@@ -12,7 +12,7 @@ Living handoff document. **Update it at every milestone.** Any coding agent shou
 - **Databricks App `resource` is RUNNING:** https://resource-7474650863346302.aws.databricksapps.com (OAuth: open it while signed in to the workspace; `/docs` for the API). Operational store on **Lakebase `resource-ops`**; Delta `rs_*`, `ai_extract`, MLflow, Linkup, Companies House and OpenAI wired through App resources (D-017, D-018).
 - The private App is on snapshot `01f1e055423315c78a9fa2f49f0f029c` (SUCCEEDED). It includes intake and mesh validation v1.1 and stamps confirmed draft versions on decisions. The App principal has READ VOLUME and WRITE VOLUME on `workspace.resource.rs_uploads`. The deployed HTTP demo still needs a signed-in browser session.
 - Redeploy the private App with `uv run --project backend python deploy/databricks/redeploy.py` from the repo root. It includes `frontend/dist` if built locally. See [deployment instructions](deploy/databricks/README.md).
-- Public hosting moved to Vercel under Yixin's direction, with Databricks staying the data platform. Astra reported the homepage live and is handling API/queue verification after server variables are in place. [Board update](https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6881733472)
+- Public hosting moved to Vercel under Yixin's direction, with Databricks staying the data platform. Astra's staged homepage returned HTTP 200; `/api/v1/health` returned HTTP 500 while the server variables were pending. [Board update](https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6881881723)
 
 ## Current gate (PRD §15)
 
@@ -26,6 +26,7 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 | What | How | Result |
 |---|---|---|
 | Full test suite | `cd backend && RS_SKIP_DATABRICKS=1 uv run --locked pytest ../tests -q`; then `uv run --locked pytest ../tests/integration/test_databricks_layer.py -q` | **133 passed, 4 skipped** offline. All 9 Databricks integration tests passed separately, including the 4 live tests. |
+| HTTP demo (local Uvicorn, isolated seeded run) | Commands and SSE over a local socket | D1 Offer A → Rotterdam signal → D2 Offer B; diff and SSE reconnect; selection → approved paperwork → simulated receipt → install/restore; upload → reviewed requirements → D3 with the confirmed version. Valid/invalid GLB and blueprint `provider_required` passed. |
 | Primary D1 (seeded, live integrations) | HTTP + SSE flow against `uvicorn` | D1: A 85.79 > B 82.07 > C 49.96; PD pending, PE ineligible. `ai_extract` on the SQL warehouse, Linkup leads, OpenAI summaries, MLflow trace linked in events |
 | Hero feature (AC-03) | `SIG-RTM-CLOSURE` | D2: B 82.07 > A 66.91 > C 49.96; A day 4→11, £48,000→£50,500; 1 check rerun, 46 reused; path NLRTM → R-RTM-HWC → Offer A → case-primary |
 | Execution gate | select → documents → approve → submit → install/restore | CAA Form 1 MO + 145.A.42 acceptance + supplier approval; one receipt per operation; visual install/restore gated on the receipt |
