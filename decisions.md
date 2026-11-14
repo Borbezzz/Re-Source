@@ -108,7 +108,7 @@ Status values: **Accepted** (in force) · **Proposed** (needs team lead / human 
 - Affects: `adapters/external.py`, `agents/investigation.py`.
 
 ### D-013 — Frontend delegated to Borbezzz's OpenAI agent (GPT-6 Astra + GPT Image 2.5)
-- Date: 2026-11-14 · Status: **Proposed (lead must confirm folder ownership per AGENTS.md §4)**
+- Date: 2026-11-14 · Status: Accepted by Yixin in this session; `frontend/**` assigned to Yixin’s Astra.
 - Decision: at Bede's request, the React + TypeScript + Vite + React Three Fiber frontend is built by Borbezzz's OpenAI coding agent. It uses `gpt-6-astra` for UI/UX and 3D, and `gpt-image-2.5-flare` / `gpt-image-2.5-sunburst` for presentation imagery. Proposed ownership: their agent owns `frontend/**`; Bede's Claude owns `backend/`, `contracts/`, `data/`, `rules/`, `templates/`, `deploy/`, `tests/`, `docs/` (except frontend docs) and the handoff files. Contract changes go through `interface.md` and the board.
 - Brief: `docs/handoff/frontend-brief-astra.md`; post text: `docs/handoff/board-post-frontend.md`.
 - Constraint: image generation uses the frontend owner's own build key, never the app's runtime key.
@@ -141,9 +141,23 @@ Status values: **Accepted** (in force) · **Proposed** (needs team lead / human 
 - Found on deployment: Postgres enforces VARCHAR lengths (SQLite does not) — operational columns are now `TEXT`, and the store migrates existing VARCHAR columns to TEXT at startup (idempotent).
 - Local development keeps SQLite by default; `RS_USE_LAKEBASE=1` + `PGHOST`/`PGUSER` opts in (high latency from outside us-west-2).
 
-### D-018 — Databricks App deployment (2026-11-14, approved by Bede)
+### D-018 — Databricks App deployment (2026-11-14, approved by Bede; hosting superseded by D-019)
 - App `resource` → https://resource-7474650863346302.aws.databricksapps.com (OAuth-protected; open it signed in to the workspace).
 - Source synced to `/Workspace/Shared/ReSource/app-src` (no `.env`); entrypoint `app.yaml` (uvicorn, port 8000); resources: `sql-warehouse`, `linkup-key`, `companies-house-key`, `agent-traces`, `openai-key` (new secret `resource/openai_key`), `lakebase` (new).
 - `requirements.txt` lists top-level packages only: a fully pinned export failed against Databricks-managed Python constraints.
 - Grants: App service principal has `USE CATALOG workspace`, `USE SCHEMA, SELECT, MODIFY` on `workspace.resource` (rs_* projections and evidence reads).
 - Verified from outside (the App only accepts browser OAuth sessions): startup created a run + 3 cases in Lakebase; prewarm extracted all 68 evidence documents with `ai_extract` as the App identity (76 s, all agreeing with the structured parse).
+
+### D-019 — Public Vercel frontend and API; Databricks remains the data platform
+- Date: 2026-11-14 · Status: Lead-authorized; public runtime verification awaits server credentials.
+- Yixin replaced Databricks Apps hosting with Vercel because the App requires workspace OAuth. Both frontend and API deploy together to the verified `borbez2s-projects/resource` project. Existing Databricks resources remain intact.
+- Vercel Services (beta) builds the Vite static service and FastAPI Python service. The backend entrypoint is `pyproject.toml` so the web app and private queue subscriber are both built. `/api/v1` and frontend assets share one origin. The browser never calls the private Databricks App.
+- Vercel Queues carries durable job IDs for investigations, extraction, replay and the document/projection outbox. Lakebase holds job payloads and graph checkpoints. Advisory locks and completed-job records make duplicate deliveries harmless. A generation's job intent commits in the same database transaction; request retries recover unpublished intents. Consumers retry five times with a 15-second delay, bounded to three concurrent deliveries. Terminal queue failure still requires operator inspection/replay; do not represent this as unlimited automatic recovery. No resident worker thread is used on Vercel.
+- Serverless startup refuses SQLite. Databricks service-principal credentials and PG connection settings replace App resource injection. Postgres checkpoints supersede D-017's local checkpoint limitation. Uploads synchronously mirror to UC before acknowledgement; 4 MB proxy limit until a direct signed-upload design exists.
+- SSE reads persisted events across instances and closes after 50 seconds; EventSource reconnects using the sequence cursor. No correctness dependency on a resident API process.
+- Evidence: both API and queue subscriber built on Vercel; anonymous route and connected worker/Lakebase verification are recorded separately in deployment docs. Build success alone is not runtime success.
+
+### D-020 — Anonymous public demo identity
+- Date: 2026-11-14 · Status: Implemented; local regression tests cover visitor boundaries.
+- Public visitors get an opaque random HttpOnly cookie, with per-visitor current runs and per-run intake/manifest state. Explicit run and replay access is ownership-checked. Idempotency is namespaced by visitor. Cross-origin mutations are rejected. Databricks forwarded user headers are never trusted on Vercel.
+- Review actions are attributed to an unverified demo visitor. They approve a versioned draft only; simulation does not order parts, file regulatory documents or provide engineering approval. Persistent authenticated identities are future work.

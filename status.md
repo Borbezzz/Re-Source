@@ -2,17 +2,28 @@
 
 Living handoff document. **Update it at every milestone.** Any coding agent should be able to resume from this file plus [`decisions.md`](decisions.md), [`architecture.md`](architecture.md) and [`interface.md`](interface.md).
 
-- Last updated: 2026-11-14, by Bede's Codex
+- Last updated: 2026-11-14, by Yixin’s Astra and Bede’s Codex.
+- Active frontend/migration branch: `codex/jet-engine-frontend`, based on PR #6. Issue #7.
 - Spec: [`PRD.md`](PRD.md) v1.2
 - Branch: `5-backend-recovery`, PR https://github.com/Borbezzz/Re-Source/pull/6 (closes #5). Base `main@ddceb8e`.
 - Frontend delegation posted to the board: https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6880396173
 
-## Deployment (2026-11-14)
+## Public deployment update (2026-11-14)
+
+Yixin superseded Databricks Apps hosting: **Vercel frontend AND API**; Databricks remains data/platform. Verified project: `borbez2s-projects/resource`. Both Python HTTP and private queue subscriber builds pass. Runtime credentials are being configured by Yixin; no complete public-path verification yet. See `deploy/vercel/README.md`. Do not redeploy the old App as the frontend delivery target.
+
+Frontend is implemented with typed commands/SSE, intake v1.1, cited review, real procedural/loaded meshes, reversible Anime.js motion, supplier/map/evidence comparison and versioned approval/simulated receipts. Blueprint generation and full uploaded-spec compatibility evaluation remain explicit gaps.
+
+## Retained Databricks deployment (historical)
 
 - **Databricks App `resource` is RUNNING:** https://resource-7474650863346302.aws.databricksapps.com (OAuth: open it while signed in to the workspace; `/docs` for the API). Operational store on **Lakebase `resource-ops`**; Delta `rs_*`, `ai_extract`, MLflow, Linkup, Companies House and OpenAI wired through App resources (D-017, D-018).
 - The private App is on snapshot `01f1e055423315c78a9fa2f49f0f029c` (SUCCEEDED). It includes intake and mesh validation v1.1 and stamps confirmed draft versions on decisions. The App principal has READ VOLUME and WRITE VOLUME on `workspace.resource.rs_uploads`. The deployed HTTP demo still needs a signed-in browser session.
 - Redeploy the private App with `uv run --project backend python deploy/databricks/redeploy.py` from the repo root. It includes `frontend/dist` if built locally. See [deployment instructions](deploy/databricks/README.md).
 - Public hosting moved to Vercel under Yixin's direction, with Databricks staying the data platform. Astra's staged homepage returned HTTP 200; `/api/v1/health` returned HTTP 500 while the server variables were pending. [Board update](https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6881881723)
+
+## Frontend/migration verification
+
+See [`docs/verification/frontend-vercel.md`](docs/verification/frontend-vercel.md): 138 backend tests passed (4 skipped), 9 frontend invariant tests and 4 full browser flows passed, including anonymous local mode. Connected public API/worker verification is still blocked on Vercel server configuration.
 
 ## Current gate (PRD §15)
 
@@ -67,7 +78,7 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 ## Blockers / waiting on humans
 
 0. **Repo description** — setting it was blocked (repo settings belong to the lead). Proposed: "Re-Source: aerospace recovery agent — finds, verifies and re-plans jet-engine part replacements (BUY/MAKE) with continuous risk monitoring, UK CAA paperwork and a 3D engine view. FastAPI + LangGraph + Databricks."
-1. **Folder ownership + model provider** — @Borbezzz to confirm on the board (AGENTS.md: the lead assigns folders; D-001 OpenAI instead of Claude).
+1. **Resolved:** Yixin assigned `frontend/**` and confirmed OpenAI D-001; later authorized the Vercel runtime migration.
 2. **AI Search** endpoint not provisioned (keyword retrieval in use). Lakebase is provisioned (D-017).
 3. **Intake scope:** confirmation changes the part identity and the decision's `requirements_version`. Other extracted engineering fields are for manual review. Blueprint mesh jobs report `provider_required` until a generation provider is connected.
 4. **Live demo:** the Databricks App requires browser sign-in. The public Vercel API and queue still need connected verification on Astra's deployment.
@@ -76,8 +87,8 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 ## Next steps
 
 1. Frontend (Borbezzz's agent) against `interface.md` + `contracts/generated-types/api.ts`.
-2. Run the backend demo on the signed-in private App and coordinate with Astra on the connected Vercel demo.
-3. Optional: AI Search endpoint for hybrid retrieval.
+2. Complete the Vercel server credentials, deploy both services, and verify anonymous browser → API → Lakebase → queue → SSE → approval flow. Do not use deployment bypass tokens. Bede handles optional signed-in verification on the retained private App.
+3. Lakebase is required for the serverless public runtime. AI Search remains optional; generation provider and full uploaded-spec rule evaluation remain open.
 4. Re-run the §12 QA pass after the frontend lands (AC-01/14/17) and record results in `docs/verification/`.
 
 ## How to resume

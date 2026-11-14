@@ -12,7 +12,7 @@
 
 ## Stack
 
-FastAPI BFF (Python 3.12, uv) · LangGraph orchestration with a persistent checkpointer · Databricks (SQL warehouse, Delta `workspace.resource.rs_*`, `ai_extract`, MLflow 3 tracing, Databricks App `resource`) · OpenAI Responses API for explanations and extraction fallback · Linkup search and Companies House adapters · OR-Tools CP-SAT for recovery scheduling · React + TypeScript + Vite + React Three Fiber frontend (built by the frontend owner, see [`docs/handoff/frontend-brief-astra.md`](docs/handoff/frontend-brief-astra.md)).
+FastAPI BFF (Python 3.12, uv) · LangGraph orchestration with a persistent checkpointer · Databricks (SQL warehouse, Delta `workspace.resource.rs_*`, `ai_extract`, MLflow 3 tracing) · OpenAI Responses API for explanations and extraction fallback · Linkup search and Companies House adapters · OR-Tools CP-SAT for recovery scheduling · React + TypeScript + Vite + React Three Fiber frontend · Vercel Services and Queues for public application hosting (see [`deploy/vercel/README.md`](deploy/vercel/README.md)).
 
 ## Repository layout
 
@@ -24,7 +24,7 @@ data/{manifests,fixtures,ingestion,evidence-inventory}            engine manifes
 rules/{requirements,applicability,ranking}                        versioned requirement sets, UK CAA catalogue, ranking config
 templates/{registry,fields,renderers}                             document template registry
 frontend/                                                         workspace UI and 3D scene (frontend owner)
-deploy/{databricks,resources}                                     Databricks App deployment
+deploy/{vercel,databricks,resources}                              Public deployment and retained platform resources
 tests/{unit,integration,e2e,evaluations}                          tests and MLflow evaluation scorers
 docs/{decisions,verification,demo,handoff}                        verification records, demo script, handoffs
 ```
@@ -55,3 +55,7 @@ Hookup, once per person:
 Claude Code loads [`CLAUDE.md`](CLAUDE.md), Cursor always applies [`.cursor/rules/agent-board.mdc`](.cursor/rules/agent-board.mdc), and Copilot reads [`.github/copilot-instructions.md`](.github/copilot-instructions.md). Other agents follow `AGENTS.md` and run `BOARD_READER_ID=<id> tools/board unread` before each task.
 
 Issue #1 is pinned and has the `board` label.
+
+## Frontend
+
+Run `npm ci && npm run dev` in `frontend/` with the backend on port 8000. See [`frontend/README.md`](frontend/README.md) for build, tests, Figma and current contract limits. Public hosting is Vercel for both frontend and API (D-019); the retained Databricks App is not the public target.
