@@ -49,22 +49,40 @@ class Views:
         if not generation_id:
             return []
         out: dict[str, dict] = {}
-        for e in self.s.store.events_after(run_id, case_id, 0, 5000):
-            if e.get("invocation_id") != generation_id or not e["type"].startswith("task."):
-                continue
-            tid = e["task_id"]
-            cur = out.get(tid, {"task_id": tid, "name": e["data"].get("task", tid), "status": "pending", "started_at": None, "finished_at": None, "summary": None})
-            st_ = e["data"].get("status")
-            if st_ == "running":
-                cur["started_at"] = e["occurred_at"]
-                cur["status"] = "running"
-            else:
-                cur["status"] = st_ or "completed"
-                cur["finished_at"] = e["occurred_at"]
-                cur["started_at"] = cur["started_at"] or e["occurred_at"]
-            cur["summary"] = e["summary"]
-            out[tid] = cur
-        return list(out.values())
+        tools: dict[str, dict] = {}
+        refs: dict[str, set[str]] = {}
+        cursor = 0
+        while True:
+            events = self.s.store.events_after(run_id, case_id, cursor, 5000)
+            if not events:
+                break
+            for e in events:
+                cursor = e["sequence"]
+                tid = e.get("task_id")
+                if e.get("invocation_id") != generation_id or not tid:
+                    continue
+                refs.setdefault(tid, set()).update(e.get("evidence_refs") or [])
+                if e["type"] in ("tool.started", "tool.completed", "tool.failed") and e["data"].get("tool"):
+                    tools[tid] = {"name": e["data"]["tool"], "status": e["type"].split(".", 1)[1],
+                                  "call_id": e["data"].get("call_id"), "occurred_at": e["occurred_at"], "summary": e["summary"]}
+                if not e["type"].startswith("task."):
+                    continue
+                cur = out.get(tid, {"task_id": tid, "name": e["data"].get("task", tid), "status": "pending",
+                                    "started_at": None, "finished_at": None, "summary": None})
+                st_ = e["data"].get("status")
+                if st_ == "running":
+                    cur["started_at"] = e["occurred_at"]
+                    cur["status"] = "running"
+                else:
+                    cur["status"] = st_ or "completed"
+                    cur["finished_at"] = e["occurred_at"]
+                    cur["started_at"] = cur["started_at"] or e["occurred_at"]
+                cur["summary"] = e["summary"]
+                out[tid] = cur
+            if len(events) < 5000:
+                break
+        return [{**task, "latest_tool": tools.get(tid), "evidence_refs": sorted(refs.get(tid, set()))}
+                for tid, task in out.items()]
 
     def case(self, case_id: str, run_id: Optional[str] = None) -> dict:
         rid = self.run_id(run_id)

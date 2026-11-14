@@ -2245,7 +2245,7 @@
             "type": "string"
           },
           "schema_version": {
-            "default": "1.4",
+            "default": "1.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5887,7 +5887,7 @@
             "type": "string"
           },
           "schema_version": {
-            "default": "1.4",
+            "default": "1.5",
             "title": "Schema Version",
             "type": "string"
           },
@@ -5944,6 +5944,14 @@
       "TaskStatus": {
         "additionalProperties": false,
         "properties": {
+          "evidence_refs": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Refs",
+            "type": "array"
+          },
           "finished_at": {
             "anyOf": [
               {
@@ -5955,6 +5963,16 @@
               }
             ],
             "title": "Finished At"
+          },
+          "latest_tool": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TaskToolActivity"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "name": {
             "title": "Name",
@@ -6005,6 +6023,52 @@
           "status"
         ],
         "title": "TaskStatus",
+        "type": "object"
+      },
+      "TaskToolActivity": {
+        "additionalProperties": false,
+        "properties": {
+          "call_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Call Id"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "started",
+              "completed",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "status",
+          "occurred_at",
+          "summary"
+        ],
+        "title": "TaskToolActivity",
         "type": "object"
       },
       "TemplateChangeRequest": {
@@ -6177,7 +6241,7 @@
   "info": {
     "description": "Backend-for-frontend for the Re-Source aerospace recovery demonstration. Synthetic demo data is labelled data_origin=synthetic_demo.",
     "title": "Re-Source Aerospace Recovery API",
-    "version": "1.4"
+    "version": "1.5"
   },
   "openapi": "3.1.0",
   "paths": {

@@ -1655,7 +1655,7 @@ export interface components {
             scenario_run_id: string;
             /**
              * Schema Version
-             * @default 1.4
+             * @default 1.5
              */
             schema_version: string;
             /** Sequence */
@@ -3043,7 +3043,7 @@ export interface components {
             scenario_run_id: string;
             /**
              * Schema Version
-             * @default 1.4
+             * @default 1.5
              */
             schema_version: string;
             /** Sequence */
@@ -3063,8 +3063,14 @@ export interface components {
         };
         /** TaskStatus */
         TaskStatus: {
+            /**
+             * Evidence Refs
+             * @default []
+             */
+            evidence_refs: string[];
             /** Finished At */
             finished_at?: string | null;
+            latest_tool?: components["schemas"]["TaskToolActivity"] | null;
             /** Name */
             name: string;
             /** Started At */
@@ -3078,6 +3084,25 @@ export interface components {
             summary?: string | null;
             /** Task Id */
             task_id: string;
+        };
+        /** TaskToolActivity */
+        TaskToolActivity: {
+            /** Call Id */
+            call_id?: string | null;
+            /** Name */
+            name: string;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "started" | "completed" | "failed";
+            /** Summary */
+            summary: string;
         };
         /** TemplateChangeRequest */
         TemplateChangeRequest: {
@@ -5025,7 +5050,7 @@ export interface operations {
 }
 
 // ---- appended by backend/scripts/export_contracts.py ----
-export const SCHEMA_VERSION = "1.4";
+export const SCHEMA_VERSION = "1.5";
 export const EVENT_TYPES = [
   "case.started",
   "task.started",
