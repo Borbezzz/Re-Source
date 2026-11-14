@@ -60,3 +60,59 @@ test("prepared asset keeps each published part mapped to nonempty mesh geometry 
   }
   assert.ok(gltf.animations.length > 0);
 });
+
+test("prepared engine preserves three case meshes, seven modules and reversible authored casing motion", async () => {
+  const { GLTFLoader } = await import("three/addons/loaders/GLTFLoader.js");
+  const { AnimationMixer, LoopOnce, Vector3 } = await import("three");
+  const bytes = readFileSync(
+    new URL("../public/models/engine-cutaway.glb", import.meta.url),
+  );
+  const gltf = await new GLTFLoader().parseAsync(
+    bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
+    "",
+  );
+  assert.deepEqual(validateMeshMappings(gltf.scene, manifest.components), []);
+  for (const module of manifest.engine.asset.modules)
+    assert.ok(gltf.scene.getObjectByName(module.node_name));
+  const shell = gltf.scene.getObjectByName("Nacelle")!;
+  const initial = shell.getWorldPosition(new Vector3()).clone();
+  const initialPositions = new Map<string, InstanceType<typeof Vector3>>();
+  gltf.scene.traverse((node) =>
+    initialPositions.set(
+      node.uuid,
+      node.getWorldPosition(new Vector3()).clone(),
+    ),
+  );
+  const mixer = new AnimationMixer(gltf.scene);
+  const actions = gltf.animations.map((c) => {
+    const a = mixer.clipAction(c);
+    a.setLoop(LoopOnce, 1);
+    a.clampWhenFinished = true;
+    a.play();
+    return a;
+  });
+  const end = Math.max(...gltf.animations.map((c) => c.duration));
+  const seek = (p: number) => {
+    for (const a of actions) {
+      a.enabled = true;
+      a.paused = false;
+    }
+    mixer.setTime(end * p);
+    gltf.scene.updateMatrixWorld(true);
+  };
+  seek(0.5);
+  assert.ok(shell.getWorldPosition(new Vector3()).distanceTo(initial) > 0.5);
+  seek(1);
+  assert.ok(shell.getWorldPosition(new Vector3()).distanceTo(initial) > 0.5);
+  seek(0);
+  assert.ok(shell.getWorldPosition(new Vector3()).distanceTo(initial) < 1e-5);
+  gltf.scene.traverse((node) =>
+    assert.ok(
+      node
+        .getWorldPosition(new Vector3())
+        .distanceTo(initialPositions.get(node.uuid)!) < 1e-5,
+      node.name,
+    ),
+  );
+  disposeModel(gltf.scene);
+});
