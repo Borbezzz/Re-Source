@@ -17,3 +17,5 @@ Blueprint-to-mesh generation is **unavailable until a provider is connected**. T
 Uploaded identity/revision affect current checks; uploaded material, dimensions, tolerance and certification requirements currently need separate manual evidence review. Their compatibility is unknown until implemented in the rules. Live public leads do not turn synthetic offers into real quotes. Costs are estimates and receipts are simulation-only.
 
 Uploads currently accept at most 4 MB. `deploy/vercel/README.md` documents public hosting, server configuration and remaining verification. No API secrets belong in this package. Lazy-load the 3D runtime and supplier map; fonts are self-hosted.
+
+Set `RESOURCE_BASE_URL` to test another deployment. Add `RESOURCE_VERIFY_PUBLIC=1` to include anonymous visitor isolation and real timed SSE reconnect checks; the backend must have `RS_PUBLIC_DEMO=1`. All setup requests use the same origin as the browser.

@@ -39,6 +39,9 @@ interface Props {
   reducedMotion: boolean;
   focusToken: number;
   onSelect: (id: string) => void;
+  hero?: boolean;
+  selectedModule?: string | null;
+  onSelectModule?: (id: string) => void;
 }
 class SceneBoundary extends Component<
   { children: ReactNode },
@@ -101,8 +104,16 @@ function SceneModel({
         .add(new THREE.Vector3(-1.8, 1.25, 2.2));
     } else {
       cameraTarget.current = new THREE.Vector3(0, 0, 0);
-      eyeTarget.current = new THREE.Vector3(-5, 2.6, 6.2).multiplyScalar(
-        Math.max(1, 1.4 / (size.width / size.height)),
+      eyeTarget.current = (
+        props.hero
+          ? new THREE.Vector3(
+              -4.1 + explosion * 2.4,
+              1.8 + explosion * 0.05,
+              5.1 + explosion * 3.6,
+            )
+          : new THREE.Vector3(-5, 2.6, 6.2)
+      ).multiplyScalar(
+        Math.max(1, (props.hero ? 1.55 : 1.4) / (size.width / size.height)),
       );
     }
     invalidate();
@@ -113,10 +124,11 @@ function SceneModel({
     invalidate,
     size.width,
     size.height,
+    props.hero ? explosion : 0,
   ]);
   useEffect(() => {
     invalidate();
-  }, [explosion, selected, visualState, invalidate]);
+  }, [explosion, selected, visualState, props.selectedModule, invalidate]);
   useFrame((_, delta) => {
     progress.current = reducedMotion
       ? explosion
@@ -128,10 +140,26 @@ function SceneModel({
         );
     const p = progress.current;
     root.traverse((node) => {
-      if (typeof node.userData.moduleIndex === "number")
+      if (typeof node.userData.moduleIndex === "number") {
         node.position.x =
           (node.userData.moduleBaseX ?? 0) +
-          (node.userData.moduleIndex - 3) * p * 0.48;
+          (node.userData.moduleIndex - 3) * p * (props.hero ? 0.65 : 0.48);
+        node.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            for (const material of Array.isArray(child.material)
+              ? child.material
+              : [child.material]) {
+              if (material instanceof THREE.MeshStandardMaterial) {
+                material.emissive.set(
+                  node.name === props.selectedModule ? "#237f6b" : "#000000",
+                );
+                material.emissiveIntensity =
+                  node.name === props.selectedModule ? 0.22 : 0;
+              }
+            }
+          }
+        });
+      }
     });
     for (const [index, component] of engine.components.entries()) {
       const mesh = root.getObjectByName(component.mesh_mapping.node_name);
@@ -198,10 +226,12 @@ function SceneModel({
         line.setAttribute("y2", String(labelY));
       }
     }
-    if (props.host.current)
+    if (props.host.current) {
       props.host.current.dataset.settled = String(
         Math.abs(p - explosion) < 0.01,
       );
+      props.host.current.dataset.separation = p.toFixed(3);
+    }
     if (eyeTarget.current && cameraTarget.current && controls.current) {
       if (reducedMotion) {
         camera.position.copy(eyeTarget.current);
@@ -223,10 +253,11 @@ function SceneModel({
   });
   const select = (e: ThreeEvent<PointerEvent>) => {
     let n: THREE.Object3D | null = e.object;
-    while (n && !n.userData.componentId) n = n.parent;
+    while (n && !n.userData.componentId && !n.userData.moduleName) n = n.parent;
     if (n) {
       e.stopPropagation();
-      onSelect(n.userData.componentId);
+      if (n.userData.componentId) onSelect(n.userData.componentId);
+      else props.onSelectModule?.(n.userData.moduleName);
     }
   };
   return (
@@ -269,6 +300,7 @@ function Loaded(props: Props & OverlayRefs & { path: string }) {
       const index = modules?.findIndex((m) => m.node_name === node.name) ?? -1;
       if (index >= 0) {
         node.userData.moduleIndex = index;
+        node.userData.moduleName = node.name;
         node.userData.moduleBaseX = node.position.x;
       }
     });
@@ -306,7 +338,10 @@ export default function EngineScene(props: Props) {
           <Canvas
             frameloop="demand"
             dpr={[1, 1.5]}
-            camera={{ position: [-5, 2.6, 6.2], fov: 34 }}
+            camera={{
+              position: props.hero ? [-4.1, 1.8, 5.1] : [-5, 2.6, 6.2],
+              fov: props.hero ? 30 : 34,
+            }}
             gl={{ antialias: true, alpha: true }}
             onCreated={({ gl }) =>
               gl.domElement.addEventListener(
@@ -321,9 +356,9 @@ export default function EngineScene(props: Props) {
               </div>
             }
           >
-            <ambientLight intensity={1.1} />
-            <directionalLight position={[-3, 5, 4]} intensity={3} />
-            <directionalLight position={[4, 2, -3]} intensity={2} />
+            <ambientLight intensity={0.45} />
+            <directionalLight position={[-3, 5, 4]} intensity={2.2} />
+            <directionalLight position={[4, 2, -3]} intensity={1.4} />
             <Suspense fallback={null}>
               <Environment resolution={128}>
                 <Lightformer

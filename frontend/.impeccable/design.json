@@ -263,6 +263,7 @@
     "northStar": "The Assembly Workbench",
     "overview": "The code-led Operate direction combines warm off-white work surfaces, forest navigation and actions, and pale sage selection. The physical assembly is the visual center of the inspection workspace. Nearby controls, evidence, and compact tables use quiet typography and thin separators so the object and the decision remain connected.\n\nGeist supplies both headings and working text. White panels sit within a pale surface without decorative elevation; amber marks uncertainty, while explicit text and icons carry status. This record describes the implemented visual system, with the tokens above as its normative values. It does not establish geometry, compatibility, or evidence as verified merely because the interface displays them.",
     "keyCharacteristics": [
+      "Engine-first entry: independent real mesh, seven selectable modules, reversible scroll and mobile source/details panel.",
       "Assembly-centered inspection with a persistent selected-part context.",
       "Forest actions, sage selection, white panels, and thin separators.",
       "One variable sans-serif family with compact, tabular numeric content.",
@@ -290,7 +291,8 @@
       "Do use the forest primary action, sage selection, and quiet white panels for their established roles.",
       "Do preserve visible keyboard focus, native controls, direct separation input, and the component-list fallback.",
       "Do use tabular figures and retain horizontal scrolling for dense comparison data.",
-      "Do honor reduced motion in both CSS and the rendered scene."
+      "Do honor reduced motion in both CSS and the rendered scene.",
+      "Do retain source-workflow navigation across reload and disable supplier actions until the real API session is ready."
     ],
     "donts": [
       "Don't use color alone to communicate a result or treat selection styling as verification.",

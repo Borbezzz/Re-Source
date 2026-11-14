@@ -25,6 +25,7 @@ import {
   Status,
   human,
 } from "./components/Primitives.tsx";
+import { EngineIntro } from "./scene/EngineIntro.tsx";
 import { Intake } from "./components/Intake.tsx";
 import { Activity, Research } from "./components/Research.tsx";
 import { Documents } from "./components/Documents.tsx";
@@ -43,6 +44,14 @@ export default function App() {
   const [engine, setEngine] = useState<EngineView | null>(null),
     [error, setError] = useState(""),
     [entered, setEntered] = useState(false);
+  const [intro, setIntro] = useState(() => location.hash !== "#sources"),
+    [initialPart, setInitialPart] = useState<string | null>(null);
+  const openSources = () => {
+    history.replaceState(null, "", "#sources");
+    setIntro(false);
+    setEntered(false);
+    window.scrollTo(0, 0);
+  };
   const [mode, setMode] = useState<Schema<"Mode">>("seeded"),
     [runBusy, setRunBusy] = useState(false),
     [settings, setSettings] = useState(false);
@@ -84,7 +93,11 @@ export default function App() {
       <header className="global-header">
         <button
           className="wordmark"
-          onClick={() => setEntered(false)}
+          onClick={() => {
+            setIntro(true);
+            history.replaceState(null, "", location.pathname + location.search);
+            window.scrollTo(0, 0);
+          }}
           aria-label="ReSource home"
         >
           <span className="brand-mark">
@@ -94,14 +107,22 @@ export default function App() {
         </button>
         <nav aria-label="Main navigation">
           <button
-            className={!entered ? "active" : ""}
-            onClick={() => setEntered(false)}
+            className={!intro && !entered ? "active" : ""}
+            onClick={openSources}
           >
             Sources & requirements
           </button>
           <button
-            className={entered ? "active" : ""}
-            onClick={() => setEntered(true)}
+            className={intro || entered ? "active" : ""}
+            onClick={() => {
+              setIntro(true);
+              history.replaceState(
+                null,
+                "",
+                location.pathname + location.search,
+              );
+              window.scrollTo(0, 0);
+            }}
           >
             Engine workspace
           </button>
@@ -110,7 +131,9 @@ export default function App() {
           <span className="mode-label">
             {engine
               ? `${engine.mode} · ${engine.mode === "live" ? "public leads + synthetic offers" : "synthetic data"}`
-              : "Connecting"}
+              : error
+                ? "Illustrative assembly"
+                : "Connecting supplier tools"}
           </span>
           <button
             className="icon-button"
@@ -150,9 +173,24 @@ export default function App() {
           </p>
         </section>
       )}
-      {error && <ErrorNotice retry={() => void refresh()}>{error}</ErrorNotice>}
+      {error && !intro && (
+        <ErrorNotice retry={() => void refresh()}>{error}</ErrorNotice>
+      )}
       <div id="main-content">
-        {!entered ? (
+        {intro ? (
+          <EngineIntro
+            engine={engine}
+            connectionFailed={Boolean(error)}
+            onRetry={() => void refresh()}
+            onSources={openSources}
+            onPart={(id) => {
+              setInitialPart(id);
+              setEntered(true);
+              setIntro(false);
+              window.scrollTo(0, 0);
+            }}
+          />
+        ) : !entered ? (
           <Intake
             key={engine?.scenario_run_id}
             engine={engine}
@@ -162,14 +200,24 @@ export default function App() {
         ) : !engine ? (
           <Loading>Connecting to the engine workspace…</Loading>
         ) : (
-          <Workspace key={engine.scenario_run_id} engine={engine} />
+          <Workspace
+            key={engine.scenario_run_id}
+            engine={engine}
+            initialPart={initialPart}
+          />
         )}
       </div>
     </>
   );
 }
-function Workspace({ engine }: { engine: EngineView }) {
-  const [selected, setSelected] = useState<string | null>(null),
+function Workspace({
+  engine,
+  initialPart,
+}: {
+  engine: EngineView;
+  initialPart: string | null;
+}) {
+  const [selected, setSelected] = useState<string | null>(initialPart),
     [tab, setTab] = useState<Tab>("assembly"),
     [explosion, setExplosion] = useState(0),
     [focus, setFocus] = useState(0);

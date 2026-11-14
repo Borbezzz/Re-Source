@@ -6,12 +6,12 @@ Verified target: Vercel account `borbez2`, team `borbez2s-projects` (`team_gDiuA
 
 ## Server configuration
 
-Set Production and Preview variables in Vercel project settings. Never put these in `VITE_*`, client code, git, issue comments or screenshots. Do not copy local `.env` into a deployment.
+Production variables are configured in Vercel project settings. Preview has no production credentials and is not a connected runtime. Never put these in `VITE_*`, client code, git, issue comments or screenshots. Do not copy local `.env` into a deployment.
 
 | Variable | Purpose |
 |---|---|
 | `DATABRICKS_HOST` | Existing workspace URL |
-| `DATABRICKS_CLIENT_ID`, `DATABRICKS_CLIENT_SECRET` | Dedicated approved service principal, OAuth M2M |
+| `DATABRICKS_TOKEN` | Existing user-authorized PAT, verified against workspace and Lakebase |
 | `PGHOST`, `PGUSER`, `PGDATABASE` | Existing `resource-ops` Lakebase connection; PGUSER must be the authorized database role |
 | `PGPORT`, `PGSSLMODE` | Optional; 5432 and require by default |
 | `RS_USE_LAKEBASE` | Set 1 explicitly; Vercel with PGHOST also selects it by default |
@@ -21,9 +21,9 @@ Set Production and Preview variables in Vercel project settings. Never put these
 | `LINKUP_API_KEY`, `COMPANIES_HOUSE_API_KEY` | Live public research adapters |
 | `MLFLOW_TRACKING_URI`, `MLFLOW_EXPERIMENT_ID` | Optional approved tracing destination |
 
-The service principal needs Lakebase connection/schema/table access, warehouse use, UC catalog/schema/table permissions, and READ/WRITE VOLUME on `workspace.resource.rs_uploads`. Existing App identity/grants do not automatically transfer. OAuth passwords are minted and refreshed server-side. Missing Lakebase fails startup rather than silently storing state in ephemeral SQLite.
+The configured identity uses `DATABRICKS_HOST` + `DATABRICKS_TOKEN`; no new service principal is required for this demo. The parent verified workspace access and Lakebase credential generation for that identity. It needs Lakebase connection/schema/table access, warehouse use, UC catalog/schema/table permissions, and READ/WRITE VOLUME on `workspace.resource.rs_uploads`. Lakebase database passwords are minted and refreshed server-side using the Databricks SDK. An approved OAuth M2M identity (`DATABRICKS_CLIENT_ID`/`DATABRICKS_CLIENT_SECRET`) remains an optional alternative, not the current setup. Missing Lakebase fails startup rather than silently storing state in ephemeral SQLite.
 
-Vercel defaults: `RS_PUBLIC_DEMO=1`, `RS_JOB_BACKEND=vercel`, `RS_PREWARM=0`, `RS_VAR_DIR=/tmp/resource`, `RS_SSE_MAX_SECONDS=50`. The job queue uses the deployment's Vercel OIDC credential, not a client key. No cron/polling daemon is required. Local development uses threads/SQLite unless explicitly configured otherwise.
+Vercel defaults: `RS_PUBLIC_DEMO=1`, `RS_JOB_BACKEND=vercel`, `RS_PREWARM=0`, `RS_VAR_DIR=/tmp/resource`, `RS_SSE_MAX_SECONDS=50`. The job queue uses the deployment's Vercel OIDC credential, not a client key. Remote MLflow setup runs in queue workers with a three-second wait limit; it never gates HTTP cold starts. No cron/polling daemon is required. Local development uses threads/SQLite unless explicitly configured otherwise.
 
 ## Build and deploy
 
@@ -51,8 +51,19 @@ The first command stages production without assigning the normal production doma
 
 Local automated coverage: typed/idempotent commands, SSE replay and case isolation, source/mesh guards, intake extraction review/reload, supplier evidence, versioned draft approval invalidation, simulated receipts, mobile/reduced-motion, reversible scroll, D1→D2 disruption. Runtime regressions cover two anonymous visitors, replay/upload isolation, failed queue publication retry, duplicate completion, cross-instance persisted SSE and rejection of serverless SQLite.
 
-Vercel build verified: frontend, FastAPI and private queue subscriber. **Not yet verified:** authenticated server-to-Lakebase access, real queue redelivery/checkpoint restart, durable upload across instances, and complete anonymous public browser flow. Runtime variables were absent at the last check and Yixin is configuring them. Build success is not a tested public application.
+Vercel build verified: frontend, FastAPI and private queue subscriber. **Not yet verified:** authenticated server-to-Lakebase access, real queue redelivery/checkpoint restart, durable upload across instances, and complete anonymous public browser flow. The parent completed 24 Production variables with zero failures and handed deployment back to this session. Connected verification is in progress; Preview remains unconfigured. Build success is not a tested public application.
 
 Before promoting, use a fresh browser context (no cookies initially, no Vercel bypass) to load `/`, create an anonymous run, upload/review sources, select a part, watch real queue events/SSE reconnect, compare supplier evidence, approve/edit/reapprove a draft, simulate submission, and reload. A second fresh context must not read the first visitor's run/upload. Confirm that the first visitor's state survives a new API invocation and that queue consumers use Postgres checkpoints.
 
 Official references: [Services](https://vercel.com/docs/services), [service configuration](https://vercel.com/docs/services/config-reference), [FastAPI](https://vercel.com/docs/frameworks/backend/fastapi), [Python queue consumers](https://vercel.com/kb/guide/python-and-vercel-queues), [function limits](https://vercel.com/docs/functions/limitations).
+
+## Public browser test command
+
+After the parent chat reports variables ready and the verified deployment is rebuilt:
+
+```sh
+cd frontend
+RESOURCE_BASE_URL=https://<verified-deployment>.vercel.app RESOURCE_VERIFY_PUBLIC=1 npx playwright test
+```
+
+All setup calls use the tested origin and the browser context's cookie jar. There is no localhost API shortcut, saved login state or bypass header. The additional public tests exercise two visitor boundaries, upload persistence across reload, and native EventSource reconnect with Last-Event-ID after the 50-second response ends. These checks do not by themselves prove a queue worker survives forced termination; that remains a separate connected-runtime check.

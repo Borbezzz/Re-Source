@@ -1,16 +1,13 @@
 import { test, expect } from "@playwright/test";
+import { startSeededRun } from "./helpers";
 test("two sources, cited review, correction, confirmation and truthful generation blocker", async ({
   page,
-  request,
 }) => {
-  await request.post("http://127.0.0.1:8000/api/v1/scenario-runs", {
-    data: {
-      mode: "seeded",
-      manifest_id: "engine-demo-001",
-      fixture_version: "seed-v1",
-    },
-  });
+  await startSeededRun(page);
   await page.goto("/");
+  await page
+    .getByRole("button", { name: "Sources & requirements", exact: true })
+    .click();
   await page
     .locator("input[type=file]")
     .nth(0)
@@ -99,13 +96,11 @@ test("two sources, cited review, correction, confirmation and truthful generatio
     .locator("summary")
     .filter({ hasText: "Use an existing segmented GLB" })
     .click();
-  await page
-    .locator('input[accept=".glb"]')
-    .setInputFiles({
-      name: "synthetic-test.glb",
-      mimeType: "model/gltf-binary",
-      buffer: testMesh(blueprintId),
-    });
+  await page.locator('input[accept=".glb"]').setInputFiles({
+    name: "synthetic-test.glb",
+    mimeType: "model/gltf-binary",
+    buffer: testMesh(blueprintId),
+  });
   const activate = page.getByRole("button", {
     name: "Activate validated assembly",
   });

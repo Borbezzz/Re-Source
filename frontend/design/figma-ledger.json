@@ -187,5 +187,11 @@
     "extractedReview": "4:15",
     "generationBlocked": "4:40",
     "mobile": "4:54"
+  },
+  "engineFirstRevision": {
+    "assembled": "8:21",
+    "separating": "8:58",
+    "exploded": "8:95",
+    "note": "Editable layout and schematic module placement; actual scene verified with rendered browser captures."
   }
 }

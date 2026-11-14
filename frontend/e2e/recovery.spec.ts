@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { startSeededRun } from "./helpers";
 import { mkdir } from "node:fs/promises";
 test("source entry, real mesh selection, events, comparison and versioned approval", async ({
   page,
-  request,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -10,15 +10,11 @@ test("source entry, real mesh selection, events, comparison and versioned approv
     if (e.type() === "error") errors.push(e.text());
   });
   await mkdir(".impeccable/review", { recursive: true });
-  const run = await request.post("http://127.0.0.1:8000/api/v1/scenario-runs", {
-    data: {
-      mode: "seeded",
-      manifest_id: "engine-demo-001",
-      fixture_version: "seed-v1",
-    },
-  });
-  expect(run.ok()).toBeTruthy();
+  await startSeededRun(page);
   await page.goto("/");
+  await page
+    .getByRole("button", { name: "Sources & requirements", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Start with the source." }),
   ).toBeVisible();
@@ -142,6 +138,9 @@ test("narrow viewport and reduced motion retain keyboard/direct controls", async
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await page
+    .getByRole("button", { name: "Sources & requirements", exact: true })
+    .click();
   await page.screenshot({
     path: ".impeccable/review/intake-mobile.png",
     fullPage: true,
@@ -175,16 +174,12 @@ test("narrow viewport and reduced motion retain keyboard/direct controls", async
 
 test("scroll reverses explosion and disruption publishes a new decision with repair gates intact", async ({
   page,
-  request,
 }) => {
-  await request.post("http://127.0.0.1:8000/api/v1/scenario-runs", {
-    data: {
-      mode: "seeded",
-      manifest_id: "engine-demo-001",
-      fixture_version: "seed-v1",
-    },
-  });
+  await startSeededRun(page);
   await page.goto("/");
+  await page
+    .getByRole("button", { name: "Sources & requirements", exact: true })
+    .click();
   await page.getByRole("button", { name: "Open seeded workspace" }).click();
   await expect(page.locator(".scene-root")).toHaveAttribute(
     "data-ready",

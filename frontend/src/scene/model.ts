@@ -44,24 +44,36 @@ function rotor(
   count: number,
   chord: number,
 ) {
-  const positions: number[] = [];
+  const positions: number[] = [],
+    indices: number[] = [];
+  const radialSteps = 24,
+    chordSteps = 8;
   const point = (t: number, u: number, angle: number) => {
-    const r = root + (tip - root) * t,
-      a = angle + ((u - 0.5) * chord) / r + t * t * 0.24;
-    return [x + (u - 0.5) * 0.22 + t * 0.07, Math.cos(a) * r, Math.sin(a) * r];
+    const r = root + (tip - root) * t;
+    const a = angle + ((u - 0.5) * chord * (1 - 0.2 * t)) / r + t * t * 0.24;
+    return [
+      x + (u - 0.5) * 0.22 + t * 0.07 + Math.sin(u * Math.PI) * 0.035,
+      Math.cos(a) * r,
+      Math.sin(a) * r,
+    ];
   };
-  for (let k = 0; k < count; k++)
-    for (let t = 0; t < 8; t++)
-      for (let u = 0; u < 3; u++) {
-        const angle = (k / count) * Math.PI * 2;
-        const a = point(t / 8, u / 3, angle),
-          b = point((t + 1) / 8, u / 3, angle),
-          c = point((t + 1) / 8, (u + 1) / 3, angle),
-          d = point(t / 8, (u + 1) / 3, angle);
-        positions.push(...a, ...b, ...c, ...a, ...c, ...d);
+  for (let k = 0; k < count; k++) {
+    const offset = positions.length / 3;
+    for (let t = 0; t <= radialSteps; t++)
+      for (let u = 0; u <= chordSteps; u++)
+        positions.push(
+          ...point(t / radialSteps, u / chordSteps, (k / count) * Math.PI * 2),
+        );
+    for (let t = 0; t < radialSteps; t++)
+      for (let u = 0; u < chordSteps; u++) {
+        const a = offset + t * (chordSteps + 1) + u,
+          b = a + chordSteps + 1;
+        indices.push(a, b, b + 1, a, b + 1, a + 1);
       }
+  }
   const g = new THREE.BufferGeometry();
   g.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  g.setIndex(indices);
   g.computeVertexNormals();
   return g;
 }
@@ -83,15 +95,16 @@ export function createDemoEngine(
   const root = new THREE.Group();
   root.name = "Representative_RS_TF2";
   root.userData.provenance = "procedural_demo";
-  const silver = alloy("#b5c4c3"),
-    dark = alloy("#526464"),
-    copper = alloy("#ae8062"),
-    polished = alloy("#d4dddd", 0.24);
+  const silver = alloy("#7c8c91", 0.28),
+    dark = alloy("#26383f", 0.32),
+    copper = alloy("#8f6344", 0.3),
+    polished = alloy("#b3bfc3", 0.2);
   const radii = [1.04, 0.66, 0.54, 0.55, 0.48, 0.51, 0.48];
   modules.forEach((spec, index) => {
     const group = new THREE.Group();
     group.name = spec.node_name;
     group.userData.moduleIndex = index;
+    group.userData.moduleName = spec.node_name;
     const [start, end] = spec.x_range,
       r = radii[index] ?? 0.5,
       mid = (start + end) / 2;
@@ -202,6 +215,12 @@ export function createDemoEngine(
         ),
       );
     }
+    group.traverse((n) => {
+      if (n instanceof THREE.Mesh)
+        n.material = Array.isArray(n.material)
+          ? n.material.map((m) => m.clone())
+          : n.material.clone();
+    });
     root.add(group);
   });
   components.forEach((component, index) => {

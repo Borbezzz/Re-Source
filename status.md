@@ -10,7 +10,7 @@ Living handoff document. **Update it at every milestone.** Any coding agent shou
 
 ## Public deployment update (2026-11-14)
 
-Yixin superseded Databricks Apps hosting: **Vercel frontend AND API**; Databricks remains data/platform. Verified project: `borbez2s-projects/resource`. Both Python HTTP and private queue subscriber builds pass. Runtime credentials are being configured by Yixin; no complete public-path verification yet. See `deploy/vercel/README.md`. Do not redeploy the old App as the frontend delivery target.
+Yixin superseded Databricks Apps hosting: **Vercel frontend AND API**; Databricks remains data/platform. Verified project: `borbez2s-projects/resource`. Both Python HTTP and private queue subscriber builds pass. The parent configured 24 Production variables with zero failures, using the existing verified Databricks PAT/Lakebase identity. Deployment and connected verification are in progress; Preview has no production credentials. See `deploy/vercel/README.md`. Do not redeploy the old App as the frontend delivery target.
 
 Frontend is implemented with typed commands/SSE, intake v1.1, cited review, real procedural/loaded meshes, reversible Anime.js motion, supplier/map/evidence comparison and versioned approval/simulated receipts. Blueprint generation and full uploaded-spec compatibility evaluation remain explicit gaps.
 

@@ -290,3 +290,10 @@ Scroll synchronizes separation linearly and reverses with scrolling. Mesh separa
 - Don't apply the evidence-drawer or pin shadow to ordinary working panels.
 - Don't reuse the smallest scene annotations as the default body or label scale.
 - Don't let animation or physical realism imply document-backed compatibility, generation, or approval.
+
+
+## Engine-first entry revision
+
+The first visit opens `EngineIntro`: a real R3F representative assembly, independent of API readiness. The concept PNG is not the primary hero. A 265vh desktop scroll track progressively separates seven modules and reassembles on reverse scroll; direct controls and reduced motion remain available. Indexed blade surfaces share normals, metal lighting has stronger depth, and the camera opens toward the intake. Module geometry and the labelled strip select the same module.
+
+Source upload and requirements sit beside the scene. On narrow screens an explicit details control opens the same module, part and upload content; it is not removed. Supplier actions stay disabled until a real visitor run exists. Source navigation uses `#sources` so a reload resumes extraction/review. New visitors with no view hash see the assembly. Figma revision frames: `8:21`, `8:58`, `8:95`.
