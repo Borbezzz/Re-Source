@@ -22,7 +22,7 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 | Primary D1 (seeded, live integrations) | HTTP + SSE flow against `uvicorn` | D1: A 85.79 > B 82.07 > C 49.96; PD pending, PE ineligible. `ai_extract` on the SQL warehouse, Linkup leads, OpenAI summaries, MLflow trace linked in events |
 | Hero feature (AC-03) | `SIG-RTM-CLOSURE` | D2: B 82.07 > A 66.91 > C 49.96; A day 4→11, £48,000→£50,500; 1 check rerun, 46 reused; path NLRTM → R-RTM-HWC → Offer A → case-primary |
 | Execution gate | select → documents → approve → submit → install/restore | CAA Form 1 MO + 145.A.42 acceptance + supplier approval; one receipt per operation; visual install/restore gated on the receipt |
-| Responsiveness | measured locally | command ack 0.01 s; first progress event 1.2 s; warm signal → D2 ≈ 8 s; cold D1 ≈ 86 s before prewarm (prewarm now caches all 68 documents at startup, ~100 s once) |
+| Responsiveness | measured locally (live Databricks/OpenAI/Linkup) | command ack <0.01 s; first progress event 1.2 s; **warm D1 7.8 s, signal → D2 5.6 s**; cold first extraction ≈100 s, now done once by the startup prewarm and cached by content hash (restart prewarm 3.6 s) |
 | Databricks | `docs/verification/disc-04-capability-spike.md` | 16 `rs_*` Delta tables loaded (evidence hashes match the catalog); outbox → Delta projection works |
 | MLflow evaluation | `tests/evaluations/run_eval.py` | run `2934d58d1e14432ca1f1753d1667f897`, all scorer means 1.000 (17 rows, 6 held out) |
 
