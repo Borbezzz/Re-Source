@@ -919,25 +919,44 @@ const __originkitPresetProps = {
 };
 
 // Neutral process labels describe sourcing work, not live search outcomes.
-const SEARCH_NODES = [
-  { x: 0.13, y: 0.17, size: 28, label: "Material", anchor: "start" },
-  { x: 0.76, y: 0.11, size: 22, label: "Tolerances", anchor: "end" },
-  { x: 0.91, y: 0.4, size: 32, label: "Certification", anchor: "end" },
-  { x: 0.17, y: 0.6, size: 23, label: "Supplier search", anchor: "start" },
-  { x: 0.82, y: 0.76, size: 27, label: "Lead time", anchor: "end" },
-  { x: 0.09, y: 0.85, size: 18, label: "Source trace", anchor: "start" },
+const SEARCH_LABELS = [
+  "Material",
+  null,
+  null,
+  "Supplier search",
+  null,
+  null,
+  "Lead time",
+  null,
+  null,
 ] as const;
-const SEARCH_LINKS = [
-  [0, 1],
-  [0, 2],
-  [0, 3],
-  [0, 5],
-  [1, 2],
-  [2, 4],
-  [3, 4],
-  [3, 5],
-  [4, 5],
-] as const;
+const SEARCH_LINKS = SEARCH_LABELS.map(
+  (_, i) => [i, (i + 1) % SEARCH_LABELS.length] as const,
+);
+type RigPoint = { x: number; y: number };
+type RigBox = { left: number; right: number; top: number; bottom: number };
+const rigOverlap = (a: RigBox, b: RigBox) =>
+  a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+
+function rigLinkCrosses(a: RigPoint, b: RigPoint, box: RigBox) {
+  let near = 0,
+    far = 1;
+  for (const [origin, delta, min, max] of [
+    [a.x, b.x - a.x, box.left, box.right],
+    [a.y, b.y - a.y, box.top, box.bottom],
+  ]) {
+    if (Math.abs(delta) < 0.001) {
+      if (origin < min || origin > max) return false;
+    } else {
+      const first = (min - origin) / delta,
+        last = (max - origin) / delta;
+      near = Math.max(near, Math.min(first, last));
+      far = Math.min(far, Math.max(first, last));
+      if (near > far) return false;
+    }
+  }
+  return true;
+}
 
 function SearchRig({
   targetRef,
@@ -953,64 +972,188 @@ function SearchRig({
     const svg = svgRef.current;
     if (!target || !svg) return;
     const media = matchMedia("(prefers-reduced-motion: reduce)");
-    let width = target.clientWidth;
-    let height = target.clientHeight;
-    let pointerX = 0;
-    let pointerY = 0;
-    let frame = 0;
-    let visible = true;
-    const copy = target.querySelector<HTMLElement>(".entry-actions");
+    const protectedElements = Array.from(
+      target.querySelectorAll<HTMLElement>(".entry-actions, .entry-explore"),
+    );
+    const wordmark = target.querySelector<HTMLElement>(".entry-wordmark");
+    let width = target.clientWidth,
+      height = target.clientHeight;
+    let protectedBoxes: RigBox[] = [];
+    let letterBand: RigBox | null = null;
+    let labelWidths: number[] = [],
+      labelSizes: number[] = [];
+    let offsets: { x: number; y: number; size: number; depth: number }[] = [];
+    let pointer = { x: 0, y: 0 },
+      client = { x: 0, y: 0 };
+    let drift = { x: 0, y: 0 };
+    let frame = 0,
+      lastFrame = 0,
+      settleUntil = 0;
+    let active = false,
+      visible = true,
+      alive = true;
     const hide = () => {
+      active = false;
       cancelAnimationFrame(frame);
       frame = 0;
+      drift = { x: 0, y: 0 };
       svg.dataset.active = "false";
     };
-    const draw = () => {
-      frame = 0;
+    const measure = () => {
+      width = target.clientWidth;
+      height = target.clientHeight;
       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-      const points = SEARCH_NODES.map((node, i) => ({
-        x: node.x * width + pointerX * (8 + i * 3) * (i % 2 ? -1 : 1),
-        y: node.y * height + pointerY * (7 + i * 2),
-      }));
-      if (width <= 700 && copy) {
-        // A narrow hero has no side gutter beside the working copy. Keep the
-        // complete cube/label group above or below that block, including after
-        // viewport resizing or font reflow. The connecting lines stay spread.
-        const heroBounds = target.getBoundingClientRect();
-        const copyBounds = copy.getBoundingClientRect();
-        const top = copyBounds.top - heroBounds.top - 14;
-        const bottom = copyBounds.bottom - heroBounds.top + 14;
-        points.forEach((point, i) => {
-          const bounds = nodes.current[i]?.getBBox();
-          if (!bounds) return;
-          const half = SEARCH_NODES[i].size / 2;
-          const groupTop = point.y - half + bounds.y;
-          const groupBottom = groupTop + bounds.height;
-          if (groupBottom > top && groupTop < bottom) {
-            const above = top - bounds.y - bounds.height + half;
-            const below = bottom - bounds.y + half;
-            point.y =
-              Math.abs(point.y - above) < Math.abs(point.y - below)
-                ? above
-                : below;
-          }
-        });
+      const hero = target.getBoundingClientRect();
+      protectedBoxes = protectedElements.map((element) => {
+        const bounds = element.getBoundingClientRect();
+        return {
+          left: bounds.left - hero.left - 10,
+          right: bounds.right - hero.left + 10,
+          top: bounds.top - hero.top - 10,
+          bottom: bounds.bottom - hero.top + 10,
+        };
+      });
+      if (wordmark) {
+        const bounds = wordmark.getBoundingClientRect();
+        // Protect the centered letter band from optional labels only. Cube
+        // geometry, links, pointer locality, and title pixels stay unchanged.
+        letterBand = {
+          left: bounds.left - hero.left,
+          right: bounds.right - hero.left,
+          top: bounds.top - hero.top + bounds.height * 0.2,
+          bottom: bounds.top - hero.top + bounds.height * 0.8,
+        };
       }
-      points.forEach((point, i) =>
-        nodes.current[i]?.setAttribute(
-          "transform",
-          `translate(${point.x - SEARCH_NODES[i].size / 2} ${point.y - SEARCH_NODES[i].size / 2})`,
-        ),
+      labelWidths = nodes.current.map(
+        (node) => node?.querySelector("text")?.getComputedTextLength() ?? 0,
       );
-      SEARCH_LINKS.forEach(([from, to], i) =>
-        links.current[i]?.setAttribute(
+      labelSizes = nodes.current.map((node) => {
+        const label = node?.querySelector("text");
+        return label ? parseFloat(getComputedStyle(label).fontSize) : 0;
+      });
+    };
+    const reshuffle = () => {
+      const rotation = Math.random() * Math.PI * 2;
+      offsets = SEARCH_LABELS.map((_, i) => {
+        const angle =
+          rotation +
+          (i * Math.PI * 2) / SEARCH_LABELS.length +
+          (Math.random() - 0.5) * 0.44;
+        const reach = 0.4 + Math.random() * 0.52;
+        return {
+          x: Math.cos(angle) * reach,
+          y: Math.sin(angle) * reach,
+          size: 14 + Math.random() * 7,
+          depth: 0.15 + Math.random() * 0.2,
+        };
+      });
+    };
+    const draw = (now: number) => {
+      frame = 0;
+      if (!active || !visible || document.hidden || media.matches)
+        return hide();
+      const radius = Math.min(196, width * 0.24);
+      const narrow = width <= 700;
+      const points = offsets.map((offset) => ({
+        x: pointer.x + offset.x * radius - drift.x * offset.depth,
+        y: pointer.y + offset.y * radius - drift.y * offset.depth,
+      }));
+      const cubeBoxes = points.map((point, i) => {
+        const size = offsets[i].size * (narrow ? 0.75 : 1),
+          half = size / 2;
+        return {
+          left: point.x - half - 2,
+          right: point.x + half + 6,
+          top: point.y - half - 6,
+          bottom: point.y + half + 2,
+        };
+      });
+      const suppressed = cubeBoxes.map((box) =>
+        protectedBoxes.some((protectedBox) => rigOverlap(box, protectedBox)),
+      );
+      const acceptedLabels: RigBox[] = [];
+      points.forEach((point, i) => {
+        const node = nodes.current[i];
+        if (!node) return;
+        const size = offsets[i].size * (narrow ? 0.75 : 1),
+          half = size / 2;
+        node.setAttribute("transform", `translate(${point.x} ${point.y})`);
+        node.style.visibility = suppressed[i] ? "hidden" : "visible";
+        node.style.opacity = String(
+          1 - Math.hypot(offsets[i].x, offsets[i].y) * 0.4,
+        );
+        node
+          .querySelector("path")
+          ?.setAttribute(
+            "d",
+            `M${-half} ${-half}H${half}V${half}H${-half}ZM${-half} ${-half}L${-half + 4} ${-half - 4}H${half + 4}V${half - 4}L${half} ${half}M${half} ${-half}L${half + 4} ${-half - 4}`,
+          );
+        const label = node.querySelector("text");
+        if (!label) return;
+        // Labels face inward, and may disappear independently of their cube.
+        const facesRight = offsets[i].x < 0;
+        const labelX = facesRight ? half + 11 : -half - 7;
+        label.setAttribute("x", String(labelX));
+        label.setAttribute("y", "3.5");
+        label.setAttribute("text-anchor", facesRight ? "start" : "end");
+        const left = point.x + labelX - (facesRight ? 0 : labelWidths[i]);
+        const box = {
+          left: left - 2,
+          right: left + labelWidths[i] + 2,
+          top: point.y + 3.5 - labelSizes[i],
+          bottom: point.y + 7,
+        };
+        const outsideCluster = [
+          [box.left, box.top],
+          [box.right, box.top],
+          [box.left, box.bottom],
+          [box.right, box.bottom],
+        ].some(
+          ([x, y]) =>
+            Math.hypot(x - pointer.x, y - pointer.y) >
+            radius + (narrow ? 16 : 22),
+        );
+        const obscuresCube = cubeBoxes.some(
+          (cube, j) => j !== i && !suppressed[j] && rigOverlap(box, cube),
+        );
+        const hidden =
+          suppressed[i] ||
+          outsideCluster ||
+          obscuresCube ||
+          (letterBand !== null && rigOverlap(box, letterBand)) ||
+          protectedBoxes.some((protectedBox) =>
+            rigOverlap(box, protectedBox),
+          ) ||
+          acceptedLabels.some((other) => rigOverlap(box, other));
+        label.style.visibility = hidden ? "hidden" : "visible";
+        if (!hidden) acceptedLabels.push(box);
+      });
+      SEARCH_LINKS.forEach(([from, to], i) => {
+        const link = links.current[i];
+        if (!link) return;
+        link.setAttribute(
           "d",
           `M${points[from].x} ${points[from].y}L${points[to].x} ${points[to].y}`,
-        ),
-      );
+        );
+        const hidden =
+          suppressed[from] ||
+          suppressed[to] ||
+          protectedBoxes.some((box) =>
+            rigLinkCrosses(points[from], points[to], box),
+          );
+        link.style.visibility = hidden ? "hidden" : "visible";
+      });
+      const elapsed = lastFrame ? Math.min(40, now - lastFrame) : 16;
+      lastFrame = now;
+      const decay = Math.exp(-elapsed * 0.018);
+      drift.x *= decay;
+      drift.y *= decay;
+      // Only pointer events and this short settling tail schedule frames.
+      if (now < settleUntil && Math.hypot(drift.x, drift.y) > 0.15)
+        frame = requestAnimationFrame(draw);
     };
     const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(draw);
+      if (!frame && active) frame = requestAnimationFrame(draw);
     };
     const move = (event: PointerEvent) => {
       if (
@@ -1021,8 +1164,26 @@ function SearchRig({
       )
         return hide();
       const bounds = target.getBoundingClientRect();
-      pointerX = (event.clientX - bounds.left) / bounds.width - 0.5;
-      pointerY = (event.clientY - bounds.top) / bounds.height - 0.5;
+      client = { x: event.clientX, y: event.clientY };
+      const next = {
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top,
+      };
+      if (!active) {
+        reshuffle();
+        pointer = next;
+        drift = { x: 0, y: 0 };
+        lastFrame = 0;
+        active = true;
+      } else {
+        const dx = next.x - pointer.x,
+          dy = next.y - pointer.y;
+        const length = Math.hypot(dx, dy),
+          scale = length > 32 ? 32 / length : 1;
+        drift = { x: dx * scale, y: dy * scale };
+        pointer = next;
+      }
+      settleUntil = performance.now() + 240;
       svg.dataset.active = "true";
       schedule();
     };
@@ -1030,9 +1191,19 @@ function SearchRig({
       if (document.hidden) hide();
     };
     const resize = new ResizeObserver(() => {
-      width = target.clientWidth;
-      height = target.clientHeight;
-      schedule();
+      measure();
+      if (active) {
+        const bounds = target.getBoundingClientRect();
+        pointer = { x: client.x - bounds.left, y: client.y - bounds.top };
+        if (
+          pointer.x < 0 ||
+          pointer.x > width ||
+          pointer.y < 0 ||
+          pointer.y > height
+        )
+          hide();
+        else schedule();
+      }
     });
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -1041,17 +1212,27 @@ function SearchRig({
       },
       { rootMargin: "-108px 0px 0px 0px" },
     );
+    measure();
     resize.observe(target);
-    if (copy) resize.observe(copy);
+    if (wordmark) resize.observe(wordmark);
+    protectedElements.forEach((element) => resize.observe(element));
     observer.observe(target);
+    document.fonts.ready.then(() => {
+      if (alive) {
+        measure();
+        schedule();
+      }
+    });
     target.addEventListener("pointerenter", move);
     target.addEventListener("pointermove", move);
     target.addEventListener("pointerleave", hide);
     target.addEventListener("pointercancel", hide);
     window.addEventListener("blur", hide);
+    window.addEventListener("scroll", hide, { passive: true });
     document.addEventListener("visibilitychange", visibility);
     media.addEventListener("change", hide);
     return () => {
+      alive = false;
       hide();
       resize.disconnect();
       observer.disconnect();
@@ -1060,6 +1241,7 @@ function SearchRig({
       target.removeEventListener("pointerleave", hide);
       target.removeEventListener("pointercancel", hide);
       window.removeEventListener("blur", hide);
+      window.removeEventListener("scroll", hide);
       document.removeEventListener("visibilitychange", visibility);
       media.removeEventListener("change", hide);
     };
@@ -1082,26 +1264,18 @@ function SearchRig({
               />
             ))}
           </g>
-          {SEARCH_NODES.map((node, i) => (
+          {SEARCH_LABELS.map((label, i) => (
             <g
-              key={node.label}
-              ref={(element) => {
-                nodes.current[i] = element;
+              key={i}
+              ref={(node) => {
+                nodes.current[i] = node;
               }}
               className="wordmark-search-node"
             >
-              <path
-                className="wordmark-search-cube"
-                d={`M0 5H${node.size}V${node.size + 5}H0ZM0 5L5 0H${node.size + 5}V${node.size}L${node.size} ${node.size + 5}M${node.size} 5L${node.size + 5} 0`}
-              />
-              <text
-                x={node.anchor === "start" ? node.size + 15 : -10}
-                y={node.size / 2 + 7}
-                textAnchor={node.anchor}
-                className="wordmark-search-label"
-              >
-                {node.label}
-              </text>
+              <path className="wordmark-search-cube" />
+              {label ? (
+                <text className="wordmark-search-label">{label}</text>
+              ) : null}
             </g>
           ))}
         </svg>,
