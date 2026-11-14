@@ -1,0 +1,97 @@
+{
+  "$defs": {
+    "AssemblyProfileComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "node_name": {
+          "title": "Node Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "component_id",
+        "display_name",
+        "node_name"
+      ],
+      "title": "AssemblyProfileComponent",
+      "type": "object"
+    },
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assembly_id": {
+      "title": "Assembly Id",
+      "type": "string"
+    },
+    "asset": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Asset",
+      "type": "object"
+    },
+    "components": {
+      "items": {
+        "$ref": "#/$defs/AssemblyProfileComponent"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "display_name": {
+      "title": "Display Name",
+      "type": "string"
+    },
+    "investigation_available": {
+      "title": "Investigation Available",
+      "type": "boolean"
+    },
+    "product_type": {
+      "title": "Product Type",
+      "type": "string"
+    },
+    "requirements_status": {
+      "enum": [
+        "source_required",
+        "fixture_defined"
+      ],
+      "title": "Requirements Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "assembly_id",
+    "display_name",
+    "product_type",
+    "description",
+    "requirements_status",
+    "investigation_available",
+    "data_origin",
+    "components"
+  ],
+  "title": "AssemblyProfile",
+  "type": "object"
+}

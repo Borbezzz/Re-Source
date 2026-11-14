@@ -170,6 +170,22 @@ async def readiness(refresh: bool = False, detail: bool = False) -> dict:
     return matrix
 
 
+# ---------------------------------------------------------------------------------------------- assembly profiles
+@app.get("/api/v1/assemblies", response_model=list[M.AssemblyProfile])
+async def list_assembly_profiles() -> list[dict]:
+    from ..services.assembly_profiles import profiles
+
+    return await run_in_threadpool(profiles, services())
+
+
+@app.get("/api/v1/assemblies/{assembly_id}", response_model=M.AssemblyProfile,
+         responses={404: {"model": M.ApiError}})
+async def get_assembly_profile(assembly_id: str) -> dict:
+    from ..services.assembly_profiles import get_profile
+
+    return await run_in_threadpool(get_profile, services(), assembly_id)
+
+
 # ---------------------------------------------------------------------------------------------- engine / cases
 @app.get("/api/v1/engines/{engine_id}", response_model=None, responses={200: {"model": M.EngineView}, 409: {"model": M.ApiError}, 422: {"model": M.ApiError}})
 async def get_engine(engine_id: str, run_id: Optional[str] = None) -> dict:

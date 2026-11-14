@@ -4,6 +4,40 @@
  */
 
 export interface paths {
+    "/api/v1/assemblies": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Assembly Profiles */
+        get: operations["list_assembly_profiles_api_v1_assemblies_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/assemblies/{assembly_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Assembly Profile */
+        get: operations["get_assembly_profile_api_v1_assemblies__assembly_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/batches": {
         parameters: {
             query?: never;
@@ -754,6 +788,43 @@ export interface components {
              * @default false
              */
             retryable: boolean;
+        };
+        /** AssemblyProfile */
+        AssemblyProfile: {
+            /** Assembly Id */
+            assembly_id: string;
+            /**
+             * Asset
+             * @default {}
+             */
+            asset: {
+                [key: string]: unknown;
+            };
+            /** Components */
+            components: components["schemas"]["AssemblyProfileComponent"][];
+            data_origin: components["schemas"]["DataOrigin"];
+            /** Description */
+            description: string;
+            /** Display Name */
+            display_name: string;
+            /** Investigation Available */
+            investigation_available: boolean;
+            /** Product Type */
+            product_type: string;
+            /**
+             * Requirements Status
+             * @enum {string}
+             */
+            requirements_status: "source_required" | "fixture_defined";
+        };
+        /** AssemblyProfileComponent */
+        AssemblyProfileComponent: {
+            /** Component Id */
+            component_id: string;
+            /** Display Name */
+            display_name: string;
+            /** Node Name */
+            node_name: string;
         };
         /** BatchComponent */
         BatchComponent: {
@@ -1584,7 +1655,7 @@ export interface components {
             scenario_run_id: string;
             /**
              * Schema Version
-             * @default 1.2
+             * @default 1.3
              */
             schema_version: string;
             /** Sequence */
@@ -2959,7 +3030,7 @@ export interface components {
             scenario_run_id: string;
             /**
              * Schema Version
-             * @default 1.2
+             * @default 1.3
              */
             schema_version: string;
             /** Sequence */
@@ -3060,6 +3131,66 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    list_assembly_profiles_api_v1_assemblies_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssemblyProfile"][];
+                };
+            };
+        };
+    };
+    get_assembly_profile_api_v1_assemblies__assembly_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                assembly_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssemblyProfile"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_batch_api_v1_batches_post: {
         parameters: {
             query?: never;
@@ -4881,7 +5012,7 @@ export interface operations {
 }
 
 // ---- appended by backend/scripts/export_contracts.py ----
-export const SCHEMA_VERSION = "1.2";
+export const SCHEMA_VERSION = "1.3";
 export const EVENT_TYPES = [
   "case.started",
   "task.started",

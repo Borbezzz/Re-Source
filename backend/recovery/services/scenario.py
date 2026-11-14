@@ -42,6 +42,8 @@ class ScenarioService:
                    replay_source_run_id: Optional[str] = None) -> dict:
         s = self.s
         cat = s.catalog
+        if manifest_id != cat.engine["engine_id"]:
+            raise invalid(f"manifest {manifest_id} is not available for investigations")
         if fixture_version != cat.fixture_version:
             raise invalid(f"fixture version {fixture_version} not loaded (have {cat.fixture_version})")
         if mode == "replay" and not (replay_source_run_id and s.store.get_run(replay_source_run_id)):
