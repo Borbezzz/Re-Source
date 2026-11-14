@@ -28,9 +28,7 @@ test("prepared demo uses the real intake, batch, evidence, decision and approval
   const guide = page.getByRole("complementary", {
     name: "Prepared demo guide",
   });
-  await expect(guide).toContainText(
-    "Isolated run · synthetic data · real workflow",
-  );
+  await expect(guide).toContainText("Sample data · simulated orders");
   await expect(
     page.getByRole("heading", { name: "Start with the source." }),
   ).toBeVisible();
