@@ -30,6 +30,11 @@ import { ProductHome } from "./product/ProductHome.tsx";
 import { Intake } from "./components/Intake.tsx";
 import { Activity, Research } from "./components/Research.tsx";
 import { Documents } from "./components/Documents.tsx";
+const InvestigationWorkspace = lazy(() =>
+  import("./investigation/InvestigationWorkspace.tsx").then((m) => ({
+    default: m.InvestigationWorkspace,
+  })),
+);
 const EngineScene = lazy(() => import("./scene/EngineScene.tsx"));
 type Tab = "assembly" | "suppliers" | "documents";
 const shortName = (c: ComponentInstance) =>
@@ -48,7 +53,14 @@ export default function App() {
   const [intro, setIntro] = useState(() => location.hash !== "#sources"),
     [initialPart, setInitialPart] = useState<string | null>(null);
   const [intakeVersion, setIntakeVersion] = useState(0);
+  const [investigating, setInvestigating] = useState(
+    () =>
+      location.hash === "#investigations" ||
+      location.hash.startsWith("#batch/"),
+  );
+  const [homeVersion, setHomeVersion] = useState(0);
   const openSources = () => {
+    setInvestigating(false);
     history.replaceState(null, "", "#sources");
     setIntro(false);
     setEntered(false);
@@ -97,6 +109,8 @@ export default function App() {
         <button
           className="wordmark"
           onClick={() => {
+            setInvestigating(false);
+            setHomeVersion((v) => v + 1);
             setIntro(true);
             history.replaceState(null, "", location.pathname + location.search);
             window.scrollTo(0, 0);
@@ -110,14 +124,16 @@ export default function App() {
         </button>
         <nav aria-label="Main navigation">
           <button
-            className={!intro && !entered ? "active" : ""}
+            className={!investigating && !intro && !entered ? "active" : ""}
             onClick={openSources}
           >
             Sources & requirements
           </button>
           <button
-            className={intro || entered ? "active" : ""}
+            className={!investigating && (intro || entered) ? "active" : ""}
             onClick={() => {
+              setInvestigating(false);
+              setHomeVersion((v) => v + 1);
               setIntro(true);
               history.replaceState(
                 null,
@@ -128,6 +144,17 @@ export default function App() {
             }}
           >
             Product workspace
+          </button>
+          <button
+            className={investigating ? "active" : ""}
+            onClick={() => {
+              setInvestigating(true);
+              if (!investigating)
+                history.replaceState(null, "", "#investigations");
+              window.scrollTo(0, 0);
+            }}
+          >
+            Investigations
           </button>
         </nav>
         <div className="header-end">
@@ -180,8 +207,24 @@ export default function App() {
         <ErrorNotice retry={() => void refresh()}>{error}</ErrorNotice>
       )}
       <div id="main-content">
-        {intro ? (
+        {investigating ? (
+          <Suspense fallback={<Loading>Opening investigations…</Loading>}>
+            <InvestigationWorkspace
+              engine={engine}
+              connectionError={error}
+              onReconnect={() => void refresh()}
+              onPart={(id) => {
+                setInitialPart(id);
+                setEntered(true);
+                setIntro(false);
+                setInvestigating(false);
+                window.scrollTo(0, 0);
+              }}
+            />
+          </Suspense>
+        ) : intro ? (
           <ProductHome
+            key={homeVersion}
             engine={engine}
             connectionFailed={Boolean(error)}
             onRetry={() => void refresh()}

@@ -195,7 +195,7 @@
   "productV2": {
     "entry": "13:24",
     "selection": "13:29",
-    "researchConcept": "13:34",
-    "note": "Editable initial v2 layouts. Entry and selection preview implemented; research frame is a concept for the following increment. Actual curated model/motion verified in browser captures."
+    "note": "Editable v2 entry, selection and investigation layouts. Implemented browser surfaces use real prepared geometry and real batch/task/supplier events; Figma globe is a schematic design example. Research currently supports the enabled engine profile only.",
+    "research": "13:34"
   }
 }

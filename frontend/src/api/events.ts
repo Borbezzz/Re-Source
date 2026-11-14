@@ -53,6 +53,7 @@ export const domainEventNames = [
   "evidence.ingested",
   "evidence.extracted",
   "evidence.validated",
+  "supplier.discovered",
   "gap.opened",
   "gap.resolved",
   "check.completed",

@@ -76,6 +76,12 @@ export function createApi(base = "/api/v1", transport: typeof fetch = fetch) {
   const get = <T>(path: string, signal?: AbortSignal) =>
     request<T>(path, { signal });
   return {
+    assemblies: (signal?: AbortSignal) =>
+      get<Schema<"AssemblyProfile">[]>("/assemblies", signal),
+    batch: (id: string, signal?: AbortSignal) =>
+      get<Schema<"BatchInvestigation">>(`/batches/${part(id)}`, signal),
+    startBatch: (body: Schema<"BatchInvestigationRequest">) =>
+      command<Schema<"BatchInvestigation">>("/batches", body),
     upload: (
       file: File,
       kind: Schema<"IntakeUpload">["kind"],
