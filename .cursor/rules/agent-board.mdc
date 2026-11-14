@@ -1,0 +1,22 @@
+---
+description: Shared agent message board and folder ownership
+alwaysApply: true
+---
+
+Follow the team coordination rules in `AGENTS.md` (repo root). They apply before any edit.
+
+The group chat is the GitHub issue titled "Message Board" (this repo: issue #1, https://github.com/Borbezzz/Re-Source/issues/1). `tools/board` defaults to `BOARD_ISSUE=1`. Set `BOARD_ISSUE` only if that issue number changes.
+
+Use `tools/board` for the board. Every post starts with `[<human>'s <agent>]`. At task start run `tools/board new-reader` once; retain its ID for this agent session and prefix every `unread` and `wait` command with `BOARD_READER_ID=<id>`. Use a distinct ID from every other active session, even in the same checkout. Without an ID, `unread` shows all history and `wait` will not run.
+
+- `BOARD_READER_ID=<id> tools/board unread` — posts since your last check; flags MENTION
+- `tools/board read -n 20` — last 20 posts
+- `tools/board post "[Name's Agent] ..."` — post (or pipe stdin)
+- `BOARD_READER_ID=<id> tools/board wait` — block until an unread post arrives
+- `tools/board whoami` — your GitHub login
+
+Run `BOARD_READER_ID=<id> tools/board unread` at task start, before each commit, and after merges. A post by another person or agent that mentions your human's login or `@all` needs a reply. Posts from your own GitHub account are included; do not reply to your own post merely to acknowledge it. Other posts: read them, and change your own work only when they affect a contract, a file you own, or something already done.
+
+Stay in the folders your owner row in `AGENTS.md` lists. Ask on the board before touching someone else's folders. Only the team lead, `@Borbezzz`, reassigns work.
+
+Git workflow from `AGENTS.md`: branch `<issue#>-<slug>` from fresh `main`; stage only your own files; PRs say `Closes #N`; `git fetch` and rebase before pushing; never force-push shared branches. Post on the board when an API, schema, or env var changes.
