@@ -1,24 +1,24 @@
 ---
-name: "ReSource"
+name: "Re::Source"
 description: "A precise product-parts workspace connecting prepared assemblies to source-backed evidence."
 colors:
-  surface: "#f2f3f5"
-  paper: "#fff"
-  ink: "#17191d"
-  muted: "#5d6470"
-  brand: "#2251ef"
-  soft: "#e8edf8"
-  border: "#d6dbe4"
-  warning: "#8a4d17"
-  brand-hover: "#173bc0"
-  soft-hover: "#dce4fa"
-  stage: "#e8ebef"
-  selection-fill: "#e9eeff"
-  selection-text: "#2144ba"
-  selection-border: "#b7c8ff"
-  status-good: "#29654a"
-  status-bad: "#a13c32"
-  status-unknown: "#85521f"
+  surface: "#08090b"
+  paper: "#121419"
+  ink: "#f2f4f8"
+  muted: "#a8b0bf"
+  brand: "#9cbaff"
+  soft: "#1d2943"
+  border: "#ffffff20"
+  warning: "#e7bb83"
+  brand-hover: "#c2d4ff"
+  soft-hover: "#283b60"
+  stage: "#0d1016"
+  selection-fill: "#223553"
+  selection-text: "#dbe8ff"
+  selection-border: "#8aafff"
+  status-good: "#a4d8c0"
+  status-bad: "#f4aaa7"
+  status-unknown: "#e7bb83"
 typography:
   display:
     fontFamily: "\"Geist Variable\", sans-serif"
@@ -145,23 +145,28 @@ components:
     padding: "6px 8px"
 ---
 
-# Design System: ReSource
+# Design System: Re::Source
 
 ## Overview
 
+The current direction is the user-requested dark Re::Source display brand. The two colons suggest parts :: sources. Repository/domain/API identities remain unchanged. The opening uses the exact React Bits PatternWaves `silk` preset with white on black, edge fade and pointer interaction. A solid-to-dotted wordmark and a locally generated SVG refractive lens provide the title treatment; both the lens and blue coordinate rig clear on pointer exit.
+
+`src/theme/dark-glass.css` is the final theme stylesheet. [Theme details](src/theme/DESIGN.md) document the material, tokens and fallback behavior. Native buttons, links, selects and ranges keep their semantics and keyboard focus. Glass is concentrated on navigation/controls; evidence and working panels remain readable. Mobile navigation items cannot shrink below their text.
+
+
 **Creative North Star: "From Solid to Source"**
 
-ReSource uses charcoal lettering, cool near-white work surfaces, electric cobalt actions and selection, and fine dotted geometry. The supplied wordmark establishes the signature: solid Geist lettering resolves into a dotted outline around the pointer, with a restrained vector rig. The working interface carries that precision through thin dividers, compact controls, and prepared physical geometry.
+Re::Source uses bright solid-to-dotted lettering, near-black work surfaces, pale glass controls, cool blue focus/selection and fine dotted geometry. The supplied wordmark establishes the signature: solid Geist lettering resolves into a dotted outline around the pointer, with a restrained vector rig. The working interface carries that precision through thin dividers, compact controls, and prepared physical geometry.
 
-The assembly has depth; the surrounding interface stays flat and legible. Selection is explicit in the model, the part list, and removable chips. Source requirements and unavailable actions remain written beside the relevant controls. The v2 entry and prepared toy-car selection are implemented; the engine demo retains the working intake, evidence, and sourcing flows. The dotted globe and parallel-research frame remain a Figma concept, not a delivered component.
+The assembly has depth; the surrounding interface stays flat and legible. Selection is explicit in the model, the part list, and removable chips. Source requirements and unavailable actions remain written beside the relevant controls. The v2 entry and prepared toy-car selection are implemented; the engine demo retains the working intake, evidence, and sourcing flows. The sourced dotted globe and parallel-research workspace are implemented for enabled engine components; generic-product research remains gated.
 
 **Key Characteristics:**
-- Charcoal and cool paper with cobalt reserved for actions, focus, and selection.
-- Solid-to-dotted ReSource lettering and precise variable Geist typography.
+- Near-black surfaces, pale lettering and glass controls; cool blue identifies focus and selection.
+- Solid-to-dotted Re::Source lettering and precise variable Geist typography.
 - Prepared geometry paired with a persistent, keyboard-operable part list.
 - Reversible separation with direct controls, reduced motion, and explicit source states.
 
-Ground truth: `src/tokens.css`, the cascade from `src/styles.css` into `src/product.css`, `src/main.tsx`, `src/brand/VectorWordmark.tsx`, `src/product/*.tsx`, and retained shared primitives. `PRODUCT.md` owns product scope. The direction contract is in `.impeccable/surfaces/src-product-producthome-tsx.md`. `design/figma-ledger.json` maps the [v2 entry and selection frames](https://www.figma.com/design/o4G1HFAyQybcPuBG1nV2lL?node-id=13-24) and the unimplemented research concept; source code determines this record.
+Ground truth: `src/tokens.css`, the cascade from `src/styles.css` into `src/product.css` and the final `src/theme/dark-glass.css`, `src/main.tsx`, `src/brand/VectorWordmark.tsx`, `src/product/*.tsx`, and retained shared primitives. `PRODUCT.md` owns product scope. The direction contract is in `.impeccable/surfaces/src-product-producthome-tsx.md`. `design/figma-ledger.json` maps the [v2 entry and selection frames](https://www.figma.com/design/o4G1HFAyQybcPuBG1nV2lL?node-id=13-24) and the earlier research concept; current source and the theme documentation determine the implemented visual record.
 
 ## Colors
 
@@ -169,7 +174,7 @@ Cool neutrals support an electric action color; the legacy workflow retains dist
 
 ### Primary
 
-- **Electric cobalt** (`brand`): primary actions, links, focus outlines, range accents, checked selections, and selected mesh emission. `brand-hover` is the deeper button hover state.
+- **Cool blue** (`brand`): links, focus outlines, range accents and checked selections. Primary buttons use pale glass fills; renderer mesh selection retains its own explicit blue emission.
 - **Cobalt wash** (`soft`): secondary actions, provenance badges, and removable selection chips. `soft-hover` is the secondary hover state.
 - **Selected-part wash, text, and border** (`selection-fill`, `selection-text`, `selection-border`): the pressed-state part row. The checkmark and `aria-pressed` carry the same state independently of color.
 
@@ -214,7 +219,7 @@ Local asset credits, coordinate labels, citations, and engine metadata include s
 
 The product entry is centered within an 1800px maximum width. Desktop uses a fluid wordmark column and a 280px action column, a 42px gap, and 28px 40px 44px padding. The global header is sticky, with a thin bottom separator. At 900px the entry uses 24px padding, a 230px action column, and a 24px gap. At 600px it stacks with 20px side gutters; the header becomes 68px high. The wordmark host steps from 255px to 300px above 1600px, to 200px below 900px, and to 145px below 600px.
 
-The prepared assembly has a 230vh scroll track and a sticky working area below the 72px header. Its height is `calc(100vh - 72px)` with a 690px minimum. A fluid scene sits beside a 340px white inspector; the inspector becomes 290px below 1050px. Title and controls use 32px horizontal gutters, reduced to 20px at that breakpoint. The inspector scrolls independently on desktop.
+The prepared assembly has a 230vh scroll track and a sticky working area below the 72px header. Its height is `calc(100vh - 72px)` with a 690px minimum. A fluid scene sits beside a 340px opaque dark inspector; the inspector becomes 290px below 1050px. Title and controls use 32px horizontal gutters, reduced to 20px at that breakpoint. The inspector scrolls independently on desktop.
 
 At 700px and narrower, the assembly becomes normal-flow content with a 370px scene row and the parts inspector below it. The part buttons form two columns. Direct-control and reduced-motion modes remove the long scroll track. The current scroll observer retains its 72px offset; do not generalize it as a responsive rule.
 
@@ -222,9 +227,9 @@ Compatible engine-workflow layouts remain: centered content pages with a 1680px 
 
 ## Elevation & Depth
 
-The product workspace is flat: tone, whitespace, and borders separate its controls. The toy-car model receives scene lighting and a soft contact shadow (opacity 0.24, blur 2.6, scale 15, far 4). These are renderer settings, not CSS elevation values. Prepared selected meshes add cobalt emission at intensity 0.85; this is selection feedback rather than a material claim.
+Working panels use tone, whitespace and borders; native controls and navigation add restrained glass edges and blur. The toy-car model receives scene lighting and a soft contact shadow (opacity 0.24, blur 2.6, scale 15, far 4). These are renderer settings, not CSS elevation values. Prepared selected meshes add cobalt emission at intensity 0.85; this is selection feedback rather than a material claim.
 
-The existing engine workflow still uses floating mesh-pin, evidence-drawer, and mobile-inspector shadows. The sidecar records their exact values as compatibility extensions; their older green tint is not the v2 elevation palette.
+The existing engine workflow still uses floating mesh-pin, evidence-drawer, and mobile-inspector shadows. They retain their behavior while the dark theme overrides their surrounding working surfaces and text.
 
 **The Flat Work Surface Rule.** Use tone, whitespace, and fine borders for ordinary panels; keep physical lighting and contact shadows within the assembly scene.
 
@@ -254,13 +259,13 @@ White drafts, upload slots, requirement panels, and candidate details use the co
 
 ### Inputs / Fields
 
-Select fields use a white fill, separator border, field radius, and the frontmatter padding. Retained draft and requirement textareas stay full-width and vertically resizable; their existing local fills and radii remain compatibility details. All retain visible focus. This implementation has no reusable error-border variant.
+Select fields use a dark fill, separator border, field radius, and the frontmatter padding. Retained draft and requirement textareas stay full-width and vertically resizable; their existing local fills and radii remain compatibility details. All retain visible focus. This implementation has no reusable error-border variant.
 
 ### Navigation
 
 The global header uses cool paper, charcoal identity, and muted navigation labels. The active item has charcoal text and a 2px cobalt underline. The compact header mark also uses cobalt. Header navigation remains in a horizontal row on small screens with reduced gaps and hidden nonessential mark detail.
 
-Engine workspace tabs remain a distinct white toolbar with a cobalt-wash selected state. Their existing wrapping behavior and accessible selected state remain intact.
+Engine workspace tabs remain a distinct dark toolbar with a cobalt-wash selected state. Their existing wrapping behavior and accessible selected state remain intact.
 
 ### Prepared assembly and selection
 
@@ -296,3 +301,14 @@ The working engine flow retains source-link buttons with inline document icons, 
 - **Don’t** use cobalt alone to convey selection, compatibility, or approval.
 - **Don’t** add decorative card shadows to the flat product workspace.
 - **Don’t** turn residual forest-tinted engine styles or 8–10px metadata into v2 defaults.
+
+
+## Guided demo and prepared engine
+
+Start demo opens a new isolated seeded run and guides the same Intake, assembly, batch investigation, evidence, comparison and approval screens used by the app. Sample documents are explicitly labelled; confirmation and approval remain user actions. The guide shows the real missing blueprint-to-mesh provider state and makes the separate prepared assembly choice explicit.
+
+The engine viewport uses the licensed Blender-prepared cutaway for compatible engine cases, including existing runs; activated uploaded GLBs take precedence. Casing-first separation, module spread, reverse scrolling and focus follow actual mesh transforms. Source notices and an editable Blender project are supplied; visual counterparts do not establish engineering compatibility.
+
+## Verification scope
+
+Desktop/mobile captures and a fresh independent Impeccable review found two material issues (header naming and mobile pill sizing); both were resolved and scored ship with no visible regressions. No QUALITY BAR card was supplied, so this is not a whole-surface ceiling certification. Build, frontend invariants and real-screen demo/browser regression checks pass locally. See frontend/design/dark-demo-verification.md for exact evidence and limitations.
