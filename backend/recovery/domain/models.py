@@ -15,7 +15,7 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 
 
 def utcnow() -> datetime:
@@ -810,6 +810,31 @@ class CommandAccepted(Contract):
     status: Literal["accepted", "already_running", "duplicate"]
     events_url: str
     case_revision: int
+
+
+class BatchInvestigationRequest(Contract):
+    assembly_id: str
+    component_ids: list[str] = Field(min_length=1)
+    mode: Mode = Mode.seeded
+
+
+class BatchComponent(Contract):
+    component_id: str
+    case_id: str
+    generation_id: Optional[str]
+    status: Literal["accepted", "already_running", "duplicate"]
+    events_url: str
+    generation_status: Optional[str] = None
+    tasks: list[TaskStatus] = []
+
+
+class BatchInvestigation(Contract):
+    batch_id: str
+    run_id: str
+    assembly_id: str
+    mode: Mode
+    created_at: datetime
+    components: list[BatchComponent]
 
 
 class SignalInjectionRequest(Contract):
