@@ -1,145 +1,123 @@
-/* ReSource v2: the supplied vector reference carried into the working UI. */
-html {
-  scrollbar-color: #a1aab9 var(--surface);
-}
-::selection {
-  background: #c9d5ff;
-  color: #142866;
-}
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-summary:focus-visible {
-  outline-color: var(--brand);
-}
-.global-header {
-  background: var(--surface);
-  color: var(--ink);
-  height: 72px;
-  border-bottom: 1px solid var(--border);
-  gap: 48px;
-}
-.wordmark {
-  color: var(--ink);
-  font-size: 25px;
-  font-weight: 650;
-  letter-spacing: -0.035em;
-}
-.brand-mark {
-  color: var(--brand);
-  width: 20px;
-}
-.global-header nav button {
-  color: var(--muted);
-  font-size: 13px;
-}
-.global-header nav button.active {
-  color: var(--ink);
-}
-.global-header nav button.active:after {
-  height: 2px;
-  background: var(--brand);
-}
-.header-end .mode-label {
-  color: var(--muted);
-}
-.header-end .icon-button {
-  color: var(--ink);
-}
-.primary:hover:not(:disabled) {
-  background: #173bc0;
-}
-.secondary:hover:not(:disabled) {
-  background: #dce4fa;
+/* Re::Source: the supplied vector wordmark over the verified silk field. */
+.product-home {
+  background: #000;
 }
 .product-entry {
-  padding: 28px 40px 44px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 42px;
+  position: relative;
+  isolation: isolate;
+  min-height: min(920px, calc(100svh - 72px));
+  min-height: clamp(660px, calc(100svh - 72px), 980px);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  max-width: 1800px;
-  margin: auto;
+  justify-content: center;
+  padding: 64px 40px 100px;
+  overflow: hidden;
+}
+.entry-wave-field {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.55;
+}
+.entry-wave-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #0000 24%, #000b 65%, #000 100%);
+  pointer-events: none;
 }
 .entry-wordmark {
-  height: 255px;
   position: relative;
+  width: min(1180px, 100%);
+  height: clamp(190px, 25vw, 330px);
+  flex-shrink: 0;
 }
-.wordmark-fallback {
+.static-vector-wordmark {
   position: absolute;
-  inset: 34px 0 auto;
-  font-size: clamp(55px, 11vw, 180px);
-  letter-spacing: -0.035em;
-  font-weight: 650;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(54px, 12.3vw, 178px);
   line-height: 1;
-}
-.entry-wordmark > p {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  font-size: 16px;
-  color: var(--muted);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  color: #e6e9ef;
+  text-shadow:
+    0 1px 0 #fff9,
+    0 10px 34px #0009;
 }
 .entry-actions {
-  display: grid;
-  gap: 16px;
-  align-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: min(660px, 100%);
+  margin-top: -6px;
 }
 .entry-actions h2 {
-  font-size: 24px;
+  max-width: 26ch;
+  font-size: clamp(26px, 2.55vw, 36px);
+  line-height: 1.25;
   letter-spacing: -0.03em;
+  font-weight: 480;
+  text-wrap: balance;
+  color: #f4f5f8;
 }
-.entry-actions p {
-  color: var(--muted);
-  font-size: 14px;
+.entry-actions > p {
+  font-size: 15px;
+  color: #bdc2cb;
+  margin-top: 18px;
+  text-wrap: balance;
 }
-.entry-actions .primary {
-  justify-content: space-between;
-  min-height: 48px;
-}
-.entry-actions a {
+.entry-cta-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
+  justify-content: center;
+  margin-top: 30px;
+}
+.entry-cta-group > button {
+  min-height: 52px;
+  padding: 14px 23px;
+  font-size: 14px;
+  gap: 12px;
+}
+.entry-cta-group .entry-demo {
+  min-width: 188px;
+}
+.entry-actions > .entry-scope {
+  color: #9ca3b0;
+  font-size: 12px;
+  max-width: 48ch;
+  margin-top: 20px;
+}
+.entry-explore {
+  display: flex;
   align-items: center;
-  font-size: 13px;
+  gap: 12px;
+  position: absolute;
+  bottom: 28px;
+  color: #b5bcc7;
+  font-size: 12px;
   text-decoration: none;
-  min-height: 40px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 24px;
+}
+.entry-explore:hover {
+  color: #fff;
+  background: #ffffff0b;
 }
 .prepared-entry {
-  border-top: 1px solid var(--border);
   scroll-margin-top: 72px;
 }
-.product-home .intro-heading {
-  padding-top: 24px;
+.prepared-entry > .text-button {
+  margin: 16px 24px;
 }
-.product-home .intro-heading .eyebrow {
-  display: none;
-}
-.product-home .intro-heading h1 {
-  font-size: 32px;
-  line-height: 1.1;
-}
-.product-home .intro-heading h1 br {
-  display: none;
-}
-.product-home .intro-heading h1 {
-  max-width: 720px;
-}
-.product-home .intro-sticky {
-  background: #e8ebef;
-}
-.product-home .intro-inspector {
-  background: var(--paper);
-  border-left: 1px solid var(--border);
-}
-.module-strip button[aria-pressed="true"],
-.parts button[aria-pressed="true"] {
-  background: var(--soft);
-  color: var(--brand);
-  border-color: var(--brand);
-}
+.product-home .intro-heading .eyebrow,
 .intake-form .eyebrow,
 .workspace-heading .eyebrow {
   display: none;
@@ -147,106 +125,56 @@ summary:focus-visible {
 .intake {
   max-width: 850px;
 }
-.upload-slot,
-.draft,
-.requirements-panel,
-.candidate-detail {
-  border-radius: 4px;
-}
-@media (min-width: 1600px) {
-  .entry-wordmark {
-    height: 300px;
-  }
-}
 @media (max-width: 900px) {
   .product-entry {
-    padding: 24px;
-    grid-template-columns: minmax(0, 1fr) 230px;
-    gap: 24px;
+    padding: 48px 24px 100px;
   }
   .entry-wordmark {
-    height: 200px;
-  }
-  .entry-wordmark > p {
-    font-size: 13px;
-    max-width: 35ch;
-  }
-  .entry-actions h2 {
-    font-size: 22px;
-  }
-  .global-header {
-    gap: 24px;
-    padding: 0 24px;
+    height: 230px;
   }
 }
 @media (max-width: 600px) {
-  .global-header {
-    height: 68px;
-    padding: 0 16px;
-    gap: 20px;
-  }
-  .global-header nav {
-    gap: 16px;
-  }
-  .wordmark {
-    font-size: 22px;
-  }
-  .brand-mark {
-    display: none;
-  }
   .product-entry {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 20px 20px 28px;
-    gap: 20px;
+    min-height: max(650px, calc(100svh - 68px));
+    padding: 58px 20px 110px;
   }
   .entry-wordmark {
-    height: 145px;
+    width: calc(100% + 12px);
+    height: 150px;
   }
-  .wordmark-fallback {
-    font-size: 19vw;
-    top: 24px;
-  }
-  .entry-wordmark > p {
-    max-width: 30ch;
-    line-height: 1.4;
+  .static-vector-wordmark {
+    font-size: 12.7vw;
   }
   .entry-actions {
-    gap: 10px;
+    margin-top: 12px;
   }
   .entry-actions h2 {
-    font-size: 21px;
-  }
-  .entry-actions p {
-    font-size: 13px;
-  }
-  .entry-actions .primary {
-    min-height: 46px;
-  }
-  .entry-actions a {
-    min-height: 40px;
-  }
-  .product-home .intro-heading h1 {
     font-size: 26px;
+    max-width: 22ch;
   }
-  .product-home .intro-heading {
-    padding-top: 20px;
+  .entry-actions > p {
+    font-size: 14px;
+    max-width: 28ch;
+    margin-top: 16px;
   }
-  .prepared-entry {
-    scroll-margin-top: 68px;
+  .entry-cta-group {
+    gap: 10px;
+    width: 100%;
+    margin-top: 26px;
   }
-}
-.static-vector-wordmark {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  font-size: clamp(55px, 12vw, 190px);
-  line-height: 1;
-  font-weight: 650;
-  letter-spacing: -0.035em;
-  color: var(--ink);
+  .entry-cta-group > button {
+    padding: 13px 18px;
+  }
+  .entry-cta-group .entry-demo {
+    min-width: 156px;
+  }
+  .entry-actions > .entry-scope {
+    max-width: 33ch;
+    font-size: 12px;
+  }
+  .entry-explore {
+    bottom: 24px;
+  }
 }
 .assembly-track {
   height: 230vh;
@@ -257,7 +185,7 @@ summary:focus-visible {
 .assembly-track.direct {
   height: auto;
 }
-.assembly-sticky {
+.assembly-track .assembly-sticky {
   position: sticky;
   top: 72px;
   min-height: 690px;
@@ -463,7 +391,7 @@ summary:focus-visible {
   width: 100%;
 }
 @media (max-width: 1050px) {
-  .assembly-sticky {
+  .assembly-track .assembly-sticky {
     grid-template-columns: minmax(0, 1fr) 290px;
   }
   .part-sidebar {
@@ -490,7 +418,7 @@ summary:focus-visible {
   .assembly-track {
     height: auto;
   }
-  .assembly-sticky {
+  .assembly-track .assembly-sticky {
     height: auto;
     min-height: 0;
     position: relative;

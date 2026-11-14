@@ -122,6 +122,7 @@ uniform vec2 uV0;
 uniform vec2 uV1;
 uniform vec2 uV2;
 uniform float uHalf;    // handle half-side, in y-normalised units
+uniform float uGlass;   // bright rim and translucent body for the dark theme
 
 varying vec2 vUv;
 
@@ -187,7 +188,17 @@ void main() {
     float k = 1.0 - pow(smoothstep(0.0, max(uReach, 1e-4), d), 3.0);
 
     float mask = mix(soft.r, sharp.g, k) * inside;
+    mask = max(mask, soft.r * inside * 0.85 * uGlass);
     vec3 fill = mix(uShade, uText, smoothstep(0.0, 1.0, E.y));
+    // The original solid/dotted reveal stays intact. A sampled edge catches
+    // the light while the translucent letter body lets the silk show through.
+    vec2 texel = vec2(1.4) / uAtlas;
+    float solid = texture2D(uMap, safeUv).r;
+    float rim = max(abs(solid - texture2D(uMap, safeUv + texel).r),
+                    abs(solid - texture2D(uMap, safeUv - texel).r));
+    float reflection = 0.84 + 0.16 * cos(E.y * 14.0 + E.x * 1.8);
+    fill = mix(fill, mix(fill * reflection, vec3(1.0), rim), uGlass);
+    mask *= mix(1.0, 0.8 + rim * 0.2, uGlass);
 
     // Rig space: x scaled by aspect so a cell and a handle stay square.
     vec2 P = vec2(vUv.x * aspect, vUv.y);
@@ -215,7 +226,7 @@ void main() {
     // algebraically the same result over a background-coloured root — check
     // it at any weight — and needs no plate, so the background colour is now
     // only ever the root's CSS background.
-    gl_FragColor = comp * pow(clamp(E.y, 0.0, 1.0), 0.7);
+    gl_FragColor = comp * mix(pow(clamp(E.y, 0.0, 1.0), 0.7), 0.96, uGlass);
 }`;
 
 function compile(gl: WebGLRenderingContext, vs: string, fs: string) {
@@ -350,6 +361,7 @@ export interface VectorWordmarkProps {
   handles?: Partial<HandleGroup>;
   interactionRef?: React.RefObject<HTMLElement | null>;
   style?: React.CSSProperties;
+  glass?: boolean;
 }
 
 function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
@@ -373,6 +385,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
     handles,
     interactionRef,
     style,
+    glass = false,
   } = props;
 
   // Spread-merge over a typed literal: a group the designer never opened
@@ -412,6 +425,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
     speed,
     damping,
     hg,
+    glass,
   });
   live.current.text = text;
   live.current.fontSpec = fontSpec;
@@ -423,6 +437,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
   live.current.speed = speed;
   live.current.damping = damping;
   live.current.hg = hg;
+  live.current.glass = glass;
 
   useEffect(() => {
     const host = hostRef.current;
@@ -463,6 +478,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
       v1: gl.getUniformLocation(prog, "uV1"),
       v2: gl.getUniformLocation(prog, "uV2"),
       half: gl.getUniformLocation(prog, "uHalf"),
+      glass: gl.getUniformLocation(prog, "uGlass"),
     };
 
     const quad = gl.createBuffer();
@@ -759,6 +775,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
       gl!.uniform2f(U.v1, verts[1].x, verts[1].y);
       gl!.uniform2f(U.v2, verts[2].x, verts[2].y);
       gl!.uniform1f(U.half, L.hg.size / 2 / boxH);
+      gl!.uniform1f(U.glass, L.glass ? 1 : 0);
       gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
     }
 
