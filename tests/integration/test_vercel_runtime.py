@@ -138,3 +138,16 @@ def test_generation_and_undispatched_job_commit_together_and_retry_publication(s
         assert svc.store.kv_get(f'dispatched:{gen}') is True
     finally:
         object.__setattr__(settings, 'job_backend', before)
+
+
+def test_serverless_http_startup_does_not_wait_for_remote_tracing(public_api, monkeypatch):
+    before = settings.serverless
+    object.__setattr__(settings, 'serverless', True)
+    def forbidden():
+        raise AssertionError('Remote tracing must not gate HTTP startup')
+    monkeypatch.setattr(public_api, 'init_tracing', forbidden)
+    try:
+        with TestClient(public_api.app) as client:
+            assert client.get('/api/v1/health').json()['status'] == 'ok'
+    finally:
+        object.__setattr__(settings, 'serverless', before)

@@ -54,8 +54,14 @@ def services() -> Any:
 async def lifespan(app: FastAPI):  # noqa: ANN201
     global SERVICES
     logging.basicConfig(level=logging.INFO)
-    init_tracing()
+    if not settings.serverless:
+        await run_in_threadpool(init_tracing)
+    # Remote diagnostic setup must not block every public HTTP cold start.
+    # Serverless investigation workers initialise tracing with a bounded wait.
+    started = time.monotonic()
+    log.info("Startup: initialising durable services")
     SERVICES = await run_in_threadpool(initialise_services)
+    log.info("Startup: durable services ready in %.2fs", time.monotonic() - started)
     if not settings.public_demo:
         await run_in_threadpool(SERVICES.scenario.ensure_run)
     await run_in_threadpool(SERVICES.coordinator.recover_interrupted)
