@@ -17,12 +17,13 @@ Original checklist:
    the App restarts.
 4. Build the frontend (`frontend/dist`); the BFF mounts it at `/`.
 
-Deploy (Databricks CLI ≥ 0.250):
+From the repository root, sync the runtime files and redeploy with the SDK. It uses
+your normal Databricks credentials or the local, ignored `.env`. If
+`frontend/dist/index.html` exists, the static build is included. Run with
+`--dry-run` to preview the file list.
 
 ```bash
-databricks sync . /Workspace/Shared/ReSource/app-src --exclude-from .gitignore
-databricks apps deploy resource --source-code-path /Workspace/Shared/ReSource/app-src
-databricks apps start resource
+uv run --project backend python deploy/databricks/redeploy.py
 ```
 
 Verify: `GET https://resource-7474650863346302.aws.databricksapps.com/api/v1/readiness` (OAuth-protected).

@@ -1,6 +1,7 @@
 # Databricks App runtime dependencies (top-level only; the platform applies its own managed constraints).
 # Local development uses backend/pyproject.toml + backend/uv.lock instead.
 fastapi
+python-multipart
 uvicorn[standard]
 pydantic>=2.6
 sqlalchemy>=2.0

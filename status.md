@@ -2,7 +2,7 @@
 
 Living handoff document. **Update it at every milestone.** Any coding agent should be able to resume from this file plus [`decisions.md`](decisions.md), [`architecture.md`](architecture.md) and [`interface.md`](interface.md).
 
-- Last updated: 2026-11-14 16:40 UTC, by Bede's Claude
+- Last updated: 2026-11-14, by Bede's Codex
 - Spec: [`PRD.md`](PRD.md) v1.2
 - Branch: `5-backend-recovery`, PR https://github.com/Borbezzz/Re-Source/pull/6 (closes #5). Base `main@ddceb8e`.
 - Frontend delegation posted to the board: https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6880396173
@@ -10,8 +10,9 @@ Living handoff document. **Update it at every milestone.** Any coding agent shou
 ## Deployment (2026-11-14)
 
 - **Databricks App `resource` is RUNNING:** https://resource-7474650863346302.aws.databricksapps.com (OAuth: open it while signed in to the workspace; `/docs` for the API). Operational store on **Lakebase `resource-ops`**; Delta `rs_*`, `ai_extract`, MLflow, Linkup, Companies House and OpenAI wired through App resources (D-017, D-018).
-- Verified: startup run + cases written to Lakebase; prewarm extracted 68 documents with `ai_extract` as the App identity. Full click-through on the deployed App still needs a signed-in browser session (or the frontend).
-- Redeploy: upload changed files to `/Workspace/Shared/ReSource/app-src`, then `POST /api/2.0/apps/resource/deployments {"source_code_path": "/Workspace/Shared/ReSource/app-src", "mode": "SNAPSHOT"}` (see `deploy/databricks/README.md`).
+- The private App is on snapshot `01f1e055423315c78a9fa2f49f0f029c` (SUCCEEDED). It includes intake and mesh validation v1.1 and stamps confirmed draft versions on decisions. The App principal has READ VOLUME and WRITE VOLUME on `workspace.resource.rs_uploads`. The deployed HTTP demo still needs a signed-in browser session.
+- Redeploy the private App with `uv run --project backend python deploy/databricks/redeploy.py` from the repo root. It includes `frontend/dist` if built locally. See [deployment instructions](deploy/databricks/README.md).
+- Public hosting moved to Vercel under Yixin's direction, with Databricks staying the data platform. Astra reported the homepage live and is handling API/queue verification after server variables are in place. [Board update](https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6881733472)
 
 ## Current gate (PRD §15)
 
@@ -24,7 +25,7 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 
 | What | How | Result |
 |---|---|---|
-| Full test suite | `cd backend && uv run pytest ../tests -q` | **131 passed** with live Databricks (offline: `RS_SKIP_DATABRICKS=1` skips the 4 live Databricks tests) |
+| Full test suite | `cd backend && RS_SKIP_DATABRICKS=1 uv run --locked pytest ../tests -q`; then `uv run --locked pytest ../tests/integration/test_databricks_layer.py -q` | **133 passed, 4 skipped** offline. All 9 Databricks integration tests passed separately, including the 4 live tests. |
 | Primary D1 (seeded, live integrations) | HTTP + SSE flow against `uvicorn` | D1: A 85.79 > B 82.07 > C 49.96; PD pending, PE ineligible. `ai_extract` on the SQL warehouse, Linkup leads, OpenAI summaries, MLflow trace linked in events |
 | Hero feature (AC-03) | `SIG-RTM-CLOSURE` | D2: B 82.07 > A 66.91 > C 49.96; A day 4→11, £48,000→£50,500; 1 check rerun, 46 reused; path NLRTM → R-RTM-HWC → Offer A → case-primary |
 | Execution gate | select → documents → approve → submit → install/restore | CAA Form 1 MO + 145.A.42 acceptance + supplier approval; one receipt per operation; visual install/restore gated on the receipt |
@@ -67,15 +68,15 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 0. **Repo description** — setting it was blocked (repo settings belong to the lead). Proposed: "Re-Source: aerospace recovery agent — finds, verifies and re-plans jet-engine part replacements (BUY/MAKE) with continuous risk monitoring, UK CAA paperwork and a 3D engine view. FastAPI + LangGraph + Databricks."
 1. **Folder ownership + model provider** — @Borbezzz to confirm on the board (AGENTS.md: the lead assigns folders; D-001 OpenAI instead of Claude).
 2. **AI Search** endpoint not provisioned (keyword retrieval in use). Lakebase is provisioned (D-017).
-3. **Intake/mesh v1.1 is implemented** (133 tests pass offline; see `interface.md` §7a) but NOT yet deployed to the App. To deploy: upload `backend/recovery/**` to `/Workspace/Shared/ReSource/app-src`, run `GRANT READ VOLUME, WRITE VOLUME ON VOLUME workspace.resource.rs_uploads TO \`f1202d5b-9f1c-4495-b4ec-17a5f7806222\``, then redeploy. Known gap: decision `requirements_version` does not yet reflect a confirmed requirement overlay (only identity checks show it).
-4. **Live App click-through** not yet verified (needs a signed-in Databricks browser session).
-4. **DISC-03:** exact current issue numbers of the CAA Form 1 PDFs and CAA Form 60 unconfirmed.
+3. **Intake scope:** confirmation changes the part identity and the decision's `requirements_version`. Other extracted engineering fields are for manual review. Blueprint mesh jobs report `provider_required` until a generation provider is connected.
+4. **Live demo:** the Databricks App requires browser sign-in. The public Vercel API and queue still need connected verification on Astra's deployment.
+5. **DISC-03:** exact current issue numbers of the CAA Form 1 PDFs and CAA Form 60 unconfirmed.
 
 ## Next steps
 
 1. Frontend (Borbezzz's agent) against `interface.md` + `contracts/generated-types/api.ts`.
-2. Deploy the BFF + `frontend/dist` to the Databricks App `resource` once approvals land; run AC-02/12 on the deployed worker.
-3. Optional: Lakebase for durable operational state; AI Search endpoint for hybrid retrieval.
+2. Run the backend demo on the signed-in private App and coordinate with Astra on the connected Vercel demo.
+3. Optional: AI Search endpoint for hybrid retrieval.
 4. Re-run the §12 QA pass after the frontend lands (AC-01/14/17) and record results in `docs/verification/`.
 
 ## How to resume

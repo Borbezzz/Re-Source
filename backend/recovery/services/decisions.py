@@ -141,6 +141,11 @@ class DecisionService:
         evidence_set_id, evidence_hash = s.run_state.evidence_set_hash(state["docs"])
         used_versions = sorted({d["version_id"] for ds in state["docs"].values() for d in ds})
         trigger = state.get("trigger")
+        requirements_version = s.catalog.requirements_version
+        # Use the checkpointed requirements that this decision evaluated.
+        overlay = next((req["overlay"] for req in state.get("requirements", []) if req.get("overlay")), None)
+        if overlay:
+            requirements_version += f"+{overlay['draft_id']}.v{overlay['draft_version']}"
         decision = {
             "decision_id": decision_id,
             "label": "pending",
@@ -153,7 +158,7 @@ class DecisionService:
             "checks": sorted(state["checks"].values(), key=lambda c: (c["candidate_id"], c["requirement_id"])),
             "evidence_set_id": evidence_set_id,
             "evidence_hash": evidence_hash,
-            "requirements_version": s.catalog.requirements_version,
+            "requirements_version": requirements_version,
             "ranking_config_version": s.catalog.ranking["ranking_config_version"],
             "relationship_versions": {"catalog": 1, "run_extra": len(s.store.kv_get(f"rels:{run_id}") or [])},
             "signal_versions": {sig["source_event_id"]: sig["version"] for sig in state["signals"]},

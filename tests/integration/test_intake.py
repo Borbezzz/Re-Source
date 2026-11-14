@@ -152,6 +152,7 @@ def test_blueprint_mesh_job_never_fakes_generation(svc, run, monkeypatch):
 def test_part_requirements_review_confirm_reassesses_case_through_gateway(svc, run):
     d1 = investigate(svc, "case-primary")
     assert ranked(d1) == ["OFF-PA", "OFF-PB", "OFF-PC"]
+    assert d1["requirements_version"] == svc.catalog.requirements_version
     up = svc.intake.upload(REQ_TEXT.encode(), "fuel-nozzle-requirements.txt", "part_requirements", component_id="component-primary")
     draft = svc.intake.start_part_requirements(up["upload_id"], "component-primary")
     assert draft["status"] == "extracting"
@@ -176,6 +177,8 @@ def test_part_requirements_review_confirm_reassesses_case_through_gateway(svc, r
     assert svc.coordinator.wait_idle(60)
     case, d2 = current(svc, "case-primary")
     assert d2["label"] == "D2" and ranked(d2) == []  # every offer is RS-FN-1001: none meets the confirmed RS-FN-1002 requirement
+    assert d2["requirements_version"] == f"{d1['requirements_version']}+{draft['draft_id']}.v{draft['version']}"
+    assert svc.decisions.get(d1["decision_id"])["requirements_version"] == svc.catalog.requirements_version
     id_checks = [c for c in d2["checks"] if c["requirement_id"] == "REQ-FN-ID-01"]
     assert id_checks and all(c["result"] == "fail" and "RS-FN-1002" in c["explanation"] for c in id_checks)
     assert all(draft["draft_id"] in c["requirement_version"] for c in id_checks)
