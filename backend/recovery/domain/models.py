@@ -15,7 +15,7 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-SCHEMA_VERSION = "1.1"
+SCHEMA_VERSION = "1.2"
 
 
 def utcnow() -> datetime:
@@ -682,6 +682,7 @@ EVENT_TYPES = [
     "case.started",
     "task.started", "task.completed", "task.failed",
     "tool.started", "tool.completed", "tool.failed",
+    "supplier.discovered",
     "evidence.ingested", "evidence.extracted", "evidence.validated",
     "gap.opened", "gap.resolved",
     "check.completed",
@@ -702,6 +703,29 @@ EVENT_TYPES = [
 ]
 
 
+class DiscoveryLocation(Contract):
+    site_id: str
+    country: Optional[str] = None
+    geo_id: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    precision: Optional[str] = None
+    confidence: Optional[str] = None
+    location_type: Optional[str] = None
+    source: Optional[str] = None
+    data_origin: DataOrigin
+
+
+class SupplierDiscovery(Contract):
+    component_id: str
+    candidate_id: str
+    supplier_id: str
+    route: Route
+    location: DiscoveryLocation
+    replay: Optional[bool] = None
+    replay_of_event: Optional[str] = None
+
+
 class DomainEvent(Contract):
     schema_version: str = SCHEMA_VERSION
     event_id: str
@@ -718,6 +742,11 @@ class DomainEvent(Contract):
     evidence_refs: list[str] = []
     trace_id: Optional[str] = None
     data_origin: DataOrigin = DataOrigin.synthetic_demo
+
+
+class SupplierDiscoveryEvent(DomainEvent):
+    type: Literal["supplier.discovered"] = "supplier.discovered"
+    data: SupplierDiscovery
 
 
 # ----------------------------------------------------------------------------------------------

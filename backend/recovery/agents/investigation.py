@@ -190,6 +190,23 @@ class InvestigationNodes:
             r["evidence_ids"] = sorted(uniq)
             r["mode"] = self.s.evidence_source
             r["count"] = len(uniq)
+        # These are catalogue discoveries, not verified factory locations or eligibility claims.
+        # Only fixture coordinates have an explicit source here; other coordinates stay unknown.
+        for cid, offer in sorted(state["offers"].items()):
+            site = self.cat.sites[offer["site_id"]]
+            geo = site.get("geography") or {}
+            origin = site.get("data_origin") or "computed"
+            fixture = origin == "synthetic_demo"
+            location = {"site_id": site["site_id"], "country": geo.get("country"), "geo_id": geo.get("geo_id"),
+                        "latitude": geo.get("lat") if fixture else None, "longitude": geo.get("lon") if fixture else None,
+                        "precision": "representative" if fixture else None, "confidence": None, "location_type": None,
+                        "source": f"fixture:{self.cat.fixture_version}/sites.json#{site['site_id']}" if fixture else None,
+                        "data_origin": origin}
+            finding = {"component_id": self.cat.case_to_component[state["case_id"]], "candidate_id": cid,
+                       "supplier_id": offer["supplier_id"], "route": offer["route"], "location": location}
+            self.s.bus.publish(state["run_id"], state["case_id"], "supplier.discovered", "Candidate supplier found in catalogue",
+                               finding, task_id=task_id, invocation_id=state["generation_id"],
+                               evidence_refs=sorted(d["version_id"] for d in docs[cid]), data_origin=origin)
         for d in uniq.values():
             self.emit(state, "evidence.ingested", f"Evidence {d['title']}", {"version_id": d["version_id"], "hash": d["hash"], "doc_type": d["doc_type"],
                                                                           "data_origin": d["data_origin"]}, task_id=task_id, evidence_refs=[d["version_id"]])

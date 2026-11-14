@@ -1385,6 +1385,28 @@ export interface components {
             /** Trigger Id */
             trigger_id?: string | null;
         };
+        /** DiscoveryLocation */
+        DiscoveryLocation: {
+            /** Confidence */
+            confidence?: string | null;
+            /** Country */
+            country?: string | null;
+            data_origin: components["schemas"]["DataOrigin"];
+            /** Geo Id */
+            geo_id?: string | null;
+            /** Latitude */
+            latitude?: number | null;
+            /** Location Type */
+            location_type?: string | null;
+            /** Longitude */
+            longitude?: number | null;
+            /** Precision */
+            precision?: string | null;
+            /** Site Id */
+            site_id: string;
+            /** Source */
+            source?: string | null;
+        };
         /** DocumentDraft */
         DocumentDraft: {
             /** Applicability */
@@ -1528,6 +1550,53 @@ export interface components {
             receipts: components["schemas"]["SimulatedReceipt"][];
             /** Templates */
             templates: components["schemas"]["FormTemplate"][];
+        };
+        /** DomainEvent */
+        DomainEvent: {
+            /** Case Id */
+            case_id: string;
+            /** Case Revision */
+            case_revision: number;
+            /**
+             * Data
+             * @default {}
+             */
+            data: {
+                [key: string]: unknown;
+            };
+            /** @default synthetic_demo */
+            data_origin: components["schemas"]["DataOrigin"];
+            /** Event Id */
+            event_id: string;
+            /**
+             * Evidence Refs
+             * @default []
+             */
+            evidence_refs: string[];
+            /** Invocation Id */
+            invocation_id?: string | null;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Scenario Run Id */
+            scenario_run_id: string;
+            /**
+             * Schema Version
+             * @default 1.2
+             */
+            schema_version: string;
+            /** Sequence */
+            sequence: number;
+            /** Summary */
+            summary: string;
+            /** Task Id */
+            task_id?: string | null;
+            /** Trace Id */
+            trace_id?: string | null;
+            /** Type */
+            type: string;
         };
         /** DraftField */
         DraftField: {
@@ -2848,6 +2917,66 @@ export interface components {
             /** Supplier Id */
             supplier_id: string;
         };
+        /** SupplierDiscovery */
+        SupplierDiscovery: {
+            /** Candidate Id */
+            candidate_id: string;
+            /** Component Id */
+            component_id: string;
+            location: components["schemas"]["DiscoveryLocation"];
+            /** Replay */
+            replay?: boolean | null;
+            /** Replay Of Event */
+            replay_of_event?: string | null;
+            route: components["schemas"]["Route"];
+            /** Supplier Id */
+            supplier_id: string;
+        };
+        /** SupplierDiscoveryEvent */
+        SupplierDiscoveryEvent: {
+            /** Case Id */
+            case_id: string;
+            /** Case Revision */
+            case_revision: number;
+            data: components["schemas"]["SupplierDiscovery"];
+            /** @default synthetic_demo */
+            data_origin: components["schemas"]["DataOrigin"];
+            /** Event Id */
+            event_id: string;
+            /**
+             * Evidence Refs
+             * @default []
+             */
+            evidence_refs: string[];
+            /** Invocation Id */
+            invocation_id?: string | null;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Scenario Run Id */
+            scenario_run_id: string;
+            /**
+             * Schema Version
+             * @default 1.2
+             */
+            schema_version: string;
+            /** Sequence */
+            sequence: number;
+            /** Summary */
+            summary: string;
+            /** Task Id */
+            task_id?: string | null;
+            /** Trace Id */
+            trace_id?: string | null;
+            /**
+             * Type
+             * @default supplier.discovered
+             * @constant
+             */
+            type: "supplier.discovered";
+        };
         /** TaskStatus */
         TaskStatus: {
             /** Finished At */
@@ -3278,9 +3407,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    }[];
+                    "application/json": (components["schemas"]["DomainEvent"] | components["schemas"]["SupplierDiscoveryEvent"])[];
                 };
             };
             /** @description Validation Error */
@@ -4754,7 +4881,7 @@ export interface operations {
 }
 
 // ---- appended by backend/scripts/export_contracts.py ----
-export const SCHEMA_VERSION = "1.1";
+export const SCHEMA_VERSION = "1.2";
 export const EVENT_TYPES = [
   "case.started",
   "task.started",
@@ -4763,6 +4890,7 @@ export const EVENT_TYPES = [
   "tool.started",
   "tool.completed",
   "tool.failed",
+  "supplier.discovered",
   "evidence.ingested",
   "evidence.extracted",
   "evidence.validated",
