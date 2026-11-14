@@ -47,6 +47,140 @@
         "title": "ApiError",
         "type": "object"
       },
+      "BatchComponent": {
+        "additionalProperties": false,
+        "properties": {
+          "case_id": {
+            "title": "Case Id",
+            "type": "string"
+          },
+          "component_id": {
+            "title": "Component Id",
+            "type": "string"
+          },
+          "events_url": {
+            "title": "Events Url",
+            "type": "string"
+          },
+          "generation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generation Id"
+          },
+          "generation_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generation Status"
+          },
+          "status": {
+            "enum": [
+              "accepted",
+              "already_running",
+              "duplicate"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "tasks": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/TaskStatus"
+            },
+            "title": "Tasks",
+            "type": "array"
+          }
+        },
+        "required": [
+          "component_id",
+          "case_id",
+          "generation_id",
+          "status",
+          "events_url"
+        ],
+        "title": "BatchComponent",
+        "type": "object"
+      },
+      "BatchInvestigation": {
+        "additionalProperties": false,
+        "properties": {
+          "assembly_id": {
+            "title": "Assembly Id",
+            "type": "string"
+          },
+          "batch_id": {
+            "title": "Batch Id",
+            "type": "string"
+          },
+          "components": {
+            "items": {
+              "$ref": "#/components/schemas/BatchComponent"
+            },
+            "title": "Components",
+            "type": "array"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/Mode"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "batch_id",
+          "run_id",
+          "assembly_id",
+          "mode",
+          "created_at",
+          "components"
+        ],
+        "title": "BatchInvestigation",
+        "type": "object"
+      },
+      "BatchInvestigationRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "assembly_id": {
+            "title": "Assembly Id",
+            "type": "string"
+          },
+          "component_ids": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Component Ids",
+            "type": "array"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/Mode",
+            "default": "seeded"
+          }
+        },
+        "required": [
+          "assembly_id",
+          "component_ids"
+        ],
+        "title": "BatchInvestigationRequest",
+        "type": "object"
+      },
       "Body_intake_upload_api_v1_intake_uploads_post": {
         "properties": {
           "component_id": {
@@ -5529,10 +5663,118 @@
   "info": {
     "description": "Backend-for-frontend for the Re-Source aerospace recovery demonstration. Synthetic demo data is labelled data_origin=synthetic_demo.",
     "title": "Re-Source Aerospace Recovery API",
-    "version": "1.0"
+    "version": "1.1"
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/batches": {
+      "post": {
+        "operationId": "create_batch_api_v1_batches_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "idempotency-key",
+            "required": true,
+            "schema": {
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchInvestigationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchInvestigation"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "Create Batch"
+      }
+    },
+    "/api/v1/batches/{batch_id}": {
+      "get": {
+        "operationId": "get_batch_api_v1_batches__batch_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "batch_id",
+            "required": true,
+            "schema": {
+              "title": "Batch Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchInvestigation"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Batch"
+      }
+    },
     "/api/v1/cases/{case_id}": {
       "get": {
         "operationId": "get_case_api_v1_cases__case_id__get",

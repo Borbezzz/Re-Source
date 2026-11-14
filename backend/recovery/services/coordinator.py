@@ -47,7 +47,7 @@ class Coordinator:
                 return {"status": "already_running", "generation_id": case["active_generation_id"], "case_revision": case["revision"]}
             if case["current_decision_id"] and case["state"] not in ("failed", "interrupted"):
                 return {"status": "duplicate", "generation_id": None, "case_revision": case["revision"]}
-            gen_id = self._new_generation(c, run_id, case_id, "investigation", case["input_revision"], None)
+            gen_id = self._new_generation(c, run_id, case_id, "investigation", case["input_revision"], None, mode=mode)
             new_rev = case["revision"] + 1
             s.store.update_case(c, run_id, case_id, state="investigating", active_generation_id=gen_id, revision=new_rev, mode=mode)
             s.bus.publish(run_id, case_id, "case.state_changed", "Investigation started", {"state": "investigating", "generation_id": gen_id}, case_revision=new_rev)
@@ -83,7 +83,7 @@ class Coordinator:
                 s.store.update_case(c, run_id, case_id, pending_target_revision=None)
                 return None
             gen_id = self._new_generation(c, run_id, case_id, "reassessment", case["input_revision"],
-                                          pending["triggers"][-1].get("trigger_id"))
+                                          pending["triggers"][-1].get("trigger_id"), mode=case["mode"])
             s.store.update_case(c, run_id, case_id, active_generation_id=gen_id, pending_target_revision=None)
             s.store.kv_set(key, {"affected": [], "triggers": []})
             s.store.kv_set(f"gen_inputs:{gen_id}", pending)
@@ -94,15 +94,14 @@ class Coordinator:
         self._launch(run_id, case_id, gen_id, kind="reassessment", mode=case["mode"], trigger=trig, affected=pending["affected"])
         return gen_id
 
-    def _new_generation(self, c: Any, run_id: str, case_id: str, kind: str, target_rev: int, trigger_id: Optional[str]) -> str:
+    def _new_generation(self, c: Any, run_id: str, case_id: str, kind: str, target_rev: int, trigger_id: Optional[str], *, mode: str) -> str:
         gen_id = f"gen-{uuid.uuid4().hex[:12]}"
         self.s.store.put(st.generations, gen_id, run_id, {"generation_id": gen_id, "case_id": case_id, "kind": kind, "target_input_revision": target_rev,
                                                           "trigger_id": trigger_id, "status": "running", "started_at": _now()},
                          case_id=case_id, status="running", target_input_revision=target_rev, kind=kind)
         if settings.job_backend == "vercel":
-            case = self.s.store.get_case(run_id, case_id)
             self.s.jobs.prepare("generation", run_id, dict(case_id=case_id, gen_id=gen_id, kind=kind,
-                                mode=case["mode"], trigger=None, affected=None), gen_id)
+                                mode=mode, trigger=None, affected=None), gen_id)
         return gen_id
 
     # ------------------------------------------------------------------ execution

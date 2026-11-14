@@ -1,0 +1,188 @@
+{
+  "$defs": {
+    "BatchComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "events_url": {
+          "title": "Events Url",
+          "type": "string"
+        },
+        "generation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Generation Id"
+        },
+        "generation_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Generation Status"
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "already_running",
+            "duplicate"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "tasks": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/TaskStatus"
+          },
+          "title": "Tasks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "component_id",
+        "case_id",
+        "generation_id",
+        "status",
+        "events_url"
+      ],
+      "title": "BatchComponent",
+      "type": "object"
+    },
+    "Mode": {
+      "enum": [
+        "live",
+        "seeded",
+        "replay"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "TaskStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "finished_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Finished At"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Started At"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "reused"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "name",
+        "status"
+      ],
+      "title": "TaskStatus",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assembly_id": {
+      "title": "Assembly Id",
+      "type": "string"
+    },
+    "batch_id": {
+      "title": "Batch Id",
+      "type": "string"
+    },
+    "components": {
+      "items": {
+        "$ref": "#/$defs/BatchComponent"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "batch_id",
+    "run_id",
+    "assembly_id",
+    "mode",
+    "created_at",
+    "components"
+  ],
+  "title": "BatchInvestigation",
+  "type": "object"
+}

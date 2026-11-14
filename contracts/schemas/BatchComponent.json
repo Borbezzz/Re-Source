@@ -1,0 +1,137 @@
+{
+  "$defs": {
+    "TaskStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "finished_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Finished At"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Started At"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "reused"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "name",
+        "status"
+      ],
+      "title": "TaskStatus",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "component_id": {
+      "title": "Component Id",
+      "type": "string"
+    },
+    "events_url": {
+      "title": "Events Url",
+      "type": "string"
+    },
+    "generation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Generation Id"
+    },
+    "generation_status": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Generation Status"
+    },
+    "status": {
+      "enum": [
+        "accepted",
+        "already_running",
+        "duplicate"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "tasks": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/TaskStatus"
+      },
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "component_id",
+    "case_id",
+    "generation_id",
+    "status",
+    "events_url"
+  ],
+  "title": "BatchComponent",
+  "type": "object"
+}

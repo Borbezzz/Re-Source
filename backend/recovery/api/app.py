@@ -196,6 +196,28 @@ async def start_investigation(case_id: str, body: M.StartInvestigationRequest, i
     return await idempotent(f"investigate:{rid}:{case_id}", _key(idempotency_key, body.model_dump()), body.model_dump(mode="json"), run, 202)
 
 
+@app.post("/api/v1/batches", status_code=202, response_model=None,
+          responses={202: {"model": M.BatchInvestigation}, 409: {"model": M.ApiError}, 422: {"model": M.ApiError}})
+async def create_batch(body: M.BatchInvestigationRequest, idempotency_key: str = Header(...)) -> JSONResponse:
+    from ..services.batches import BatchService
+
+    s = services()
+    if settings.job_backend == "vercel":
+        await run_in_threadpool(s.jobs.recover_dispatches)
+    run_id = await run_in_threadpool(s.views.run_id, None)
+    batch, replay = await run_in_threadpool(BatchService(s).create, run_id, body.model_dump(mode="json"), idempotency_key)
+    headers = {"Idempotent-Replay": "true"} if replay else {}
+    return JSONResponse(status_code=202, content=batch, headers=headers)
+
+
+@app.get("/api/v1/batches/{batch_id}", response_model=None,
+         responses={200: {"model": M.BatchInvestigation}, 404: {"model": M.ApiError}})
+async def get_batch(batch_id: str) -> dict:
+    from ..services.batches import BatchService
+
+    return await run_in_threadpool(BatchService(services()).get, batch_id)
+
+
 @app.get("/api/v1/cases/{case_id}/decisions")
 async def list_decisions(case_id: str, run_id: Optional[str] = None) -> list[dict]:
     s = services()

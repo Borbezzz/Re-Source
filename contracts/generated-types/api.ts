@@ -4,6 +4,40 @@
  */
 
 export interface paths {
+    "/api/v1/batches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Batch */
+        post: operations["create_batch_api_v1_batches_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/batches/{batch_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Batch */
+        get: operations["get_batch_api_v1_batches__batch_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/cases/{case_id}": {
         parameters: {
             query?: never;
@@ -720,6 +754,55 @@ export interface components {
              * @default false
              */
             retryable: boolean;
+        };
+        /** BatchComponent */
+        BatchComponent: {
+            /** Case Id */
+            case_id: string;
+            /** Component Id */
+            component_id: string;
+            /** Events Url */
+            events_url: string;
+            /** Generation Id */
+            generation_id: string | null;
+            /** Generation Status */
+            generation_status?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "accepted" | "already_running" | "duplicate";
+            /**
+             * Tasks
+             * @default []
+             */
+            tasks: components["schemas"]["TaskStatus"][];
+        };
+        /** BatchInvestigation */
+        BatchInvestigation: {
+            /** Assembly Id */
+            assembly_id: string;
+            /** Batch Id */
+            batch_id: string;
+            /** Components */
+            components: components["schemas"]["BatchComponent"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            mode: components["schemas"]["Mode"];
+            /** Run Id */
+            run_id: string;
+        };
+        /** BatchInvestigationRequest */
+        BatchInvestigationRequest: {
+            /** Assembly Id */
+            assembly_id: string;
+            /** Component Ids */
+            component_ids: string[];
+            /** @default seeded */
+            mode: components["schemas"]["Mode"];
         };
         /** Body_intake_upload_api_v1_intake_uploads_post */
         Body_intake_upload_api_v1_intake_uploads_post: {
@@ -2848,6 +2931,90 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    create_batch_api_v1_batches_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "idempotency-key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BatchInvestigationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchInvestigation"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    get_batch_api_v1_batches__batch_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                batch_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchInvestigation"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_case_api_v1_cases__case_id__get: {
         parameters: {
             query?: {
@@ -4587,7 +4754,7 @@ export interface operations {
 }
 
 // ---- appended by backend/scripts/export_contracts.py ----
-export const SCHEMA_VERSION = "1.0";
+export const SCHEMA_VERSION = "1.1";
 export const EVENT_TYPES = [
   "case.started",
   "task.started",

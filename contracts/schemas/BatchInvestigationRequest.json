@@ -1,0 +1,38 @@
+{
+  "$defs": {
+    "Mode": {
+      "enum": [
+        "live",
+        "seeded",
+        "replay"
+      ],
+      "title": "Mode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assembly_id": {
+      "title": "Assembly Id",
+      "type": "string"
+    },
+    "component_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Component Ids",
+      "type": "array"
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode",
+      "default": "seeded"
+    }
+  },
+  "required": [
+    "assembly_id",
+    "component_ids"
+  ],
+  "title": "BatchInvestigationRequest",
+  "type": "object"
+}
