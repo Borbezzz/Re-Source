@@ -2402,7 +2402,7 @@
           "type": "string"
         },
         "schema_version": {
-          "default": "1.4",
+          "default": "1.5",
           "title": "Schema Version",
           "type": "string"
         },
@@ -6397,7 +6397,7 @@
           "type": "string"
         },
         "schema_version": {
-          "default": "1.4",
+          "default": "1.5",
           "title": "Schema Version",
           "type": "string"
         },
@@ -6456,6 +6456,14 @@
     "TaskStatus": {
       "additionalProperties": false,
       "properties": {
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
         "finished_at": {
           "anyOf": [
             {
@@ -6468,6 +6476,17 @@
           ],
           "default": null,
           "title": "Finished At"
+        },
+        "latest_tool": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TaskToolActivity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "name": {
           "title": "Name",
@@ -6520,6 +6539,53 @@
         "status"
       ],
       "title": "TaskStatus",
+      "type": "object"
+    },
+    "TaskToolActivity": {
+      "additionalProperties": false,
+      "properties": {
+        "call_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Call Id"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "started",
+            "completed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "status",
+        "occurred_at",
+        "summary"
+      ],
+      "title": "TaskToolActivity",
       "type": "object"
     },
     "TemplateChangeRequest": {
@@ -6653,7 +6719,7 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
-  "description": "Generated from backend/recovery/domain/models.py \u2014 schema_version 1.4. Do not edit by hand.",
+  "description": "Generated from backend/recovery/domain/models.py \u2014 schema_version 1.5. Do not edit by hand.",
   "properties": {
     "AgentTaskOutput": {
       "$ref": "#/$defs/AgentTaskOutput"
@@ -6895,6 +6961,9 @@
     "TaskStatus": {
       "$ref": "#/$defs/TaskStatus"
     },
+    "TaskToolActivity": {
+      "$ref": "#/$defs/TaskToolActivity"
+    },
     "TemplateChangeRequest": {
       "$ref": "#/$defs/TemplateChangeRequest"
     },
@@ -7011,5 +7080,5 @@
     "intake.confirmed",
     "manifest.updated"
   ],
-  "x-schema-version": "1.4"
+  "x-schema-version": "1.5"
 }

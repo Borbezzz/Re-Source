@@ -15,7 +15,7 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-SCHEMA_VERSION = "1.4"
+SCHEMA_VERSION = "1.5"
 
 
 def utcnow() -> datetime:
@@ -803,6 +803,14 @@ class EngineView(Contract):
     visual_states: list[VisualState] = []
 
 
+class TaskToolActivity(Contract):
+    name: str
+    status: Literal["started", "completed", "failed"]
+    call_id: Optional[str] = None
+    occurred_at: datetime
+    summary: str
+
+
 class TaskStatus(Contract):
     task_id: str
     name: str
@@ -810,6 +818,8 @@ class TaskStatus(Contract):
     started_at: Optional[datetime] = None
     finished_at: Optional[datetime] = None
     summary: Optional[str] = None
+    latest_tool: Optional[TaskToolActivity] = None
+    evidence_refs: list[str] = []
 
 
 class StaleReason(Contract):

@@ -371,6 +371,14 @@
     "TaskStatus": {
       "additionalProperties": false,
       "properties": {
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
         "finished_at": {
           "anyOf": [
             {
@@ -383,6 +391,17 @@
           ],
           "default": null,
           "title": "Finished At"
+        },
+        "latest_tool": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TaskToolActivity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "name": {
           "title": "Name",
@@ -435,6 +454,53 @@
         "status"
       ],
       "title": "TaskStatus",
+      "type": "object"
+    },
+    "TaskToolActivity": {
+      "additionalProperties": false,
+      "properties": {
+        "call_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Call Id"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "started",
+            "completed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "status",
+        "occurred_at",
+        "summary"
+      ],
+      "title": "TaskToolActivity",
       "type": "object"
     },
     "VisualState": {
