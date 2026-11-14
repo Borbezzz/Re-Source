@@ -301,33 +301,6 @@ svg {
   margin-left: auto;
   gap: 20px;
 }
-.header-end .icon-button {
-  color: #dbe9df;
-}
-.header-end .icon-button:hover {
-  background: #286153;
-}
-.mode-label {
-  font-size: 11px;
-  color: #c7ddcf;
-}
-.run-settings {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-items: center;
-  background: white;
-  padding: 24px 32px;
-  border-bottom: 1px solid var(--border);
-}
-.run-settings h2 {
-  font-size: 18px;
-}
-.run-settings label {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
 select {
   border: 1px solid var(--border);
   background: white;
@@ -1461,9 +1434,6 @@ input[type="range"] {
   .global-header nav button {
     font-size: 11px;
   }
-  .header-end .mode-label {
-    display: none;
-  }
   .header-end {
     gap: 0;
   }
@@ -1593,9 +1563,6 @@ input[type="range"] {
   .draft {
     padding: 22px;
   }
-  .run-settings {
-    padding: 20px;
-  }
   .geometry-note {
     font-size: 9px;
   }
@@ -1615,10 +1582,6 @@ input[type="range"] {
   }
   .header-end {
     margin-left: auto;
-  }
-  .header-end .icon-button {
-    padding: 8px;
-    min-width: 32px;
   }
   .wordmark {
     font-size: 21px;

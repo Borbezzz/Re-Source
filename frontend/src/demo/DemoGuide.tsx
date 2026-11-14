@@ -178,7 +178,7 @@ export function DemoGuide({
       <div className="demo-guide-heading">
         <div>
           <strong>Prepared engine demo</strong>
-          <span>Isolated run · synthetic data · real workflow</span>
+          <span>Sample data · simulated orders</span>
         </div>
         <div className="inline">
           <button
@@ -314,8 +314,8 @@ export function DemoGuide({
             <summary>What this demo processes</summary>
             <p>
               Offers, supplier evidence, prices and reliability metrics are
-              synthetic. Configured OpenAI, Databricks and Linkup integrations
-              may still make actual processing calls in seeded mode. Extraction
+              examples. Configured OpenAI, Databricks and Linkup integrations
+              may still make actual processing calls with demo data. Extraction
               reports its source; validation and ranking use deterministic
               rules.
             </p>

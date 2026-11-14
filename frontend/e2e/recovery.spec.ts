@@ -22,7 +22,7 @@ test("source entry, real mesh selection, events, comparison and versioned approv
     path: ".impeccable/review/intake-desktop.png",
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Open seeded workspace" }).click();
+  await page.getByRole("button", { name: "Open demo workspace" }).click();
   await expect(page.locator(".scene-root")).toHaveAttribute(
     "data-ready",
     "true",
@@ -145,7 +145,7 @@ test("narrow viewport and reduced motion retain keyboard/direct controls", async
     path: ".impeccable/review/intake-mobile.png",
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Open seeded workspace" }).click();
+  await page.getByRole("button", { name: "Open demo workspace" }).click();
   await expect(page.getByLabel("Reduced motion enabled")).toBeDisabled();
   await page.getByRole("button", { name: "Explode", exact: true }).focus();
   await page.keyboard.press("Enter");
@@ -180,7 +180,7 @@ test("scroll reverses explosion and disruption publishes a new decision with rep
   await page
     .getByRole("button", { name: "Sources & requirements", exact: true })
     .click();
-  await page.getByRole("button", { name: "Open seeded workspace" }).click();
+  await page.getByRole("button", { name: "Open demo workspace" }).click();
   await expect(page.locator(".scene-root")).toHaveAttribute(
     "data-ready",
     "true",

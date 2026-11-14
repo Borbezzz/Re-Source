@@ -634,12 +634,12 @@ export function Intake({
           <div>
             <strong>Explore the recovery workflow</strong>
             <p className="small muted">
-              A representative engine, three selectable components and synthetic
-              supplier evidence.
+              A representative engine, three selectable components and example
+              supplier information.
             </p>
           </div>
           <button className="text-button" onClick={onExplore}>
-            Open seeded workspace <ArrowRight size={16} />
+            Open demo workspace <ArrowRight size={16} />
           </button>
         </div>
       </section>
