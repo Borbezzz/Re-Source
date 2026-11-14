@@ -39,6 +39,25 @@ def test_anonymous_visitors_have_separate_runs_uploads_and_replay_authority(publ
         assert a.post('/api/v1/scenario-runs', json={'mode':'seeded'}, headers={'Origin':'https://untrusted.example'}).status_code == 403
 
 
+def test_activated_manifest_and_reset_are_private_to_each_run(public_api):
+    from test_intake import GOOD, make_glb
+    with TestClient(public_api.app) as a, TestClient(public_api.app) as b:
+        a.get('/api/v1/engines/engine-demo-001')
+        b.get('/api/v1/engines/engine-demo-001')
+        upload = a.post('/api/v1/intake/uploads', data={'kind':'mesh_glb'},
+                        files={'file':('synthetic.glb',make_glb(GOOD),'model/gltf-binary')}).json()
+        job = a.post('/api/v1/intake/mesh-jobs', json={'upload_id':upload['upload_id'], 'engine_id':'engine-demo-001'}).json()
+        activated = a.post(f"/api/v1/intake/mesh-jobs/{job['job_id']}/activate").json()
+        assert activated['kind'] == 'generated'
+        assert a.get('/api/v1/engines/engine-demo-001').json()['engine']['asset']['kind'] == 'generated'
+        assert b.get('/api/v1/intake/manifest').json()['kind'] == 'procedural'
+        assert b.get('/api/v1/engines/engine-demo-001').json()['engine']['asset']['kind'] == 'procedural'
+        assert b.post('/api/v1/intake/manifest/reset').json()['kind'] == 'procedural'
+        assert a.get('/api/v1/intake/manifest').json()['manifest_version'] == activated['manifest_version']
+        a.post('/api/v1/scenario-runs', json={'mode':'seeded'})
+        assert a.get('/api/v1/intake/manifest').json()['kind'] == 'procedural'
+
+
 def test_queue_duplicate_is_noop_and_retry_preserves_job_and_owner(svc, monkeypatch):
     module = importlib.import_module('recovery.runtime.jobs')
     deliveries = []

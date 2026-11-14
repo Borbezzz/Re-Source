@@ -106,7 +106,7 @@ class IntakeService:
 
     def _scope_key(self, key: str) -> str:
         # Uploads, extraction drafts and active manifests belong to this run.
-        return f"run:{self._run_id()}:{key}" if settings.public_demo and key.startswith("intake:") else key
+        return f"run:{self._run_id()}:{key}" if settings.public_demo else key
 
     def _kv(self, key: str) -> Optional[dict]:
         return self.s.store.kv_get(self._scope_key(key))
