@@ -199,6 +199,8 @@ class IntakeService:
             raise invalid(f"upload {upload_id} is a {rec['kind']}, not a part-requirements document or blueprint")
         if component_id not in self.s.catalog.components:
             raise invalid(f"unknown component_id {component_id}")
+        if rec.get("component_id") and rec["component_id"] != component_id:
+            raise invalid("upload is associated with a different component")
         draft_id = f"preq-{uuid.uuid4().hex[:12]}"
         now = _now()
         draft = {"draft_id": draft_id, "upload_id": upload_id, "component_id": component_id, "scenario_run_id": self._run_id(), "version": 1,
@@ -308,6 +310,43 @@ class IntakeService:
         return out
 
     @staticmethod
+    def _component_section(text: str, elements: list[dict], component_id: str) -> tuple[str, list[dict], Optional[str]]:
+        """Select explicit COMPONENT_ID sections; never mix repeated part identities."""
+        markers = []
+        part_numbers = set()
+        for index, element in enumerate(elements):
+            line = element.get("text", "")
+            if ":" not in line:
+                continue
+            key, value = line.split(":", 1)
+            key, value = field_key(key), value.strip()
+            if key == "component_id":
+                markers.append((index, value))
+            elif key in {"part_number", "part_no", "pn", "part"} and value:
+                part_numbers.add(value.upper())
+        if markers:
+            matching = [i for i, (_, value) in enumerate(markers) if value == component_id]
+            if len(matching) != 1:
+                return "", [], "No unique COMPONENT_ID section matches this component; fields require manual review"
+            section_index = matching[0]
+            start = markers[section_index][0] + 1
+            end = markers[section_index + 1][0] if section_index + 1 < len(markers) else len(elements)
+            scoped = elements[start:end]
+            section_parts = set()
+            for element in scoped:
+                line = element.get("text", "")
+                if ":" in line:
+                    key, value = line.split(":", 1)
+                    if field_key(key) in {"part_number", "part_no", "pn", "part"} and value.strip():
+                        section_parts.add(value.strip().upper())
+            if len(section_parts) > 1:
+                return "", [], "Multiple part numbers occur in this component section; fields require manual review"
+            return "\n".join(e["text"] for e in scoped), scoped, None
+        if len(part_numbers) > 1:
+            return "", [], "Multiple part numbers lack COMPONENT_ID sections; fields require manual review"
+        return text, elements, None
+
+    @staticmethod
     def _locate(value: Any, elements: list[dict], line: Optional[int] = None) -> Optional[dict]:
         el = None
         if line is not None:
@@ -324,6 +363,9 @@ class IntakeService:
         draft = self._kv(f"intake:draft:{draft_id}")
         rec = self.get_upload(draft["upload_id"])
         text, elements, text_mode, note = self._document_text(rec)
+        text, elements, scope_note = self._component_section(text, elements, draft["component_id"])
+        if scope_note:
+            note = f"{note}; {scope_note}" if note else scope_note
         generated: Optional[dict] = None
         gen_mode = None
         backend = settings.extraction_backend
@@ -337,6 +379,8 @@ class IntakeService:
             generated = model_client.extract("part_requirements", text[:20000], {n: lbl for n, lbl, *_ in REQUIREMENT_FIELDS})
             gen_mode = "openai_structured_output" if generated else None
         structured = self._structured(text) if text else {}
+        # Structured-parser line numbers refer to the scoped text; preserve original source locators.
+        structured = {name: (value, elements[line - 1]["line"]) for name, (value, line) in structured.items()}
         fields = []
         for name, label, type_code, required, _ in REQUIREMENT_FIELDS:
             det = structured.get(name)
