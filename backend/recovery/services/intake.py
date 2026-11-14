@@ -16,6 +16,7 @@ from contextvars import copy_context
 import json
 import logging
 import os
+import re
 import threading
 import time
 import uuid
@@ -50,11 +51,24 @@ REQUIREMENT_FIELDS: list[tuple[str, str, str, bool, tuple[str, ...]]] = [
     ("material", "Material", "str", False, ("materials", "alloy")),
     ("mating_interfaces", "Mating interfaces", "str", False, ("interfaces", "interface")),
     ("key_dimensions", "Key dimensions", "str", False, ("dimensions", "critical_dimensions")),
+    ("tolerances", "Tolerances", "str", False, ("tolerance", "dimensional_tolerances")),
+    ("certifications", "Certifications", "list", False, ("certificates", "required_certifications")),
+    ("drawing_units", "Drawing units", "str", False, ("units", "measurement_units")),
     ("applicable_standards", "Applicable standards", "list", False, ("standards", "specifications")),
     ("inspection_requirements", "Inspection requirements", "str", False, ("inspection", "inspections")),
     ("effectivity", "Effectivity", "list", False, ("engine_effectivity", "applicability")),
 ]
 LABELS = [f[0] for f in REQUIREMENT_FIELDS]
+
+
+def _dimensional_unit(value: Any) -> Optional[str]:
+    """Return an explicit, unambiguous length unit; leave mixed or absent units unknown."""
+    if not isinstance(value, str):
+        return None
+    found = re.findall(r"(?<![\w.])[+-]?\d+(?:\.\d+)?\s*(mm|cm|m|inches|inch|in|um|µm|μm)\b", value, re.IGNORECASE)
+    normalised = {"in" if unit.lower() in {"in", "inch", "inches"} else "um" if unit.lower() in {"um", "µm", "μm"}
+                  else unit.lower() for unit in found}
+    return next(iter(normalised)) if len(normalised) == 1 else None
 
 
 def _now() -> str:
@@ -406,7 +420,8 @@ class IntakeService:
                 vnote = "not found in the document" if text else (note or "no text could be read from this file")
             from_structured = bool(det) and det_state == "valid" and value is det_val
             loc = self._locate(value, elements, det[1] if from_structured or (det and state == "invalid") else None)
-            fields.append({"name": name, "label": label, "value": value, "unit": None, "required": required,
+            unit = _dimensional_unit(value) if name in ("key_dimensions", "tolerances") and state == "valid" else None
+            fields.append({"name": name, "label": label, "value": value, "unit": unit, "required": required,
                            "source_ref": {"upload_id": rec["upload_id"], **loc} if loc else None, "confidence": conf,
                            "validation_state": state, "validation_note": vnote, "extraction_mode": mode, "edited_by": None, "edited_at": None})
         with self.s.store.tx():
@@ -449,7 +464,9 @@ class IntakeService:
                     if f["name"] in edits:
                         raw = edits[f["name"]]
                         val, state, vnote = coerce(types[f["name"]], raw) if raw not in (None, "") else (None, "unknown", "cleared by reviewer")
-                        f.update(value=val if state == "valid" else raw, validation_state=state if state in ("valid", "invalid") else "unknown",
+                        unit = _dimensional_unit(val) if f["name"] in ("key_dimensions", "tolerances") and state == "valid" else None
+                        f.update(value=val if state == "valid" else raw, unit=unit, source_ref=None,
+                                 validation_state=state if state in ("valid", "invalid") else "unknown",
                                  validation_note=vnote, extraction_mode="user_edit", edited_by=req.get("actor", "demo-operator"), edited_at=_now(),
                                  confidence=1.0 if state == "valid" else None)
                 d["version"] += 1
@@ -461,11 +478,13 @@ class IntakeService:
                 if blocking:
                     raise DomainError(422, "NOT_READY", "required fields are missing or invalid", details={"fields": blocking})
                 vals = {f["name"]: f["value"] for f in d["fields"] if f["validation_state"] == "valid"}
+                reviewed_by, reviewed_at = req.get("actor", "demo-operator"), _now()
                 overlay = {"part_identity": {"part_number": vals["part_number"], "revision": vals["revision"]},
                            "documented": {k: v for k, v in vals.items() if k not in ("part_number", "revision")},
+                           "reviewed_fields": copy.deepcopy(d["fields"]), "reviewed_by": reviewed_by, "reviewed_at": reviewed_at,
                            "draft_id": draft_id, "draft_version": d["version"], "upload_id": d["upload_id"],
                            "source_refs": {f["name"]: f["source_ref"] for f in d["fields"] if f["source_ref"]}}
-                d.update(status="confirmed", confirmed_by=req.get("actor", "demo-operator"), confirmed_at=_now(), overlay=overlay)
+                d.update(status="confirmed", confirmed_by=reviewed_by, confirmed_at=reviewed_at, overlay=overlay)
                 confirm_payload = (d["scenario_run_id"], d["component_id"], overlay)
             d["updated_at"] = _now()
             self._put(f"intake:draft:{draft_id}", d)
