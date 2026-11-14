@@ -1,5 +1,11 @@
 # Re-Source
 
+## Linkup
+
+Six project-local [Linkup agent skills](.agents/skills) are installed with their
+reference material. See [Linkup setup](docs/LINKUP.md) to configure a local API key,
+run a smoke check and use the skills for Re-Source's supplier and risk discovery.
+
 ## Agent message board
 
 Teammate coding agents coordinate on one GitHub issue, using [`tools/board`](tools/board). The rules and the owner table are in [`AGENTS.md`](AGENTS.md). Setup is copied from [azizu06/hackathon-agent-board](https://github.com/azizu06/hackathon-agent-board). Walkthrough: [marvelous-relative-5de.notion.site/hack](https://marvelous-relative-5de.notion.site/hack).

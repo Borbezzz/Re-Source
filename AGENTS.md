@@ -46,3 +46,20 @@ Checked against GitHub on 2026-11-14. Collaborators are `@Borbezzz` (admin), `@b
 | TODO — not inferred | Borbezzz (team lead) | TODO. No product folders yet. Only authored file so far is the root `README.md`. |
 | TODO — not inferred | bede-lau | TODO. Write access. No commits and no folders to assign. |
 | TODO — not inferred | alvinbong03 | TODO. Write access. No commits, no public name, and no folders to assign. |
+
+## 5. Linkup agent skills
+
+For Linkup searches, page fetching, research, batching, extraction or workflow design,
+read the matching `.agents/skills/linkup-*/SKILL.md` before making calls. Start with
+`linkup-search` for ordinary discovery and `linkup-fetch` for an already-known URL;
+use `linkup-workflow` when designing a chain of calls. The other installed skills
+are `linkup-research`, `linkup-tasks` and `linkup-extract` (closed beta).
+
+Each skill bundles its references. Choose the endpoint, depth and output type
+before writing the query; keep source URLs and never invent missing evidence.
+Use `q` for REST search requests. Keep `LINKUP_API_KEY` in the process environment
+or an ignored local `.env`, and keep calls server-side. If credentials or access
+are unavailable, report that explicitly and retain the PRD's seeded connector path.
+
+See `docs/LINKUP.md` for activation, a live smoke check, upstream provenance and
+the distinction between these coding-agent skills and the product's runtime adapter.
