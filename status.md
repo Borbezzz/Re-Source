@@ -25,7 +25,7 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 
 | What | How | Result |
 |---|---|---|
-| Full test suite | `cd backend && RS_SKIP_DATABRICKS=1 uv run --locked pytest ../tests -q`; then `uv run --locked pytest ../tests/integration/test_databricks_layer.py -q` | **133 passed, 4 skipped** offline. All 9 Databricks integration tests passed separately, including the 4 live tests. |
+| Full test suite | `cd backend && RS_SKIP_DATABRICKS=1 uv run --locked pytest ../tests -q`; then `uv run --locked pytest ../tests/integration/test_databricks_layer.py -q` | **137 passed, 4 skipped** offline after the readiness diagnostics fix. All 9 Databricks integration tests passed separately, including the 4 live tests. |
 | HTTP demo (local Uvicorn, isolated seeded run) | Commands and SSE over a local socket | D1 Offer A → Rotterdam signal → D2 Offer B; diff and SSE reconnect; selection → approved paperwork → simulated receipt → install/restore; upload → reviewed requirements → D3 with the confirmed version. Valid/invalid GLB and blueprint `provider_required` passed. |
 | Primary D1 (seeded, live integrations) | HTTP + SSE flow against `uvicorn` | D1: A 85.79 > B 82.07 > C 49.96; PD pending, PE ineligible. `ai_extract` on the SQL warehouse, Linkup leads, OpenAI summaries, MLflow trace linked in events |
 | Hero feature (AC-03) | `SIG-RTM-CLOSURE` | D2: B 82.07 > A 66.91 > C 49.96; A day 4→11, £48,000→£50,500; 1 check rerun, 46 reused; path NLRTM → R-RTM-HWC → Offer A → case-primary |
