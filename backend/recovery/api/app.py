@@ -352,6 +352,13 @@ async def inject_evidence_change(run_id: str, body: M.EvidenceChangeRequest, ide
                             lambda: s.changes.inject_evidence_change(run_id, body.fixture_evidence_change_id))
 
 
+@app.post("/api/v1/scenario-runs/{run_id}/template-changes")
+async def inject_template_change(run_id: str, body: M.TemplateChangeRequest, idempotency_key: Optional[str] = Header(None)) -> JSONResponse:
+    s = services()
+    return await idempotent(f"template-change:{run_id}", _key(idempotency_key, body.model_dump()), body.model_dump(mode="json", exclude={"idempotency_key"}),
+                            lambda: s.changes.inject_template_change(run_id, body.template_id, body.revision, body.note))
+
+
 @app.post("/api/v1/scenario-runs/{run_id}/clock", response_model=None, responses={200: {"model": M.ClockState}, 409: {"model": M.ApiError}, 422: {"model": M.ApiError}})
 async def advance_clock(run_id: str, body: M.ClockAdvanceRequest, idempotency_key: Optional[str] = Header(None)) -> JSONResponse:
     s = services()

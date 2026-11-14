@@ -4,7 +4,8 @@ Living handoff document. **Update it at every milestone.** Any coding agent shou
 
 - Last updated: 2026-11-14 16:40 UTC, by Bede's Claude
 - Spec: [`PRD.md`](PRD.md) v1.2
-- Branch: work is on a feature branch with an open PR (see the board, issue #1). Base `main@ddceb8e`.
+- Branch: `5-backend-recovery`, PR https://github.com/Borbezzz/Re-Source/pull/6 (closes #5). Base `main@ddceb8e`.
+- Frontend delegation posted to the board: https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6880396173
 
 ## Current gate (PRD §15)
 
@@ -17,7 +18,7 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 
 | What | How | Result |
 |---|---|---|
-| Full test suite | `cd backend && RS_SKIP_DATABRICKS=1 uv run pytest ../tests -q` | **126 passed, 4 skipped** (the 4 need live Databricks; they pass with credentials) |
+| Full test suite | `cd backend && uv run pytest ../tests -q` | **131 passed** with live Databricks (offline: `RS_SKIP_DATABRICKS=1` skips the 4 live Databricks tests) |
 | Primary D1 (seeded, live integrations) | HTTP + SSE flow against `uvicorn` | D1: A 85.79 > B 82.07 > C 49.96; PD pending, PE ineligible. `ai_extract` on the SQL warehouse, Linkup leads, OpenAI summaries, MLflow trace linked in events |
 | Hero feature (AC-03) | `SIG-RTM-CLOSURE` | D2: B 82.07 > A 66.91 > C 49.96; A day 4→11, £48,000→£50,500; 1 check rerun, 46 reused; path NLRTM → R-RTM-HWC → Offer A → case-primary |
 | Execution gate | select → documents → approve → submit → install/restore | CAA Form 1 MO + 145.A.42 acceptance + supplier approval; one receipt per operation; visual install/restore gated on the receipt |
@@ -52,11 +53,12 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 | AC-19 | ✅ | `test_ac19_newest_generation_wins_when_changes_overlap`. |
 | AC-20 | ✅ | `test_ac20_barrier_blocks_commits_until_fanout_completes` (partial fan-out failure, barrier 409, idempotent retry). |
 | AC-21 | ✅ | `test_ac21_active_change_before_open_clock_expiry_and_pause`. |
-| AC-22 | 🟡 | Immutable versions, guarded publication and approved-hash checks tested; template-change race not yet tested. |
+| AC-22 | ✅ | `test_ac22_template_change_guards_submission_and_regenerates` (template revision via gateway → stale package, 409 on submit, regenerated drafts, delayed generator cannot overwrite). |
 | Contracts | ✅ | `tests/integration/test_contracts.py` validates real payloads against the published models. |
 
 ## Blockers / waiting on humans
 
+0. **Repo description** — setting it was blocked (repo settings belong to the lead). Proposed: "Re-Source: aerospace recovery agent — finds, verifies and re-plans jet-engine part replacements (BUY/MAKE) with continuous risk monitoring, UK CAA paperwork and a 3D engine view. FastAPI + LangGraph + Databricks."
 1. **Folder ownership + model provider** — @Borbezzz to confirm on the board (AGENTS.md: the lead assigns folders; D-001 OpenAI instead of Claude).
 2. **Lakebase + AI Search provisioning** was denied by the permission system pending explicit approval (it creates resources in the lead's workspace). Without Lakebase the operational store is SQLite (durable locally; ephemeral in the Databricks App).
 3. **Databricks App deployment** needs: an `openai-key` secret resource, grants for the App service principal on `rs_*`, and approval to start App compute. See `deploy/databricks/README.md`.

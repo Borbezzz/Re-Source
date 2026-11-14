@@ -327,3 +327,30 @@ def test_signal_sources_report_health_and_freshness(svc, run):
     rows = {r["source_id"]: r for r in SignalSources(svc).status(run)}
     assert rows["scenario-port-feed"]["health"] == "ok"
     assert rows["linkup-news"]["kind"] == "live" and rows["linkup-news"]["freshness_slo_minutes"] == 60
+
+
+def test_ac22_template_change_guards_submission_and_regenerates(svc, run):
+    investigate(svc, "case-primary")
+    accept(svc, "case-primary", "OFF-PB")
+    drain_outbox(svc, "case-primary")
+    view = svc.documents.view(run, "case-primary")
+    pkg = svc.documents.patch(run, view["current_package"]["package_id"], {"expected_version": view["current_package"]["version"],
+                                                                         "review_action": "approve"})["package"]
+    # a delayed duplicate generator never overwrites the reviewed package
+    case = svc.store.get_case(run, "case-primary")
+    again = svc.documents.generate(run, "case-primary", case["current_selection_id"])
+    assert again is None or again["package_id"] == pkg["package_id"]
+    res = svc.changes.inject_template_change(run, "TPL-CAA-FORM1-MO", "issue 3 (scenario)", "CAA republished the template")
+    assert res["affected_case_ids"] == ["case-primary"]
+    with pytest.raises(DomainError) as e:
+        svc.documents.submit(run, "case-primary", {"selection_id": case["current_selection_id"], "package_id": pkg["package_id"],
+                                                   "package_version": pkg["version"]})
+    assert e.value.status == 409
+    case = drain_outbox(svc, "case-primary")
+    view = svc.documents.view(run, "case-primary")
+    new_pkg = view["current_package"]
+    assert new_pkg["package_id"] != pkg["package_id"] and new_pkg["status"] == "current"
+    form1 = next(d for d in view["current_drafts"] if d["template_id"] == "TPL-CAA-FORM1-MO")
+    assert "issue 3" in form1["template_version"]
+    receipt = approve_and_submit(svc, "case-primary")
+    assert receipt["package_id"] == new_pkg["package_id"]

@@ -18,7 +18,7 @@ OFFLINE = dict(pacing_ms=0, model_enabled=False, extraction_backend="structured"
                databricks_enabled=False, projection_enabled=False, companies_house_enabled=False, prewarm=False)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def offline_settings(tmp_path):
     from recovery.config import settings
 

@@ -827,6 +827,13 @@ class EvidenceChangeRequest(Contract):
     idempotency_key: Optional[str] = None
 
 
+class TemplateChangeRequest(Contract):
+    template_id: str
+    revision: str = Field(description="New template/applicability revision label, e.g. 'issue 3'")
+    note: str = ""
+    idempotency_key: Optional[str] = None
+
+
 class ClockAdvanceRequest(Contract):
     hours: float = Field(gt=0, le=24 * 60)
     idempotency_key: Optional[str] = None

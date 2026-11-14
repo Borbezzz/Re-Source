@@ -1,4 +1,6 @@
-# Board post: frontend delegation (to send once `gh auth login` is done)
+# Board post: frontend delegation
+
+POSTED 2026-11-14 16:10 UTC: https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6880396173 (final text referenced PR #6, branch `5-backend-recovery`).
 
 Send with:
 

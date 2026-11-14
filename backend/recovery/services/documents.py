@@ -79,12 +79,13 @@ class DocumentService:
         for item in plan["templates"]:
             tpl = item["template"]
             fields = D.autofill(tpl, decision, selection["candidate_id"], case_info, self.catalog, self._operator(), selection)
+            rev = self.template_revisions(run_id).get(tpl["template_id"])
             drafts.append({
                 "draft_id": f"draft-{uuid.uuid4().hex[:12]}",
                 "case_id": case_id,
                 "scenario_run_id": run_id,
                 "template_id": tpl["template_id"],
-                "template_version": tpl["version"],
+                "template_version": tpl["version"] + (f" + {rev['revision']}" if rev else ""),
                 "template_title": tpl["title"],
                 "version": 1,
                 "selection_id": selection["selection_id"],
@@ -100,6 +101,10 @@ class DocumentService:
                 "created_at": now_iso(),
             })
         return plan, drafts
+
+    def template_revisions(self, run_id: str) -> dict:
+        """Run-scoped template/applicability revisions activated through the change gateway (FR-13)."""
+        return self.store.kv_get(f"template_revs:{run_id}") or {}
 
     def generate(self, run_id: str, case_id: str, selection_id: str) -> Optional[dict]:
         """Outbox consumer for op_type 'generate_documents'. Idempotent per generation_id."""
@@ -117,7 +122,8 @@ class DocumentService:
                     return cur["payload"]
             existing = self._packages(run_id, case_id)
             start_version = existing[0]["payload"]["version"] if existing else 0
-            gen_basis = f"{selection_id}|{decision.get('evidence_set_id')}|{self.catalog.templates_version}|{start_version}|{case['revision']}"
+            revs = sorted((k, v["revision"]) for k, v in self.template_revisions(run_id).items())
+            gen_basis = f"{selection_id}|{decision.get('evidence_set_id')}|{self.catalog.templates_version}|{revs}|{start_version}|{case['revision']}"
             generation_id = "docgen-" + hashlib.sha256(gen_basis.encode()).hexdigest()[:16]
             dup = next((p for p in existing if p.get("generation_id") == generation_id), None)
             if dup:

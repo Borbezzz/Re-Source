@@ -111,6 +111,49 @@ class ChangeService:
 
         return self._propagate(run_id, change, impact, activate=activate)
 
+    def inject_template_change(self, run_id: str, template_id: str, revision: str, note: str = "") -> dict:
+        """Template/applicability updates enter the same invalidation gateway as evidence changes (FR-13)."""
+        tpl = self.s.catalog.templates.get(template_id)
+        if not tpl:
+            raise not_found(f"template {template_id}")
+        dedup = f"template:{template_id}:{revision}"
+        existing = self._existing(run_id, dedup)
+        if existing:
+            return {"change": existing, "duplicate": True, "affected_case_ids": existing.get("affected_case_ids", [])}
+        change = self._register(run_id, "template", template_id, f"{template_id}@{revision}", dedup, {"template_id": template_id, "revision": revision},
+                                title=f"Template revised: {tpl['title']} ({revision})", effective_at=iso(self.s.run_state.now(run_id)),
+                                scope={"template_id": template_id})
+        affected: list[str] = []
+        for case in self.s.store.list_cases(run_id):
+            if not case["current_package_id"]:
+                continue
+            drafts = [r for r in self.s.store.find(st.drafts, run_id=run_id, case_id=case["case_id"]) if r["package_id"] == case["current_package_id"]]
+            if not any(r["payload"]["template_id"] == template_id for r in drafts):
+                continue
+            with self.s.store.tx() as c:
+                cur = self.s.store.lock_case(c, run_id, case["case_id"])
+                if self.s.documents is not None:
+                    self.s.documents.mark_stale(c, run_id, case["case_id"], change["title"])
+                self.s.store.update_case(c, run_id, case["case_id"], revision=cur["revision"] + 1)
+            affected.append(case["case_id"])
+
+        def activate() -> None:
+            revs = self.s.store.kv_get(f"template_revs:{run_id}") or {}
+            revs[template_id] = {"revision": revision, "note": note, "change_id": change["change_id"], "at": _now()}
+            self.s.store.kv_set(f"template_revs:{run_id}", revs)
+
+        res = self._finish(run_id, change, affected, {"offers": [], "cases": affected, "paths": []}, activation_state="active",
+                           activate=activate, schedule=False)
+        for case_id in affected:  # regenerate drafts for the still-current selection against the new template revision
+            case = self.s.store.get_case(run_id, case_id)
+            sel = self.s.store.get(st.selections, case["current_selection_id"]) if case["current_selection_id"] else None
+            if sel and sel["status"] == "current":
+                self.s.store.put(st.outbox, f"op-gen-docs-{sel['id']}-{change['change_id']}", run_id,
+                                 {"op": "generate_documents", "run_id": run_id, "case_id": case_id, "selection_id": sel["id"]},
+                                 case_id=case_id, status="pending", op_type="generate_documents", attempts=0, available_at=_now())
+        self.s.worker_kick()
+        return res
+
     def advance_clock(self, run_id: str, hours: float) -> dict:
         run = self.s.store.get_run(run_id)
         if not run:
@@ -270,7 +313,8 @@ class ChangeService:
             s.store.put(st.change_events, change["change_id"], run_id, change, status="staged", dedup_key=change["dedup_key"], seq=change["revision"])
         return "matched"
 
-    def _finish(self, run_id: str, change: dict, matched: list[str], impact: dict, *, activation_state: str, activate, queued: Optional[list] = None) -> dict:  # noqa: ANN001
+    def _finish(self, run_id: str, change: dict, matched: list[str], impact: dict, *, activation_state: str, activate, queued: Optional[list] = None,
+                schedule: bool = True) -> dict:  # noqa: ANN001
         s = self.s
         with s.store.tx() as c:
             run = s.store.lock_run(c, run_id)
@@ -286,7 +330,7 @@ class ChangeService:
                           + (f", {len(queued)} queued (monitoring paused)" if queued else ""),
                           {"change_id": change["change_id"], "affected_case_ids": matched, "queued_case_ids": queued or [],
                            "impact_paths": change["impact_paths"], "activation_state": activation_state})
-        for case_id in matched:
+        for case_id in (matched if schedule else []):
             s.coordinator.request_reassessment(run_id, case_id, {"trigger_id": change["trigger_id"], "change_id": change["change_id"],
                                                                  "trigger_type": change["trigger_type"], "title": change["title"],
                                                                  "impact_paths": [p for p in change["impact_paths"] if p and p[-1]["id"] == case_id]},

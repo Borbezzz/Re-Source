@@ -517,6 +517,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/scenario-runs/{run_id}/template-changes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Inject Template Change */
+        post: operations["inject_template_change_api_v1_scenario_runs__run_id__template_changes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2218,6 +2235,23 @@ export interface components {
             /** Task Id */
             task_id: string;
         };
+        /** TemplateChangeRequest */
+        TemplateChangeRequest: {
+            /** Idempotency Key */
+            idempotency_key?: string | null;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
+            /**
+             * Revision
+             * @description New template/applicability revision label, e.g. 'issue 3'
+             */
+            revision: string;
+            /** Template Id */
+            template_id: string;
+        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -3422,6 +3456,43 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    inject_template_change_api_v1_scenario_runs__run_id__template_changes_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TemplateChangeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */
