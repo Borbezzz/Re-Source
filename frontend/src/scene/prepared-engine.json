@@ -1,0 +1,64 @@
+{
+  "asset_url": "/models/engine-cutaway.glb",
+  "source_url": "https://www.innerscene.com/tools/library/3d-parts/turbofan-quarter-cutaway-e0184203",
+  "source_sha256": "65ce366afd7fd46f254fef43363f7d4cd39b2cc75899e59c3933fc1dcbe02f88",
+  "license": "CC0-1.0",
+  "donor_url": "https://github.com/AungMyoKyaw/jet-engine-lab/tree/07dc2651814ae4736f1ee2cbfd7f12c89d3b8b85",
+  "donor_license": "MIT",
+  "modules": [
+    "Module_Fan",
+    "Module_LPC",
+    "Module_HPC",
+    "Module_Combustor",
+    "Module_HPT",
+    "Module_LPT",
+    "Module_Exhaust"
+  ],
+  "source_nodes": [
+    "Combustor_case",
+    "Compressor_case",
+    "Compressor_rotor_1",
+    "Compressor_rotor_2",
+    "Compressor_rotor_3",
+    "Compressor_rotor_4",
+    "Compressor_rotor_5",
+    "Compressor_rotor_6",
+    "Compressor_rotor_7",
+    "Core_nozzle",
+    "Fan_20_blades",
+    "High_pressure_turbine_1",
+    "High_pressure_turbine_2",
+    "Inner_shaft",
+    "Low_pressure_turbine_3",
+    "Low_pressure_turbine_4",
+    "Nacelle",
+    "Perforated_combustor_liner",
+    "Spinner",
+    "Tail_cone",
+    "Turbine_case"
+  ],
+  "component_studies": [
+    {
+      "node_name": "Component_FuelNozzle_07",
+      "component_id": "component-primary",
+      "source_file": "combustor-manifold.glb",
+      "source_sha256": "d85869131a98f6d0d9a2740e7691e94e9374ecbe64375808aae3e9d94d3c0aaf",
+      "mapping": "representative counterpart; synthetic position/part number remains in backend"
+    },
+    {
+      "node_name": "Component_NGV_Segment_12",
+      "component_id": "component-secondary-a",
+      "source_file": "turbine-nozzle-guide.glb",
+      "source_sha256": "342039d21250ef56988f6ad2b815d8e5c1ed806493dfae13c66750ed3142b6b8",
+      "mapping": "representative counterpart; synthetic position/part number remains in backend"
+    },
+    {
+      "node_name": "Component_BleedDuct_HP",
+      "component_id": "component-secondary-b",
+      "source_file": "compressor-service-hardware.glb",
+      "source_sha256": "fc2e2e745d47e967eb106f6489e01fa8ee16257c781daca41472a4dfdd834911",
+      "mapping": "representative counterpart; synthetic position/part number remains in backend"
+    }
+  ],
+  "note": "Prepared cutaway and component studies, not a complete production engine or source of requirements."
+}
