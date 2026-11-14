@@ -31,6 +31,11 @@ class Settings:
 
     # Operational store (Lakebase Postgres when configured, local SQLite otherwise).
     operational_db_url: str = os.getenv("RS_OPERATIONAL_DB_URL", "")
+    # Lakebase: in a Databricks App the database resource injects PGHOST/PGUSER/PGDATABASE/PGPORT/PGSSLMODE.
+    # Locally set RS_USE_LAKEBASE=1 (+ PGHOST/PGUSER) to use it with a token minted from your Databricks auth.
+    lakebase_instance: str = os.getenv("RS_LAKEBASE_INSTANCE", "resource-ops")
+    lakebase_schema: str = os.getenv("RS_LAKEBASE_SCHEMA", "resource_ops")
+    use_lakebase: bool = _bool("RS_USE_LAKEBASE", bool(os.getenv("PGHOST")) and bool(os.getenv("DATABRICKS_APP_NAME") or os.getenv("DATABRICKS_APP_PORT")))
 
     # Models (the app's own OpenAI key; never used for building the app).
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
@@ -85,7 +90,15 @@ class Settings:
 
     @property
     def db_url(self) -> str:
-        return self.operational_db_url or f"sqlite:///{self.sqlite_path}"
+        if self.operational_db_url:
+            return self.operational_db_url
+        if self.use_lakebase and os.getenv("PGHOST"):
+            user = os.getenv("PGUSER", "")
+            from urllib.parse import quote
+
+            return (f"postgresql+psycopg://{quote(user, safe='')}@{os.getenv('PGHOST')}:{os.getenv('PGPORT', '5432')}/"
+                    f"{os.getenv('PGDATABASE', 'databricks_postgres')}?sslmode={os.getenv('PGSSLMODE', 'require')}")
+        return f"sqlite:///{self.sqlite_path}"
 
     @property
     def databricks_configured(self) -> bool:

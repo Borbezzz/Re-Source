@@ -7,6 +7,12 @@ Living handoff document. **Update it at every milestone.** Any coding agent shou
 - Branch: `5-backend-recovery`, PR https://github.com/Borbezzz/Re-Source/pull/6 (closes #5). Base `main@ddceb8e`.
 - Frontend delegation posted to the board: https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6880396173
 
+## Deployment (2026-11-14)
+
+- **Databricks App `resource` is RUNNING:** https://resource-7474650863346302.aws.databricksapps.com (OAuth: open it while signed in to the workspace; `/docs` for the API). Operational store on **Lakebase `resource-ops`**; Delta `rs_*`, `ai_extract`, MLflow, Linkup, Companies House and OpenAI wired through App resources (D-017, D-018).
+- Verified: startup run + cases written to Lakebase; prewarm extracted 68 documents with `ai_extract` as the App identity. Full click-through on the deployed App still needs a signed-in browser session (or the frontend).
+- Redeploy: upload changed files to `/Workspace/Shared/ReSource/app-src`, then `POST /api/2.0/apps/resource/deployments {"source_code_path": "/Workspace/Shared/ReSource/app-src", "mode": "SNAPSHOT"}` (see `deploy/databricks/README.md`).
+
 ## Current gate (PRD §15)
 
 Backend gates 1–5 are implemented and verified locally (seeded mode, live Databricks/OpenAI/Linkup/MLflow).
@@ -60,8 +66,8 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 
 0. **Repo description** — setting it was blocked (repo settings belong to the lead). Proposed: "Re-Source: aerospace recovery agent — finds, verifies and re-plans jet-engine part replacements (BUY/MAKE) with continuous risk monitoring, UK CAA paperwork and a 3D engine view. FastAPI + LangGraph + Databricks."
 1. **Folder ownership + model provider** — @Borbezzz to confirm on the board (AGENTS.md: the lead assigns folders; D-001 OpenAI instead of Claude).
-2. **Lakebase + AI Search provisioning** was denied by the permission system pending explicit approval (it creates resources in the lead's workspace). Without Lakebase the operational store is SQLite (durable locally; ephemeral in the Databricks App).
-3. **Databricks App deployment** needs: an `openai-key` secret resource, grants for the App service principal on `rs_*`, and approval to start App compute. See `deploy/databricks/README.md`.
+2. **AI Search** endpoint not provisioned (keyword retrieval in use). Lakebase is provisioned (D-017).
+3. **Intake/mesh extension (contract v1.1)** promised to Yixin's Astra on the board — in progress.
 4. **DISC-03:** exact current issue numbers of the CAA Form 1 PDFs and CAA Form 60 unconfirmed.
 
 ## Next steps

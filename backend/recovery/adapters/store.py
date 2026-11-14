@@ -17,7 +17,7 @@ from decimal import Decimal
 from typing import Any, Iterator, Optional
 
 from sqlalchemy import (
-    Column, Integer, MetaData, String, Table, Text, UniqueConstraint, and_, create_engine, event, func, insert, select, update,
+    Column, Integer, MetaData, Table, Text, UniqueConstraint, and_, create_engine, event, func, insert, select, update,
 )
 from sqlalchemy.engine import Connection, Engine
 
@@ -50,111 +50,111 @@ def now_iso() -> str:
 
 runs = Table(
     "runs", metadata,
-    Column("run_id", String(64), primary_key=True),
-    Column("mode", String(16), nullable=False),
-    Column("fixture_version", String(32), nullable=False),
-    Column("manifest_version", String(64), nullable=False),
-    Column("scenario_now", String(40), nullable=False),
-    Column("status", String(16), nullable=False),
+    Column("run_id", Text, primary_key=True),
+    Column("mode", Text, nullable=False),
+    Column("fixture_version", Text, nullable=False),
+    Column("manifest_version", Text, nullable=False),
+    Column("scenario_now", Text, nullable=False),
+    Column("status", Text, nullable=False),
     Column("is_current", Integer, nullable=False, default=0),
-    Column("replay_source_run_id", String(64)),
+    Column("replay_source_run_id", Text),
     Column("barrier_count", Integer, nullable=False, default=0),
     Column("manifest_version_counter", Integer, nullable=False, default=1),
-    Column("created_at", String(40), nullable=False),
+    Column("created_at", Text, nullable=False),
 )
 
 cases = Table(
     "cases", metadata,
-    Column("run_id", String(64), primary_key=True),
-    Column("case_id", String(64), primary_key=True),
-    Column("component_id", String(64), nullable=False),
-    Column("state", String(32), nullable=False),
-    Column("prior_stable_state", String(32)),
+    Column("run_id", Text, primary_key=True),
+    Column("case_id", Text, primary_key=True),
+    Column("component_id", Text, nullable=False),
+    Column("state", Text, nullable=False),
+    Column("prior_stable_state", Text),
     Column("revision", Integer, nullable=False, default=0),
     Column("input_revision", Integer, nullable=False, default=0),
-    Column("mode", String(16), nullable=False),
-    Column("visual_state", String(32), nullable=False),
-    Column("monitoring_status", String(16), nullable=False),
-    Column("current_decision_id", String(64)),
-    Column("initial_decision_id", String(64)),
-    Column("current_selection_id", String(64)),
-    Column("current_package_id", String(64)),
-    Column("latest_receipt_id", String(64)),
-    Column("active_generation_id", String(64)),
+    Column("mode", Text, nullable=False),
+    Column("visual_state", Text, nullable=False),
+    Column("monitoring_status", Text, nullable=False),
+    Column("current_decision_id", Text),
+    Column("initial_decision_id", Text),
+    Column("current_selection_id", Text),
+    Column("current_package_id", Text),
+    Column("latest_receipt_id", Text),
+    Column("active_generation_id", Text),
     Column("pending_target_revision", Integer),
     Column("stale_reasons", Text, nullable=False, default="[]"),
     Column("decision_labels", Text, nullable=False, default="{}"),
     Column("event_seq", Integer, nullable=False, default=0),
-    Column("updated_at", String(40), nullable=False),
+    Column("updated_at", Text, nullable=False),
 )
 
 events = Table(
     "events", metadata,
-    Column("run_id", String(64), primary_key=True),
-    Column("case_id", String(64), primary_key=True),
+    Column("run_id", Text, primary_key=True),
+    Column("case_id", Text, primary_key=True),
     Column("sequence", Integer, primary_key=True),
-    Column("event_id", String(64), nullable=False, unique=True),
-    Column("type", String(48), nullable=False),
+    Column("event_id", Text, nullable=False, unique=True),
+    Column("type", Text, nullable=False),
     Column("payload", Text, nullable=False),
-    Column("occurred_at", String(40), nullable=False),
+    Column("occurred_at", Text, nullable=False),
 )
 
 idempotency = Table(
     "idempotency", metadata,
-    Column("scope", String(160), primary_key=True),
-    Column("key", String(160), primary_key=True),
-    Column("request_hash", String(80), nullable=False),
+    Column("scope", Text, primary_key=True),
+    Column("key", Text, primary_key=True),
+    Column("request_hash", Text, nullable=False),
     Column("response", Text, nullable=False),
     Column("status_code", Integer, nullable=False),
-    Column("created_at", String(40), nullable=False),
+    Column("created_at", Text, nullable=False),
 )
 
 
 def _payload_table(name: str, *cols: Column, unique: tuple[str, ...] | None = None) -> Table:
     args: list[Any] = [
-        Column("id", String(80), primary_key=True),
-        Column("run_id", String(64), nullable=False, index=True),
-        Column("case_id", String(64), index=True),
+        Column("id", Text, primary_key=True),
+        Column("run_id", Text, nullable=False, index=True),
+        Column("case_id", Text, index=True),
         *cols,
-        Column("status", String(32)),
+        Column("status", Text),
         Column("payload", Text, nullable=False),
-        Column("created_at", String(40), nullable=False),
-        Column("updated_at", String(40), nullable=False),
+        Column("created_at", Text, nullable=False),
+        Column("updated_at", Text, nullable=False),
     ]
     if unique:
         args.append(UniqueConstraint(*unique, name=f"uq_{name}_{'_'.join(unique)}"))
     return Table(name, metadata, *args)
 
 
-decisions = _payload_table("decisions", Column("label", String(16)), Column("generation_id", String(64)), Column("input_revision", Integer))
-diffs = _payload_table("diffs", Column("from_id", String(80)), Column("to_id", String(80)))
-selections = _payload_table("selections", Column("idem_key", String(160)), unique=("run_id", "case_id", "idem_key"))
-drafts = _payload_table("drafts", Column("package_id", String(80)), Column("version", Integer))
-packages = _payload_table("packages", Column("version", Integer), Column("generation_id", String(80)), unique=("run_id", "case_id", "version"))
-receipts = _payload_table("receipts", Column("idem_key", String(160)), Column("operation_key", String(200)),
+decisions = _payload_table("decisions", Column("label", Text), Column("generation_id", Text), Column("input_revision", Integer))
+diffs = _payload_table("diffs", Column("from_id", Text), Column("to_id", Text))
+selections = _payload_table("selections", Column("idem_key", Text), unique=("run_id", "case_id", "idem_key"))
+drafts = _payload_table("drafts", Column("package_id", Text), Column("version", Integer))
+packages = _payload_table("packages", Column("version", Integer), Column("generation_id", Text), unique=("run_id", "case_id", "version"))
+receipts = _payload_table("receipts", Column("idem_key", Text), Column("operation_key", Text),
                           unique=("run_id", "operation_key"))
-outbox = _payload_table("outbox", Column("op_type", String(48)), Column("attempts", Integer, default=0),
-                        Column("available_at", String(40)), Column("last_error", Text))
+outbox = _payload_table("outbox", Column("op_type", Text), Column("attempts", Integer, default=0),
+                        Column("available_at", Text), Column("last_error", Text))
 subscriptions = _payload_table("subscriptions", Column("dependency_revision", Integer, default=0))
-change_events = _payload_table("change_events", Column("dedup_key", String(200)), Column("seq", Integer),
+change_events = _payload_table("change_events", Column("dedup_key", Text), Column("seq", Integer),
                                unique=("run_id", "dedup_key"))
 barriers = _payload_table("barriers")
-signals = _payload_table("signals", Column("source_event_id", String(120)), Column("version", Integer),
+signals = _payload_table("signals", Column("source_event_id", Text), Column("version", Integer),
                          unique=("run_id", "source_event_id", "version"))
-evidence_state = _payload_table("evidence_state", Column("version_id", String(80)), Column("document_id", String(80)),
-                                Column("candidate_id", String(64)), unique=("run_id", "version_id", "candidate_id"))
-generations = _payload_table("generations", Column("target_input_revision", Integer), Column("kind", String(24)))
-gaps = _payload_table("gaps", Column("candidate_id", String(64)), Column("requirement_id", String(64)))
-timers = _payload_table("timers", Column("due_at", String(40)), Column("kind", String(32)))
+evidence_state = _payload_table("evidence_state", Column("version_id", Text), Column("document_id", Text),
+                                Column("candidate_id", Text), unique=("run_id", "version_id", "candidate_id"))
+generations = _payload_table("generations", Column("target_input_revision", Integer), Column("kind", Text))
+gaps = _payload_table("gaps", Column("candidate_id", Text), Column("requirement_id", Text))
+timers = _payload_table("timers", Column("due_at", Text), Column("kind", Text))
 facts_cache = Table(
     "facts_cache", metadata,
-    Column("content_hash", String(90), primary_key=True),
-    Column("doc_type", String(48), primary_key=True),
-    Column("extraction_mode", String(32), nullable=False),
+    Column("content_hash", Text, primary_key=True),
+    Column("doc_type", Text, primary_key=True),
+    Column("extraction_mode", Text, nullable=False),
     Column("payload", Text, nullable=False),
-    Column("created_at", String(40), nullable=False),
+    Column("created_at", Text, nullable=False),
 )
-kv = Table("kv", metadata, Column("key", String(120), primary_key=True), Column("value", Text, nullable=False))
+kv = Table("kv", metadata, Column("key", Text, primary_key=True), Column("value", Text, nullable=False))
 
 
 class OperationalStore:
@@ -167,7 +167,30 @@ class OperationalStore:
         else:
             kwargs["pool_pre_ping"] = True
             kwargs["pool_recycle"] = 1800  # Lakebase OAuth tokens rotate; recycle connections
+            kwargs["pool_size"] = 8
+            kwargs["max_overflow"] = 8
         self.engine: Engine = create_engine(url, **kwargs)
+        self.pg_schema: Optional[str] = None
+        if not self.is_sqlite:
+            from ..config import settings as _settings
+
+            self.pg_schema = _settings.lakebase_schema
+            if "@" in url and ":" not in url.split("://", 1)[1].split("@", 1)[0]:  # no static password → Lakebase OAuth token
+                from .lakebase import token_provider
+
+                @event.listens_for(self.engine, "do_connect")
+                def _provide_token(dialect, conn_rec, cargs, cparams):  # noqa: ANN001
+                    cparams["password"] = token_provider()
+
+            schema = self.pg_schema
+
+            @event.listens_for(self.engine, "connect")
+            def _search_path(dbapi_conn, _):  # noqa: ANN001
+                cur = dbapi_conn.cursor()
+                cur.execute(f'CREATE SCHEMA IF NOT EXISTS "{schema}"')
+                cur.execute(f'SET search_path TO "{schema}"')
+                cur.close()
+                dbapi_conn.commit()
         if self.is_sqlite:
             @event.listens_for(self.engine, "connect")
             def _connect(dbapi_conn, _):  # noqa: ANN001
@@ -182,6 +205,20 @@ class OperationalStore:
                 conn.exec_driver_sql("BEGIN IMMEDIATE")
         self._local = threading.local()
         metadata.create_all(self.engine)
+        if not self.is_sqlite:
+            self._migrate_postgres()
+
+    def _migrate_postgres(self) -> None:
+        """Idempotent schema migration: earlier deployments created bounded VARCHAR columns; widen them to TEXT."""
+        from sqlalchemy import text as sql_text
+
+        with self.engine.begin() as conn:
+            rows = conn.execute(sql_text(
+                "SELECT table_name, column_name FROM information_schema.columns "
+                "WHERE table_schema = current_schema() AND data_type = 'character varying'")).all()
+            for table, column in rows:
+                if table in metadata.tables:
+                    conn.execute(sql_text(f'ALTER TABLE "{table}" ALTER COLUMN "{column}" TYPE TEXT'))
 
     # ------------------------------------------------------------------ transactions
     @contextmanager
@@ -335,6 +372,7 @@ class OperationalStore:
     def append_event(self, c: Connection, run_id: str, case_id: str, event: dict) -> dict:
         """Assigns the per-case sequence inside the caller's transaction."""
         if case_id == "__run__":
+            self.lock_run(c, run_id)  # serialise run-level sequence allocation (Postgres row lock)
             row = c.execute(select(func.max(events.c.sequence)).where(and_(events.c.run_id == run_id, events.c.case_id == case_id))).scalar()
             seq = int(row or 0) + 1
         else:

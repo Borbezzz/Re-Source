@@ -134,3 +134,16 @@ Status values: **Accepted** (in force) · **Proposed** (needs team lead / human 
   6. Schedule coalesced per-case reassessments.
 - Selection, decision publication and simulated submission check the barrier inside their own transaction. Decisions persist with compare-and-swap on (active generation, input revision, no barrier); outdated results are stored as `superseded` and never emit `decision.updated`.
 - Affects: services (main session), `adapters/store.py`.
+
+### D-017 — Lakebase provisioned for the operational store (2026-11-14, approved by Bede)
+- Decision: Lakebase instance `resource-ops` (capacity `CU_1`, Postgres 16) in the team workspace; database `databricks_postgres`, schema `resource_ops` owned by the App service principal. The App reaches it through the App database resource `lakebase` (PGHOST/PGUSER/... injected); passwords are short-lived OAuth tokens minted per new connection (`adapters/lakebase.py`, refreshed every 40 min, pool recycle 30 min).
+- Consequence: operational state (cases, events, decisions, selections, packages, receipts, outbox, facts cache) survives App restarts. The LangGraph checkpoint file still lives in the App's `/tmp` (no Postgres checkpointer installed) — in-flight graph progress is lost on an App restart, completed decisions are not.
+- Found on deployment: Postgres enforces VARCHAR lengths (SQLite does not) — operational columns are now `TEXT`, and the store migrates existing VARCHAR columns to TEXT at startup (idempotent).
+- Local development keeps SQLite by default; `RS_USE_LAKEBASE=1` + `PGHOST`/`PGUSER` opts in (high latency from outside us-west-2).
+
+### D-018 — Databricks App deployment (2026-11-14, approved by Bede)
+- App `resource` → https://resource-7474650863346302.aws.databricksapps.com (OAuth-protected; open it signed in to the workspace).
+- Source synced to `/Workspace/Shared/ReSource/app-src` (no `.env`); entrypoint `app.yaml` (uvicorn, port 8000); resources: `sql-warehouse`, `linkup-key`, `companies-house-key`, `agent-traces`, `openai-key` (new secret `resource/openai_key`), `lakebase` (new).
+- `requirements.txt` lists top-level packages only: a fully pinned export failed against Databricks-managed Python constraints.
+- Grants: App service principal has `USE CATALOG workspace`, `USE SCHEMA, SELECT, MODIFY` on `workspace.resource` (rs_* projections and evidence reads).
+- Verified from outside (the App only accepts browser OAuth sessions): startup created a run + 3 cases in Lakebase; prewarm extracted all 68 evidence documents with `ai_extract` as the App identity (76 s, all agreeing with the structured parse).

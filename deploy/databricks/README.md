@@ -5,7 +5,9 @@ The workspace already has an App named `resource` (compute stopped, no deploymen
 `agent-traces` (MLflow experiment, CAN_EDIT). `app.yaml` and `requirements.txt` at the repo root are the
 App entrypoint and dependencies.
 
-Before the first deployment (needs workspace-owner approval — team lead):
+**Status 2026-11-14: deployed and RUNNING** (steps 1–3 done: secret `resource/openai_key` + App resource `openai-key`, UC grants for the App service principal, Lakebase instance `resource-ops` + App resource `lakebase`). Without the Databricks CLI, sync with the SDK (`WorkspaceClient().workspace.upload(...)`) and deploy via `POST /api/2.0/apps/resource/deployments`.
+
+Original checklist:
 1. Add a secret `openai_key` to scope `resource` and an App resource named `openai-key` pointing at it
    (the app's runtime OpenAI key; never commit it).
 2. Grant the App service principal `app-3eov8h resource` SELECT/MODIFY on `workspace.resource.rs_*` and USE on the
