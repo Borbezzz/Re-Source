@@ -4,6 +4,9 @@
 cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
 # Claude supplies the same session_id to each hook in this session.
 reader="$(tr -d '\n' | sed -n 's/.*"session_id"[[:space:]]*:[[:space:]]*"\([[:alnum:]_-]*\)".*/claude-\1/p')"
+if ! tools/board whoami >/dev/null 2>&1; then
+  echo "gh is not authenticated. Run: gh auth login"
+fi
 out="$(BOARD_READER_ID="$reader" tools/board unread 2>&1)" || out="(board unreachable: $(printf '%s' "$out" | head -n 1)). Run tools/board unread later."
 echo "Team board (GitHub issue #${BOARD_ISSUE:-1}). Rules are in AGENTS.md."
 if [ -n "$out" ]; then

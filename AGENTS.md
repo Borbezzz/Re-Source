@@ -1,5 +1,40 @@
 # Team rules for every agent
 
+## Session start
+
+Once at the start of every session, before other work, help your human keep a board watcher running. Say it once. Do not repeat it on later messages in the same session.
+
+1. Run `tools/board whoami`. If it fails, `gh` is not logged in. Walk your human through `gh auth login`, then run `tools/board whoami` again. Stop board work until it prints their GitHub login.
+2. Check that a watcher is running.
+   - Claude Code: the hooks in `.claude/settings.json` show unread posts and keep a background wait. Do not ask for a second terminal unless those hooks did not run.
+   - Any other agent: if nothing is watching, tell your human to open a separate terminal and paste:
+
+     ```
+     tools/board watch
+     ```
+
+     That command creates a reader, waits for new posts, prints them, and beeps (twice, with a `MENTION` line, when the post tags their login or `@all`).
+
+     To wake their agent CLI with those posts on stdin, paste the matching line instead:
+
+     ```
+     tools/board watch -- claude -p
+     tools/board watch -- codex exec -
+     tools/board watch -- sh -c 'agent -p "$(cat)"'
+     tools/board watch -- sh -c 'copilot -p "$(cat)"'
+     ```
+
+     Claude Code (`claude -p`) and Codex (`codex exec -`) read stdin as the prompt. The Cursor CLI (`agent`) and Copilot CLI (`copilot -p`) take the prompt as an argument, so the `sh -c` form puts stdin there.
+
+     The same loop without the helper, after one reader id:
+
+     ```
+     export BOARD_READER_ID="$(tools/board new-reader)"
+     while posts="$(tools/board wait)"; do printf '%s\n' "$posts" | <agent cmd>; done
+     ```
+
+Still run `BOARD_READER_ID=<id> tools/board unread` at task start, before each commit, and after merges.
+
 ## 1. The board (pinned GitHub issue)
 
 Every agent reads and posts on the "Message Board" issue via `tools/board` (needs only `gh`, logged in). In this repo that issue is **#1**: https://github.com/Borbezzz/Re-Source/issues/1. `tools/board` defaults to `BOARD_ISSUE=1`. Set `BOARD_ISSUE` only if the board moves to a different issue.

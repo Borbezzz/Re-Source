@@ -20,6 +20,8 @@ endpoint = next((x for x in args if x.startswith('repos/') or x == 'user'), '')
 if endpoint == 'repos/Owner/Repo':
     print('Owner/Repo')
 elif endpoint == 'user':
+    if os.environ.get('FAIL_USER'):
+        sys.exit(1)
     print('alice')
 elif '/comments?' in endpoint:
     if os.environ.get('FAIL_COMMENTS'):
@@ -151,6 +153,43 @@ class BoardTest(unittest.TestCase):
         self.assertNotEqual(self.run_board('wait', '--interval', reader='session-a').returncode, 0)
         self.assertNotEqual(self.run_board('unread', reader='../invalid').returncode, 0)
 
+    def test_watch_prints_mentions_and_later_posts(self):
+        captured = self.root / 'woke.txt'
+        first = self.run_board('watch', '--once', '--interval', '1', '--', 'sh', '-c', f'cat >> "{captured}"',
+                               reader='watch-reader')
+        self.assertEqual(first.returncode, 0, first.stderr)
+        self.assertIn('** MENTION **', first.stdout)
+        self.assertIn('post 1', first.stdout)
+        self.assertEqual(captured.read_text().count('post 1 @all'), 1)
+        self.assertIn('board: MENTION for alice', first.stderr)
+        self.assertIn('reader watch-reader', first.stderr)
+        self.assertIn('\a\a', first.stderr)
+        self.comments.append(self.comment(13, 'carol'))
+        self.save()
+        second = self.run_board('watch', '--once', '--interval', '1', reader='watch-reader')
+        self.assertEqual(second.returncode, 0, second.stderr)
+        self.assertIn('post 13', second.stdout)
+        self.assertNotIn('post 1 @all', second.stdout)
+        self.assertIn('board: new post', second.stderr)
+        self.assertNotIn('MENTION for alice', second.stderr)
+
+    def test_watch_creates_a_reader_and_rejects_bad_auth_or_args(self):
+        created = self.run_board('watch', '--once', '--interval', '1')
+        self.assertEqual(created.returncode, 0, created.stderr)
+        self.assertRegex(created.stderr, r'reader reader-[0-9-]+')
+        self.assertIn('post 1', created.stdout)
+        unauth = dict(self.env, FAIL_USER='1')
+        unauth.pop('BOARD_LOGIN', None)
+        result = subprocess.run([str(self.root / 'tools/board'), 'watch', '--once'],
+                                cwd=self.root, env=unauth, text=True, capture_output=True, timeout=8)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('gh not authenticated', result.stderr)
+        self.assertNotEqual(self.run_board('watch', '--interval').returncode, 0)
+        self.assertNotEqual(self.run_board('watch', '--nope').returncode, 0)
+        self.assertIn('tools/board watch', self.run_board('help').stdout)
+        self.assertIn('claude -p', self.run_board('help').stdout)
+        self.assertIn('codex exec -', self.run_board('help').stdout)
+
     def test_claude_hooks_use_per_session_reader(self):
         def hook(name, session):
             return subprocess.run([str(self.root / '.claude/hooks' / name)], cwd=self.root,
@@ -163,6 +202,14 @@ class BoardTest(unittest.TestCase):
         self.assertIn('post 1', start.stdout)
         self.assertEqual(hook('board-prompt.sh', 'session-a').stdout, '')
         self.assertIn('post 1', hook('board-prompt.sh', 'session-b').stdout)
+        self.assertNotIn('gh auth login', start.stdout)
+        unauth = dict(self.env, CLAUDE_PROJECT_DIR=str(self.root), FAIL_USER='1')
+        unauth.pop('BOARD_LOGIN', None)
+        bad = subprocess.run([str(self.root / '.claude/hooks/board-session-start.sh')], cwd=self.root,
+                             env=unauth, input=json.dumps({'session_id': 'session-a'}),
+                             capture_output=True, text=True, timeout=8)
+        self.assertEqual(bad.returncode, 0, bad.stderr)
+        self.assertIn('gh is not authenticated. Run: gh auth login', bad.stdout)
 
 
 if __name__ == '__main__':

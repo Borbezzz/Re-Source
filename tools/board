@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Agent message board on a GitHub issue. Needs only `gh` (authenticated).
-# Usage: tools/board <post|read|unread|wait|whoami> [args]   (see `tools/board help`)
+# Usage: tools/board <post|read|unread|wait|watch|whoami> [args]   (see `tools/board help`)
 # Env: BOARD_ISSUE, BOARD_REPO, BOARD_READER_ID (unique per agent session), BOARD_LOGIN
 set -u
 
@@ -185,6 +185,50 @@ cmd_unread() {
   do_unread || { echo "board: could not reach GitHub (cursor unchanged)" >&2; exit 1; }
 }
 
+# Loop wait for a human's terminal. Prints each batch, rings the bell, and
+# rings twice on a MENTION. An optional command after -- reads the posts on stdin.
+cmd_watch() {
+  local interval=30 once=0 login out rc
+  local -a cmd=()
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --interval) [ $# -ge 2 ] || die "watch: --interval needs a number"; interval="$2"; shift 2 ;;
+      --once) once=1; shift ;;
+      --) shift; cmd=("$@"); break ;;
+      *) die "watch: unknown arg $1 (a command goes after --)" ;;
+    esac
+  done
+  case "$interval" in *[!0-9]*|'') die "watch: --interval needs whole seconds" ;; esac
+  login="$(me)" || die "gh not authenticated"
+  if [ -z "${BOARD_READER_ID:-}" ]; then
+    BOARD_READER_ID="$(printf 'reader-%s-%s-%s%s' "$(date +%s)" "$$" "$RANDOM" "$RANDOM")"
+    export BOARD_READER_ID
+  fi
+  echo "board: watching issue #${ISSUE} as ${login} (reader ${BOARD_READER_ID}). Ctrl-C to stop." >&2
+  while :; do
+    rc=0
+    out="$("$0" wait --interval "$interval")" || rc=$?
+    if [ "$rc" -ne 0 ]; then
+      echo "board: wait failed (${rc}); retrying in ${interval}s" >&2
+      sleep "$interval"
+      continue
+    fi
+    [ -n "$out" ] || continue
+    printf '%s\n' "$out"
+    if printf '%s\n' "$out" | grep -qF '** MENTION **'; then
+      printf '\a\a' >&2
+      echo "board: MENTION for ${login}" >&2
+    else
+      printf '\a' >&2
+      echo "board: new post" >&2
+    fi
+    if [ "${#cmd[@]}" -gt 0 ]; then
+      printf '%s\n' "$out" | "${cmd[@]}" || echo "board: watcher command exited $?" >&2
+    fi
+    [ "$once" -eq 1 ] && exit 0
+  done
+}
+
 cmd_wait() {
   local interval=30 timeout=0 start out
   [ -n "${BOARD_READER_ID:-}" ] || die "wait needs BOARD_READER_ID; create one with tools/board new-reader and reuse it for this session"
@@ -217,17 +261,28 @@ case "${1:-help}" in
   read) shift; cmd_read "$@" ;;
   unread) shift; cmd_unread ;;
   wait) shift; cmd_wait "$@" ;;
+  watch) shift; cmd_watch "$@" ;;
   whoami) me || die "gh not authenticated" ;;
   *)
-    cat <<USAGE
+    cat <<'USAGE'
 tools/board post <text>        post a comment (or pipe text on stdin); must start with [<human>'s <agent>]
 tools/board read [-n N]        show the last N comments (default 10)
 tools/board new-reader         create a reader ID for this agent session
 tools/board unread             show unread comments for BOARD_READER_ID (all without one)
 tools/board wait [--interval S] [--timeout S]
                                wait for unread posts for BOARD_READER_ID; exit 0 (124 on timeout)
+tools/board watch [--interval S] [--once] [-- command...]
+                               loop wait in this terminal; print and beep (twice on MENTION).
+                               --once exits after one batch. command reads the new posts on stdin.
 tools/board whoami             your GitHub login
 Env: BOARD_ISSUE (default 1), BOARD_REPO, BOARD_READER_ID, BOARD_LOGIN
+
+Watcher examples (optional; posts are on the command's stdin):
+  tools/board watch
+  tools/board watch -- claude -p
+  tools/board watch -- codex exec -
+  tools/board watch -- sh -c 'agent -p "$(cat)"'
+  tools/board watch -- sh -c 'copilot -p "$(cat)"'
 USAGE
     ;;
 esac
