@@ -51,7 +51,9 @@ The first command stages production without assigning the normal production doma
 
 Local automated coverage: typed/idempotent commands, SSE replay and case isolation, source/mesh guards, intake extraction review/reload, supplier evidence, versioned draft approval invalidation, simulated receipts, mobile/reduced-motion, reversible scroll, D1→D2 disruption. Runtime regressions cover two anonymous visitors, replay/upload isolation, failed queue publication retry, duplicate completion, cross-instance persisted SSE and rejection of serverless SQLite.
 
-Vercel build verified: frontend, FastAPI and private queue subscriber. **Not yet verified:** authenticated server-to-Lakebase access, real queue redelivery/checkpoint restart, durable upload across instances, and complete anonymous public browser flow. The parent completed 24 Production variables with zero failures and handed deployment back to this session. Connected verification is in progress; Preview remains unconfigured. Build success is not a tested public application.
+Production **81b8661** is promoted at https://resource-borbez2s-projects.vercel.app (immutable deployment `resource-lm0ngyhrs-borbez2s-projects.vercel.app`). Verified anonymously: actual engine-first 3D/scroll/reverse/mobile, JSON health/readiness with Lakebase/Postgres checkpoints/OpenAI, source upload/review/confirm/reload, supplied GLB activation, queued supplier research/comparison, versioned approval/edit/reapproval/simulated receipt, disruption reassessment, visitor isolation and native SSE reconnect. See [`docs/verification/frontend-vercel.md`](../../docs/verification/frontend-vercel.md) for exact coverage and timings.
+
+**Not yet exercised live:** forced worker termination/redelivery, an upload read after deliberately replacing the API instance, and forced cross-instance placement for SSE. Local regression coverage tests checkpoint restart and duplicate suppression. Preview remains unconfigured. Blueprint mesh generation and full uploaded engineering-field evaluation remain product gaps.
 
 Before promoting, use a fresh browser context (no cookies initially, no Vercel bypass) to load `/`, create an anonymous run, upload/review sources, select a part, watch real queue events/SSE reconnect, compare supplier evidence, approve/edit/reapprove a draft, simulate submission, and reload. A second fresh context must not read the first visitor's run/upload. Confirm that the first visitor's state survives a new API invocation and that queue consumers use Postgres checkpoints.
 
@@ -63,7 +65,7 @@ After the parent chat reports variables ready and the verified deployment is reb
 
 ```sh
 cd frontend
-RESOURCE_BASE_URL=https://<verified-deployment>.vercel.app RESOURCE_VERIFY_PUBLIC=1 npx playwright test
+RESOURCE_BASE_URL=https://<verified-deployment>.vercel.app RESOURCE_VERIFY_PUBLIC=1 npx playwright test --output=/tmp/resource-public-tests
 ```
 
-All setup calls use the tested origin and the browser context's cookie jar. There is no localhost API shortcut, saved login state or bypass header. The additional public tests exercise two visitor boundaries, upload persistence across reload, and native EventSource reconnect with Last-Event-ID after the 50-second response ends. These checks do not by themselves prove a queue worker survives forced termination; that remains a separate connected-runtime check.
+All setup calls use the tested origin and the browser context's cookie jar. There is no localhost API shortcut, saved login state or bypass header. Connected checks allow longer queue/provider latency than local fixture checks. Use distinct output directories for concurrent runs. The additional public tests exercise two visitor boundaries, upload persistence across reload, and native EventSource reconnect with Last-Event-ID after the 50-second response ends. These checks do not by themselves prove a queue worker survives forced termination; that remains a separate connected-runtime check.

@@ -10,7 +10,7 @@ Living handoff document. **Update it at every milestone.** Any coding agent shou
 
 ## Public deployment update (2026-11-14)
 
-Yixin superseded Databricks Apps hosting: **Vercel frontend AND API**; Databricks remains data/platform. Verified project: `borbez2s-projects/resource`. Both Python HTTP and private queue subscriber builds pass. The parent configured 24 Production variables with zero failures, using the existing verified Databricks PAT/Lakebase identity. Deployment and connected verification are in progress; Preview has no production credentials. See `deploy/vercel/README.md`. Do not redeploy the old App as the frontend delivery target.
+Yixin superseded Databricks Apps hosting: **Vercel frontend AND API**; Databricks remains data/platform. Verified project: `borbez2s-projects/resource`. Production **81b8661** is promoted at https://resource-borbez2s-projects.vercel.app . Both Python HTTP and private queue subscriber builds pass. The parent configured 24 Production variables using the existing verified Databricks PAT/Lakebase identity. Anonymous connected intake, queue research, comparison, approval/simulated receipt, reassessment, visitor isolation and SSE reconnect pass. Preview has no production credentials. See `deploy/vercel/README.md`. Do not redeploy the old App as the frontend delivery target.
 
 Frontend is implemented with typed commands/SSE, intake v1.1, cited review, real procedural/loaded meshes, reversible Anime.js motion, supplier/map/evidence comparison and versioned approval/simulated receipts. Blueprint generation and full uploaded-spec compatibility evaluation remain explicit gaps.
 
@@ -23,7 +23,7 @@ Frontend is implemented with typed commands/SSE, intake v1.1, cited review, real
 
 ## Frontend/migration verification
 
-See [`docs/verification/frontend-vercel.md`](docs/verification/frontend-vercel.md): 138 backend tests passed (4 skipped), 9 frontend invariant tests and 4 full browser flows passed, including anonymous local mode. Connected public API/worker verification is still blocked on Vercel server configuration.
+See [`docs/verification/frontend-vercel.md`](docs/verification/frontend-vercel.md): **140 backend tests passed (4 skipped)**, 9 frontend invariant tests, local browser checks and connected public flows pass. Real 3D renders before the API connects, with seven selectable modules and reversible scroll. Slow initial connection preserves selected source files; intake review resumes via `#sources`. Live forced-worker-termination testing remains unperformed; provider generation and full uploaded-spec rule evaluation remain gaps.
 
 ## Current gate (PRD §15)
 
@@ -51,7 +51,7 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 
 | ID | Status | Where verified / notes |
 |---|---|---|
-| AC-01 | ⬜ | Frontend (delegated). Backend case isolation per run/case verified (AC-02/13 tests). |
+| AC-01 | 🟡 | Real mesh/pin selection and case switching verified in public browser tests; all three mesh identities covered by frontend invariants. Full three-hotspot/refresh acceptance sweep remains. |
 | AC-02 | ✅ | `test_ac02_ac03_*`, live HTTP flow (local, not yet on the deployed App). |
 | AC-03 | ✅ | Same; diff with rerun/reused checks and impact path. |
 | AC-04 | ✅ | `test_ac04_unrelated_duplicate_correction_retraction`. |
@@ -60,14 +60,14 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 | AC-07 | ✅ | `tests/unit/test_rules.py` (missing Form 1, expired cert, wrong-site cert, conflicting part numbers, near-match revision). |
 | AC-08 | ✅ | `test_ac08_gap_resolved_by_followup_and_budget_respected`. |
 | AC-09 | ✅ | `test_ac09_stale_and_concurrent_acceptance` (stale decision, wrong hash, 3-way race → exactly one selection). |
-| AC-10 | 🟡 | `test_ac10_*`, `tests/unit/test_documents.py`; HTML download verified over HTTP. Frontend editing UI pending. |
+| AC-10 | 🟡 | `test_ac10_*`, `tests/unit/test_documents.py`; HTML download verified over local HTTP. Public frontend pack generation/edit/approval invalidation/reapproval passed; public download acceptance sweep remains. |
 | AC-11 | ✅ | `test_ac10_ac11_*`, `test_ac11_stale_package_cannot_be_submitted`. |
 | AC-12 | 🟡 | `test_ac12_*` (checkpoint resume after simulated worker death, no duplicate decisions, ordered events). Not yet on a deployed worker. |
 | AC-13 | ✅ | `test_ac13_secondary_cases_complete_full_workflow` (SA-1 BUY, SB-3 MAKE with CAA Form 1-21; SB-2 feasible-not-ready). |
-| AC-14 | 🟡 | Backend visual state machine + prerequisites verified; animations are frontend. |
+| AC-14 | 🟡 | Backend visual state machine/prerequisites verified. Public scroll/reverse, selectable mesh and reduced-motion/direct controls pass; full receipt→install/restore visual acceptance sweep remains. |
 | AC-15 | 🟡 | `tests/integration/test_databricks_layer.py`: exact-ID retrieval + Delta keyword search; AI Search not provisioned (recorded mode). |
 | AC-16 | 🟡 | Fallbacks exist (ai_extract → OpenAI → structured parse; model → deterministic text; Linkup failure → recorded); cold start measured. Quota interruption not exercised. |
-| AC-17 | ⬜ | Frontend. |
+| AC-17 | ✅ | Public browser workflow has no page errors; mobile 390 px has no overflow, with source access, comparison and documents usable. Keyboard/direct and reduced-motion controls pass. |
 | AC-18 | ✅ | `test_ac18_reset_creates_isolated_runs_with_same_outcome`. |
 | AC-19 | ✅ | `test_ac19_newest_generation_wins_when_changes_overlap`. |
 | AC-20 | ✅ | `test_ac20_barrier_blocks_commits_until_fanout_completes` (partial fan-out failure, barrier 409, idempotent retry). |
@@ -81,13 +81,13 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 1. **Resolved:** Yixin assigned `frontend/**` and confirmed OpenAI D-001; later authorized the Vercel runtime migration.
 2. **AI Search** endpoint not provisioned (keyword retrieval in use). Lakebase is provisioned (D-017).
 3. **Intake scope:** confirmation changes the part identity and the decision's `requirements_version`. Other extracted engineering fields are for manual review. Blueprint mesh jobs report `provider_required` until a generation provider is connected.
-4. **Live demo:** the Databricks App requires browser sign-in. The public Vercel API and queue still need connected verification on Astra's deployment.
+4. **Private App:** Databricks App access requires workspace sign-in and an appropriate CAN_USE grant. Public Vercel does not depend on that App; its connected demo is verified.
 5. **DISC-03:** exact current issue numbers of the CAA Form 1 PDFs and CAA Form 60 unconfirmed.
 
 ## Next steps
 
 1. Frontend (Borbezzz's agent) against `interface.md` + `contracts/generated-types/api.ts`.
-2. Complete the Vercel server credentials, deploy both services, and verify anonymous browser → API → Lakebase → queue → SSE → approval flow. Do not use deployment bypass tokens. Bede handles optional signed-in verification on the retained private App.
+2. Public Vercel connected demo is deployed and verified. Follow-up resilience testing should force worker termination/redelivery and API cache replacement. Bede handles optional signed-in verification on the retained private App.
 3. Lakebase is required for the serverless public runtime. AI Search remains optional; generation provider and full uploaded-spec rule evaluation remain open.
 4. Re-run the §12 QA pass after the frontend lands (AC-01/14/17) and record results in `docs/verification/`.
 
