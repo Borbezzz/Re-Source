@@ -1,5 +1,55 @@
 import { test, expect } from "@playwright/test";
 import { startSeededRun } from "./helpers";
+
+test("source selections survive the initial engine connection", async ({
+  page,
+}) => {
+  await startSeededRun(page);
+  let releaseEngine!: () => void;
+  const connection = new Promise<void>((resolve) => {
+    releaseEngine = resolve;
+  });
+  await page.route("**/api/v1/engines/engine-demo-001", async (route) => {
+    await connection;
+    await route.continue();
+  });
+  await page.goto("/#sources");
+  const inputs = page.locator("input[type=file]");
+  await inputs
+    .nth(0)
+    .setInputFiles({
+      name: "blueprint.txt",
+      mimeType: "text/plain",
+      buffer: Buffer.from("Synthetic blueprint"),
+    });
+  await inputs
+    .nth(1)
+    .setInputFiles({
+      name: "requirements.txt",
+      mimeType: "text/plain",
+      buffer: Buffer.from("Synthetic requirements"),
+    });
+  const extract = page.getByRole("button", {
+    name: "Extract & review requirements",
+  });
+  await expect(extract).toBeDisabled();
+  releaseEngine();
+  await expect(extract).toBeEnabled();
+  await expect(page.locator(".file-button").nth(0)).toContainText(
+    "blueprint.txt",
+  );
+  await expect(page.locator(".file-button").nth(1)).toContainText(
+    "requirements.txt",
+  );
+  // An intentional new run must still discard selections from the old run.
+  await page.getByRole("button", { name: "Run settings" }).click();
+  await page.getByRole("button", { name: "Start new run" }).click();
+  await expect(page.locator(".file-button").nth(0)).toContainText(
+    "Choose blueprint",
+  );
+  await expect(extract).toBeDisabled();
+});
+
 test("two sources, cited review, correction, confirmation and truthful generation blocker", async ({
   page,
 }) => {

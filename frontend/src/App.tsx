@@ -46,6 +46,7 @@ export default function App() {
     [entered, setEntered] = useState(false);
   const [intro, setIntro] = useState(() => location.hash !== "#sources"),
     [initialPart, setInitialPart] = useState<string | null>(null);
+  const [intakeVersion, setIntakeVersion] = useState(0);
   const openSources = () => {
     history.replaceState(null, "", "#sources");
     setIntro(false);
@@ -79,6 +80,7 @@ export default function App() {
         .newRun(mode, mode === "replay" ? engine?.scenario_run_id : undefined)
         .execute();
       await refresh();
+      setIntakeVersion((version) => version + 1);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not start this run.");
     } finally {
@@ -192,7 +194,7 @@ export default function App() {
           />
         ) : !entered ? (
           <Intake
-            key={engine?.scenario_run_id}
+            key={intakeVersion}
             engine={engine}
             onExplore={() => setEntered(true)}
             onActivated={refresh}
