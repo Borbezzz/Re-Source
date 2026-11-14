@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { animate, onScroll } from "animejs";
-import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
+import { ArrowRight, Check, X } from "lucide-react";
 import assembly from "./toy-car.json";
 const ProductScene = lazy(() => import("./ProductScene.tsx"));
 export function PreparedAssembly({ onEngine }: { onEngine: () => void }) {
@@ -75,7 +75,7 @@ export function PreparedAssembly({ onEngine }: { onEngine: () => void }) {
           </Suspense>
           <div className="assembly-controls">
             <span>
-              {reduced
+              {reduced || direct
                 ? "Direct controls"
                 : "Scroll to separate · reverse to reassemble"}
             </span>
@@ -91,14 +91,6 @@ export function PreparedAssembly({ onEngine }: { onEngine: () => void }) {
                 onChange={(e) => separate(Number(e.target.value))}
               />
               <button onClick={() => separate(1)}>Explode</button>
-              {direct && !reduced && (
-                <button
-                  aria-label="Restore scroll animation"
-                  onClick={() => setDirect(false)}
-                >
-                  <RotateCcw size={16} />
-                </button>
-              )}
             </div>
           </div>
           <p className="asset-credit">
