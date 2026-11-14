@@ -15,7 +15,7 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-SCHEMA_VERSION = "1.3"
+SCHEMA_VERSION = "1.4"
 
 
 def utcnow() -> datetime:
@@ -812,6 +812,14 @@ class TaskStatus(Contract):
     summary: Optional[str] = None
 
 
+class StaleReason(Contract):
+    kind: str
+    summary: str
+    change_id: Optional[str] = None
+    change_ids: Optional[list[str]] = None
+    affected_candidate_ids: Optional[list[str]] = None
+
+
 class CaseView(Contract):
     case_id: str
     scenario_run_id: str
@@ -830,7 +838,7 @@ class CaseView(Contract):
     current_selection: Optional[Selection] = None
     current_package_id: Optional[str] = None
     latest_receipt_id: Optional[str] = None
-    stale_reasons: list[str] = []
+    stale_reasons: list[StaleReason] = []
     pending_change_ids: list[str] = []
     active_generation_id: Optional[str] = None
     tasks: list[TaskStatus] = []

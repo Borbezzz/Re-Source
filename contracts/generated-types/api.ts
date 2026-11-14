@@ -1041,7 +1041,7 @@ export interface components {
              * Stale Reasons
              * @default []
              */
-            stale_reasons: string[];
+            stale_reasons: components["schemas"]["StaleReason"][];
             state: components["schemas"]["CaseState"];
             /**
              * Tasks
@@ -1655,7 +1655,7 @@ export interface components {
             scenario_run_id: string;
             /**
              * Schema Version
-             * @default 1.3
+             * @default 1.4
              */
             schema_version: string;
             /** Sequence */
@@ -2953,6 +2953,19 @@ export interface components {
             /** Upload Id */
             upload_id?: string | null;
         };
+        /** StaleReason */
+        StaleReason: {
+            /** Affected Candidate Ids */
+            affected_candidate_ids?: string[] | null;
+            /** Change Id */
+            change_id?: string | null;
+            /** Change Ids */
+            change_ids?: string[] | null;
+            /** Kind */
+            kind: string;
+            /** Summary */
+            summary: string;
+        };
         /** StartInvestigationRequest */
         StartInvestigationRequest: {
             /** Expected Revision */
@@ -3030,7 +3043,7 @@ export interface components {
             scenario_run_id: string;
             /**
              * Schema Version
-             * @default 1.3
+             * @default 1.4
              */
             schema_version: string;
             /** Sequence */
@@ -5012,7 +5025,7 @@ export interface operations {
 }
 
 // ---- appended by backend/scripts/export_contracts.py ----
-export const SCHEMA_VERSION = "1.3";
+export const SCHEMA_VERSION = "1.4";
 export const EVENT_TYPES = [
   "case.started",
   "task.started",
