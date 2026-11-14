@@ -119,6 +119,12 @@ class Coordinator:
                 with span(f"{kind}:{case_id}", "AGENT", {"run_id": run_id, "case_id": case_id, "generation_id": gen_id, "mode": mode}):
                     if resume:
                         snap = self.graph.get_state(config)
+                        with s.store.tx() as c:
+                            cur = s.store.lock_case(c, run_id, case_id)
+                            if cur["state"] == "interrupted":
+                                before = s.store.kv_get(f"interrupted_state:{run_id}:{case_id}")
+                                s.store.update_case(c, run_id, case_id, state=before or ("reassessing" if kind == "reassessment" else "investigating"),
+                                                    revision=cur["revision"] + 1)
                         if snap and snap.next:
                             s.bus.publish(run_id, case_id, "run.recovered", f"Resuming {kind} from checkpoint after interruption",
                                           {"generation_id": gen_id, "next_nodes": list(snap.next)})
@@ -178,8 +184,13 @@ class Coordinator:
             if not case or case["active_generation_id"] != gen["generation_id"]:
                 s.store.set_status(st.generations, gen["generation_id"], "superseded", {"note": "not active at restart"})
                 continue
-            s.bus.publish(run_id, case_id, "run.interrupted", "Worker interrupted; recovering from last checkpoint",
-                          {"generation_id": gen["generation_id"]})
+            with s.store.tx() as c:
+                cur = s.store.lock_case(c, run_id, case_id)
+                s.store.kv_set(f"interrupted_state:{run_id}:{case_id}", cur["state"])
+                s.store.update_case(c, run_id, case_id, state="interrupted", revision=cur["revision"] + 1)
+                s.bus.publish(run_id, case_id, "run.interrupted", "Worker interrupted; recovering from last checkpoint",
+                              {"generation_id": gen["generation_id"], "state_before": cur["state"]})
+                s.bus.publish(run_id, case_id, "case.state_changed", "Case is now interrupted (resuming)", {"state": "interrupted"})
             inputs = s.store.kv_get(f"gen_inputs:{gen['generation_id']}") or {"affected": None, "triggers": []}
             self._launch(run_id, case_id, gen["generation_id"], kind=gen["kind"], mode=case["mode"],
                          trigger=inputs["triggers"][-1] if inputs.get("triggers") else None, affected=inputs.get("affected"), resume=True)

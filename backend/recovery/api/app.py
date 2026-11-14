@@ -206,8 +206,11 @@ async def get_diff(case_id: str, from_: str = Query(..., alias="from"), to: str 
 
 
 @app.post("/api/v1/cases/{case_id}/selections", response_model=None, responses={200: {"model": M.Selection}, 409: {"model": M.ApiError}, 422: {"model": M.ApiError}})
-async def create_selection(case_id: str, body: M.SelectionRequest, idempotency_key: Optional[str] = Header(None)) -> JSONResponse:
+async def create_selection(case_id: str, body: M.SelectionRequest, idempotency_key: Optional[str] = Header(None),
+                           x_forwarded_email: Optional[str] = Header(None)) -> JSONResponse:
     s = services()
+    if x_forwarded_email:  # Databricks Apps forward the signed-in user's identity; selections record the real actor
+        body = body.model_copy(update={"actor": x_forwarded_email})
     rid = await run_in_threadpool(s.views.run_id, None)
     key = _key(idempotency_key, body.model_dump()) or f"auto-{uuid.uuid4()}"
     return await idempotent(f"select:{rid}:{case_id}", key, body.model_dump(mode="json", exclude={"idempotency_key"}),

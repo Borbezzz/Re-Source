@@ -226,6 +226,8 @@ class DecisionService:
                 new_state = "selection_stale"
             elif case["current_selection_id"] and case["prior_stable_state"] and case["state"] == "reassessing":
                 new_state = case["prior_stable_state"]
+            elif not preferred and any(r["eligibility"] == "pending" for r in ranked):
+                new_state = "waiting_for_evidence"  # no ready-to-select option yet; pending gaps are listed per candidate
             else:
                 new_state = "recommendations_ready"
             if prev:
