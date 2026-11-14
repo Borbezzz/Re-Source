@@ -26,7 +26,7 @@ const SWEEP_BAND = 0.28;
 const RESNAP = 0.2; // seconds between lattice re-snaps while sweeping
 const DAMP_REF = 20; // Damping 100 -> lerp rate 20/sec; the source's 7 is 35
 const SPEED_REF = 50;
-const LABEL_MAX = 0.6; // Labels on = readouts visible at all times, no height fade
+const LABEL_MAX = 0.6;
 const DOT_DIAMETER = 4 / 440; // measured off the reference atlas
 const DOT_PITCH = 12 / 440;
 
@@ -348,6 +348,7 @@ export interface VectorWordmarkProps {
   speed?: number;
   damping?: number;
   handles?: Partial<HandleGroup>;
+  interactionRef?: React.RefObject<HTMLElement | null>;
   style?: React.CSSProperties;
 }
 
@@ -370,6 +371,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
     speed = 50,
     damping = 60,
     handles,
+    interactionRef,
     style,
   } = props;
 
@@ -426,6 +428,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
     const host = hostRef.current;
     const canvas = canvasRef.current;
     if (!host || !canvas) return;
+    const interactionTarget = interactionRef?.current ?? host;
 
     const attrs: WebGLContextAttributes = {
       alpha: true,
@@ -616,6 +619,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
     }
 
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType === "touch") return;
       hasPointer = true;
       // A FRACTION of the rect, not a measurement: clientX and the rect
       // are in the same zoomed space, so the zoom divides out. This is
@@ -623,10 +627,21 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
       // size the shader reads still comes from offsetWidth (rule G).
       const r = host!.getBoundingClientRect();
       if (r.width <= 0 || r.height <= 0) return;
-      target.x = (e.clientX - r.left) / r.width;
-      target.y = 1 - (e.clientY - r.top) / r.height;
+      target.x = clamp((e.clientX - r.left) / r.width, 0, 1);
+      target.y = clamp(1 - (e.clientY - r.top) / r.height, 0, 1);
     };
-    host.addEventListener("pointermove", onMove);
+    const onLeave = () => {
+      hasPointer = false;
+      // Clear both overlays immediately, including when the frame loop pauses
+      // because the hero has scrolled out of view or the window lost focus.
+      writeLabels();
+      draw();
+    };
+    interactionTarget.addEventListener("pointerenter", onMove);
+    interactionTarget.addEventListener("pointermove", onMove);
+    interactionTarget.addEventListener("pointerleave", onLeave);
+    interactionTarget.addEventListener("pointercancel", onLeave);
+    window.addEventListener("blur", onLeave);
 
     // --- loop ---------------------------------------------------------
     let raf = 0;
@@ -716,7 +731,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
         el.style.transform = `translate(${bx * boxW - half}px, ${
           (1 - by) * boxH - half
         }px)`;
-        el.style.opacity = String(LABEL_MAX);
+        el.style.opacity = hasPointer ? String(LABEL_MAX) : "0";
         el.textContent = `${gx}, ${gy}`;
       }
     }
@@ -739,7 +754,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
       gl!.uniform1f(U.reach, Math.max(1, L.reach) / boxW);
       gl!.uniform3f(U.text, tc[0], tc[1], tc[2]);
       gl!.uniform3f(U.shade, sc[0], sc[1], sc[2]);
-      gl!.uniform4f(U.accent, ac[0], ac[1], ac[2], ac[3]);
+      gl!.uniform4f(U.accent, ac[0], ac[1], ac[2], hasPointer ? ac[3] : 0);
       gl!.uniform2f(U.v0, verts[0].x, verts[0].y);
       gl!.uniform2f(U.v1, verts[1].x, verts[1].y);
       gl!.uniform2f(U.v2, verts[2].x, verts[2].y);
@@ -802,14 +817,18 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
       gl.deleteBuffer(quad);
       gl.deleteTexture(tex);
       gl.deleteProgram(prog);
-      host.removeEventListener("pointermove", onMove);
+      interactionTarget.removeEventListener("pointerenter", onMove);
+      interactionTarget.removeEventListener("pointermove", onMove);
+      interactionTarget.removeEventListener("pointerleave", onLeave);
+      interactionTarget.removeEventListener("pointercancel", onLeave);
+      window.removeEventListener("blur", onLeave);
       document.removeEventListener("visibilitychange", gate);
       // Never loseContext(): getContext returns the same context per
       // canvas, so StrictMode's mount -> cleanup -> mount would reuse a
       // force-lost one and render black (rule 6).
     };
     // Built once; every live input is read from `live` inside the loop.
-  }, []);
+  }, [interactionRef]);
 
   return (
     <div
@@ -850,7 +869,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
                 position: "absolute",
                 left: 0,
                 top: 0,
-                opacity: LABEL_MAX,
+                opacity: 0,
                 pointerEvents: "none",
                 whiteSpace: "nowrap",
                 fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",

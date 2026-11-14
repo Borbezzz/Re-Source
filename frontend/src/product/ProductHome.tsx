@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PreparedAssembly } from "./PreparedAssembly.tsx";
 import { ArrowDown, ArrowUpRight, FileUp } from "lucide-react";
 import type { EngineView } from "../api/types.ts";
@@ -19,6 +19,7 @@ export function ProductHome({
   onRetry: () => void;
 }) {
   const [engineDemo, setEngineDemo] = useState(location.hash === "#engine");
+  const heroRef = useRef<HTMLElement>(null);
   if (engineDemo)
     return (
       <div className="prepared-entry">
@@ -42,12 +43,17 @@ export function ProductHome({
     );
   return (
     <main className="product-home">
-      <section className="product-entry" aria-labelledby="product-title">
+      <section
+        ref={heroRef}
+        className="product-entry"
+        aria-labelledby="product-title"
+      >
         <div className="entry-wordmark">
           <h1 id="product-title" className="sr-only">
             ReSource
           </h1>
           <VectorWordmark
+            interactionRef={heroRef}
             text="ReSource"
             background="#f2f3f5"
             textColor="#17191d"
