@@ -13,6 +13,7 @@ import {
   Search,
   Settings2,
 } from "lucide-react";
+import { staleReasonText } from "./api/guards.ts";
 import { api } from "./api/client.ts";
 import { useCase, useCommand } from "./api/useCase.ts";
 import type { ComponentInstance, EngineView, Schema } from "./api/types.ts";
@@ -25,7 +26,7 @@ import {
   Status,
   human,
 } from "./components/Primitives.tsx";
-import { EngineIntro } from "./scene/EngineIntro.tsx";
+import { ProductHome } from "./product/ProductHome.tsx";
 import { Intake } from "./components/Intake.tsx";
 import { Activity, Research } from "./components/Research.tsx";
 import { Documents } from "./components/Documents.tsx";
@@ -105,7 +106,7 @@ export default function App() {
           <span className="brand-mark">
             <Layers3 size={23} />
           </span>
-          reSource
+          ReSource
         </button>
         <nav aria-label="Main navigation">
           <button
@@ -126,7 +127,7 @@ export default function App() {
               window.scrollTo(0, 0);
             }}
           >
-            Engine workspace
+            Product workspace
           </button>
         </nav>
         <div className="header-end">
@@ -180,7 +181,7 @@ export default function App() {
       )}
       <div id="main-content">
         {intro ? (
-          <EngineIntro
+          <ProductHome
             engine={engine}
             connectionFailed={Boolean(error)}
             onRetry={() => void refresh()}
@@ -557,7 +558,10 @@ function CaseWorkspace({
               {view.pending_change_ids.length
                 ? "New evidence is being reconciled."
                 : "The previous result needs review."}{" "}
-              {view.stale_reasons.join(" ")}
+              {view.stale_reasons
+                .map(staleReasonText)
+                .filter(Boolean)
+                .join(" ")}
             </div>
           )}
           {decision ? (
@@ -675,7 +679,8 @@ function CaseWorkspace({
       {stale && (
         <div className="warning-box">
           Evidence has changed. Selection and submission stay blocked until the
-          current decision is ready. {view.stale_reasons.join(" ")}
+          current decision is ready.{" "}
+          {view.stale_reasons.map(staleReasonText).filter(Boolean).join(" ")}
         </div>
       )}
       {tab === "suppliers" ? (

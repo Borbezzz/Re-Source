@@ -1,0 +1,546 @@
+/* ReSource v2: the supplied vector reference carried into the working UI. */
+html {
+  scrollbar-color: #a1aab9 var(--surface);
+}
+::selection {
+  background: #c9d5ff;
+  color: #142866;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline-color: var(--brand);
+}
+.global-header {
+  background: var(--surface);
+  color: var(--ink);
+  height: 72px;
+  border-bottom: 1px solid var(--border);
+  gap: 48px;
+}
+.wordmark {
+  color: var(--ink);
+  font-size: 25px;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+.brand-mark {
+  color: var(--brand);
+  width: 20px;
+}
+.global-header nav button {
+  color: var(--muted);
+  font-size: 13px;
+}
+.global-header nav button.active {
+  color: var(--ink);
+}
+.global-header nav button.active:after {
+  height: 2px;
+  background: var(--brand);
+}
+.header-end .mode-label {
+  color: var(--muted);
+}
+.header-end .icon-button {
+  color: var(--ink);
+}
+.primary:hover:not(:disabled) {
+  background: #173bc0;
+}
+.secondary:hover:not(:disabled) {
+  background: #dce4fa;
+}
+.product-entry {
+  padding: 28px 40px 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 42px;
+  align-items: center;
+  max-width: 1800px;
+  margin: auto;
+}
+.entry-wordmark {
+  height: 255px;
+  position: relative;
+}
+.wordmark-fallback {
+  position: absolute;
+  inset: 34px 0 auto;
+  font-size: clamp(55px, 11vw, 180px);
+  letter-spacing: -0.035em;
+  font-weight: 650;
+  line-height: 1;
+}
+.entry-wordmark > p {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-size: 16px;
+  color: var(--muted);
+}
+.entry-actions {
+  display: grid;
+  gap: 16px;
+  align-content: center;
+}
+.entry-actions h2 {
+  font-size: 24px;
+  letter-spacing: -0.03em;
+}
+.entry-actions p {
+  color: var(--muted);
+  font-size: 14px;
+}
+.entry-actions .primary {
+  justify-content: space-between;
+  min-height: 48px;
+}
+.entry-actions a {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 13px;
+  text-decoration: none;
+  min-height: 40px;
+}
+.prepared-entry {
+  border-top: 1px solid var(--border);
+  scroll-margin-top: 72px;
+}
+.product-home .intro-heading {
+  padding-top: 24px;
+}
+.product-home .intro-heading .eyebrow {
+  display: none;
+}
+.product-home .intro-heading h1 {
+  font-size: 32px;
+  line-height: 1.1;
+}
+.product-home .intro-heading h1 br {
+  display: none;
+}
+.product-home .intro-heading h1 {
+  max-width: 720px;
+}
+.product-home .intro-sticky {
+  background: #e8ebef;
+}
+.product-home .intro-inspector {
+  background: var(--paper);
+  border-left: 1px solid var(--border);
+}
+.module-strip button[aria-pressed="true"],
+.parts button[aria-pressed="true"] {
+  background: var(--soft);
+  color: var(--brand);
+  border-color: var(--brand);
+}
+.intake-form .eyebrow,
+.workspace-heading .eyebrow {
+  display: none;
+}
+.intake {
+  max-width: 850px;
+}
+.upload-slot,
+.draft,
+.requirements-panel,
+.candidate-detail {
+  border-radius: 4px;
+}
+@media (min-width: 1600px) {
+  .entry-wordmark {
+    height: 300px;
+  }
+}
+@media (max-width: 900px) {
+  .product-entry {
+    padding: 24px;
+    grid-template-columns: minmax(0, 1fr) 230px;
+    gap: 24px;
+  }
+  .entry-wordmark {
+    height: 200px;
+  }
+  .entry-wordmark > p {
+    font-size: 13px;
+    max-width: 35ch;
+  }
+  .entry-actions h2 {
+    font-size: 22px;
+  }
+  .global-header {
+    gap: 24px;
+    padding: 0 24px;
+  }
+}
+@media (max-width: 600px) {
+  .global-header {
+    height: 68px;
+    padding: 0 16px;
+    gap: 20px;
+  }
+  .global-header nav {
+    gap: 16px;
+  }
+  .wordmark {
+    font-size: 22px;
+  }
+  .brand-mark {
+    display: none;
+  }
+  .product-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px 20px 28px;
+    gap: 20px;
+  }
+  .entry-wordmark {
+    height: 145px;
+  }
+  .wordmark-fallback {
+    font-size: 19vw;
+    top: 24px;
+  }
+  .entry-wordmark > p {
+    max-width: 30ch;
+    line-height: 1.4;
+  }
+  .entry-actions {
+    gap: 10px;
+  }
+  .entry-actions h2 {
+    font-size: 21px;
+  }
+  .entry-actions p {
+    font-size: 13px;
+  }
+  .entry-actions .primary {
+    min-height: 46px;
+  }
+  .entry-actions a {
+    min-height: 40px;
+  }
+  .product-home .intro-heading h1 {
+    font-size: 26px;
+  }
+  .product-home .intro-heading {
+    padding-top: 20px;
+  }
+  .prepared-entry {
+    scroll-margin-top: 68px;
+  }
+}
+.static-vector-wordmark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  font-size: clamp(55px, 12vw, 190px);
+  line-height: 1;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+.assembly-track {
+  height: 230vh;
+  position: relative;
+  scroll-margin-top: 72px;
+  border-top: 1px solid var(--border);
+}
+.assembly-track.direct {
+  height: auto;
+}
+.assembly-sticky {
+  position: sticky;
+  top: 72px;
+  min-height: 690px;
+  height: calc(100vh - 72px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  background: #e8ebef;
+}
+.assembly-stage {
+  min-width: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(300px, 1fr) auto auto;
+}
+.assembly-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 32px 0;
+  align-items: start;
+  z-index: 1;
+}
+.assembly-title h2 {
+  font-size: 32px;
+  letter-spacing: -0.035em;
+  font-weight: 560;
+}
+.assembly-title p {
+  color: var(--muted);
+  margin-top: 6px;
+  font-size: 14px;
+}
+.asset-status {
+  font-size: 11px;
+  color: var(--muted);
+  padding-top: 10px;
+  white-space: nowrap;
+}
+.product-scene {
+  position: relative;
+  min-height: 300px;
+  touch-action: pan-y;
+}
+.model-loading {
+  position: absolute;
+  inset: 45% 0 auto;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  pointer-events: none;
+}
+.assembly-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.assembly-controls > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.assembly-controls button {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  padding: 10px 4px;
+  min-height: 40px;
+}
+.assembly-controls input {
+  accent-color: var(--brand);
+  width: 110px;
+}
+.asset-credit {
+  font-size: 10px;
+  color: var(--muted);
+  padding: 0 32px 18px;
+}
+.asset-credit a {
+  color: inherit;
+}
+.part-sidebar {
+  background: var(--paper);
+  border-left: 1px solid var(--border);
+  padding: 26px 24px;
+  overflow-y: auto;
+}
+.part-list-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.part-list-heading h3 {
+  font-size: 22px;
+}
+.prepared-part-list {
+  display: grid;
+  gap: 2px;
+}
+.prepared-part-list > button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  width: 100%;
+  padding: 10px 9px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  min-height: 40px;
+}
+.prepared-part-list > button:hover {
+  background: var(--surface);
+}
+.prepared-part-list > button[aria-pressed="true"] {
+  background: #e9eeff;
+  color: #2144ba;
+  border-color: #b7c8ff;
+}
+.part-checkbox {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #adb6c7;
+  border-radius: 2px;
+}
+[aria-pressed="true"] > .part-checkbox {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+.part-source-detail {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.part-source-detail h3 {
+  font-size: 17px;
+  margin-bottom: 14px;
+}
+.part-source-detail dl {
+  margin: 0;
+  font-size: 12px;
+}
+.part-source-detail dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0;
+}
+.part-source-detail dt {
+  color: var(--muted);
+}
+.part-source-detail dd {
+  margin: 0;
+  text-align: right;
+}
+.part-source-detail p,
+.selection-tray p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 16px;
+}
+.part-source-detail .text-button {
+  padding: 12px 0;
+  font-size: 12px;
+}
+.selection-tray {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.selection-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.selection-chips button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  padding: 6px 8px;
+  border: 0;
+  background: var(--soft);
+  color: var(--brand);
+  border-radius: 3px;
+}
+.selection-tray .secondary {
+  font-size: 12px;
+  margin-top: 12px;
+  width: 100%;
+}
+@media (max-width: 1050px) {
+  .assembly-sticky {
+    grid-template-columns: minmax(0, 1fr) 290px;
+  }
+  .part-sidebar {
+    padding: 20px 18px;
+  }
+  .assembly-title {
+    display: block;
+  }
+  .asset-status {
+    display: block;
+    margin-top: 6px;
+  }
+  .assembly-controls {
+    padding: 10px 20px;
+  }
+  .assembly-title {
+    padding: 24px 20px 0;
+  }
+  .asset-credit {
+    padding: 0 20px 14px;
+  }
+}
+@media (max-width: 700px) {
+  .assembly-track {
+    height: auto;
+  }
+  .assembly-sticky {
+    height: auto;
+    min-height: 0;
+    position: relative;
+    top: 0;
+    display: block;
+  }
+  .assembly-stage {
+    grid-template-rows: auto 370px auto auto;
+  }
+  .assembly-title h2 {
+    font-size: 28px;
+  }
+  .assembly-controls {
+    gap: 0;
+  }
+  .assembly-controls > span {
+    width: 100%;
+    font-size: 11px;
+  }
+  .assembly-controls > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .assembly-controls input {
+    flex: 1;
+    max-width: 160px;
+  }
+  .part-sidebar {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    padding: 24px 20px;
+    overflow: visible;
+  }
+  .prepared-part-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .part-source-detail dl {
+    max-width: 380px;
+  }
+  .selection-tray {
+    padding-bottom: 10px;
+  }
+  .asset-credit {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .assembly-track {
+    height: auto;
+  }
+}

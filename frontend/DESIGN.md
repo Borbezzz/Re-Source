@@ -1,68 +1,83 @@
 ---
-name: ReSource
-description: An assembly-centered workspace for source-backed supplier recovery.
+name: "ReSource"
+description: "A precise product-parts workspace connecting prepared assemblies to source-backed evidence."
 colors:
-  surface: "#f7f8f5"
+  surface: "#f2f3f5"
   paper: "#fff"
-  ink: "#172c28"
-  muted: "#566960"
-  brand: "#194f45"
-  soft: "#e6eee8"
-  border: "#d9e0d9"
+  ink: "#17191d"
+  muted: "#5d6470"
+  brand: "#2251ef"
+  soft: "#e8edf8"
+  border: "#d6dbe4"
   warning: "#8a4d17"
-  brand-hover: "#123c34"
-  soft-hover: "#d8e6db"
-  focus: "#277762"
+  brand-hover: "#173bc0"
+  soft-hover: "#dce4fa"
+  stage: "#e8ebef"
+  selection-fill: "#e9eeff"
+  selection-text: "#2144ba"
+  selection-border: "#b7c8ff"
   status-good: "#29654a"
   status-bad: "#a13c32"
   status-unknown: "#85521f"
 typography:
   display:
-    fontFamily: '"Geist Variable", sans-serif'
+    fontFamily: "\"Geist Variable\", sans-serif"
+    fontSize: "clamp(55px, 12vw, 190px)"
+    fontWeight: 650
+    lineHeight: 1
+    letterSpacing: "-0.035em"
+  headline:
+    fontFamily: "\"Geist Variable\", sans-serif"
+    fontSize: "32px"
+    fontWeight: 560
+    lineHeight: 1.25
+    letterSpacing: "-0.035em"
+  page-heading:
+    fontFamily: "\"Geist Variable\", sans-serif"
+    fontSize: "clamp(26px, 2.2vw, 36px)"
+    fontWeight: 580
+    lineHeight: 1.15
+    letterSpacing: "-0.035em"
+  intake-heading:
+    fontFamily: "\"Geist Variable\", sans-serif"
     fontSize: "clamp(32px, 3vw, 44px)"
     fontWeight: 580
     lineHeight: 1.15
     letterSpacing: "-0.035em"
-  headline:
-    fontFamily: '"Geist Variable", sans-serif'
-    fontSize: "clamp(24px, 2.05vw, 32px)"
-    fontWeight: 580
-    lineHeight: 1.15
-    letterSpacing: "-0.035em"
   title:
-    fontFamily: '"Geist Variable", sans-serif'
+    fontFamily: "\"Geist Variable\", sans-serif"
     fontSize: "25px"
     fontWeight: 580
     lineHeight: 1.25
     letterSpacing: "-0.025em"
   subheading:
-    fontFamily: '"Geist Variable", sans-serif'
+    fontFamily: "\"Geist Variable\", sans-serif"
     fontSize: "17px"
     fontWeight: 600
     lineHeight: 1.55
     letterSpacing: "-0.015em"
   body:
-    fontFamily: '"Geist Variable", sans-serif'
+    fontFamily: "\"Geist Variable\", sans-serif"
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.55
   body-small:
-    fontFamily: '"Geist Variable", sans-serif'
+    fontFamily: "\"Geist Variable\", sans-serif"
     fontSize: "12px"
     fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: '"Geist Variable", sans-serif'
+    fontFamily: "\"Geist Variable\", sans-serif"
     fontSize: "11px"
     fontWeight: 500
     lineHeight: 1.3
 rounded:
-  citation: "4px"
+  checkbox: "2px"
+  selection-chip: "3px"
+  control: "4px"
   badge: "5px"
   tab: "6px"
   field: "7px"
-  control: "8px"
-  panel: "12px"
 spacing:
   space-8: "8px"
   space-12: "12px"
@@ -101,199 +116,183 @@ components:
     typography: "{typography.label}"
     rounded: "{rounded.badge}"
     padding: "4px 8px"
-  draft-field:
-    backgroundColor: "#fcfdfa"
+  select-field:
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.tab}"
-    padding: "9px 12px"
-  workspace-tab:
-    backgroundColor: "transparent"
+    rounded: "{rounded.field}"
+    padding: "9px 32px 9px 12px"
+  global-navigation:
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.muted}"
-    rounded: "{rounded.tab}"
-    padding: "9px 14px"
-  workspace-tab-selected:
-    backgroundColor: "{colors.soft}"
-    textColor: "{colors.brand}"
+    height: "72px"
   draft-panel:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.panel}"
+    rounded: "{rounded.control}"
     padding: "24px"
-  citation:
-    backgroundColor: "#edf2eb"
-    textColor: "#32634c"
-    rounded: "{rounded.citation}"
-    padding: "4px 6px"
-  assembly-segment:
+  part-selector:
     backgroundColor: "transparent"
-    textColor: "{colors.brand}"
-    rounded: "{rounded.badge}"
-    padding: "8px 15px"
-  assembly-segment-selected:
-    backgroundColor: "{colors.brand}"
-    textColor: "{colors.paper}"
-  component-selector:
-    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     rounded: "{rounded.control}"
-    padding: "17px 12px"
-  component-selector-selected:
-    backgroundColor: "#e3ece4"
+    padding: "10px 9px"
+  part-selector-selected:
+    backgroundColor: "{colors.selection-fill}"
+    textColor: "{colors.selection-text}"
+  selection-chip:
+    backgroundColor: "{colors.soft}"
+    textColor: "{colors.brand}"
+    rounded: "{rounded.selection-chip}"
+    padding: "6px 8px"
 ---
 
 # Design System: ReSource
 
 ## Overview
 
-**Creative North Star: "The Assembly Workbench"**
+**Creative North Star: "From Solid to Source"**
 
-The code-led Operate direction combines warm off-white work surfaces, forest navigation and actions, and pale sage selection. The physical assembly is the visual center of the inspection workspace. Nearby controls, evidence, and compact tables use quiet typography and thin separators so the object and the decision remain connected.
+ReSource uses charcoal lettering, cool near-white work surfaces, electric cobalt actions and selection, and fine dotted geometry. The supplied wordmark establishes the signature: solid Geist lettering resolves into a dotted outline around the pointer, with a restrained vector rig. The working interface carries that precision through thin dividers, compact controls, and prepared physical geometry.
 
-Geist supplies both headings and working text. White panels sit within a pale surface without decorative elevation; amber marks uncertainty, while explicit text and icons carry status. This record describes the implemented visual system, with the tokens above as its normative values. It does not establish geometry, compatibility, or evidence as verified merely because the interface displays them.
+The assembly has depth; the surrounding interface stays flat and legible. Selection is explicit in the model, the part list, and removable chips. Source requirements and unavailable actions remain written beside the relevant controls. The v2 entry and prepared toy-car selection are implemented; the engine demo retains the working intake, evidence, and sourcing flows. The dotted globe and parallel-research frame remain a Figma concept, not a delivered component.
 
 **Key Characteristics:**
-- Assembly-centered inspection with a persistent selected-part context.
-- Forest actions, sage selection, white panels, and thin separators.
-- One variable sans-serif family with compact, tabular numeric content.
-- Direct controls and keyboard alternatives accompany spatial motion.
+- Charcoal and cool paper with cobalt reserved for actions, focus, and selection.
+- Solid-to-dotted ReSource lettering and precise variable Geist typography.
+- Prepared geometry paired with a persistent, keyboard-operable part list.
+- Reversible separation with direct controls, reduced motion, and explicit source states.
 
-Source evidence: `src/tokens.css`, the final cascade in `src/styles.css`, `src/main.tsx`, `src/App.tsx`, `src/components/Primitives.tsx`, and `src/scene/EngineScene.tsx`. Product context lives in `PRODUCT.md`; the surface direction and concept seed live in `briefs/workspace.md`. `design/figma-ledger.json` maps the [Figma exploration](https://www.figma.com/design/o4G1HFAyQybcPuBG1nV2lL) to variables and frames; source code determines the values recorded here.
+Ground truth: `src/tokens.css`, the cascade from `src/styles.css` into `src/product.css`, `src/main.tsx`, `src/brand/VectorWordmark.tsx`, `src/product/*.tsx`, and retained shared primitives. `PRODUCT.md` owns product scope. The direction contract is in `.impeccable/surfaces/src-product-producthome-tsx.md`. `design/figma-ledger.json` maps the [v2 entry and selection frames](https://www.figma.com/design/o4G1HFAyQybcPuBG1nV2lL?node-id=13-24) and the unimplemented research concept; source code determines this record.
 
 ## Colors
 
-The palette is green-tinted and low in saturation, with a dark action color and distinct semantic status tones.
+Cool neutrals support an electric action color; the legacy workflow retains distinct semantic status colors.
 
 ### Primary
 
-- **Forest** (`brand`): global header, primary buttons, active segmented controls, links, and input accents. `brand-hover` deepens primary buttons on hover.
-- **Sage** (`soft`): secondary buttons, active workspace tabs, and neutral provenance badges. `soft-hover` is the secondary button hover fill.
-- **Focus green** (`focus`): visible keyboard outlines around interactive elements.
+- **Electric cobalt** (`brand`): primary actions, links, focus outlines, range accents, checked selections, and selected mesh emission. `brand-hover` is the deeper button hover state.
+- **Cobalt wash** (`soft`): secondary actions, provenance badges, and removable selection chips. `soft-hover` is the secondary hover state.
+- **Selected-part wash, text, and border** (`selection-fill`, `selection-text`, `selection-border`): the pressed-state part row. The checkmark and `aria-pressed` carry the same state independently of color.
 
 ### Secondary
 
-- **Amber** (`warning`): warnings and warning badges.
-- **Status green, red, and amber** (`status-good`, `status-bad`, `status-unknown`): compact results paired with a check, circled cross, or question icon and a written state. Unknown is visually distinct from failure.
+- **Warning amber** (`warning`): written warnings and warning badges.
+- **Status green, red, and amber** (`status-good`, `status-bad`, `status-unknown`): existing engine results with a check, circled cross, or question icon and written status. Unknown remains distinct from failure.
 
 ### Neutral
 
-- **Off-white** (`surface`): page and assembly work surface.
-- **Paper** (`paper`): forms, working panels, tables, and the evidence drawer.
-- **Ink** (`ink`): primary text and control text.
-- **Muted green** (`muted`): supporting text and labels.
-- **Separator** (`border`): panel edges, field boundaries, and row dividers.
+- **Cool paper** (`surface`): page and global header.
+- **White** (`paper`): inspector, forms, and evidence surfaces.
+- **Charcoal** (`ink`): primary text and wordmark.
+- **Slate** (`muted`): supporting text and metadata.
+- **Separator** (`border`): fine panel edges and row boundaries.
+- **Assembly grey** (`stage`): the prepared model’s working ground.
 
-**The Explicit State Rule.** Pair semantic color with a written state and, where the status component is used, its icon; selection color alone does not communicate verification.
+**The Explicit State Rule.** Pair color with a written state, checked selection, or status icon; cobalt selection never means that a requirement is verified.
 
 ## Typography
 
 **Display Font:** Geist Variable, with sans-serif fallback.
-**Body Font:** Geist Variable, with the same fallback; self-hosted through the application font import.
+**Body Font:** Geist Variable, self-hosted through the application font import.
 
-One family handles display and dense operations. Headings use slightly tightened tracking and intermediate variable weights. Body copy remains sentence case; prices, quantities, timestamps, and numbered components use tabular figures where alignment matters. Paragraphs have an observed maximum measure of 75 characters.
+One variable sans-serif supplies expressive identity and dense operational text. The entry wordmark uses the reference’s canvas-based solid/dotted treatment, with a local monospace coordinate overlay. The static fallback supplies the display role recorded above. Canvas lettering uses a reference-width scale rather than that CSS clamp, so it is not an interchangeable heading component.
 
 ### Hierarchy
 
-- **Display:** the intake heading; its responsive size becomes 34px at widths up to 480px.
-- **Headline:** the assembly title; it becomes 27px at widths up to 800px. Case-page headings use a local 30px size.
-- **Title:** section headings; selected sections reduce to 23px at widths up to 480px.
-- **Subheading:** panel headings, with local sizes for document and evidence headings.
-- **Body:** ordinary working copy. The intake introduction uses a local 17px size, reduced to 16px on small screens.
-- **Body-small:** supporting paragraphs and compact details. Tables also use 12px text with their inherited body line height.
-- **Label:** badges. This role is not a general-purpose body size.
+- **Display:** static ReSource wordmark fallback. The animated instance uses weight 650 and a 235px font reference at a 1200px host width.
+- **Headline:** prepared assembly title; it reduces to 28px below the assembly stacking breakpoint.
+- **Page-heading / intake-heading:** retained workflow page headings and the larger source intake heading.
+- **Title / subheading:** general section and panel headings. The parts-list heading has a local 22px override.
+- **Body:** ordinary copy, with a maximum paragraph measure of 75 characters.
+- **Body-small:** supporting details and source-state explanations.
+- **Label:** compact badges, not a general body-text size.
 
-**The One Family Rule.** Use Geist for headings, prose, controls, and numeric data; use tabular figures rather than a second typeface for aligned values.
+**The One Family Rule.** Use Geist for headings, prose, controls, and aligned working data. Keep the wordmark’s coordinate readouts local to its vector treatment.
 
-The existing 8–10px scene annotations and dense metadata are local implementation details, excluded from the reusable type ramp. They do not establish a preferred minimum text size for future screens.
+Local asset credits, coordinate labels, citations, and engine metadata include smaller text. These are recorded as implementation limits, not a reusable minimum-size recommendation. Dense numeric tables retain tabular figures where the source defines them.
 
 ## Layout
 
-Desktop inspection uses a fluid assembly column and a fixed inspector (370px). The header is sticky (76px high). The assembly stage is sticky below it, with a height of `calc(100vh - 136px)`, bounded by 620px and 1050px. Scroll-driven assembly presentation uses a 1300px minimum section; direct-control mode uses the viewport-based stage height. The inspector has its own vertical overflow. Content pages use a centered 1680px maximum width and desktop padding of 30px 40px 60px. Intake has a separate 1800px maximum width.
+The product entry is centered within an 1800px maximum width. Desktop uses a fluid wordmark column and a 280px action column, a 42px gap, and 28px 40px 44px padding. The global header is sticky, with a thin bottom separator. At 900px the entry uses 24px padding, a 230px action column, and a 24px gap. At 600px it stacks with 20px side gutters; the header becomes 68px high. The wordmark host steps from 255px to 300px above 1600px, to 200px below 900px, and to 145px below 600px.
 
-The reusable spacing values above occur throughout padding and gaps; the implementation also uses optical adjustments between them. Thin row separators and grouping provide density without enclosing every item. Research uses a 1.6:1 grid; document review uses a fluid main column with a 310px action rail; source review uses a 0.9:1.1 grid.
+The prepared assembly has a 230vh scroll track and a sticky working area below the 72px header. Its height is `calc(100vh - 72px)` with a 690px minimum. A fluid scene sits beside a 340px white inspector; the inspector becomes 290px below 1050px. Title and controls use 32px horizontal gutters, reduced to 20px at that breakpoint. The inspector scrolls independently on desktop.
 
-- **At 1700px and wider:** the inspector grows to 440px, its padding becomes 40px, and assembly side padding becomes 48px.
-- **At 1100px and narrower:** the inspector becomes 320px, general content padding becomes 24px, and the document action rail becomes 275px.
-- **At 800px and narrower:** the header becomes 68px high; intake, research, document review, source review, and detail columns stack. The inspector and action rail become normal-flow content. The assembly remains sticky below the header, bounded by 620px and 800px; its canvas has a 280px minimum height. Source preview becomes static. Component selection remains available below the scene.
-- **At 760px and narrower:** the comparison table reveals a horizontal-scroll instruction. The table remains horizontally scrollable instead of compressing its numeric columns.
-- **At 480px and narrower:** outer content gutters become 16px, workspace navigation spans a full row, draft fields stack, and the draft footer becomes vertical. The assembly is bounded by 600px and 780px with a 260px minimum canvas height. Nonessential component numbers and icons are hidden by the relevant narrow-screen rules; the text buttons remain.
+At 700px and narrower, the assembly becomes normal-flow content with a 370px scene row and the parts inspector below it. The part buttons form two columns. Direct-control and reduced-motion modes remove the long scroll track. The current scroll observer retains its 72px offset; do not generalize it as a responsive rule.
 
-The current scroll observer starts at a 76px top offset even when the mobile header is 68px. That fixed observer value is recorded as source behavior, not promoted to a universal responsive rule.
+Compatible engine-workflow layouts remain: centered content pages with a 1680px maximum width, fluid research and source-review columns, document action rails, and horizontally scrollable comparison tables. These flows stack at their existing 800px breakpoint; outer content gutters reduce at 480px. The reusable spacing scale above supplies shared gaps and padding, with local optical adjustments documented by the source.
 
 ## Elevation & Depth
 
-Ordinary cards and forms are flat: background tone, whitespace, and fine borders establish their boundaries. Shadows are reserved for spatial pins and the evidence drawer. The rendered assembly has its own contact shadow and lighting; that physical depth does not imply elevation for surrounding UI panels.
+The product workspace is flat: tone, whitespace, and borders separate its controls. The toy-car model receives scene lighting and a soft contact shadow (opacity 0.24, blur 2.6, scale 15, far 4). These are renderer settings, not CSS elevation values. Prepared selected meshes add cobalt emission at intensity 0.85; this is selection feedback rather than a material claim.
 
-### Shadow Vocabulary
+The existing engine workflow still uses floating mesh-pin, evidence-drawer, and mobile-inspector shadows. The sidecar records their exact values as compatibility extensions; their older green tint is not the v2 elevation palette.
 
-- **Mesh pin:** a soft local shadow (`0 3px 9px #233d2830`) separates a numbered control from the model.
-- **Evidence drawer:** a left-cast shadow (`-8px 0 35px #1430201a`) places the drawer above the workspace; its separate backdrop is translucent forest (`#152e2440`).
-- **Assembly contact:** the scene uses contact-shadow opacity 0.25, blur 2.8, scale 14, and far distance 3. These are scene-rendering parameters, not CSS elevation tokens.
-
-**The Flat Work Surface Rule.** Keep ordinary panels free of box shadows; reserve the existing shadow treatments for floating pins and the evidence drawer.
+**The Flat Work Surface Rule.** Use tone, whitespace, and fine borders for ordinary panels; keep physical lighting and contact shadows within the assembly scene.
 
 ## Shapes
 
-Controls and panels use restrained rounded rectangles. Control corners, field corners, workspace tabs, badges, citations, and panels have separate recorded radii; do not collapse their distinctions into one large pill shape. Mesh pins are circular, with a white 2px border and a rendered overlay size of 32px. Small circular step counters and event marks are part of their respective sequences.
+The v2 control and primary working-panel silhouette is a restrained rounded rectangle using the control radius. Part checkboxes use small square corners; removable chips are slightly softer, and legacy badges, tabs, and form fields retain their recorded radii. Borders are normally 1px. The selected part row adds its explicit border, wash, and checked square rather than changing size.
 
-Borders are normally 1px. Selected component buttons add a muted green border (`#a5c0af`) and a pale selection fill; table selection uses its own pale row tint. These are local state treatments rather than replacements for the primary action fill.
+The wordmark’s dotted outlines, fine dashed lines, and three square handles supply the identity’s vector geometry. Keep those details attached to the reference treatment; ordinary labels remain plain text. Existing engine mesh pins remain circular and numbered.
 
 ## Components
 
 ### Buttons
 
-Compact and direct. Primary, secondary, text, and icon buttons share a 42px minimum height, medium weight, and the control radius. Icon-only buttons also have a 42px minimum width; compact actions use a 34px minimum height and 7px 12px padding. The header has a smaller icon-control override on narrow screens.
+Compact and direct. Primary, secondary, text, and icon buttons share the control radius, a 42px minimum height, medium weight, and the documented padding. Icon buttons have a 42px minimum width. Compact actions use a 34px minimum height with 7px 12px padding. The entry upload action has a 48px minimum height, reduced to 46px below 600px.
 
-Primary and secondary hover fills are tokenized above. Text and icon buttons gain a sage background on hover. Background and text color transition over 160ms with CSS's default `ease`; there is no explicit pressed animation. Disabled buttons use opacity 0.5 and a not-allowed cursor.
+Primary and secondary hover fills are tokenized above. Text and icon buttons gain the cobalt wash on hover. Background and color transitions last 160ms with CSS’s default ease; no separate pressed animation is defined. Disabled buttons use opacity 0.5 and a not-allowed cursor.
 
-All buttons, links, inputs, selects, textareas, and summaries have a 2px solid focus-green `:focus-visible` outline with a 4px offset. The upload label uses a 2px forest outline with the same offset on `:focus-within`.
+Interactive elements share a 2px solid cobalt focus outline with a 4px offset. The upload field’s focus-within treatment follows the same brand token. Preserve these visible keyboard states.
 
 ### Chips and statuses
 
-Badges are compact, slightly rounded provenance or state labels. Neutral badges use sage and forest. Warning and good variants have local tinted fills. Statuses are inline text and icons rather than filled chips; good, bad, and unknown must remain distinguishable by their contents.
+Neutral provenance badges use the cobalt wash and cobalt text. Selected parts appear as removable chips with an inline close SVG and an accessible removal label. Badge warning and good variants retain their semantic engine-workflow fills. Inline compatibility and review results remain icon-plus-text statuses rather than selection chips.
 
 ### Cards / Containers
 
-White panels use the panel radius and no box shadow. Drafts use 24px padding, changing to 22px below 800px and 20px 16px below 480px. Candidate details and requirement panels use related 24–28px interior spacing. Collapsible drafts use a native summary; the status sits at its trailing edge and wraps on small screens.
+White drafts, upload slots, requirement panels, and candidate details use the control radius after the v2 override. Draft padding is 24px on desktop, 22px below 800px, and 20px 16px below 480px. Native summaries retain an explicit status and keyboard interaction. Other retained engine containers may still use their original radius; those exceptions do not change the v2 default.
 
 ### Inputs / Fields
 
-Selects use a white fill, separator border, field radius, and 9px 32px 9px 12px padding. Draft textareas use a pale fill, fine green border, tab radius, and the documented draft-field padding. They are full-width, vertically resizable, and have a 40px minimum height. Requirement textareas use their own 42px minimum height, 13px text, and field radius. All retain the shared visible focus treatment. This source does not define a reusable field-error border variant.
+Select fields use a white fill, separator border, field radius, and the frontmatter padding. Retained draft and requirement textareas stay full-width and vertically resizable; their existing local fills and radii remain compatibility details. All retain visible focus. This implementation has no reusable error-border variant.
 
 ### Navigation
 
-The forest global header has light navigation text, white active text, and a 3px sage underline at the active item. Workspace navigation is a separate white toolbar: muted text at rest, sage fill and forest text on the active rounded tab. The source defines selected and focus states without an additional workspace-tab hover fill. On narrow screens the toolbar wraps, then the tabs occupy a full row.
+The global header uses cool paper, charcoal identity, and muted navigation labels. The active item has charcoal text and a 2px cobalt underline. The compact header mark also uses cobalt. Header navigation remains in a horizontal row on small screens with reduced gaps and hidden nonessential mark detail.
+
+Engine workspace tabs remain a distinct white toolbar with a cobalt-wash selected state. Their existing wrapping behavior and accessible selected state remain intact.
+
+### Prepared assembly and selection
+
+The eight prepared visual groups share stable component and node IDs. Clicking the model or pressing a part-list button toggles one member of the selection; Select all and Clear selection manage the whole set. The list’s checkmark, pressed state, selection count, and removable chips mirror the mesh highlight. The active part’s detail remains distinct from the set of selected parts.
+
+Reversible Anime.js scroll progress drives prepared separation. Ordinary scene movement damps toward that progress; reduced motion applies direct values. Assemble, Explode, and a labelled range input from 0 to 1 with 0.01 steps are always available. Direct input disables scroll separation, and a restore control re-enables it. Reduced motion uses a static wordmark and removes the extended scroll track. Model loading and failure text keep the part list usable when rendering is unavailable.
+
+The geometry label and source-required dimensions/material text stay beside the object. The toy-car source review and supplier research are explicitly unavailable; the working engine-demo action is separate. The future dotted-globe research concept is not a component in this record.
+
+### Wordmark
+
+The ReSource canvas treatment follows the user-supplied reference: pointer-responsive solid and dotted lettering, three square vector handles, and coordinate readouts. The visual treatment is hidden from assistive technology while the page carries a real ReSource heading. The static wordmark appears for reduced motion and when the canvas is not ready. Rendering pauses when its host is out of view or the document is hidden.
 
 ### Citations and evidence
 
-Citations are small buttons with an inline document SVG, pale fill, and darker green text. They wrap long identifiers rather than truncating the reference; hover darkens the fill. A native modal dialog holds the right-aligned evidence drawer (540px, capped at the viewport width) with a separate close control and dismissible backdrop. The drawer scrolls independently. This pattern exposes source details; it does not assign evidentiary authority through styling.
-
-### Assembly controls
-
-Numbered mesh pins and text component buttons provide parallel entry points. Selected text buttons use a sage tint and green border with `aria-pressed`; the component list remains the renderer fallback. Assemble/Explode are two pressed-state buttons inside a pale segmented tray. A labelled range input exposes separation from 0 to 1 in 0.01 steps. Direct input turns scroll-driven separation off.
-
-Scroll synchronizes separation linearly and reverses with scrolling. Mesh separation follows a damping coefficient of 10, with frame delta capped at 0.1 seconds. Camera focus interpolates with `1 - exp(-delta * 6)`. These are interpolation rates, not fixed animation durations. Under reduced motion, scroll-driven separation is disabled and geometry/camera positions update directly; CSS animation and transition durations reduce to 0.01ms, animation iteration count becomes one, and smooth scrolling becomes automatic. The loading spinner otherwise rotates over 1.4 seconds linearly. Motion communicates inspection state, never compatibility or approval.
+The working engine flow retains source-link buttons with inline document icons, long-identifier wrapping, and an independently scrollable evidence drawer in a native modal dialog. The drawer is 540px wide, capped at the viewport width, with a separate close control and dismissible backdrop. Keep provenance and source status visible. Legacy citation and excerpt tints are compatibility details awaiting full palette alignment.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- Do keep source identity, provenance, uncertainty, and status readable beside the object or decision they qualify.
-- Do use the forest primary action, sage selection, and quiet white panels for their established roles.
-- Do preserve visible keyboard focus, native controls, direct separation input, and the component-list fallback.
-- Do use tabular figures and retain horizontal scrolling for dense comparison data.
-- Do honor reduced motion in both CSS and the rendered scene.
+- **Do** use cobalt for interactive selection and visible focus while keeping source status written in text.
+- **Do** retain the source-required dimensions and material labels beside prepared geometry.
+- **Do** keep the model, pressed-state part list, selection count, and removable chips synchronized.
+- **Do** provide Assemble, Explode, and the separation slider alongside reversible scroll motion.
+- **Do** preserve the engine workflow’s evidence links, provenance labels, status icons, and SIMULATED receipts.
+- **Do** use the supplied wordmark as the identity reference and provide its static reduced-motion fallback.
 
 ### Don't:
 
-- Don't use color alone to communicate a result or treat selection styling as verification.
-- Don't make scrolling or mesh interaction the only route to component selection and inspection.
-- Don't apply the evidence-drawer or pin shadow to ordinary working panels.
-- Don't reuse the smallest scene annotations as the default body or label scale.
-- Don't let animation or physical realism imply document-backed compatibility, generation, or approval.
-
-
-## Engine-first entry revision
-
-The first visit opens `EngineIntro`: a real R3F representative assembly, independent of API readiness. AI-generated engine imagery is removed from the application. Source intake is a centered, 760px-wide document form without a promotional side panel. A 265vh desktop scroll track progressively separates seven modules and reassembles on reverse scroll; direct controls and reduced motion remain available. Indexed blade surfaces share normals, metal lighting has stronger depth, and the camera opens toward the intake. Module geometry and the labelled strip select the same module.
-
-Source upload and requirements sit beside the scene. On narrow screens an explicit details control opens the same module, part and upload content; it is not removed. Supplier actions stay disabled until a real visitor run exists. Source navigation uses `#sources` so a reload resumes extraction/review. New visitors with no view hash see the assembly. Figma revision frames: `8:21`, `8:58`, `8:95`.
+- **Don’t** treat curated geometry or a visual group as proof of an engineering requirement.
+- **Don’t** present the globe/research concept, toy-car source review, or toy-car supplier research as implemented.
+- **Don’t** use cobalt alone to convey selection, compatibility, or approval.
+- **Don’t** add decorative card shadows to the flat product workspace.
+- **Don’t** turn residual forest-tinted engine styles or 8–10px metadata into v2 defaults.

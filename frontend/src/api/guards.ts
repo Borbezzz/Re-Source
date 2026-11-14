@@ -106,3 +106,16 @@ export function meshSourceBlock(
   }
   return null;
 }
+
+// Older generated contracts describe strings; deployed change events carry objects.
+export function staleReasonText(reason: unknown): string {
+  if (typeof reason === "string") return reason;
+  if (
+    reason &&
+    typeof reason === "object" &&
+    "summary" in reason &&
+    typeof reason.summary === "string"
+  )
+    return reason.summary;
+  return "";
+}

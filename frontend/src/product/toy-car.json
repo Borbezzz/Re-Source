@@ -1,0 +1,76 @@
+{
+  "assembly_id": "toy-car-demo",
+  "name": "Toy car assembly",
+  "asset_url": "/models/toy-car.glb",
+  "provenance": "Curated CC0 model, separated into visual groups in Blender. Not reconstructed from an uploaded blueprint.",
+  "source_url": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/ToyCar",
+  "license": "CC0-1.0",
+  "source_sha256": "01a60862de55cd4b9f3acfab0b0def86451800f9c42467fcd61052c16cb9838c",
+  "authors": ["Guido Odendahl", "Eric Chadwick"],
+  "components": [
+    {
+      "component_id": "toycar-body",
+      "node_name": "ToyCar_Body",
+      "label": "Body shell",
+      "explode": [0, 0.55, 0],
+      "source_node": "ToyCar",
+      "requirements_status": "source_required"
+    },
+    {
+      "component_id": "toycar-glazing",
+      "node_name": "ToyCar_Glazing",
+      "label": "Window glazing",
+      "explode": [0, 1.55, 0],
+      "source_node": "Glass",
+      "requirements_status": "source_required"
+    },
+    {
+      "component_id": "toycar-wheel-fl",
+      "node_name": "ToyCar_Wheel_FL",
+      "label": "Front left wheel",
+      "explode": [-1.15, -0.15, -0.1],
+      "source_node": "ToyCar",
+      "requirements_status": "source_required"
+    },
+    {
+      "component_id": "toycar-wheel-fr",
+      "node_name": "ToyCar_Wheel_FR",
+      "label": "Front right wheel",
+      "explode": [1.15, -0.15, -0.1],
+      "source_node": "ToyCar",
+      "requirements_status": "source_required"
+    },
+    {
+      "component_id": "toycar-wheel-rl",
+      "node_name": "ToyCar_Wheel_RL",
+      "label": "Rear left wheel",
+      "explode": [-1.15, -0.15, 0.1],
+      "source_node": "ToyCar",
+      "requirements_status": "source_required"
+    },
+    {
+      "component_id": "toycar-wheel-rr",
+      "node_name": "ToyCar_Wheel_RR",
+      "label": "Rear right wheel",
+      "explode": [1.15, -0.15, 0.1],
+      "source_node": "ToyCar",
+      "requirements_status": "source_required"
+    },
+    {
+      "component_id": "toycar-bumper-f",
+      "node_name": "ToyCar_Bumper_F",
+      "label": "Front bumper",
+      "explode": [0, 0, -1.2],
+      "source_node": "ToyCar",
+      "requirements_status": "source_required"
+    },
+    {
+      "component_id": "toycar-bumper-r",
+      "node_name": "ToyCar_Bumper_R",
+      "label": "Rear bumper",
+      "explode": [0, 0, 1.2],
+      "source_node": "ToyCar",
+      "requirements_status": "source_required"
+    }
+  ]
+}

@@ -1,23 +1,11 @@
 # ReSource
 
-Jet-engine supplier recovery for a UK aerospace procurement/maintenance buyer.
-Confirmed flow: blueprint plus part-requirement specification → source-linked
-extraction review → generated, segmented, labelled 3D → select a mesh → supplier
-investigation → compare requirements/evidence/cost → review a draft approval pack.
+A product-parts sourcing workspace. The authorized v2 direction generalizes the original jet-engine demo to multi-component products: detailed blueprint and specification inputs, reviewed source-backed requirements, a curated segmented 3D model, one or many selected parts, parallel supplier investigation and inspectable evidence.
 
-The factory specification contains part dimensions, material, tolerance and
-certification requirements. Geometry never proves those properties. Each mesh
-needs a document-backed identity; uncertain mapping requires confirmation.
+Curated geometry is prepared and animated in Blender. It does not demonstrate arbitrary blueprint reconstruction or establish engineering requirements. Dimensions, materials, tolerances and certifications require reviewed sources. The current toy-car preview has eight visual groups with stable component/node IDs; its source review and research remain unavailable until backend catalog/rule isolation is complete. The engine demo remains the working intake and sourcing path.
 
-The backend handoff currently supports a labelled representative engine and three
-synthetic component cases. Intake v1.1 is integrated: uploads, cited requirement drafts, review and mesh validation. Blueprint generation returns provider_required until an actual server adapter is connected; never represent fixture loading as document-to-3D generation. OpenAI is the
-application model provider (D-001 confirmed by Yixin).
+Preserve seeded/live/replay distinctions, synthetic offers, public leads, scenario signals and SIMULATED receipts. Selection, document approval, install and restore remain backend-authoritative. Existing compatibility checks evaluate part identity; additional uploaded engineering requirements remain unknown/manual review. OpenAI supplies application models; Vercel serves frontend/API with Databricks data services.
 
-The product must distinguish seeded/live/replay mode, synthetic offers, public
-leads, scenario signals, fixture reliability and SIMULATED receipts. Selection,
-document approval, install and restore remain backend-authoritative.
+The supplied ReSource wordmark and dotted globe references establish the visual direction. Use Figma and Impeccable. Reversible Anime.js motion controls prepared Three.js/R3F geometry. Keep keyboard selection, direct controls, reduced motion and explicit loading/failure states. Research visuals must reflect real task/tool/source/check/decision events, retain provenance and explain targeted reassessment. Unknown locations are not plotted as known.
 
-Design in Figma using Impeccable Operate guidance. A reversible Anime.js scroll
-timeline controls explosion presentation; actual geometry uses Three.js/R3F.
-Support keyboard component selection, direct explosion controls, reduced motion,
-source citations, case isolation, stale evidence and reconnecting event streams.
+BUY/MAKE choices, joint batch optimization, business constraints and final purchasing/forms outcomes remain open. Preserve compatible existing flows without inventing decisions. The parallel research/globe frontend is a following implementation milestone, not complete in the first asset/selection increment.

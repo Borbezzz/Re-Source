@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
 
-test("first load renders a real engine without API readiness and reverses its scroll sequence", async ({
+test("engine demo renders real geometry without API readiness and reverses its scroll sequence", async ({
   page,
 }) => {
   // The API is unavailable; no fake run or supplier results are injected.
@@ -9,7 +9,7 @@ test("first load renders a real engine without API readiness and reverses its sc
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await mkdir(".impeccable/review", { recursive: true });
-  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.goto("/#engine", { waitUntil: "domcontentloaded" });
   {
     await expect(page.locator(".intro-canvas canvas")).toBeVisible();
     await expect(page.locator(".scene-root")).toHaveAttribute(
@@ -29,7 +29,14 @@ test("first load renders a real engine without API readiness and reverses its sc
     ] as const) {
       await page.evaluate(
         (y) => scrollTo({ top: y, behavior: "instant" }),
-        extent * progress,
+        (await page
+          .locator(".intro-scroll")
+          .evaluate((el) => el.offsetTop - 76)) +
+          (extent -
+            (await page
+              .locator(".intro-scroll")
+              .evaluate((el) => el.offsetTop - 76))) *
+            progress,
       );
       await expect
         .poll(async () =>
