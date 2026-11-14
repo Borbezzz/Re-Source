@@ -104,7 +104,8 @@ class ScenarioService:
                 if e["type"] in ("case.state_changed",) and e["data"].get("state") == "ready":
                     continue
                 s.bus.publish(run_id, case_id, e["type"], f"Replay: {e['summary']}", {**e["data"], "replay": True, "replay_of_event": e["event_id"]},
-                              task_id=e.get("task_id"), evidence_refs=e.get("evidence_refs", []))
+                              task_id=e.get("task_id"), evidence_refs=e.get("evidence_refs", []),
+                              data_origin=e.get("data_origin", "synthetic_demo"))
                 time.sleep(0.05)
         for c in cases:
             with s.store.tx() as conn:

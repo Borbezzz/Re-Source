@@ -478,7 +478,8 @@ async def run_events(run_id: str, request: Request, after: int = 0, last_event_i
     return StreamingResponse(_sse(run_id, "__run__", after, request), media_type="text/event-stream", headers={"Cache-Control": "no-cache"})
 
 
-@app.get("/api/v1/cases/{case_id}/events/history")
+@app.get("/api/v1/cases/{case_id}/events/history", response_model=None,
+         responses={200: {"model": list[M.DomainEvent | M.SupplierDiscoveryEvent]}})
 async def case_event_history(case_id: str, after: int = 0, run_id: Optional[str] = None, limit: int = 1000) -> list[dict]:
     s = services()
     rid = await run_in_threadpool(s.views.run_id, run_id)
