@@ -15,7 +15,7 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-SCHEMA_VERSION = "1.2"
+SCHEMA_VERSION = "1.3"
 
 
 def utcnow() -> datetime:
@@ -128,6 +128,24 @@ class Locator(Contract):
 # ----------------------------------------------------------------------------------------------
 # Entities (PRD §6.1)
 # ----------------------------------------------------------------------------------------------
+
+
+class AssemblyProfileComponent(Contract):
+    component_id: str
+    display_name: str
+    node_name: str
+
+
+class AssemblyProfile(Contract):
+    assembly_id: str
+    display_name: str
+    product_type: str
+    description: str
+    requirements_status: Literal["source_required", "fixture_defined"]
+    investigation_available: bool
+    data_origin: DataOrigin
+    asset: dict[str, Any] = {}
+    components: list[AssemblyProfileComponent]
 
 
 class MeshMapping(Contract):

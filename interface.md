@@ -34,6 +34,8 @@ Model names below (e.g. `CaseView`) are the Pydantic/TS type names.
 
 | Method & path | Request | Response | Notes |
 |---|---|---|---|
+| GET `/assemblies` | — | `AssemblyProfile[]` | Lists the current engine demo and configured assembly previews, including component-to-node mappings and `investigation_available`. |
+| GET `/assemblies/{assembly_id}` | — | `AssemblyProfile` | Preview one profile. `toy-car-demo` has eight components, `requirements_status: source_required`, and `investigation_available: false`; its preview cannot launch engine investigations. |
 | GET `/engines/{engine_id}` | — | `EngineView` | Manifest, component instances, case summaries for the current run, `scenario_run_id`, mode. `engine_id = engine-demo-001`. |
 | GET `/cases/{case_id}` | `?run_id=` | `CaseView` | Current projection: state, revision, input revision, visual state, monitoring, current/initial decision IDs, `decision_labels` (`{"dec-…": "D1"}`), current selection/package/receipt, stale reasons, tasks, `event_cursor`, `events_url`, provenance (mode, fixture version, data origin). |
 | POST `/cases/{case_id}/investigations` | `StartInvestigationRequest {expected_revision?, mode, idempotency_key?}` | **202** `CommandAccepted` | Starts or resumes. `status`: `accepted` / `already_running` / `duplicate`. |
