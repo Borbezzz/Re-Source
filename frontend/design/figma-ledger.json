@@ -31,7 +31,6 @@
     "review": "3:145"
   },
   "images": [
-    "3:62",
     "3:73"
   ],
   "buttons": {
@@ -193,5 +192,10 @@
     "separating": "8:58",
     "exploded": "8:95",
     "note": "Editable layout and schematic module placement; actual scene verified with rendered browser captures."
+  },
+  "sourceIntakeRevision": {
+    "removedImageNode": "3:62",
+    "centeredWorkspaceNode": "3:43",
+    "reason": "Yixin requested removal of the AI engine illustration."
   }
 }

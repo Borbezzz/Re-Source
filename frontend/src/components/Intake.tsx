@@ -643,30 +643,6 @@ export function Intake({
           </button>
         </div>
       </section>
-      <aside className="intake-art">
-        <div className="art-caption">
-          <Badge>Jet-engine recovery</Badge>
-          <span>From requirement to recovery.</span>
-        </div>
-        <img
-          src="/images/engine-concept.png"
-          width="1536"
-          height="1024"
-          alt="Illustrative exploded turbofan engine with fan, compressor, combustor and turbine stages"
-        />
-        <div className="art-note">
-          <h2>
-            See the part.
-            <br />
-            Understand the options.
-          </h2>
-          <p>
-            Source-backed requirements stay connected to every supplier check
-            and draft approval.
-          </p>
-          <small>AI-generated illustration. Not an engineering model.</small>
-        </div>
-      </aside>
     </main>
   );
 }
