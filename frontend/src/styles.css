@@ -338,9 +338,9 @@ select {
 }
 .intake {
   display: grid;
-  grid-template-columns: minmax(380px, 0.95fr) minmax(0, 1.05fr);
+  grid-template-columns: minmax(0, 1fr);
   min-height: calc(100vh - 76px);
-  max-width: 1800px;
+  max-width: 760px;
   margin: auto;
 }
 .intake-copy {
@@ -453,51 +453,6 @@ select {
 }
 .demo-entry .text-button {
   padding-left: 0;
-}
-.intake-art {
-  background: #e8ede7;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  justify-content: center;
-}
-.art-caption {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 32px;
-  color: #405c4d;
-  font-size: 12px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-.intake-art img {
-  width: 100%;
-  height: auto;
-  mix-blend-mode: multiply;
-  object-fit: contain;
-}
-.art-note {
-  padding: 20px 48px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.art-note h2 {
-  font-size: 35px;
-  font-weight: 500;
-  letter-spacing: -0.03em;
-}
-.art-note p {
-  color: #526755;
-  max-width: 42ch;
-}
-.art-note small {
-  color: #596d5d;
-  margin-top: 8px;
 }
 .workspace-toolbar {
   display: flex;
@@ -1526,21 +1481,6 @@ input[type="range"] {
   }
   .intake-copy h1 {
     max-width: none;
-  }
-  .intake-art {
-    min-height: 400px;
-  }
-  .intake-art img {
-    max-height: 350px;
-  }
-  .art-caption {
-    position: static;
-  }
-  .art-note {
-    padding: 0 24px 32px;
-  }
-  .art-note h2 {
-    font-size: 28px;
   }
   .workspace-toolbar {
     padding: 12px 20px;

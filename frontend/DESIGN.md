@@ -294,6 +294,6 @@ Scroll synchronizes separation linearly and reverses with scrolling. Mesh separa
 
 ## Engine-first entry revision
 
-The first visit opens `EngineIntro`: a real R3F representative assembly, independent of API readiness. The concept PNG is not the primary hero. A 265vh desktop scroll track progressively separates seven modules and reassembles on reverse scroll; direct controls and reduced motion remain available. Indexed blade surfaces share normals, metal lighting has stronger depth, and the camera opens toward the intake. Module geometry and the labelled strip select the same module.
+The first visit opens `EngineIntro`: a real R3F representative assembly, independent of API readiness. AI-generated engine imagery is removed from the application. Source intake is a centered, 760px-wide document form without a promotional side panel. A 265vh desktop scroll track progressively separates seven modules and reassembles on reverse scroll; direct controls and reduced motion remain available. Indexed blade surfaces share normals, metal lighting has stronger depth, and the camera opens toward the intake. Module geometry and the labelled strip select the same module.
 
 Source upload and requirements sit beside the scene. On narrow screens an explicit details control opens the same module, part and upload content; it is not removed. Supplier actions stay disabled until a real visitor run exists. Source navigation uses `#sources` so a reload resumes extraction/review. New visitors with no view hash see the assembly. Figma revision frames: `8:21`, `8:58`, `8:95`.
