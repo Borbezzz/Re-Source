@@ -10,6 +10,8 @@ Date: 14 November 2026. Integrated from dark theme 5f9f61f, guided demo 097d573 
 - Demo tests use actual local APIs and a private operational store with model/Databricks/Linkup/Companies House/prewarm disabled. They exercise deterministic fallbacks and all normal confirmation/approval gates, not live provider success.
 - First visual review returned fix for stale header branding and a mobile active tab shrinking under its label. Both were fixed in the integrated app and recaptured at1440x900 and390x844. The independent scoring pass returned ship for those fixes, with no visible introduced regression. No QUALITY BAR card was supplied; no whole-surface ceiling certification is claimed.
 - Native controls, pointer-exit clearing, real refraction in Chromium, reduced motion, no-WebGL fallback and background suspension were verified by the dark worker. SVG backdrop displacement remains a progressive enhancement.
+- A subsequent full-workflow review caught legacy light research/comparison panels. Their dark backgrounds and field states are corrected. The fresh working-screen reviewer returned `disposition: ship` for comparison, evidence, approval and desktop/mobile receipt captures; motion, keyboard behavior and other mobile stages were outside that capture-only scope.
+- After the contrast correction, the production build, 14 frontend invariants and the complete prepared-demo browser journey passed again.
 
 ## Source and provider facts
 
