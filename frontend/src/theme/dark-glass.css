@@ -396,6 +396,181 @@ input[type="range"]::-moz-range-thumb {
   color: #16213a;
   border-color: transparent;
 }
+/* The real sourcing workflow retains legacy surfaces outside the hero. */
+.workspace-toolbar {
+  background: #11141be8;
+  color: var(--ink);
+  border-color: var(--border);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+.workspace-tabs {
+  background: transparent;
+}
+.workspace-tabs button {
+  border-radius: 10px;
+}
+.workspace-tabs button:hover {
+  color: var(--ink);
+  background: #ffffff0b;
+}
+.workspace-tabs button.active {
+  background: #24324d;
+  color: #c7d8ff;
+}
+.breadcrumb {
+  color: var(--muted);
+}
+.breadcrumb strong {
+  color: var(--ink);
+}
+.segmented {
+  background: var(--glass-fill);
+  box-shadow: var(--glass-edge);
+  border-radius: 12px;
+}
+.segmented button {
+  color: #ccd7eb;
+  border-radius: 9px;
+}
+.segmented button[aria-pressed="true"] {
+  background: #d8e4fa;
+  color: #16213a;
+}
+.component-list > button {
+  background: #141922;
+  color: var(--ink);
+  border-color: var(--border);
+  border-radius: 12px;
+}
+.component-list > button:hover {
+  background: #1b2330;
+}
+.component-list > button.selected {
+  background: #1d2e4c;
+  border-color: #7499dd;
+}
+.component-list > button > svg,
+.component-number,
+.scene-orientation,
+.upload-field > svg,
+.inspector-empty > svg {
+  color: var(--muted);
+}
+.scene-orientation span {
+  background: #667289;
+}
+.mesh-pin.active,
+.input-steps li.current::before {
+  color: #15213a;
+}
+.research-top > .activity,
+.batch-research-top > .activity {
+  background: var(--paper);
+  color: var(--ink);
+}
+.event-mark {
+  background: #91c5ac;
+}
+.event-mark.failed {
+  background: #f0a092;
+}
+.supply-map {
+  background: #131a23;
+  color: var(--ink);
+}
+.supply-map[role="status"] {
+  padding: 24px;
+  color: var(--muted);
+}
+.map-heading span,
+.map-caption {
+  color: var(--muted);
+}
+.supply-map > svg > g:first-child {
+  fill: #59697d;
+}
+.map-sites button {
+  background: #253247;
+  color: #c6d4e9;
+  border-radius: 8px;
+}
+.map-sites button:hover {
+  background: #34445f;
+  color: #fff;
+}
+.map-sites button.chosen {
+  background: #b9cefa;
+  color: #16213a;
+}
+.comparison-table {
+  background: var(--paper);
+  color: var(--ink);
+}
+.comparison-table th {
+  background: #1b222d;
+  color: #bec7d6;
+}
+.comparison-table td {
+  border-color: var(--border);
+}
+.comparison-table tbody tr:hover {
+  background: #1a202b;
+}
+.comparison-table tr.selected-row {
+  background: #1b2b45;
+}
+.comparison-table tr.selected-row:hover {
+  background: #213554;
+}
+.comparison-table td:first-child > .badge {
+  color: #b8ccff;
+}
+.decision-diff {
+  background: #172b24;
+  color: #c8e2d4;
+}
+.citation {
+  background: #26334a;
+  color: #c6d7fa;
+  border-radius: 6px;
+}
+.citation:hover {
+  background: #354868;
+  color: #fff;
+}
+.document-actions {
+  background: #151b25;
+  color: var(--ink);
+  border-radius: 14px;
+}
+.document-actions hr {
+  border-color: var(--border);
+}
+.receipt {
+  border-color: #ffffff30;
+  color: var(--ink);
+}
+.source-preview iframe {
+  background: var(--paper);
+}
+select option {
+  background: #14171e;
+  color: var(--ink);
+}
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #9cbaff;
+}
+.facts dt,
+.draft summary .muted,
+.event-meta {
+  color: #aeb8c9;
+}
+.warning,
+.warning-box .muted {
+  color: #edc99a;
+}
 @media (max-width: 1050px) {
   .global-header {
     gap: 24px;
