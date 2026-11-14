@@ -38,8 +38,8 @@ test("source selections survive the initial engine connection", async ({
     "requirements.txt",
   );
   // An intentional new run must still discard selections from the old run.
-  await page.getByRole("button", { name: "Run settings" }).click();
-  await page.getByRole("button", { name: "Start new run" }).click();
+  await page.getByRole("button", { name: "Demo data options" }).click();
+  await page.getByRole("button", { name: "Start new session" }).click();
   await expect(page.locator(".file-button").nth(0)).toContainText(
     "Choose blueprint",
   );

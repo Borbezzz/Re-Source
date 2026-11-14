@@ -4,6 +4,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Box,
+  ChevronDown,
   ChevronLeft,
   Crosshair,
   FileText,
@@ -11,7 +12,6 @@ import {
   Layers3,
   RotateCcw,
   Search,
-  Settings2,
 } from "lucide-react";
 import { staleReasonText } from "./api/guards.ts";
 import { api, type Command } from "./api/client.ts";
@@ -44,6 +44,25 @@ const InvestigationWorkspace = lazy(() =>
 );
 const EngineScene = lazy(() => import("./scene/EngineScene.tsx"));
 type Tab = "assembly" | "suppliers" | "documents";
+const sessionModes: Record<
+  Schema<"Mode">,
+  { label: string; description: string }
+> = {
+  seeded: {
+    label: "Demo data",
+    description:
+      "Explore prepared parts and example supplier information. Prices and orders are simulated.",
+  },
+  live: {
+    label: "Live research",
+    description:
+      "Search public supplier information. Offers, prices and orders are still simulated.",
+  },
+  replay: {
+    label: "Replay",
+    description: "Review the current session using its recorded results.",
+  },
+};
 const shortName = (c: ComponentInstance) =>
   c.part_identity === "RS-FN-1001"
     ? "Fuel nozzle"
@@ -93,7 +112,29 @@ export default function App() {
   };
   const [mode, setMode] = useState<Schema<"Mode">>("seeded"),
     [runBusy, setRunBusy] = useState(false),
+    [runError, setRunError] = useState(""),
     [settings, setSettings] = useState(false);
+  const settingsContainer = useRef<HTMLDivElement>(null);
+  const settingsButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!settings) return;
+    const dismissOutside = (event: PointerEvent) => {
+      if (!settingsContainer.current?.contains(event.target as Node))
+        setSettings(false);
+    };
+    const dismissOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSettings(false);
+        settingsButton.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", dismissOutside);
+    document.addEventListener("keydown", dismissOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", dismissOutside);
+      document.removeEventListener("keydown", dismissOnEscape);
+    };
+  }, [settings]);
   const updateDemo = (value: DemoSession | null) => {
     saveDemoSession(value);
     setDemo(value);
@@ -209,6 +250,7 @@ export default function App() {
   };
   const newRun = async () => {
     setRunBusy(true);
+    setRunError("");
     try {
       await api
         .newRun(mode, mode === "replay" ? engine?.scenario_run_id : undefined)
@@ -217,8 +259,12 @@ export default function App() {
       updateDemo(null);
       setInitialPart(null);
       setIntakeVersion((version) => version + 1);
+      setSettings(false);
+      settingsButton.current?.focus();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not start this run.");
+      setRunError(
+        e instanceof Error ? e.message : "Could not start this session.",
+      );
     } finally {
       setRunBusy(false);
     }
@@ -280,52 +326,72 @@ export default function App() {
             Investigations
           </button>
         </nav>
-        <div className="header-end">
-          <span className="mode-label">
-            {engine
-              ? `${engine.mode} · ${engine.mode === "live" ? "public leads + synthetic offers" : "synthetic data"}`
-              : error
-                ? "Illustrative assembly"
-                : "Connecting supplier tools"}
-          </span>
+        <div className="header-end" ref={settingsContainer}>
           <button
-            className="icon-button"
-            onClick={() => setSettings(!settings)}
-            aria-label="Run settings"
+            ref={settingsButton}
+            className="workspace-options-toggle"
+            onClick={() => setSettings((open) => !open)}
+            aria-label={
+              engine
+                ? `${sessionModes[engine.mode].label} options`
+                : "Workspace options"
+            }
             aria-expanded={settings}
+            aria-controls="workspace-options"
           >
-            <Settings2 size={19} />
+            {engine ? sessionModes[engine.mode].label : "Workspace options"}
+            <ChevronDown size={14} aria-hidden="true" />
           </button>
+          {settings && (
+            <section
+              className="workspace-options"
+              id="workspace-options"
+              aria-labelledby="workspace-options-title"
+            >
+              <div>
+                <h2 id="workspace-options-title">Workspace options</h2>
+                <p className="small muted">
+                  Choose the data for a new session.
+                </p>
+              </div>
+              <label>
+                Data source
+                <select
+                  value={mode}
+                  disabled={runBusy || demoSourceBusy}
+                  aria-describedby="session-mode-description"
+                  onChange={(e) => setMode(e.target.value as Schema<"Mode">)}
+                >
+                  <option value="seeded">Demo data</option>
+                  <option value="live">Live research</option>
+                  <option value="replay">Replay current session</option>
+                </select>
+              </label>
+              <p
+                id="session-mode-description"
+                className="small muted"
+                aria-live="polite"
+              >
+                {sessionModes[mode].description}
+              </p>
+              <button
+                className="secondary"
+                disabled={runBusy || demoSourceBusy || !engine}
+                onClick={() => void newRun()}
+              >
+                {runBusy ? "Starting session…" : "Start new session"}
+                <ArrowRight size={15} aria-hidden="true" />
+              </button>
+              {runError && <ErrorNotice>{runError}</ErrorNotice>}
+              <p className="session-options-note small muted">
+                {engine
+                  ? "Previous sessions stay saved. A new session starts with fresh uploads and selections."
+                  : "Connect to start a new session. You can still explore the model."}
+              </p>
+            </section>
+          )}
         </div>
       </header>
-      {settings && (
-        <section className="run-settings">
-          <h2>Scenario run</h2>
-          <label>
-            Mode
-            <select
-              value={mode}
-              onChange={(e) => setMode(e.target.value as Schema<"Mode">)}
-            >
-              <option value="seeded">Seeded</option>
-              <option value="live">Live research</option>
-              <option value="replay">Replay current run</option>
-            </select>
-          </label>
-          <button
-            className="secondary"
-            disabled={runBusy || demoSourceBusy || !engine}
-            onClick={() => void newRun()}
-          >
-            <RotateCcw size={15} />
-            Start new run
-          </button>
-          <p className="small muted">
-            Previous runs are retained. Live mode requires configured
-            integrations; eligibility still depends on evidence.
-          </p>
-        </section>
-      )}
       {error && !intro && (
         <ErrorNotice
           retry={() => void (demoStartFailed ? startDemo() : refresh())}
@@ -660,8 +726,7 @@ function Workspace({
                     connected here.
                   </p>
                   <div className="small muted">
-                    Three component cases are available in this seeded
-                    workspace.
+                    Three component cases are available in this demo workspace.
                   </div>
                 </div>
               </aside>
