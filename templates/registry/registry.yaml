@@ -1,0 +1,175 @@
+# Versioned template registry (PRD FR-13, DISC-03). registry_version: templates-v1
+# Field `source` expressions are resolved by backend/recovery/domain/documents.py:
+#   fact:<doc_type>.<field>   value from a validated extracted fact on the selected candidate's evidence
+#   offer:<attr> / site:<attr> / supplier:<attr> / plan:<attr> / case:<attr> / decision:<attr> / selection:<attr> / operator:<attr>
+#   check:<template_code>      result of a requirement check (e.g. check:REL)
+#   const:<text>               fixed text from the template
+#   task:<role>                explicit completion task for a responsible person (signature/attestation)
+registry_version: templates-v1
+templates:
+  - template_id: TPL-CAA-FORM1-MO
+    title: CAA Form 1 MO — Authorised Release Certificate (incoming certificate verification)
+    owner: Issuing UK Part 145 organisation (supplier); verified by operator receiving inspection
+    authority: UK CAA
+    version: "UK Reg (EU) 1321/2014 Annex I (Part-M) Appendix II template — current PDF issue to confirm"
+    source_url: https://www.caa.co.uk/media/kg1krs55/caa-form-1-mo.pdf
+    reference_url: https://regulatorylibrary.caa.co.uk/1321-2014/Content/Regs/01250_Annex_I_Part-M.htm
+    kind: release_certificate
+    applicability_rule_id: APP-BUY-RELEASED
+    responsible_applicant: Supplier's certifying staff (blocks 14a–e); operator receiving inspector verifies
+    signatory: Supplier authorised signatory (block 14b); operator receiving inspector (verification)
+    supporting_evidence: [release_certificate, trace_pack]
+    completion_rules:
+      - Blocks 1–12 must match the physical part, the purchase order and the trace pack.
+      - Block 14 signature is the supplier's; the operator only records verification.
+    destination_type: internal_quality_records
+    fields:
+      - {field_id: b1, block: "1", label: Approving competent authority / country, source: "fact:release_certificate.approving_authority"}
+      - {field_id: b2, block: "2", label: Form title, source: "const:AUTHORISED RELEASE CERTIFICATE CAA FORM 1"}
+      - {field_id: b3, block: "3", label: Form tracking number, source: "fact:release_certificate.tracking_number"}
+      - {field_id: b4, block: "4", label: Organisation name and address, source: "fact:release_certificate.organisation"}
+      - {field_id: b4a, block: "4", label: Approval reference, source: "fact:release_certificate.approval_reference"}
+      - {field_id: b5, block: "5", label: Work order / contract / invoice, source: "offer:quote_version"}
+      - {field_id: b6, block: "6", label: Item, source: "const:1"}
+      - {field_id: b7, block: "7", label: Description, source: "case:part_description"}
+      - {field_id: b8, block: "8", label: Part number, source: "fact:release_certificate.part_number"}
+      - {field_id: b9, block: "9", label: Quantity, source: "fact:release_certificate.quantity"}
+      - {field_id: b10, block: "10", label: Serial number, source: "fact:release_certificate.serial_number"}
+      - {field_id: b11, block: "11", label: Status / work, source: "fact:release_certificate.status_work"}
+      - {field_id: b12, block: "12", label: Remarks, source: "fact:release_certificate.remarks", required: false}
+      - {field_id: b14a, block: "14a", label: Release basis (Part 145 / other regulation), source: "const:Part-145.A.50 certificate of release to service"}
+      - {field_id: b14b, block: "14b", label: Authorised signature (supplier), source: "const:Present on supplier original — see evidence", editable: false}
+      - {field_id: b14e, block: "14e", label: Release date, source: "fact:release_certificate.release_date"}
+      - {field_id: ver, block: "Operator", label: Verified against part and paperwork by (receiving inspector), source: "task:receiving_inspector"}
+  - template_id: TPL-CAA-FORM1-21
+    title: CAA Form 1 (Part 21) — Authorised Release Certificate for newly manufactured part (expected from POA holder)
+    owner: UK Part 21 Subpart G production organisation (manufacturer)
+    authority: UK CAA
+    version: "UK Reg (EU) 748/2012 Annex I (Part 21) Appendix I template — current PDF issue to confirm"
+    source_url: https://regulatorylibrary.caa.co.uk/748-2012/Content/Regs/07550_Annex_I_Appendix_I_PART_21.htm
+    reference_url: https://regulatorylibrary.caa.co.uk/748-2012/Content/Regs/07550_Annex_I_Appendix_I_PART_21.htm
+    kind: release_certificate
+    applicability_rule_id: APP-MAKE-POA
+    responsible_applicant: Manufacturer's authorised certifying staff (block 13)
+    signatory: Manufacturer authorised signatory (block 13b)
+    supporting_evidence: [poa_certificate, design_licence, fai_report]
+    completion_rules:
+      - Block 13a states conformity to approved design data.
+      - Approval reference must equal the POA covering the manufacturing site.
+    destination_type: internal_quality_records
+    fields:
+      - {field_id: b1, block: "1", label: Approving competent authority / country, source: "const:CAA / UNITED KINGDOM"}
+      - {field_id: b2, block: "2", label: Form title, source: "const:AUTHORISED RELEASE CERTIFICATE CAA FORM 1"}
+      - {field_id: b3, block: "3", label: Form tracking number, source: "task:manufacturer_certifying_staff", note: "Issued by the manufacturer at release"}
+      - {field_id: b4, block: "4", label: Organisation name and address, source: "supplier:legal_entity_name"}
+      - {field_id: b4a, block: "4", label: Production approval reference, source: "fact:poa_certificate.approval_reference"}
+      - {field_id: b5, block: "5", label: Work order / contract / invoice, source: "offer:quote_version"}
+      - {field_id: b7, block: "7", label: Description, source: "case:part_description"}
+      - {field_id: b8, block: "8", label: Part number, source: "offer:part_id"}
+      - {field_id: b9, block: "9", label: Quantity, source: "offer:quantity"}
+      - {field_id: b11, block: "11", label: Status / work, source: "const:NEW"}
+      - {field_id: b12, block: "12", label: Remarks, source: "fact:design_licence.drawing_number", transform: "Manufactured to licensed drawing {value} rev {fact:design_licence.drawing_revision}"}
+      - {field_id: b13a, block: "13a", label: Conformity statement, source: "const:Certifies that the items identified above were manufactured in conformity to approved design data and are in a condition for safe operation"}
+      - {field_id: b13b, block: "13b", label: Authorised signature, source: "task:manufacturer_certifying_staff"}
+  - template_id: TPL-COMPONENT-ACCEPTANCE
+    title: Component acceptance and receiving inspection record (UK Part 145.A.42)
+    owner: Operator quality department
+    authority: Operator internal quality system (UK Part 145.A.42 / AMC1 145.A.42(a)(i))
+    version: operator-QR-145-42 v3 (synthetic internal record)
+    source_url: https://regulatorylibrary.caa.co.uk/1321-2014/Content/AMC%20GM/AMC1%20145%20A%2042%20a%20i%20Components.htm
+    reference_url: https://www.caa.co.uk/commercial-industry/aircraft/airworthiness/approval-information-and-guidance/guidance-on-acceptance-of-components/
+    kind: internal_quality_record
+    applicability_rule_id: APP-BUY-RELEASED|APP-MAKE-POA
+    responsible_applicant: Operator receiving inspector
+    signatory: Operator receiving inspector and quality manager
+    supporting_evidence: [release_certificate, trace_pack, ipc_extract, service_bulletin]
+    completion_rules:
+      - Part identity, interchangeability and release certificate checks must pass.
+      - Inspector signature is a completion task.
+    destination_type: internal_quality_records
+    fields:
+      - {field_id: case, label: Case reference, source: "case:case_id"}
+      - {field_id: engine, label: Engine configuration, source: "case:engine_configuration"}
+      - {field_id: position, label: Installation position, source: "case:position"}
+      - {field_id: part, label: Part number and revision, source: "offer:part_revision"}
+      - {field_id: route, label: Sourcing route, source: "offer:route"}
+      - {field_id: supplier, label: Supplier (legal entity) and site, source: "site:supplier_and_site"}
+      - {field_id: ic, label: Interchangeability basis, source: "check:IC"}
+      - {field_id: id, label: Identity / revision check, source: "check:ID"}
+      - {field_id: rel, label: Release certificate check, source: "check:REL_OR_POA"}
+      - {field_id: sb, label: Applicable service bulletin status, source: "fact:service_bulletin.sb_number", transform: "{value} Rev {fact:service_bulletin.revision} reviewed"}
+      - {field_id: decision, label: Accepted decision snapshot, source: "decision:label_and_id"}
+      - {field_id: eta, label: Planned installation readiness, source: "plan:finish_day", transform: "Day {value} of recovery plan"}
+      - {field_id: insp, label: Receiving inspector signature, source: "task:receiving_inspector"}
+      - {field_id: qm, label: Quality manager acceptance, source: "task:quality_manager"}
+  - template_id: TPL-SUPPLIER-APPROVAL
+    title: Supplier and site approval record (operator supplier control procedure)
+    owner: Operator quality department
+    authority: Operator internal quality system (exposition supplier-control procedure)
+    version: operator-QR-SUP v5 (synthetic internal record)
+    source_url: https://www.caa.co.uk/commercial-industry/aircraft/airworthiness/approval-information-and-guidance/guidance-on-acceptance-of-components/
+    reference_url: https://regulatorylibrary.caa.co.uk/1321-2014/Content/AMC%20GM/AMC1%20145%20A%2042%20a%20i%20Components.htm
+    kind: internal_quality_record
+    applicability_rule_id: APP-BUY-RELEASED|APP-MAKE-POA
+    responsible_applicant: Operator supplier quality engineer
+    signatory: Operator quality manager
+    supporting_evidence: [quality_certificate, registry_extract, metrics_report]
+    completion_rules:
+      - Site-specific quality certificate must cover the supplying site.
+      - Reliability figures are labelled as scenario fixtures where applicable.
+    destination_type: internal_quality_records
+    fields:
+      - {field_id: entity, label: Legal entity, source: "supplier:legal_entity_name"}
+      - {field_id: regno, label: Registration number, source: "fact:registry_extract.company_number"}
+      - {field_id: regstatus, label: Registry status, source: "fact:registry_extract.status"}
+      - {field_id: site, label: Approved site, source: "site:name_and_address"}
+      - {field_id: qms, label: Quality certificate (standard / number / expiry), source: "fact:quality_certificate.certificate_number", transform: "{fact:quality_certificate.standard} {value}, expires {fact:quality_certificate.expiry_date}"}
+      - {field_id: scope, label: Approval scope, source: "offer:route_scope"}
+      - {field_id: otd, label: Historical on-time delivery, source: "site:otd_label"}
+      - {field_id: exposure, label: Current exposure at approval, source: "decision:exposure_label"}
+      - {field_id: sqe, label: Supplier quality engineer signature, source: "task:supplier_quality_engineer"}
+      - {field_id: qm, label: Quality manager approval, source: "task:quality_manager"}
+  - template_id: TPL-FAI-ACCEPTANCE
+    title: First article inspection acceptance record (AS9102 report review)
+    owner: Operator quality department
+    authority: Operator internal quality system
+    version: operator-QR-FAI v2 (synthetic internal record)
+    source_url: https://regulatorylibrary.caa.co.uk/748-2012/Content/Regs/07550_Annex_I_Appendix_I_PART_21.htm
+    reference_url: https://regulatorylibrary.caa.co.uk/748-2012/Content/Regs/07550_Annex_I_Appendix_I_PART_21.htm
+    kind: internal_quality_record
+    applicability_rule_id: APP-MAKE-POA
+    responsible_applicant: Operator supplier quality engineer
+    signatory: Operator quality manager
+    supporting_evidence: [fai_report, design_licence]
+    completion_rules: [FAI report must be complete for this part, revision and site.]
+    destination_type: internal_quality_records
+    fields:
+      - {field_id: report, label: FAI report number, source: "fact:fai_report.report_number"}
+      - {field_id: part, label: Part / revision, source: "offer:part_revision"}
+      - {field_id: site, label: Manufacturing site, source: "site:name_and_address"}
+      - {field_id: drawing, label: Drawing revision built to, source: "fact:fai_report.drawing_revision"}
+      - {field_id: result, label: FAI result, source: "fact:fai_report.result"}
+      - {field_id: review, label: Reviewer signature, source: "task:supplier_quality_engineer"}
+  - template_id: TPL-CAA-FORM-60
+    title: CAA Form 60 — Application for agreement of production under Part 21 Subpart F
+    owner: Applicant manufacturer
+    authority: UK CAA
+    version: "Referenced in CAA AMC 21.B.120 guidance — current issue to confirm"
+    source_url: https://regulatorylibrary.caa.co.uk/748-2012/Content/AMC%20GM%201/AMC%2021%20B%20120%20c%201%20Evaluation.htm
+    reference_url: https://legislation.gov.uk/eur/2012/748/annex/I/section/B/division/subpart+f
+    kind: authority_application
+    applicability_rule_id: APP-MAKE-NO-POA
+    responsible_applicant: Manufacturer accountable manager
+    signatory: Manufacturer accountable manager
+    supporting_evidence: [design_licence, special_process_accreditation]
+    completion_rules:
+      - Applicant registered name/address, trade name and manufacturing locations are required.
+      - Letter of agreement (CAA Form 65) must be issued before the route becomes selectable.
+    destination_type: caa_application_simulated
+    fields:
+      - {field_id: name, label: Applicant registered name, source: "supplier:legal_entity_name"}
+      - {field_id: regno, label: Registration number, source: "fact:registry_extract.company_number"}
+      - {field_id: locations, label: Manufacturing locations, source: "site:name_and_address"}
+      - {field_id: part, label: Product / part to be produced, source: "offer:part_revision"}
+      - {field_id: design, label: Design data basis, source: "fact:design_licence.licence_reference"}
+      - {field_id: am, label: Accountable manager signature, source: "task:manufacturer_accountable_manager"}

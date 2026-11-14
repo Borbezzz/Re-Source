@@ -1,0 +1,54 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "actor": {
+      "default": "demo-operator",
+      "title": "Actor",
+      "type": "string"
+    },
+    "expected_version": {
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "field_edits": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Field Edits",
+      "type": "object"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    },
+    "review_action": {
+      "anyOf": [
+        {
+          "enum": [
+            "submit_for_review",
+            "approve",
+            "request_changes"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Review Action"
+    }
+  },
+  "required": [
+    "expected_version"
+  ],
+  "title": "DocumentPatchRequest",
+  "type": "object"
+}

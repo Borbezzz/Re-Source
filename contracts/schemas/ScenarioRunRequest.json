@@ -1,0 +1,56 @@
+{
+  "$defs": {
+    "Mode": {
+      "enum": [
+        "live",
+        "seeded",
+        "replay"
+      ],
+      "title": "Mode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "fixture_version": {
+      "default": "seed-v1",
+      "title": "Fixture Version",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    },
+    "manifest_id": {
+      "default": "engine-demo-001",
+      "title": "Manifest Id",
+      "type": "string"
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode",
+      "default": "seeded"
+    },
+    "replay_source_run_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Replay Source Run Id"
+    }
+  },
+  "title": "ScenarioRunRequest",
+  "type": "object"
+}

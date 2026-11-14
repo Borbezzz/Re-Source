@@ -1,1 +1,15 @@
 .board/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+dist/
+.pytest_cache/
+.ruff_cache/
+var/
+*.db
+*.sqlite3
+.DS_Store

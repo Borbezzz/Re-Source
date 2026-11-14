@@ -1,0 +1,41 @@
+{
+  "$defs": {
+    "MonitoringStatus": {
+      "enum": [
+        "active",
+        "paused",
+        "closed"
+      ],
+      "title": "MonitoringStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    },
+    "status": {
+      "$ref": "#/$defs/MonitoringStatus"
+    }
+  },
+  "required": [
+    "status",
+    "expected_revision"
+  ],
+  "title": "MonitoringRequest",
+  "type": "object"
+}

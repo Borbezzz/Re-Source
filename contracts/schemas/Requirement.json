@@ -1,0 +1,103 @@
+{
+  "$defs": {
+    "Route": {
+      "enum": [
+        "BUY",
+        "MAKE"
+      ],
+      "title": "Route",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "category": {
+      "enum": [
+        "technical",
+        "supplier_site",
+        "regulatory",
+        "logistics"
+      ],
+      "title": "Category",
+      "type": "string"
+    },
+    "evaluator_id": {
+      "title": "Evaluator Id",
+      "type": "string"
+    },
+    "evaluator_version": {
+      "title": "Evaluator Version",
+      "type": "string"
+    },
+    "evidence_authority_policy": {
+      "title": "Evidence Authority Policy",
+      "type": "string"
+    },
+    "fact_inputs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Fact Inputs",
+      "type": "array"
+    },
+    "feasibility_only": {
+      "default": false,
+      "description": "Pending result still counts as 'feasible' (MAKE)",
+      "title": "Feasibility Only",
+      "type": "boolean"
+    },
+    "mandatory": {
+      "title": "Mandatory",
+      "type": "boolean"
+    },
+    "params": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Params",
+      "type": "object"
+    },
+    "plain_language": {
+      "title": "Plain Language",
+      "type": "string"
+    },
+    "requirement_id": {
+      "title": "Requirement Id",
+      "type": "string"
+    },
+    "requirement_set_id": {
+      "title": "Requirement Set Id",
+      "type": "string"
+    },
+    "routes": {
+      "items": {
+        "$ref": "#/$defs/Route"
+      },
+      "title": "Routes",
+      "type": "array"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "requirement_id",
+    "requirement_set_id",
+    "version",
+    "title",
+    "plain_language",
+    "category",
+    "routes",
+    "mandatory",
+    "evaluator_id",
+    "evaluator_version",
+    "fact_inputs",
+    "evidence_authority_policy"
+  ],
+  "title": "Requirement",
+  "type": "object"
+}

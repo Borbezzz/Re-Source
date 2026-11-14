@@ -1,0 +1,106 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "applicability_rule_id": {
+      "title": "Applicability Rule Id",
+      "type": "string"
+    },
+    "authority": {
+      "title": "Authority",
+      "type": "string"
+    },
+    "completion_rules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Completion Rules",
+      "type": "array"
+    },
+    "destination_type": {
+      "title": "Destination Type",
+      "type": "string"
+    },
+    "fields": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Fields",
+      "type": "array"
+    },
+    "kind": {
+      "enum": [
+        "release_certificate",
+        "internal_quality_record",
+        "authority_application"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "owner": {
+      "title": "Owner",
+      "type": "string"
+    },
+    "responsible_applicant": {
+      "title": "Responsible Applicant",
+      "type": "string"
+    },
+    "signatory": {
+      "title": "Signatory",
+      "type": "string"
+    },
+    "source_url": {
+      "title": "Source Url",
+      "type": "string"
+    },
+    "supporting_evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Supporting Evidence",
+      "type": "array"
+    },
+    "template_id": {
+      "title": "Template Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "why_included": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Why Included"
+    }
+  },
+  "required": [
+    "template_id",
+    "title",
+    "owner",
+    "authority",
+    "version",
+    "source_url",
+    "kind",
+    "applicability_rule_id",
+    "responsible_applicant",
+    "signatory",
+    "supporting_evidence",
+    "completion_rules",
+    "destination_type",
+    "fields"
+  ],
+  "title": "FormTemplate",
+  "type": "object"
+}

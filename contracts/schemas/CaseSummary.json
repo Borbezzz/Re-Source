@@ -1,0 +1,102 @@
+{
+  "$defs": {
+    "CaseState": {
+      "enum": [
+        "ready",
+        "investigating",
+        "recommendations_ready",
+        "reassessing",
+        "selected",
+        "documents_preparing",
+        "documents_ready",
+        "submission_simulated",
+        "installation_visualized",
+        "restored_visualized",
+        "waiting_for_evidence",
+        "interrupted",
+        "failed",
+        "selection_stale",
+        "documents_stale"
+      ],
+      "title": "CaseState",
+      "type": "string"
+    },
+    "VisualState": {
+      "enum": [
+        "assembled",
+        "exploded",
+        "failed",
+        "removed",
+        "replacement_ready",
+        "installed",
+        "running"
+      ],
+      "title": "VisualState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "component_id": {
+      "title": "Component Id",
+      "type": "string"
+    },
+    "current_decision_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Current Decision Id"
+    },
+    "display_name": {
+      "title": "Display Name",
+      "type": "string"
+    },
+    "preferred_candidate_label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Preferred Candidate Label"
+    },
+    "revision": {
+      "title": "Revision",
+      "type": "integer"
+    },
+    "stale": {
+      "default": false,
+      "title": "Stale",
+      "type": "boolean"
+    },
+    "state": {
+      "$ref": "#/$defs/CaseState"
+    },
+    "visual_state": {
+      "$ref": "#/$defs/VisualState"
+    }
+  },
+  "required": [
+    "case_id",
+    "component_id",
+    "display_name",
+    "state",
+    "revision",
+    "visual_state"
+  ],
+  "title": "CaseSummary",
+  "type": "object"
+}

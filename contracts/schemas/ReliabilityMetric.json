@@ -1,0 +1,120 @@
+{
+  "$defs": {
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin",
+      "default": "synthetic_demo"
+    },
+    "denominator": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Denominator"
+    },
+    "fixture_note": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fixture Note"
+    },
+    "label": {
+      "title": "Label",
+      "type": "string"
+    },
+    "metric_id": {
+      "title": "Metric Id",
+      "type": "string"
+    },
+    "metric_name": {
+      "title": "Metric Name",
+      "type": "string"
+    },
+    "numerator": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Numerator"
+    },
+    "site_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Site Id"
+    },
+    "source_evidence_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Evidence Id"
+    },
+    "subject_id": {
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "unit": {
+      "title": "Unit",
+      "type": "string"
+    },
+    "value": {
+      "title": "Value",
+      "type": "number"
+    },
+    "window": {
+      "title": "Window",
+      "type": "string"
+    }
+  },
+  "required": [
+    "metric_id",
+    "subject_id",
+    "metric_name",
+    "label",
+    "value",
+    "unit",
+    "window"
+  ],
+  "title": "ReliabilityMetric",
+  "type": "object"
+}

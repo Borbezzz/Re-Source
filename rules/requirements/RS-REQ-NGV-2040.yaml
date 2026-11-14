@@ -1,0 +1,21 @@
+requirement_set_id: RS-REQ-NGV-2040
+version: "v1"
+component_id: component-secondary-a
+engine_configuration: RS-TF2-CFG-A
+part_identity: {part_number: RS-NGV-2040, revision: "B", family: turbine_nozzle_guide_vane}
+data_origin: synthetic_demo
+note: Requirement parameters are a scenario design pending DISC-02 authoritative technical sources.
+requirements:
+  - {id: REQ-NGV-ID-01, template: ID}
+  - {id: REQ-NGV-IC-01, template: IC}
+  - {id: REQ-NGV-REL-01, template: REL}
+  - {id: REQ-NGV-TRC-01, template: TRC}
+  - {id: REQ-NGV-QMS-01, template: QMS}
+  - {id: REQ-NGV-LEG-01, template: LEG}
+  - {id: REQ-NGV-QTE-01, template: QTE}
+  - {id: REQ-NGV-POA-01, template: POA, params: {family: turbine_nozzle_guide_vane}}
+  - {id: REQ-NGV-DD-01, template: DD}
+  - {id: REQ-NGV-SPC-01, template: SPC}
+  - {id: REQ-NGV-FAI-01, template: FAI}
+  - {id: REQ-NGV-LOG-01, template: LOG}
+  - {id: REQ-NGV-REG-01, template: REG}

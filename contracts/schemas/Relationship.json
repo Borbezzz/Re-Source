@@ -1,0 +1,100 @@
+{
+  "$defs": {
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin",
+      "default": "synthetic_demo"
+    },
+    "effective_from": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Effective From"
+    },
+    "effective_to": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Effective To"
+    },
+    "evidence_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "from_id": {
+      "title": "From Id",
+      "type": "string"
+    },
+    "from_type": {
+      "title": "From Type",
+      "type": "string"
+    },
+    "recorded_at": {
+      "format": "date-time",
+      "title": "Recorded At",
+      "type": "string"
+    },
+    "relation_type": {
+      "title": "Relation Type",
+      "type": "string"
+    },
+    "relationship_id": {
+      "title": "Relationship Id",
+      "type": "string"
+    },
+    "revision": {
+      "default": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "to_id": {
+      "title": "To Id",
+      "type": "string"
+    },
+    "to_type": {
+      "title": "To Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "relationship_id",
+    "from_id",
+    "from_type",
+    "to_id",
+    "to_type",
+    "relation_type",
+    "recorded_at"
+  ],
+  "title": "Relationship",
+  "type": "object"
+}

@@ -1,0 +1,36 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    },
+    "package_id": {
+      "title": "Package Id",
+      "type": "string"
+    },
+    "package_version": {
+      "title": "Package Version",
+      "type": "integer"
+    },
+    "selection_id": {
+      "title": "Selection Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "selection_id",
+    "package_id",
+    "package_version"
+  ],
+  "title": "SubmissionRequest",
+  "type": "object"
+}

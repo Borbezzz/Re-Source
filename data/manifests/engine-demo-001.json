@@ -1,0 +1,115 @@
+{
+  "manifest_version": "engine-demo-001.v1",
+  "engine": {
+    "engine_id": "engine-demo-001",
+    "display_name": "Representative two-spool high-bypass turbofan (RS-TF2)",
+    "representative_note": "Representative assembly for demonstration. Visual geometry is procedural/representative; case identity (part numbers, requirement sets, evidence) lives in the data and is synthetic.",
+    "configuration_revision": "RS-TF2-CFG-A",
+    "component_instance_ids": ["component-primary", "component-secondary-a", "component-secondary-b"],
+    "scenario_manifest_version": "engine-demo-001.v1",
+    "asset": {
+      "kind": "procedural",
+      "glb_path": null,
+      "licence": "Original procedural geometry authored for this project (frontend/src/scene). Replace with a licensed GLB only if DISC-01 selects one; keep node names below.",
+      "units": "metres",
+      "axis": "engine centreline along +X (intake at -X, exhaust at +X)",
+      "modules": [
+        {"node_name": "Module_Fan", "label": "Fan and intake", "x_range": [-2.0, -1.3]},
+        {"node_name": "Module_LPC", "label": "Low-pressure compressor (booster)", "x_range": [-1.3, -0.9]},
+        {"node_name": "Module_HPC", "label": "High-pressure compressor", "x_range": [-0.9, -0.15]},
+        {"node_name": "Module_Combustor", "label": "Combustor", "x_range": [-0.15, 0.35]},
+        {"node_name": "Module_HPT", "label": "High-pressure turbine", "x_range": [0.35, 0.6]},
+        {"node_name": "Module_LPT", "label": "Low-pressure turbine", "x_range": [0.6, 1.2]},
+        {"node_name": "Module_Exhaust", "label": "Exhaust nozzle", "x_range": [1.2, 1.8]}
+      ],
+      "explode": {"axis": "x", "module_spacing": 0.45, "duration_ms": 1400}
+    },
+    "operating_story": {
+      "purpose": "Powers a twin-engine regional airliner (representative).",
+      "current_state": "Grounded (AOG) after a borescope inspection finding in the combustor section.",
+      "consequence": "Each grounded day costs about £18,000 in lease and disruption (scenario figure)."
+    },
+    "data_origin": "synthetic_demo"
+  },
+  "components": [
+    {
+      "engine_id": "engine-demo-001",
+      "component_id": "component-primary",
+      "case_id": "case-primary",
+      "display_name": "Combustor fuel nozzle (position 7)",
+      "short_description": "Atomises fuel into the combustor. A cracked swirler tip creates a hot streak that damages the turbine.",
+      "part_identity": "RS-FN-1001",
+      "revision": "D",
+      "position": "Combustor, fuel nozzle position 7 of 20",
+      "requirement_set_id": "RS-REQ-FN-1001",
+      "mesh_mapping": {
+        "node_name": "Component_FuelNozzle_07",
+        "hotspot_anchor": [0.05, 0.62, 0.18],
+        "exploded_offset": [0.0, 0.55, 0.25],
+        "camera_focus": {"position": [0.9, 1.1, 1.6], "target": [0.05, 0.55, 0.15]},
+        "removal_vector": [0.0, 1.0, 0.35]
+      },
+      "failure_story": {
+        "finding": "Borescope inspection found a cracked swirler tip on fuel nozzle #7.",
+        "effect": "Distorted spray pattern produces a hot streak on the HPT stage-1 nozzle guide vanes.",
+        "consequence": "Engine unserviceable until the nozzle is replaced; aircraft grounded.",
+        "severity": "AOG",
+        "visual": {"highlight": "failure_red", "pulse": true, "crack_overlay": true}
+      },
+      "data_origin": "synthetic_demo"
+    },
+    {
+      "engine_id": "engine-demo-001",
+      "component_id": "component-secondary-a",
+      "case_id": "case-secondary-a",
+      "display_name": "HP turbine stage-1 nozzle guide vane segment",
+      "short_description": "Directs hot gas onto the first turbine blades. Thermal distress beyond limits requires replacement.",
+      "part_identity": "RS-NGV-2040",
+      "revision": "B",
+      "position": "HPT stage 1, NGV segment 12 of 24",
+      "requirement_set_id": "RS-REQ-NGV-2040",
+      "mesh_mapping": {
+        "node_name": "Component_NGV_Segment_12",
+        "hotspot_anchor": [0.42, 0.48, -0.12],
+        "exploded_offset": [0.2, 0.45, -0.3],
+        "camera_focus": {"position": [1.3, 0.9, -1.2], "target": [0.42, 0.45, -0.12]},
+        "removal_vector": [0.3, 1.0, -0.4]
+      },
+      "failure_story": {
+        "finding": "Thermal distress and coating loss beyond manual limits on NGV segment 12.",
+        "effect": "Reduced turbine efficiency and risk of downstream blade damage.",
+        "consequence": "Segment must be replaced before return to service.",
+        "severity": "unserviceable",
+        "visual": {"highlight": "failure_amber", "pulse": true, "crack_overlay": false}
+      },
+      "data_origin": "synthetic_demo"
+    },
+    {
+      "engine_id": "engine-demo-001",
+      "component_id": "component-secondary-b",
+      "case_id": "case-secondary-b",
+      "display_name": "HP compressor bleed air duct",
+      "short_description": "Carries high-pressure bleed air from the compressor case. A flange weld crack leaks hot air.",
+      "part_identity": "RS-BD-3110",
+      "revision": "A",
+      "position": "HPC case, 4 o'clock bleed port",
+      "requirement_set_id": "RS-REQ-BD-3110",
+      "mesh_mapping": {
+        "node_name": "Component_BleedDuct_HP",
+        "hotspot_anchor": [-0.3, 0.7, 0.35],
+        "exploded_offset": [-0.25, 0.6, 0.45],
+        "camera_focus": {"position": [-0.6, 1.3, 1.7], "target": [-0.3, 0.65, 0.3]},
+        "removal_vector": [-0.2, 1.0, 0.6]
+      },
+      "failure_story": {
+        "finding": "Fatigue crack at the duct flange weld found during zonal inspection.",
+        "effect": "Hot bleed-air leak into the nacelle; overheat warning risk.",
+        "consequence": "Duct must be replaced; aircraft dispatch not permitted.",
+        "severity": "unserviceable",
+        "visual": {"highlight": "failure_amber", "pulse": true, "crack_overlay": true}
+      },
+      "data_origin": "synthetic_demo"
+    }
+  ],
+  "visual_states": ["assembled", "exploded", "failed", "removed", "replacement_ready", "installed", "running"]
+}

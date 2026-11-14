@@ -1,0 +1,445 @@
+[
+  {
+    "candidate_id": "OFF-PA",
+    "case_id": "case-primary",
+    "route": "BUY",
+    "label": "Offer A \u2014 overhauled spare, Rotterdam stock",
+    "part_id": "RS-FN-1001",
+    "revision": "D",
+    "supplier_id": "SUP-NVA",
+    "site_id": "SITE-NVA-RTM",
+    "manufacturer_id": null,
+    "seller_id": "SUP-NVA",
+    "quantity": 1,
+    "condition": "OVERHAULED",
+    "quote_version": "q-off-pa-v1",
+    "price": {
+      "amount": "46200.00",
+      "currency": "GBP"
+    },
+    "stock": 2,
+    "capacity": null,
+    "logistics_route_id": "R-RTM-HWC",
+    "plan_id": "plan-off-pa",
+    "evidence_ids": [
+      "ev-q-pa",
+      "ev-f1-pa",
+      "ev-tr-pa",
+      "ev-qc-nva-rtm",
+      "ev-reg-nva",
+      "ev-metrics-site-nva-rtm",
+      "ev-ipc-fn-1001-v1",
+      "ev-sb-fn-0042-a"
+    ],
+    "route_specific": {},
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-PB",
+    "case_id": "case-primary",
+    "route": "BUY",
+    "label": "Offer B \u2014 inspected/tested spare, Manchester",
+    "part_id": "RS-FN-1001",
+    "revision": "D",
+    "supplier_id": "SUP-CAL",
+    "site_id": "SITE-CAL-MAN",
+    "manufacturer_id": null,
+    "seller_id": "SUP-CAL",
+    "quantity": 1,
+    "condition": "INSPECTED/TESTED",
+    "quote_version": "q-off-pb-v1",
+    "price": {
+      "amount": "55400.00",
+      "currency": "GBP"
+    },
+    "stock": 1,
+    "capacity": null,
+    "logistics_route_id": "R-MAN-EMA",
+    "plan_id": "plan-off-pb",
+    "evidence_ids": [
+      "ev-q-pb",
+      "ev-f1-pb",
+      "ev-tr-pb",
+      "ev-qc-cal-man",
+      "ev-reg-cal",
+      "ev-metrics-site-cal-man",
+      "ev-ipc-fn-1001-v1",
+      "ev-sb-fn-0042-a"
+    ],
+    "route_specific": {},
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-PC",
+    "case_id": "case-primary",
+    "route": "MAKE",
+    "label": "Offer C \u2014 commissioned manufacture, Sheffield",
+    "part_id": "RS-FN-1001",
+    "revision": "D",
+    "supplier_id": "SUP-PEN",
+    "site_id": "SITE-PEN-SHF",
+    "manufacturer_id": "SUP-PEN",
+    "seller_id": "SUP-PEN",
+    "quantity": 1,
+    "condition": "NEW",
+    "quote_version": "q-off-pc-v1",
+    "price": {
+      "amount": "66500.00",
+      "currency": "GBP"
+    },
+    "stock": null,
+    "capacity": {
+      "machining_slots": [
+        [
+          5,
+          13
+        ],
+        [
+          16,
+          30
+        ]
+      ]
+    },
+    "logistics_route_id": "R-SHF-EMA",
+    "plan_id": "plan-off-pc",
+    "evidence_ids": [
+      "ev-q-pc",
+      "ev-dl-pc",
+      "ev-fai-pc",
+      "ev-poa-pen",
+      "ev-nadcap-pen-shf",
+      "ev-qc-pen-shf",
+      "ev-reg-pen",
+      "ev-metrics-site-pen-shf",
+      "ev-ipc-fn-1001-v1",
+      "ev-sb-fn-0042-a"
+    ],
+    "route_specific": {
+      "design_basis": "Licensed design data DWG-FN-1001 rev E",
+      "special_processes": [
+        "vacuum_brazing",
+        "heat_treatment",
+        "fpi_ndt"
+      ],
+      "qualification": "AS9102 FAI complete at Sheffield",
+      "tooling": "Existing fixture set"
+    },
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-PD",
+    "case_id": "case-primary",
+    "route": "BUY",
+    "label": "Offer D \u2014 low-price broker stock, Luton",
+    "part_id": "RS-FN-1001",
+    "revision": "D",
+    "supplier_id": "SUP-LOW",
+    "site_id": "SITE-LOW-LTN",
+    "manufacturer_id": null,
+    "seller_id": "SUP-LOW",
+    "quantity": 1,
+    "condition": "AS REMOVED",
+    "quote_version": "q-off-pd-v1",
+    "price": {
+      "amount": "29000.00",
+      "currency": "GBP"
+    },
+    "stock": 1,
+    "capacity": null,
+    "logistics_route_id": "R-LTN-EMA",
+    "plan_id": "plan-off-pd",
+    "evidence_ids": [
+      "ev-q-pd",
+      "ev-tr-pd",
+      "ev-qc-low-ltn",
+      "ev-reg-low",
+      "ev-metrics-site-low-ltn",
+      "ev-ipc-fn-1001-v1",
+      "ev-sb-fn-0042-a"
+    ],
+    "route_specific": {},
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-PE",
+    "case_id": "case-primary",
+    "route": "BUY",
+    "label": "Offer E \u2014 near-match revision C, Birmingham",
+    "part_id": "RS-FN-1001",
+    "revision": "C",
+    "supplier_id": "SUP-ESK",
+    "site_id": "SITE-ESK-BHX",
+    "manufacturer_id": null,
+    "seller_id": "SUP-ESK",
+    "quantity": 1,
+    "condition": "OVERHAULED",
+    "quote_version": "q-off-pe-v1",
+    "price": {
+      "amount": "38000.00",
+      "currency": "GBP"
+    },
+    "stock": 1,
+    "capacity": null,
+    "logistics_route_id": "R-BHX-EMA",
+    "plan_id": "plan-off-pe",
+    "evidence_ids": [
+      "ev-q-pe",
+      "ev-f1-pe",
+      "ev-tr-pe",
+      "ev-qc-esk-bhx",
+      "ev-reg-esk",
+      "ev-metrics-site-esk-bhx",
+      "ev-ipc-fn-1001-v1",
+      "ev-sb-fn-0042-a"
+    ],
+    "route_specific": {},
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-SA1",
+    "case_id": "case-secondary-a",
+    "route": "BUY",
+    "label": "Offer SA-1 \u2014 serviceable segment, Southampton",
+    "part_id": "RS-NGV-2040",
+    "revision": "B",
+    "supplier_id": "SUP-HAR",
+    "site_id": "SITE-HAR-SOU",
+    "manufacturer_id": null,
+    "seller_id": "SUP-HAR",
+    "quantity": 1,
+    "condition": "SERVICEABLE",
+    "quote_version": "q-off-sa1-v1",
+    "price": {
+      "amount": "31500.00",
+      "currency": "GBP"
+    },
+    "stock": 1,
+    "capacity": null,
+    "logistics_route_id": "R-SOU-EMA",
+    "plan_id": "plan-off-sa1",
+    "evidence_ids": [
+      "ev-q-sa1",
+      "ev-f1-sa1",
+      "ev-qc-har-sou",
+      "ev-reg-har",
+      "ev-metrics-site-har-sou",
+      "ev-ipc-ngv-2040-v1"
+    ],
+    "route_specific": {},
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-SA2",
+    "case_id": "case-secondary-a",
+    "route": "BUY",
+    "label": "Offer SA-2 \u2014 new segment, Hamburg OEM distributor",
+    "part_id": "RS-NGV-2040",
+    "revision": "C",
+    "supplier_id": "SUP-MER",
+    "site_id": "SITE-MER-HAM",
+    "manufacturer_id": null,
+    "seller_id": "SUP-MER",
+    "quantity": 1,
+    "condition": "NEW",
+    "quote_version": "q-off-sa2-v1",
+    "price": {
+      "amount": "50575.00",
+      "currency": "EUR"
+    },
+    "stock": 3,
+    "capacity": null,
+    "logistics_route_id": "R-HAM-IMM",
+    "plan_id": "plan-off-sa2",
+    "evidence_ids": [
+      "ev-q-sa2",
+      "ev-f1-sa2",
+      "ev-tr-sa2",
+      "ev-qc-mer-ham",
+      "ev-reg-mer",
+      "ev-metrics-site-mer-ham",
+      "ev-ipc-ngv-2040-v1"
+    ],
+    "route_specific": {},
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-SA3",
+    "case_id": "case-secondary-a",
+    "route": "BUY",
+    "label": "Offer SA-3 \u2014 surplus segment, Dublin",
+    "part_id": "RS-NGV-2040",
+    "revision": "B",
+    "supplier_id": "SUP-CST",
+    "site_id": "SITE-CST-DUB",
+    "manufacturer_id": null,
+    "seller_id": "SUP-CST",
+    "quantity": 1,
+    "condition": "AS REMOVED",
+    "quote_version": "q-off-sa3-v1",
+    "price": {
+      "amount": "22000.00",
+      "currency": "GBP"
+    },
+    "stock": 1,
+    "capacity": null,
+    "logistics_route_id": "R-DUB-HLY",
+    "plan_id": "plan-off-sa3",
+    "evidence_ids": [
+      "ev-q-sa3",
+      "ev-qc-cst-dub",
+      "ev-reg-cst",
+      "ev-metrics-site-cst-dub",
+      "ev-ipc-ngv-2040-v1"
+    ],
+    "route_specific": {},
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-SB1",
+    "case_id": "case-secondary-b",
+    "route": "BUY",
+    "label": "Offer SB-1 \u2014 new duct, Hamburg (backorder)",
+    "part_id": "RS-BD-3110",
+    "revision": "A",
+    "supplier_id": "SUP-MER",
+    "site_id": "SITE-MER-HAM",
+    "manufacturer_id": null,
+    "seller_id": "SUP-MER",
+    "quantity": 1,
+    "condition": "NEW",
+    "quote_version": "q-off-sb1-v1",
+    "price": {
+      "amount": "12800.00",
+      "currency": "GBP"
+    },
+    "stock": 0,
+    "capacity": null,
+    "logistics_route_id": "R-HAM-IMM",
+    "plan_id": "plan-off-sb1",
+    "evidence_ids": [
+      "ev-q-sb1",
+      "ev-f1-sb1",
+      "ev-tr-sb1",
+      "ev-qc-mer-ham",
+      "ev-reg-mer",
+      "ev-metrics-site-mer-ham",
+      "ev-ipc-bd-3110-v1"
+    ],
+    "route_specific": {},
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-SB2",
+    "case_id": "case-secondary-b",
+    "route": "MAKE",
+    "label": "Offer SB-2 \u2014 commissioned manufacture, Rotherham",
+    "part_id": "RS-BD-3110",
+    "revision": "A",
+    "supplier_id": "SUP-PEN",
+    "site_id": "SITE-PEN-ROT",
+    "manufacturer_id": "SUP-PEN",
+    "seller_id": "SUP-PEN",
+    "quantity": 1,
+    "condition": "NEW",
+    "quote_version": "q-off-sb2-v1",
+    "price": {
+      "amount": "11900.00",
+      "currency": "GBP"
+    },
+    "stock": null,
+    "capacity": {
+      "forming_slots": [
+        [
+          2,
+          30
+        ]
+      ]
+    },
+    "logistics_route_id": "R-ROT-EMA",
+    "plan_id": "plan-off-sb2",
+    "evidence_ids": [
+      "ev-q-sb2",
+      "ev-dl-sb2",
+      "ev-poa-pen",
+      "ev-qc-pen-shf",
+      "ev-nadcap-pen-rot",
+      "ev-reg-pen",
+      "ev-metrics-site-pen-rot",
+      "ev-ipc-bd-3110-v1"
+    ],
+    "route_specific": {
+      "design_basis": "Licensed design data DWG-BD-3110 rev A",
+      "special_processes": [
+        "tig_welding",
+        "heat_treatment",
+        "fpi_ndt"
+      ],
+      "qualification": "No FAI yet for this part at Rotherham",
+      "tooling": "New forming tool required"
+    },
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "candidate_id": "OFF-SB3",
+    "case_id": "case-secondary-b",
+    "route": "MAKE",
+    "label": "Offer SB-3 \u2014 commissioned manufacture, Bristol",
+    "part_id": "RS-BD-3110",
+    "revision": "A",
+    "supplier_id": "SUP-KES",
+    "site_id": "SITE-KES-BRS",
+    "manufacturer_id": "SUP-KES",
+    "seller_id": "SUP-KES",
+    "quantity": 1,
+    "condition": "NEW",
+    "quote_version": "q-off-sb3-v1",
+    "price": {
+      "amount": "13900.00",
+      "currency": "GBP"
+    },
+    "stock": null,
+    "capacity": {
+      "forming_slots": [
+        [
+          3,
+          30
+        ]
+      ]
+    },
+    "logistics_route_id": "R-BRS-EMA",
+    "plan_id": "plan-off-sb3",
+    "evidence_ids": [
+      "ev-q-sb3",
+      "ev-dl-sb3",
+      "ev-fai-sb3",
+      "ev-poa-kes",
+      "ev-nadcap-kes-brs",
+      "ev-qc-kes-brs",
+      "ev-reg-kes",
+      "ev-metrics-site-kes-brs",
+      "ev-ipc-bd-3110-v1"
+    ],
+    "route_specific": {
+      "design_basis": "Licensed design data DWG-BD-3110 rev A",
+      "special_processes": [
+        "tig_welding",
+        "heat_treatment",
+        "fpi_ndt"
+      ],
+      "qualification": "AS9102 FAI complete at Bristol",
+      "tooling": "Existing forming tool"
+    },
+    "source_adapter": "seeded_offers",
+    "data_origin": "synthetic_demo"
+  }
+]

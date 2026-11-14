@@ -1,0 +1,67 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "from_rank": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "From Rank"
+    },
+    "from_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "From Score"
+    },
+    "label": {
+      "title": "Label",
+      "type": "string"
+    },
+    "to_rank": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "To Rank"
+    },
+    "to_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "To Score"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "label",
+    "from_rank",
+    "to_rank",
+    "from_score",
+    "to_score"
+  ],
+  "title": "RankMove",
+  "type": "object"
+}

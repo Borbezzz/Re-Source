@@ -1,0 +1,974 @@
+{
+  "$defs": {
+    "CandidateOffer": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "capacity": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capacity"
+        },
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Condition"
+        },
+        "data_origin": {
+          "$ref": "#/$defs/DataOrigin",
+          "default": "synthetic_demo"
+        },
+        "evidence_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "logistics_route_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Logistics Route Id"
+        },
+        "manufacturer_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Manufacturer Id"
+        },
+        "part_id": {
+          "title": "Part Id",
+          "type": "string"
+        },
+        "plan_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plan Id"
+        },
+        "price": {
+          "$ref": "#/$defs/Money"
+        },
+        "quantity": {
+          "default": 1,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "quote_version": {
+          "title": "Quote Version",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "string"
+        },
+        "route": {
+          "$ref": "#/$defs/Route"
+        },
+        "route_specific": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Route Specific",
+          "type": "object"
+        },
+        "seller_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seller Id"
+        },
+        "site_id": {
+          "title": "Site Id",
+          "type": "string"
+        },
+        "source_adapter": {
+          "default": "seeded_offers",
+          "title": "Source Adapter",
+          "type": "string"
+        },
+        "stock": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stock"
+        },
+        "supplier_id": {
+          "title": "Supplier Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "case_id",
+        "route",
+        "label",
+        "part_id",
+        "revision",
+        "supplier_id",
+        "site_id",
+        "quote_version",
+        "price"
+      ],
+      "title": "CandidateOffer",
+      "type": "object"
+    },
+    "CostLine": {
+      "additionalProperties": false,
+      "properties": {
+        "converted": {
+          "$ref": "#/$defs/Money"
+        },
+        "fx_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fx Version"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "original": {
+          "$ref": "#/$defs/Money"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "original",
+        "converted",
+        "source"
+      ],
+      "title": "CostLine",
+      "type": "object"
+    },
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    },
+    "Duration": {
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "default": "days",
+          "enum": [
+            "hours",
+            "days"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Duration",
+      "type": "object"
+    },
+    "Eligibility": {
+      "enum": [
+        "eligible",
+        "pending",
+        "ineligible"
+      ],
+      "title": "Eligibility",
+      "type": "string"
+    },
+    "EvidenceGap": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_sources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Sources",
+          "type": "array"
+        },
+        "attempts": {
+          "default": [],
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Attempts",
+          "type": "array"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "desired": {
+          "title": "Desired",
+          "type": "string"
+        },
+        "gap_id": {
+          "title": "Gap Id",
+          "type": "string"
+        },
+        "priority": {
+          "default": 1,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "requirement_id": {
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "site_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Site Id"
+        },
+        "status": {
+          "default": "open",
+          "enum": [
+            "open",
+            "resolved",
+            "exhausted"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gap_id",
+        "case_id",
+        "candidate_id",
+        "requirement_id",
+        "desired",
+        "allowed_sources"
+      ],
+      "title": "EvidenceGap",
+      "type": "object"
+    },
+    "Money": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "description": "Decimal amount as a string-safe decimal",
+          "title": "Amount",
+          "type": "string"
+        },
+        "currency": {
+          "description": "ISO 4217 code",
+          "maxLength": 3,
+          "minLength": 3,
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "title": "Money",
+      "type": "object"
+    },
+    "PlanStep": {
+      "additionalProperties": false,
+      "properties": {
+        "adjusted_by": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Adjusted By",
+          "type": "array"
+        },
+        "assumption": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assumption"
+        },
+        "depends_on": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "duration": {
+          "$ref": "#/$defs/Duration"
+        },
+        "duration_range": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Range"
+        },
+        "finish_day": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Finish Day"
+        },
+        "kind": {
+          "enum": [
+            "procurement",
+            "manufacture",
+            "qualification",
+            "transport",
+            "inspection",
+            "installation",
+            "documentation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "on_critical_path": {
+          "default": false,
+          "title": "On Critical Path",
+          "type": "boolean"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "start_day": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start Day"
+        },
+        "step_id": {
+          "title": "Step Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "step_id",
+        "name",
+        "kind",
+        "duration",
+        "source"
+      ],
+      "title": "PlanStep",
+      "type": "object"
+    },
+    "RecoveryPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "cost_breakdown": {
+          "items": {
+            "$ref": "#/$defs/CostLine"
+          },
+          "title": "Cost Breakdown",
+          "type": "array"
+        },
+        "critical_path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Critical Path",
+          "type": "array"
+        },
+        "data_origin": {
+          "$ref": "#/$defs/DataOrigin",
+          "default": "synthetic_demo"
+        },
+        "elapsed_days": {
+          "title": "Elapsed Days",
+          "type": "number"
+        },
+        "finish_day": {
+          "title": "Finish Day",
+          "type": "number"
+        },
+        "input_versions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Input Versions",
+          "type": "object"
+        },
+        "labour_days": {
+          "title": "Labour Days",
+          "type": "number"
+        },
+        "landed_cost": {
+          "$ref": "#/$defs/Money"
+        },
+        "plan_id": {
+          "title": "Plan Id",
+          "type": "string"
+        },
+        "solver": {
+          "enum": [
+            "dependency_cpm",
+            "cp_sat"
+          ],
+          "title": "Solver",
+          "type": "string"
+        },
+        "solver_detail": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Solver Detail",
+          "type": "object"
+        },
+        "solver_status": {
+          "title": "Solver Status",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/PlanStep"
+          },
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "plan_id",
+        "candidate_id",
+        "steps",
+        "assumptions",
+        "finish_day",
+        "elapsed_days",
+        "labour_days",
+        "critical_path",
+        "cost_breakdown",
+        "landed_cost",
+        "solver",
+        "solver_status"
+      ],
+      "title": "RecoveryPlan",
+      "type": "object"
+    },
+    "ReliabilityMetric": {
+      "additionalProperties": false,
+      "properties": {
+        "data_origin": {
+          "$ref": "#/$defs/DataOrigin",
+          "default": "synthetic_demo"
+        },
+        "denominator": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Denominator"
+        },
+        "fixture_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fixture Note"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "metric_id": {
+          "title": "Metric Id",
+          "type": "string"
+        },
+        "metric_name": {
+          "title": "Metric Name",
+          "type": "string"
+        },
+        "numerator": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Numerator"
+        },
+        "site_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Site Id"
+        },
+        "source_evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Evidence Id"
+        },
+        "subject_id": {
+          "title": "Subject Id",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "window": {
+          "title": "Window",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric_id",
+        "subject_id",
+        "metric_name",
+        "label",
+        "value",
+        "unit",
+        "window"
+      ],
+      "title": "ReliabilityMetric",
+      "type": "object"
+    },
+    "Route": {
+      "enum": [
+        "BUY",
+        "MAKE"
+      ],
+      "title": "Route",
+      "type": "string"
+    },
+    "ScoreBreakdown": {
+      "additionalProperties": false,
+      "properties": {
+        "current_resilience": {
+          "title": "Current Resilience",
+          "type": "number"
+        },
+        "historical_reliability": {
+          "title": "Historical Reliability",
+          "type": "number"
+        },
+        "inputs": {
+          "additionalProperties": true,
+          "title": "Inputs",
+          "type": "object"
+        },
+        "landed_cost": {
+          "title": "Landed Cost",
+          "type": "number"
+        },
+        "recovery_speed": {
+          "title": "Recovery Speed",
+          "type": "number"
+        },
+        "score": {
+          "title": "Score",
+          "type": "number"
+        },
+        "thresholds": {
+          "additionalProperties": true,
+          "title": "Thresholds",
+          "type": "object"
+        },
+        "weights": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Weights",
+          "type": "object"
+        }
+      },
+      "required": [
+        "recovery_speed",
+        "landed_cost",
+        "historical_reliability",
+        "current_resilience",
+        "weights",
+        "inputs",
+        "thresholds",
+        "score"
+      ],
+      "title": "ScoreBreakdown",
+      "type": "object"
+    },
+    "Site": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "title": "Address",
+          "type": "string"
+        },
+        "capabilities": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "data_origin": {
+          "$ref": "#/$defs/DataOrigin",
+          "default": "synthetic_demo"
+        },
+        "geography": {
+          "additionalProperties": true,
+          "title": "Geography",
+          "type": "object"
+        },
+        "metric_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Metric Refs",
+          "type": "array"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "qualified_scope_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Qualified Scope Refs",
+          "type": "array"
+        },
+        "roles": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Roles",
+          "type": "array"
+        },
+        "site_id": {
+          "title": "Site Id",
+          "type": "string"
+        },
+        "supplier_id": {
+          "title": "Supplier Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "site_id",
+        "supplier_id",
+        "name",
+        "address",
+        "geography",
+        "roles"
+      ],
+      "title": "Site",
+      "type": "object"
+    },
+    "Supplier": {
+      "additionalProperties": false,
+      "properties": {
+        "data_origin": {
+          "$ref": "#/$defs/DataOrigin",
+          "default": "synthetic_demo"
+        },
+        "legal_entity_name": {
+          "title": "Legal Entity Name",
+          "type": "string"
+        },
+        "registry": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Registry"
+        },
+        "roles": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Roles",
+          "type": "array"
+        },
+        "supplier_id": {
+          "title": "Supplier Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "supplier_id",
+        "legal_entity_name",
+        "roles"
+      ],
+      "title": "Supplier",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidate": {
+      "$ref": "#/$defs/CandidateOffer"
+    },
+    "check_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Check Ids",
+      "type": "array"
+    },
+    "eligibility": {
+      "$ref": "#/$defs/Eligibility"
+    },
+    "evidence_coverage": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Evidence Coverage",
+      "type": "object"
+    },
+    "exposure": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Exposure",
+      "type": "object"
+    },
+    "feasible": {
+      "title": "Feasible",
+      "type": "boolean"
+    },
+    "gaps": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/EvidenceGap"
+      },
+      "title": "Gaps",
+      "type": "array"
+    },
+    "plan": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RecoveryPlan"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rank": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rank"
+    },
+    "reliability": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ReliabilityMetric"
+      },
+      "title": "Reliability",
+      "type": "array"
+    },
+    "score": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ScoreBreakdown"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "site": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Site"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "summary": {
+      "default": "",
+      "title": "Summary",
+      "type": "string"
+    },
+    "supplier": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Supplier"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "candidate",
+    "eligibility",
+    "feasible"
+  ],
+  "title": "RankedCandidate",
+  "type": "object"
+}

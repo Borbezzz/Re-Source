@@ -1,0 +1,34 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "capabilities": {
+      "additionalProperties": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Capabilities",
+      "type": "object"
+    },
+    "checked_at": {
+      "format": "date-time",
+      "title": "Checked At",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "degraded",
+        "unavailable"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "capabilities",
+    "checked_at"
+  ],
+  "title": "Readiness",
+  "type": "object"
+}

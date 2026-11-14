@@ -1,0 +1,73 @@
+[
+  {
+    "reply_id": "reply-sa1-trace",
+    "candidate_id": "OFF-SA1",
+    "requirement_id": "REQ-NGV-TRC-01",
+    "attempt": 1,
+    "evidence": {
+      "version_id": "ev-tr-sa1",
+      "document_id": "doc-ev-tr-sa1",
+      "title": "Traceability pack \u2014 RS-NGV-2040 S/N NG4410",
+      "doc_type": "trace_pack",
+      "hash": "sha256:57d1ccf117b770c8aade9bca122dd8e4e58aa4b47ab1e9a5d7351e2a56aace94",
+      "source_url": null,
+      "storage_uri": "/Volumes/workspace/resource/evidence/ev-tr-sa1.txt",
+      "authority": "supplier_record",
+      "authority_rank": 50,
+      "issuer": "Harbourline Aero Components Ltd",
+      "subject_ids": [
+        "OFF-SA1",
+        "RS-NGV-2040"
+      ],
+      "site_id": "SITE-HAR-SOU",
+      "revision": null,
+      "effective_at": null,
+      "expiry_at": null,
+      "retrieved_at": "2026-11-14T12:00:00Z",
+      "data_origin": "synthetic_demo",
+      "validation_state": "unvalidated",
+      "supersedes_version_id": null,
+      "content_text": "TRACEABILITY PACK \u2014 RS-NGV-2040 S/N NG4410\nRecord type: SYNTHETIC DEMONSTRATION RECORD \u2014 not a real document\n\nPART NUMBER: RS-NGV-2040\nSERIAL NUMBER: NG4410\nBACK TO BIRTH: yes\nLAST OPERATOR: Synthetic Island Airways Ltd\nNON INCIDENT STATEMENT: yes",
+      "expected_facts": {
+        "part_number": "RS-NGV-2040",
+        "serial_number": "NG4410",
+        "back_to_birth": "yes",
+        "last_operator": "Synthetic Island Airways Ltd",
+        "non_incident_statement": "yes"
+      }
+    },
+    "message": "Harbourline: back-to-birth trace pack attached for S/N NG4410 (synthetic supplier reply)."
+  },
+  {
+    "reply_id": "reply-sa3-none-1",
+    "candidate_id": "OFF-SA3",
+    "requirement_id": "REQ-NGV-TRC-01",
+    "attempt": 1,
+    "evidence": null,
+    "message": "Coastreach: trace records being located, no date yet (synthetic supplier reply)."
+  },
+  {
+    "reply_id": "reply-sa3-none-2",
+    "candidate_id": "OFF-SA3",
+    "requirement_id": "REQ-NGV-TRC-01",
+    "attempt": 2,
+    "evidence": null,
+    "message": "Coastreach: no response received within the follow-up window (synthetic)."
+  },
+  {
+    "reply_id": "reply-pd-none-1",
+    "candidate_id": "OFF-PD",
+    "requirement_id": "REQ-FN-REL-01",
+    "attempt": 1,
+    "evidence": null,
+    "message": "Lowmarsh: unit sold 'as removed' without release certificate (synthetic supplier reply)."
+  },
+  {
+    "reply_id": "reply-pd-none-2",
+    "candidate_id": "OFF-PD",
+    "requirement_id": "REQ-FN-REL-01",
+    "attempt": 2,
+    "evidence": null,
+    "message": "Lowmarsh: no certificate available (synthetic)."
+  }
+]
