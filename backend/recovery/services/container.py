@@ -29,7 +29,10 @@ log = logging.getLogger("recovery.container")
 
 class Services:
     def __init__(self, db_url: Optional[str] = None, start_worker: bool = True):
-        self.store = OperationalStore(db_url or settings.db_url)
+        store_url = db_url or settings.db_url
+        if settings.serverless and not store_url.startswith("postgresql"):
+            raise RuntimeError("Vercel requires durable Postgres/Lakebase configuration; SQLite fallback is disabled.")
+        self.store = OperationalStore(store_url)
         self.catalog = load_catalog()
         self.bus = EventBus(self.store)
         self.bus.trace_lookup = current_trace_id
@@ -70,10 +73,12 @@ class Services:
         self.checkpointer, self.checkpointer_kind = make_checkpointer()
         self.graph = build_graph(self, self.checkpointer)
         self.coordinator = Coordinator(self, self.graph)
+        from ..runtime.jobs import DurableJobs
+        self.jobs = DurableJobs(self)
         self._kick = threading.Event()
         self._stop = threading.Event()
         self._worker: Optional[threading.Thread] = None
-        if start_worker:
+        if start_worker and settings.job_backend != "vercel":
             self.start_worker()
 
     def prewarm(self) -> dict:
@@ -100,7 +105,10 @@ class Services:
 
     # ------------------------------------------------------------------ outbox worker
     def worker_kick(self) -> None:
-        self._kick.set()
+        if settings.job_backend == "vercel":
+            self.jobs.enqueue("outbox", "__system__", {})
+        else:
+            self._kick.set()
 
     def start_worker(self) -> None:
         if self._worker and self._worker.is_alive():

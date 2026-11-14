@@ -6,16 +6,16 @@ This describes what the code actually does. Where it departs from PRD §5, see t
 
 | Layer | PRD default | Implemented | Notes |
 |---|---|---|---|
-| Frontend | React + TS + Vite | Delegated to Borbezzz's OpenAI agent (`frontend/**`) | D-013. Built against `contracts/` and [`interface.md`](interface.md). |
+| Frontend | React + TS + Vite | `frontend/`, built and served by Vercel | D-013/D-019. Typed client, scoped SSE, source review, R3F scene, comparison and approval. |
 | 3D | R3F + drei, glTF | Procedural R3F geometry or licensed GLB; node names from the manifest | D-009. |
-| API/BFF | FastAPI + Pydantic | `backend/recovery/api/app.py` | Serves `frontend/dist` at `/` in deployment. |
+| API/BFF | FastAPI + Pydantic | `backend/recovery/api/app.py` | Vercel Python service at `/api/v1`; static frontend is a separate service on the same origin. |
 | Orchestration | LangGraph | `backend/recovery/agents/graph.py` + `investigation.py` | One graph for investigation and reassessment. |
-| Agent hosting | Agent Bricks / AgentKit / Agent Runtime | Background workers in the FastAPI process (Databricks App `resource`) | D-006 gap. |
+| Agent hosting | Agent Bricks / AgentKit / Agent Runtime | Vercel Queues → private Python subscriber; threads only in local development | D-019. Delivery/checkpoints persist across API invocations. |
 | Models | Claude via Databricks | OpenAI Responses API, `OPENAI_MODEL` (default `gpt-5.4-mini`) | D-001/D-002. Explains only. |
 | Evidence/data | Delta + UC + SQL warehouse | Delta tables `workspace.resource.rs_*` loaded from fixtures; SQL warehouse | D-014. |
 | Retrieval | AI Search hybrid + rerank | Exact-ID resolution for gates; keyword search fallback; mode recorded | D-008. |
 | Operational storage | Lakebase Postgres | `OperationalStore`: Postgres-ready, SQLite locally | D-004. |
-| Execution state | Runtime Store + checkpoints | LangGraph SqliteSaver (PostgresSaver with Lakebase) | D-005. |
+| Execution state | Runtime Store + checkpoints | LangGraph PostgresSaver on Lakebase; SqliteSaver locally | D-005. |
 | Ingestion | Lakeflow jobs | `data/ingestion/load_delta.py`; signal/evidence/clock ingestion through the change gateway | Scheduled Lakeflow job: future. |
 | Document AI | ai_parse_document + ai_extract | `ai_extract` via SQL, cross-checked with the structured parse | D-007. |
 | Observability | MLflow 3 | `runtime/tracing.py` → experiment `/Shared/ReSource/agent-traces` | Events carry `trace_id`. |
@@ -31,20 +31,22 @@ flowchart LR
   API -- commands --> SVC[Services<br/>selection · documents · changes · scenario · visual · monitoring]
   SVC -- tx: case revision, outbox, events --> OPS[(Operational store<br/>SQLite / Lakebase)]
   SVC -- start/coalesce --> CO[Coordinator<br/>execution generations]
-  CO -- invoke/resume --> G[LangGraph graph<br/>checkpointer]
+  CO -- durable job ID --> Q[Vercel Queues]
+  Q -- private consumer / resume --> G[LangGraph graph<br/>checkpointer]
   G -- tools --> T[Tools §8.2]
   T --> CAT[Catalog snapshot<br/>fixtures · rules · templates]
   T --> DBX[Databricks SQL<br/>Delta rs_* · ai_extract]
   T --> OAI[OpenAI Responses API]
   T --> LK[Linkup / Companies House]
   G -- persist_decision CAS --> OPS
-  OPS -- after-commit --> BUS[EventBus] -- live push --> API
+  OPS -- committed cursor replay --> API
+  OPS -- after-commit --> BUS[Local wake-up hint] --> API
   OPS -- outbox --> PROJ[Projection worker] --> DBX
   G -. spans .-> ML[MLflow traces]
 ```
 
 - Commands commit to the operational store. Domain events are written **in the same transaction** with a per-case `sequence` and pushed to SSE subscribers only **after commit** (`store.after_commit`).
-- Long work (investigations, reassessments) returns `202` with a command/generation ID and runs in background workers. Concurrency is bounded by `RS_MAX_CASE_WORKERS`, and every run has a tool budget (`RS_RUN_TOOL_BUDGET`).
+- On Vercel, long work returns `202` and is delivered through `resource-jobs` to a private subscriber, with three concurrent deliveries and five attempts. Job records and LangGraph checkpoints use Lakebase; advisory locks prevent duplicate execution. Generation job intent commits with the generation row. Request retries redispatch committed unpublished jobs. See D-019 for limits and recovery. Local development retains threads. Every run has a tool budget (`RS_RUN_TOOL_BUDGET`).
 - Outbox items (`project_decision`, `project_selection`, `project_receipt`, `generate_documents`, …) drive side effects and analytical projections into Delta, with idempotent consumers. Each item records attempts, `last_error` and its source revision.
 
 ## 3. Storage authority (PRD §5.3)
@@ -179,3 +181,13 @@ Repository layout follows PRD §14: `frontend/`, `backend/`, `contracts/`, `data
 - Source documents are untrusted data. Extraction prompts tell the model to ignore embedded instructions, and the tools enforce domain transitions.
 - All SQL is parameterised. The only interpolated SQL fragments are code constants (field labels).
 - Every fixture entity carries `data_origin: synthetic_demo`, and favourable reliability values are labelled as scenario fixtures.
+
+## Public deployment and identity (D-019/D-020)
+
+Vercel serves both the Vite frontend and FastAPI API. The old Databricks App is retained but is not the browser's API upstream. Databricks remains Lakebase, SQL/Delta, UC upload storage, extraction and tracing. Deployment instructions and required server variables are in [`deploy/vercel/README.md`](deploy/vercel/README.md).
+
+Anonymous visitors receive an opaque HttpOnly, Secure, SameSite=Lax cookie. Their current run, intake records, manifests and command-idempotency namespace are isolated. Run IDs and replay sources are checked against cookie ownership. Forwarded identity headers are ignored; review actors are explicitly unverified demo visitors. This is a public demonstration, not authenticated engineering approval.
+
+SSE responses last at most 50 seconds and reconnect with the persisted sequence cursor. Each stream checks committed Lakebase events even if another instance wrote them; the local EventBus is only a low-latency wake-up hint. Uploads must reach the UC volume before serverless acknowledgement; local `/tmp` is a cache. The current proxy upload limit is 4 MB.
+
+The frontend distinguishes the procedural fixture from a generated asset. Blueprint jobs honestly return `provider_required` until a real server generation adapter exists. GLBs require named mesh validation and source identity review. Uploaded material/dimension/tolerance/certification fields are retained with citations but remain manual-review unknowns in compatibility; only the existing configured rules and uploaded identity/revision are automated.

@@ -226,3 +226,9 @@ Run-stream events (`GET /scenario-runs/{run_id}/events`): `intake.uploaded`, `in
 1. Edit `backend/recovery/domain/models.py` (bump `SCHEMA_VERSION` for breaking changes).
 2. `uv run python scripts/export_contracts.py`.
 3. Update this file and post on the board (`[Bede's Claude] contract change: …`) before merging.
+
+## Public Vercel runtime (D-019/D-020)
+
+The browser uses same-origin `/api/v1` on Vercel; it never calls the private Databricks App. Public anonymous visitors receive a secure HttpOnly `resource_visitor` cookie. Current runs, intake records/active manifests and idempotency keys are visitor-scoped; cross-visitor run/replay access returns 404. Cross-origin mutations return 403. Forwarded user headers do not establish reviewer identity; actors are unverified demo visitors.
+
+No generated payload shapes changed for this hosting migration. The fallback HTML root is excluded from OpenAPI so the contract does not vary with frontend build presence. SSE responses reconnect after a bounded 50-second window and replay committed Lakebase events using the existing sequence cursor. Long operations are durable queue jobs, not resident API threads. On Vercel, multipart uploads are limited to 4 MB and must mirror to the UC volume before acknowledgement. Local backend upload limits remain 50 MB. See `deploy/vercel/README.md` for configuration and verification status.

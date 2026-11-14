@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T18:03:00.421101Z",
+  "title": "Design System: ReSource",
+  "extensions": {
+    "colorMeta": {
+      "surface": {
+        "role": "neutral",
+        "displayName": "Off-white",
+        "canonical": "#f7f8f5"
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#fff"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#172c28"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted green",
+        "canonical": "#566960"
+      },
+      "brand": {
+        "role": "primary",
+        "displayName": "Forest",
+        "canonical": "#194f45"
+      },
+      "soft": {
+        "role": "primary",
+        "displayName": "Sage",
+        "canonical": "#e6eee8"
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Separator",
+        "canonical": "#d9e0d9"
+      },
+      "warning": {
+        "role": "secondary",
+        "displayName": "Warning amber",
+        "canonical": "#8a4d17"
+      },
+      "brand-hover": {
+        "role": "primary",
+        "displayName": "Forest hover",
+        "canonical": "#123c34"
+      },
+      "soft-hover": {
+        "role": "primary",
+        "displayName": "Sage hover",
+        "canonical": "#d8e6db"
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Focus green",
+        "canonical": "#277762"
+      },
+      "status-good": {
+        "role": "secondary",
+        "displayName": "Status green",
+        "canonical": "#29654a"
+      },
+      "status-bad": {
+        "role": "secondary",
+        "displayName": "Status red",
+        "canonical": "#a13c32"
+      },
+      "status-unknown": {
+        "role": "secondary",
+        "displayName": "Status amber",
+        "canonical": "#85521f"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Intake display",
+        "purpose": "Intake heading; 34px at max-width 480px."
+      },
+      "headline": {
+        "displayName": "Assembly headline",
+        "purpose": "Assembly heading; 27px at max-width 800px."
+      },
+      "title": {
+        "displayName": "Section title",
+        "purpose": "Section headings; selected sections use 23px at max-width 480px."
+      },
+      "subheading": {
+        "displayName": "Panel subheading",
+        "purpose": "General panel headings; document and evidence headings have local overrides."
+      },
+      "body": {
+        "displayName": "Working body",
+        "purpose": "General content, with paragraph measure capped at 75ch."
+      },
+      "body-small": {
+        "displayName": "Supporting copy",
+        "purpose": "Small supporting paragraphs and details."
+      },
+      "label": {
+        "displayName": "Badge label",
+        "purpose": "Provenance and state badges; not general-purpose body copy."
+      }
+    },
+    "shadows": [
+      {
+        "name": "mesh-pin",
+        "value": "0 3px 9px #233d2830",
+        "purpose": "Separates the numbered spatial control from rendered geometry."
+      },
+      {
+        "name": "evidence-drawer",
+        "value": "-8px 0 35px #1430201a",
+        "purpose": "Separates the right evidence drawer from the workspace; ordinary panels remain flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-color-transition",
+        "value": "background 0.16s ease, color 0.16s ease",
+        "purpose": "Source button background/color transitions; ease is the CSS default."
+      },
+      {
+        "name": "loading-spinner",
+        "value": "spin 1.4s linear infinite",
+        "purpose": "Rotates the loading indicator through 360 degrees."
+      },
+      {
+        "name": "assembly-scroll",
+        "value": "linear; progress 0..1; enter top top+=76; leave bottom bottom; sync true",
+        "purpose": "Source Anime.js scroll synchronization reverses separation with scroll; the fixed 76px observer offset is source behavior, not a responsive token."
+      },
+      {
+        "name": "assembly-separation-damping",
+        "value": "THREE.MathUtils.damp(current, target, 10, Math.min(delta, 0.1))",
+        "purpose": "Smooths mesh separation; reduced motion applies the target directly. This coefficient is not a duration."
+      },
+      {
+        "name": "camera-focus-interpolation",
+        "value": "1 - Math.exp(-delta * 6)",
+        "purpose": "Interpolation amount for camera and target; reduced motion copies target positions directly."
+      },
+      {
+        "name": "reduced-motion-css",
+        "value": "animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important",
+        "purpose": "Applied to elements and pseudo-elements when prefers-reduced-motion is reduce."
+      },
+      {
+        "name": "direct-separation",
+        "value": "min 0; max 1; step 0.01",
+        "purpose": "Range or Assemble/Explode input disables scroll-driven separation; reduced-motion mode disables the scroll toggle."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1700px"
+      },
+      {
+        "name": "compact-desktop-max",
+        "value": "1100px"
+      },
+      {
+        "name": "stack-layout-max",
+        "value": "800px"
+      },
+      {
+        "name": "comparison-hint-max",
+        "value": "760px"
+      },
+      {
+        "name": "narrow-max",
+        "value": "480px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Shared action geometry, source hover treatment, disabled state, and visible keyboard focus.",
+      "html": "<button class=\"ds-primary\" type=\"button\">Investigate suppliers</button>",
+      "css": ".ds-primary{font-family:\"Geist Variable\",sans-serif;font-size:14px;line-height:1.55;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:42px;font-weight:500;border:0;border-radius:var(--radius-control,8px);padding:10px 16px;transition:background .16s,color .16s;white-space:normal;text-align:center;cursor:pointer;background:var(--brand,#194f45);color:var(--paper,#fff);}.ds-primary:hover:not(:disabled){background:#123c34;}.ds-primary:focus-visible{outline:2px solid #277762;outline-offset:4px;}.ds-primary:disabled{opacity:.5;cursor:not-allowed;}@media(prefers-reduced-motion:reduce){.ds-primary{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Shared action geometry, source hover treatment, disabled state, and visible keyboard focus.",
+      "html": "<button class=\"ds-secondary\" type=\"button\">Review source</button>",
+      "css": ".ds-secondary{font-family:\"Geist Variable\",sans-serif;font-size:14px;line-height:1.55;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:42px;font-weight:500;border:0;border-radius:var(--radius-control,8px);padding:10px 16px;transition:background .16s,color .16s;white-space:normal;text-align:center;cursor:pointer;background:var(--soft,#e6eee8);color:var(--brand,#194f45);}.ds-secondary:hover:not(:disabled){background:#d8e6db;}.ds-secondary:focus-visible{outline:2px solid #277762;outline-offset:4px;}.ds-secondary:disabled{opacity:.5;cursor:not-allowed;}@media(prefers-reduced-motion:reduce){.ds-secondary{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Text button",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Shared action geometry, source hover treatment, disabled state, and visible keyboard focus.",
+      "html": "<button class=\"ds-text-button\" type=\"button\">Close</button>",
+      "css": ".ds-text-button{font-family:\"Geist Variable\",sans-serif;font-size:14px;line-height:1.55;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:42px;font-weight:500;border:0;border-radius:var(--radius-control,8px);padding:10px 16px;transition:background .16s,color .16s;white-space:normal;text-align:center;cursor:pointer;background:transparent;color:var(--brand,#194f45);}.ds-text-button:hover{background:var(--soft,#e6eee8);}.ds-text-button:focus-visible{outline:2px solid #277762;outline-offset:4px;}.ds-text-button:disabled{opacity:.5;cursor:not-allowed;}@media(prefers-reduced-motion:reduce){.ds-text-button{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Icon button",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Shared action geometry, source hover treatment, disabled state, and visible keyboard focus.",
+      "html": "<button class=\"ds-icon-button\" type=\"button\" aria-label=\"Focus selected component\"><svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"22\" x2=\"18\" y1=\"12\" y2=\"12\"/><line x1=\"6\" x2=\"2\" y1=\"12\" y2=\"12\"/><line x1=\"12\" x2=\"12\" y1=\"6\" y2=\"2\"/><line x1=\"12\" x2=\"12\" y1=\"22\" y2=\"18\"/></svg></button>",
+      "css": ".ds-icon-button{font-family:\"Geist Variable\",sans-serif;font-size:14px;line-height:1.55;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:42px;font-weight:500;border:0;border-radius:var(--radius-control,8px);padding:10px 16px;transition:background .16s,color .16s;white-space:normal;text-align:center;cursor:pointer;background:transparent;color:var(--brand,#194f45);padding:10px;min-width:42px;}.ds-icon-button:hover{background:var(--soft,#e6eee8);}.ds-icon-button:focus-visible{outline:2px solid #277762;outline-offset:4px;}.ds-icon-button:disabled{opacity:.5;cursor:not-allowed;}@media(prefers-reduced-motion:reduce){.ds-icon-button{transition-duration:.01ms!important;}}"
+    },
+    {
+      "name": "Draft text field",
+      "kind": "input",
+      "refersTo": "draft-field",
+      "description": "Editable document field with a visible label, resize affordance, shared focus outline, and stacked small-screen layout; no extra hover treatment is defined in the source.",
+      "html": "<div class=\"ds-draft-field\"><label class=\"ds-field-label\" for=\"ds-draft-value\">Material requirement</label><textarea class=\"ds-draft-textarea\" id=\"ds-draft-value\" rows=\"2\">Source-backed requirement</textarea></div>",
+      "css": ".ds-draft-field{font-family:\"Geist Variable\",sans-serif;display:grid;grid-template-columns:minmax(130px,.8fr) minmax(0,1.2fr);gap:24px;padding:16px 0;border-top:1px solid var(--border,#d9e0d9);color:var(--ink,#172c28);font-size:12px;line-height:1.55;}.ds-field-label{font-weight:500;}.ds-draft-textarea{font-family:\"Geist Variable\",sans-serif;width:100%;resize:vertical;min-height:40px;border:1px solid #ced9ce;background:#fcfdfa;border-radius:6px;padding:9px 12px;color:var(--ink,#172c28);font-size:12px;line-height:1.55;caret-color:var(--brand,#194f45);}.ds-draft-textarea:focus-visible{outline:2px solid #277762;outline-offset:4px;}@media(max-width:1100px){.ds-draft-field{gap:16px;}}@media(max-width:480px){.ds-draft-field{grid-template-columns:1fr;gap:9px;}}"
+    },
+    {
+      "name": "Workspace navigation",
+      "kind": "nav",
+      "refersTo": "workspace-tab",
+      "description": "Muted text tabs become sage and forest when selected. The source has no extra hover fill; keyboard focus remains visible.",
+      "html": "<nav class=\"ds-workspace-tabs\" aria-label=\"Workspace\"><button class=\"ds-workspace-tab ds-tab-selected\" type=\"button\">Assembly</button><button class=\"ds-workspace-tab\" type=\"button\">Research</button><button class=\"ds-workspace-tab\" type=\"button\">Documents</button></nav>",
+      "css": ".ds-workspace-tabs{display:flex;align-items:center;gap:8px;}.ds-workspace-tab{font-family:\"Geist Variable\",sans-serif;display:flex;gap:8px;align-items:center;background:none;border:0;border-radius:6px;color:var(--muted,#566960);padding:9px 14px;font-size:12px;line-height:1.55;cursor:pointer;}.ds-tab-selected{background:var(--soft,#e6eee8);color:var(--brand,#194f45);}.ds-workspace-tab:focus-visible{outline:2px solid #277762;outline-offset:4px;}@media(max-width:480px){.ds-workspace-tabs{width:100%;justify-content:space-between;margin:0;}.ds-workspace-tab{font-size:11px;padding:8px 10px;}}"
+    },
+    {
+      "name": "Provenance badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "A noninteractive provenance or neutral state label; it has no hover, pressed, or focus state.",
+      "html": "<span class=\"ds-badge\">Procedural demo mesh</span>",
+      "css": ".ds-badge{font-family:\"Geist Variable\",sans-serif;display:inline-flex;align-items:center;width:max-content;max-width:100%;border-radius:5px;background:var(--soft,#e6eee8);color:var(--brand,#194f45);padding:4px 8px;font-size:11px;line-height:1.3;font-weight:500;}"
+    },
+    {
+      "name": "Draft panel",
+      "kind": "card",
+      "refersTo": "draft-panel",
+      "description": "A flat white collapsible document panel with responsive padding and a native focusable summary.",
+      "html": "<details class=\"ds-draft-panel\" open><summary class=\"ds-draft-summary\">Approval draft</summary><p class=\"ds-draft-description\">Review the source-backed fields before approval.</p></details>",
+      "css": ".ds-draft-panel{font-family:\"Geist Variable\",sans-serif;background:var(--paper,#fff);color:var(--ink,#172c28);border-radius:12px;padding:24px;margin:20px 0;font-size:14px;line-height:1.55;}.ds-draft-summary{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:550;cursor:pointer;}.ds-draft-summary:focus-visible{outline:2px solid #277762;outline-offset:4px;}.ds-draft-description{margin:10px 0 0;max-width:75ch;}@media(max-width:800px){.ds-draft-panel{padding:22px;}}@media(max-width:480px){.ds-draft-panel{padding:20px 16px;}.ds-draft-summary{font-size:14px;flex-wrap:wrap;}}"
+    },
+    {
+      "name": "Evidence citation",
+      "kind": "button",
+      "refersTo": "citation",
+      "description": "A small source identifier with an inline document icon, wrapping text, hover fill, and keyboard focus. This local 10px size is not a body-text token.",
+      "html": "<button class=\"ds-citation\" type=\"button\"><svg aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\"/><path d=\"M14 2v5a1 1 0 0 0 1 1h5\"/><path d=\"M10 9H8\"/><path d=\"M16 13H8\"/><path d=\"M16 17H8\"/></svg>source-evidence-01</button>",
+      "css": ".ds-citation{font-family:\"Geist Variable\",sans-serif;display:inline-flex;gap:4px;align-items:center;border:0;background:#edf2eb;color:#32634c;font-size:10px;line-height:1.55;padding:4px 6px;border-radius:4px;overflow-wrap:anywhere;text-align:left;cursor:pointer;}.ds-citation svg{flex-shrink:0;vertical-align:middle;}.ds-citation:hover{background:#dce8d9;}.ds-citation:focus-visible{outline:2px solid #277762;outline-offset:4px;}.ds-citation:disabled{opacity:.5;cursor:not-allowed;}"
+    },
+    {
+      "name": "Assembly separation controls",
+      "kind": "custom",
+      "refersTo": "assembly-segment",
+      "description": "The source segmented control selects assembled or exploded state with aria-pressed. Direct selection disables scroll-driven separation; this static preview shows the assembled state.",
+      "html": "<div class=\"ds-segmented\" aria-label=\"Assembly separation\"><button class=\"ds-segment\" type=\"button\" aria-pressed=\"true\">Assemble</button><button class=\"ds-segment\" type=\"button\" aria-pressed=\"false\">Explode</button></div>",
+      "css": ".ds-segmented{display:inline-flex;background:#e6ece5;border-radius:7px;padding:3px;flex-shrink:0;}.ds-segment{font-family:\"Geist Variable\",sans-serif;line-height:1.55;background:transparent;border:0;color:var(--brand,#194f45);padding:8px 15px;border-radius:5px;font-size:12px;cursor:pointer;}.ds-segment[aria-pressed=\"true\"]{background:var(--brand,#194f45);color:var(--paper,#fff);}.ds-segment:focus-visible{outline:2px solid #277762;outline-offset:4px;}@media(max-width:480px){.ds-segment{font-size:11px;padding:8px 12px;}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Assembly Workbench",
+    "overview": "The code-led Operate direction combines warm off-white work surfaces, forest navigation and actions, and pale sage selection. The physical assembly is the visual center of the inspection workspace. Nearby controls, evidence, and compact tables use quiet typography and thin separators so the object and the decision remain connected.\n\nGeist supplies both headings and working text. White panels sit within a pale surface without decorative elevation; amber marks uncertainty, while explicit text and icons carry status. This record describes the implemented visual system, with the tokens above as its normative values. It does not establish geometry, compatibility, or evidence as verified merely because the interface displays them.",
+    "keyCharacteristics": [
+      "Engine-first entry: independent real mesh, seven selectable modules, reversible scroll and mobile source/details panel.",
+      "Assembly-centered inspection with a persistent selected-part context.",
+      "Forest actions, sage selection, white panels, and thin separators.",
+      "One variable sans-serif family with compact, tabular numeric content.",
+      "Direct controls and keyboard alternatives accompany spatial motion."
+    ],
+    "rules": [
+      {
+        "name": "The Explicit State Rule",
+        "body": "Pair semantic color with a written state and, where the status component is used, its icon; selection color alone does not communicate verification.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Use Geist for headings, prose, controls, and numeric data; use tabular figures rather than a second typeface for aligned values.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Work Surface Rule",
+        "body": "Keep ordinary panels free of box shadows; reserve the existing shadow treatments for floating pins and the evidence drawer.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep source identity, provenance, uncertainty, and status readable beside the object or decision they qualify.",
+      "Do use the forest primary action, sage selection, and quiet white panels for their established roles.",
+      "Do preserve visible keyboard focus, native controls, direct separation input, and the component-list fallback.",
+      "Do use tabular figures and retain horizontal scrolling for dense comparison data.",
+      "Do honor reduced motion in both CSS and the rendered scene.",
+      "Do retain source-workflow navigation across reload and disable supplier actions until the real API session is ready."
+    ],
+    "donts": [
+      "Don't use color alone to communicate a result or treat selection styling as verification.",
+      "Don't make scrolling or mesh interaction the only route to component selection and inspection.",
+      "Don't apply the evidence-drawer or pin shadow to ordinary working panels.",
+      "Don't reuse the smallest scene annotations as the default body or label scale.",
+      "Don't let animation or physical realism imply document-backed compatibility, generation, or approval."
+    ]
+  }
+}

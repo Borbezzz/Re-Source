@@ -1,3 +1,5 @@
+> Hosting superseded by Yixin on 2026-11-14: public frontend and API deploy to Vercel. This file records the retained Databricks App/resources; do not use it as the frontend deployment target. See [Vercel deployment](../vercel/README.md).
+
 # Deploying to the Databricks App `resource`
 
 The workspace already has an App named `resource` (compute stopped, no deployment) with resources:

@@ -9,6 +9,8 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Optional
 
+from ..config import settings
+
 from ..adapters import store as st
 from ..domain.errors import conflict, invalid, not_found
 from .run_state import iso, parse_ts
@@ -44,6 +46,10 @@ class ScenarioService:
             raise invalid(f"fixture version {fixture_version} not loaded (have {cat.fixture_version})")
         if mode == "replay" and not (replay_source_run_id and s.store.get_run(replay_source_run_id)):
             raise invalid("replay mode needs replay_source_run_id of an existing run")
+        if settings.public_demo and replay_source_run_id:
+            from ..runtime.context import visitor_id
+            if s.store.kv_get(f"run_owner:{replay_source_run_id}") != visitor_id.get():
+                raise not_found("replay source")
         previous = s.store.current_run()
         if previous:
             s.monitoring.pause_run(previous["run_id"])
@@ -64,7 +70,10 @@ class ScenarioService:
         s.changes.register_evidence_expiry_timers(run_id, start)
         s.bus.publish(run_id, "__run__", "case.started", f"Scenario run created ({mode})", {"previous_run_id": previous and previous["run_id"]})
         if mode == "replay":
-            threading.Thread(target=self._replay, args=(replay_source_run_id, run_id), daemon=True).start()
+            if settings.job_backend == "vercel":
+                s.jobs.enqueue("replay", run_id, {"source_run_id": replay_source_run_id}, key=f"replay:{run_id}")
+            else:
+                threading.Thread(target=self._replay, args=(replay_source_run_id, run_id), daemon=True).start()
         return self.view(run_id)
 
     def view(self, run_id: str) -> dict:
