@@ -30,9 +30,7 @@
     "research": "3:105",
     "review": "3:145"
   },
-  "images": [
-    "3:73"
-  ],
+  "images": ["3:73"],
   "buttons": {
     "Primary": "3:31",
     "Secondary": "3:33",
@@ -177,11 +175,7 @@
     "text": 95,
     "instances": 13
   },
-  "fonts": [
-    "Geist Regular",
-    "Geist Medium",
-    "Geist SemiBold"
-  ],
+  "fonts": ["Geist Regular", "Geist Medium", "Geist SemiBold"],
   "additionalFrames": {
     "extractedReview": "4:15",
     "generationBlocked": "4:40",
@@ -197,5 +191,11 @@
     "removedImageNode": "3:62",
     "centeredWorkspaceNode": "3:43",
     "reason": "Yixin requested removal of the AI engine illustration."
+  },
+  "productV2": {
+    "entry": "13:24",
+    "selection": "13:29",
+    "researchConcept": "13:34",
+    "note": "Editable initial v2 layouts. Entry and selection preview implemented; research frame is a concept for the following increment. Actual curated model/motion verified in browser captures."
   }
 }
