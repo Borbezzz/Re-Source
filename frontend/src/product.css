@@ -20,12 +20,15 @@
   z-index: -2;
   pointer-events: none;
   opacity: 0.55;
+  background: #000;
 }
 .entry-wave-field::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #0000 24%, #000b 65%, #000 100%);
+  background:
+    linear-gradient(180deg, #000, #0000 18%, #0000 43%, #0007 63%, #0009 78%, #000),
+    linear-gradient(90deg, #000, #0000 14%, #0000 86%, #000);
   pointer-events: none;
 }
 .entry-wordmark {
@@ -105,7 +108,7 @@
   text-decoration: none;
   min-height: 44px;
   padding: 8px 16px;
-  border-radius: 24px;
+  border-radius: var(--radius-control);
 }
 .entry-explore:hover {
   color: #fff;

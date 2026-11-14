@@ -5,6 +5,8 @@
 
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import "./wordmark-interaction.css";
 
 const MAX_DPR = 2; // quality tier, not a design control (rule 10)
 const REF_WIDTH = 1200; // the width the font size is quoted at
@@ -187,13 +189,14 @@ void main() {
     float d = length((vUv - uPtr) / vec2(1.0, aspect));
     float k = 1.0 - pow(smoothstep(0.0, max(uReach, 1e-4), d), 3.0);
 
-    float mask = mix(soft.r, sharp.g, k) * inside;
-    mask = max(mask, soft.r * inside * 0.85 * uGlass);
-    vec3 fill = mix(uShade, uText, smoothstep(0.0, 1.0, E.y));
-    // The original solid/dotted reveal stays intact. A sampled edge catches
-    // the light while the translucent letter body lets the silk show through.
-    vec2 texel = vec2(1.4) / uAtlas;
+    // The dark landing title stays a sharp solid atlas at every pointer
+    // position. Its sourcing rig moves independently, outside the lettering.
     float solid = texture2D(uMap, safeUv).r;
+    float mask = mix(mix(soft.r, sharp.g, k), solid, uGlass) * inside;
+    vec3 fill = mix(uShade, uText, smoothstep(0.0, 1.0, E.y));
+    // A small, static edge highlight retains the established material without
+    // a displacement lens, blur kernel, or dotted outline in the glass title.
+    vec2 texel = vec2(1.4) / uAtlas;
     float rim = max(abs(solid - texture2D(uMap, safeUv + texel).r),
                     abs(solid - texture2D(uMap, safeUv - texel).r));
     float reflection = 0.84 + 0.16 * cos(E.y * 14.0 + E.x * 1.8);
@@ -770,7 +773,13 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
       gl!.uniform1f(U.reach, Math.max(1, L.reach) / boxW);
       gl!.uniform3f(U.text, tc[0], tc[1], tc[2]);
       gl!.uniform3f(U.shade, sc[0], sc[1], sc[2]);
-      gl!.uniform4f(U.accent, ac[0], ac[1], ac[2], hasPointer ? ac[3] : 0);
+      gl!.uniform4f(
+        U.accent,
+        ac[0],
+        ac[1],
+        ac[2],
+        hasPointer && !L.glass ? ac[3] : 0,
+      );
       gl!.uniform2f(U.v0, verts[0].x, verts[0].y);
       gl!.uniform2f(U.v1, verts[1].x, verts[1].y);
       gl!.uniform2f(U.v2, verts[2].x, verts[2].y);
@@ -875,7 +884,7 @@ function __OriginkitBase_VectorWordmark(props: VectorWordmarkProps) {
           display: "block",
         }}
       />
-      {hg.labels
+      {hg.labels && !glass
         ? [0, 1, 2].map((i) => (
             <div
               key={i}
@@ -909,6 +918,198 @@ const __originkitPresetProps = {
   },
 };
 
+// Neutral process labels describe sourcing work, not live search outcomes.
+const SEARCH_NODES = [
+  { x: 0.13, y: 0.17, size: 28, label: "Material", anchor: "start" },
+  { x: 0.76, y: 0.11, size: 22, label: "Tolerances", anchor: "end" },
+  { x: 0.91, y: 0.4, size: 32, label: "Certification", anchor: "end" },
+  { x: 0.17, y: 0.6, size: 23, label: "Supplier search", anchor: "start" },
+  { x: 0.82, y: 0.76, size: 27, label: "Lead time", anchor: "end" },
+  { x: 0.09, y: 0.85, size: 18, label: "Source trace", anchor: "start" },
+] as const;
+const SEARCH_LINKS = [
+  [0, 1],
+  [0, 2],
+  [0, 3],
+  [0, 5],
+  [1, 2],
+  [2, 4],
+  [3, 4],
+  [3, 5],
+  [4, 5],
+] as const;
+
+function SearchRig({
+  targetRef,
+}: {
+  targetRef: React.RefObject<HTMLElement | null>;
+}) {
+  const [target, setTarget] = useState<HTMLElement | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const nodes = useRef<(SVGGElement | null)[]>([]);
+  const links = useRef<(SVGPathElement | null)[]>([]);
+  useEffect(() => setTarget(targetRef.current), [targetRef]);
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!target || !svg) return;
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    let width = target.clientWidth;
+    let height = target.clientHeight;
+    let pointerX = 0;
+    let pointerY = 0;
+    let frame = 0;
+    let visible = true;
+    const copy = target.querySelector<HTMLElement>(".entry-actions");
+    const hide = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      svg.dataset.active = "false";
+    };
+    const draw = () => {
+      frame = 0;
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      const points = SEARCH_NODES.map((node, i) => ({
+        x: node.x * width + pointerX * (8 + i * 3) * (i % 2 ? -1 : 1),
+        y: node.y * height + pointerY * (7 + i * 2),
+      }));
+      if (width <= 700 && copy) {
+        // A narrow hero has no side gutter beside the working copy. Keep the
+        // complete cube/label group above or below that block, including after
+        // viewport resizing or font reflow. The connecting lines stay spread.
+        const heroBounds = target.getBoundingClientRect();
+        const copyBounds = copy.getBoundingClientRect();
+        const top = copyBounds.top - heroBounds.top - 14;
+        const bottom = copyBounds.bottom - heroBounds.top + 14;
+        points.forEach((point, i) => {
+          const bounds = nodes.current[i]?.getBBox();
+          if (!bounds) return;
+          const half = SEARCH_NODES[i].size / 2;
+          const groupTop = point.y - half + bounds.y;
+          const groupBottom = groupTop + bounds.height;
+          if (groupBottom > top && groupTop < bottom) {
+            const above = top - bounds.y - bounds.height + half;
+            const below = bottom - bounds.y + half;
+            point.y =
+              Math.abs(point.y - above) < Math.abs(point.y - below)
+                ? above
+                : below;
+          }
+        });
+      }
+      points.forEach((point, i) =>
+        nodes.current[i]?.setAttribute(
+          "transform",
+          `translate(${point.x - SEARCH_NODES[i].size / 2} ${point.y - SEARCH_NODES[i].size / 2})`,
+        ),
+      );
+      SEARCH_LINKS.forEach(([from, to], i) =>
+        links.current[i]?.setAttribute(
+          "d",
+          `M${points[from].x} ${points[from].y}L${points[to].x} ${points[to].y}`,
+        ),
+      );
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(draw);
+    };
+    const move = (event: PointerEvent) => {
+      if (
+        media.matches ||
+        event.pointerType === "touch" ||
+        !visible ||
+        document.hidden
+      )
+        return hide();
+      const bounds = target.getBoundingClientRect();
+      pointerX = (event.clientX - bounds.left) / bounds.width - 0.5;
+      pointerY = (event.clientY - bounds.top) / bounds.height - 0.5;
+      svg.dataset.active = "true";
+      schedule();
+    };
+    const visibility = () => {
+      if (document.hidden) hide();
+    };
+    const resize = new ResizeObserver(() => {
+      width = target.clientWidth;
+      height = target.clientHeight;
+      schedule();
+    });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (!visible) hide();
+      },
+      { rootMargin: "-108px 0px 0px 0px" },
+    );
+    resize.observe(target);
+    if (copy) resize.observe(copy);
+    observer.observe(target);
+    target.addEventListener("pointerenter", move);
+    target.addEventListener("pointermove", move);
+    target.addEventListener("pointerleave", hide);
+    target.addEventListener("pointercancel", hide);
+    window.addEventListener("blur", hide);
+    document.addEventListener("visibilitychange", visibility);
+    media.addEventListener("change", hide);
+    return () => {
+      hide();
+      resize.disconnect();
+      observer.disconnect();
+      target.removeEventListener("pointerenter", move);
+      target.removeEventListener("pointermove", move);
+      target.removeEventListener("pointerleave", hide);
+      target.removeEventListener("pointercancel", hide);
+      window.removeEventListener("blur", hide);
+      document.removeEventListener("visibilitychange", visibility);
+      media.removeEventListener("change", hide);
+    };
+  }, [target]);
+  return target
+    ? createPortal(
+        <svg
+          ref={svgRef}
+          className="wordmark-search-rig"
+          data-active="false"
+          aria-hidden="true"
+        >
+          <g className="wordmark-search-connections">
+            {SEARCH_LINKS.map(([from, to], i) => (
+              <path
+                key={`${from}-${to}`}
+                ref={(node) => {
+                  links.current[i] = node;
+                }}
+              />
+            ))}
+          </g>
+          {SEARCH_NODES.map((node, i) => (
+            <g
+              key={node.label}
+              ref={(element) => {
+                nodes.current[i] = element;
+              }}
+              className="wordmark-search-node"
+            >
+              <path
+                className="wordmark-search-cube"
+                d={`M0 5H${node.size}V${node.size + 5}H0ZM0 5L5 0H${node.size + 5}V${node.size}L${node.size} ${node.size + 5}M${node.size} 5L${node.size + 5} 0`}
+              />
+              <text
+                x={node.anchor === "start" ? node.size + 15 : -10}
+                y={node.size / 2 + 7}
+                textAnchor={node.anchor}
+                className="wordmark-search-label"
+              >
+                {node.label}
+              </text>
+            </g>
+          ))}
+        </svg>,
+        target,
+      )
+    : null;
+}
+
 export default function VectorWordmark(props: VectorWordmarkProps) {
   const [reduced, setReduced] = useState(
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -924,6 +1125,11 @@ export default function VectorWordmark(props: VectorWordmarkProps) {
       {props.text ?? "ReSource"}
     </span>
   ) : (
-    <__OriginkitBase_VectorWordmark {...__originkitPresetProps} {...props} />
+    <>
+      <__OriginkitBase_VectorWordmark {...__originkitPresetProps} {...props} />
+      {props.glass && props.interactionRef ? (
+        <SearchRig targetRef={props.interactionRef} />
+      ) : null}
+    </>
   );
 }

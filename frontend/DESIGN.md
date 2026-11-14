@@ -73,11 +73,17 @@ typography:
     lineHeight: 1.3
 rounded:
   checkbox: "2px"
-  selection-chip: "3px"
-  control: "4px"
+  selection-chip: "4px"
+  control: "8px"
   badge: "5px"
-  tab: "6px"
-  field: "7px"
+  tab: "8px"
+  field: "8px"
+  panel: "12px"
+  hero-action: "14px"
+  group: "14px"
+  group-inner: "10px"
+  segment: "10px"
+  segment-inner: "7px"
 spacing:
   space-8: "8px"
   space-12: "12px"
@@ -235,9 +241,11 @@ The existing engine workflow still uses floating mesh-pin, evidence-drawer, and 
 
 ## Shapes
 
-The v2 control and primary working-panel silhouette is a restrained rounded rectangle using the control radius. Part checkboxes use small square corners; removable chips are slightly softer, and legacy badges, tabs, and form fields retain their recorded radii. Borders are normally 1px. The selected part row adds its explicit border, wash, and checked square rather than changing size.
+Controls and fields use 8px corners, panels 12px, and selection chips 4px. The standalone 52px hero actions use 14px corners. Nested assembly controls use a 14px outer radius and 10px inner radius across their 4px inset; segmented controls use 10px and 7px across 3px. Separate ordinary surfaces through tone and spacing; retain field boundaries, selected states and visible focus. Part checkboxes stay small squares and slider thumbs stay circles.
 
-The wordmark’s dotted outlines, fine dashed lines, and three square handles supply the identity’s vector geometry. Keep those details attached to the reference treatment; ordinary labels remain plain text. Existing engine mesh pins remain circular and numbered.
+This follows the size and nesting principles in the [REI Cedar radius guide](https://cedar.rei.com/guidelines/radius) and [Apple's concentric-shape guidance](https://developer.apple.com/videos/play/wwdc2025/356/).
+
+The wordmark remains crisp and solid during hover. Six subtle white wireframe cubes, fine connections and neutral sourcing labels supply the surrounding vector geometry; the side mask softens their edge treatment. Existing engine mesh pins remain circular and numbered.
 
 ## Components
 
@@ -255,7 +263,7 @@ Neutral provenance badges use the cobalt wash and cobalt text. Selected parts ap
 
 ### Cards / Containers
 
-White drafts, upload slots, requirement panels, and candidate details use the control radius after the v2 override. Draft padding is 24px on desktop, 22px below 800px, and 20px 16px below 480px. Native summaries retain an explicit status and keyboard interaction. Other retained engine containers may still use their original radius; those exceptions do not change the v2 default.
+Dark drafts, upload slots, requirement panels and candidate details use role-appropriate corners and separate content primarily through tone and spacing. Retain borders where they identify fields, selections or necessary data boundaries. Draft padding is 24px on desktop, 22px below 800px, and 20px 16px below 480px. Native summaries retain an explicit status and keyboard interaction.
 
 ### Inputs / Fields
 
@@ -263,7 +271,7 @@ Select fields use a dark fill, separator border, field radius, and the frontmatt
 
 ### Navigation
 
-The global header uses cool paper, charcoal identity, and muted navigation labels. The active item has charcoal text and a 2px cobalt underline. The compact header mark also uses cobalt. Header navigation remains in a horizontal row on small screens with reduced gaps and hidden nonessential mark detail.
+The global header is black with pale identity and muted navigation labels, matching the hero's upper fade. The active item uses pale text and a restrained tonal background. Header navigation remains in a horizontal row on small screens with reduced gaps and hidden nonessential mark detail.
 
 Engine workspace tabs remain a distinct dark toolbar with a cobalt-wash selected state. Their existing wrapping behavior and accessible selected state remain intact.
 
@@ -277,11 +285,11 @@ The geometry label and source-required dimensions/material text stay beside the 
 
 ### Wordmark
 
-The ReSource canvas treatment follows the user-supplied reference: pointer-responsive solid and dotted lettering, three square vector handles, and coordinate readouts. The visual treatment is hidden from assistive technology while the page carries a real ReSource heading. The static wordmark appears for reduced motion and when the canvas is not ready. Rendering pauses when its host is out of view or the document is hidden.
+The Re::Source title retains the supplied vector identity with crisp, solid lettering that does not blur or turn into a dotted outline on hover. A separate white sourcing rig moves in response to the pointer, with six cubes, nine connections and neutral process labels. The oval lens and coordinate readouts are removed. Decorative effects are hidden from assistive technology while the page carries a real Re::Source heading. Reduced motion and unsupported WebGL use the static title. Rendering pauses offscreen and in hidden tabs; pointer exit clears the rig.
 
 ### Citations and evidence
 
-The working engine flow retains source-link buttons with inline document icons, long-identifier wrapping, and an independently scrollable evidence drawer in a native modal dialog. The drawer is 540px wide, capped at the viewport width, with a separate close control and dismissible backdrop. Keep provenance and source status visible. Legacy citation and excerpt tints are compatibility details awaiting full palette alignment.
+The working engine flow retains source-link buttons with inline document icons, long-identifier wrapping, and an independently scrollable evidence drawer in a native modal dialog. The drawer is 540px wide, capped at the viewport width, with a separate close control and dismissible backdrop. Keep provenance and source status visible on opaque dark evidence surfaces.
 
 ## Do's and Don'ts
 

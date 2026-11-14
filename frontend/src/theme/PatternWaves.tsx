@@ -939,7 +939,7 @@ const PatternWaves = ({
       fieldUniforms.uAppear.value = appear;
       fieldUniforms.tRipple.value =
         ripple && rippleLive ? ripple.read.texture : blank;
-      fieldUniforms.uRipple.value = rippleLive ? 0.32 : 0;
+      fieldUniforms.uRipple.value = rippleLive ? 0.5 : 0;
       renderer.render({ scene: fieldMesh, target: fieldTarget });
 
       markUniforms.uOrigin.value = origin;

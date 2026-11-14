@@ -9,7 +9,10 @@
   --soft: #1d2943;
   --border: #ffffff20;
   --warning: #e7bb83;
-  --radius-control: 14px;
+  --radius-control: 8px;
+  --radius-field: 8px;
+  --radius-panel: 12px;
+  --radius-chip: 4px;
   --glass-fill: linear-gradient(145deg, #ffffff18, #ffffff06 52%, #ffffff0c);
   --glass-edge: inset 0 1px 0 #ffffff3b, inset 0 0 0 1px #ffffff1a;
   --glass-shadow: 0 6px 20px #00000026;
@@ -39,13 +42,22 @@ summary:focus-visible {
   outline-offset: 4px;
 }
 .global-header {
-  background: #08090be0;
+  background: #000;
   color: var(--ink);
   height: 72px;
-  border-bottom: 1px solid #ffffff12;
+  border-bottom: 0;
   gap: 44px;
   backdrop-filter: blur(24px) saturate(135%);
   -webkit-backdrop-filter: blur(24px) saturate(135%);
+}
+/* Keep the home scroll edge black while its silk field moves beneath the bar. */
+body:has(.product-home .product-entry) .global-header::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto;
+  height: 56px;
+  background: linear-gradient(#000 0 8px, #0000 56px);
+  pointer-events: none;
 }
 .wordmark {
   color: var(--ink);
@@ -65,7 +77,7 @@ summary:focus-visible {
   color: #adb4c2;
   min-height: 38px;
   padding: 8px 14px;
-  border-radius: 22px;
+  border-radius: var(--radius-control);
   font-size: 12px;
 }
 .global-header nav button:hover {
@@ -100,6 +112,9 @@ summary:focus-visible {
     box-shadow 180ms ease-out,
     color 180ms ease-out;
 }
+.entry-cta-group > button {
+  border-radius: 14px;
+}
 .primary {
   background: linear-gradient(165deg, #f8faff 0%, #dae1ed 100%);
   color: #141923;
@@ -132,7 +147,7 @@ summary:focus-visible {
 .text-button,
 .icon-button {
   color: var(--brand);
-  border-radius: 12px;
+  border-radius: var(--radius-control);
 }
 .text-button:hover,
 .icon-button:hover {
@@ -148,7 +163,7 @@ textarea,
   color: var(--ink);
   border-color: var(--border);
   background-color: #14171e;
-  border-radius: 10px;
+  border-radius: var(--radius-field);
 }
 input::placeholder,
 textarea::placeholder {
@@ -198,29 +213,6 @@ input[type="range"]::-moz-range-thumb {
   background: var(--paper);
   color: var(--ink);
 }
-.glass-optics {
-  position: absolute;
-  pointer-events: none;
-}
-.wordmark-liquid-lens {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  opacity: 0;
-  border-radius: 50%;
-  background: #ffffff03;
-  box-shadow:
-    inset 1px 1px 1px #ffffff73,
-    inset -1px -1px 2px #ffffff29,
-    inset 0 0 18px #ffffff09,
-    0 12px 24px #0003;
-  transition: opacity 160ms ease-out;
-  will-change: transform;
-}
-.wordmark-liquid-lens[data-active="true"] {
-  opacity: 1;
-}
 .run-settings,
 .upload-slot,
 .draft,
@@ -243,7 +235,7 @@ input[type="range"]::-moz-range-thumb {
 .draft,
 .requirements-panel,
 .candidate-detail {
-  border-radius: 14px;
+  border-radius: var(--radius-panel);
 }
 .badge {
   color: #b8ccff;
@@ -300,6 +292,17 @@ input[type="range"]::-moz-range-thumb {
 .engine-intro {
   background: #0d1015;
 }
+.product-home .assembly-track {
+  background: #000;
+  border-top: 0;
+}
+.product-home .assembly-track .assembly-sticky {
+  background: linear-gradient(#000, #0d1015 150px);
+}
+.product-home .assembly-track .part-sidebar {
+  background: linear-gradient(#000, #11141a 150px);
+  border-left: 0;
+}
 .part-sidebar,
 .intro-inspector {
   background: #11141a;
@@ -320,7 +323,7 @@ input[type="range"]::-moz-range-thumb {
   background: var(--glass-fill);
   box-shadow: var(--glass-edge);
   border: 0;
-  border-radius: 18px;
+  border-radius: 14px;
   padding: 4px 14px;
   gap: 16px;
   backdrop-filter: blur(16px);
@@ -330,12 +333,16 @@ input[type="range"]::-moz-range-thumb {
   padding: 8px 2px;
   font-size: 12px;
 }
+.assembly-controls > div > button,
+.intro-direct > button {
+  border-radius: 10px;
+}
 .assembly-controls button:hover,
 .intro-direct button:hover {
   color: #fff;
 }
 .prepared-part-list > button {
-  border-radius: 10px;
+  border-radius: var(--radius-control);
   min-height: 44px;
 }
 .prepared-part-list > button:hover {
@@ -357,7 +364,7 @@ input[type="range"]::-moz-range-thumb {
   border-color: #aac5ff;
 }
 .selection-chips button {
-  border-radius: 8px;
+  border-radius: var(--radius-chip);
   color: #c7d8ff;
   background: #21314f;
 }
@@ -385,11 +392,11 @@ input[type="range"]::-moz-range-thumb {
   border-color: var(--border);
 }
 .batch-start-form {
-  border-radius: 16px;
+  border-radius: var(--radius-panel);
 }
 .batch-part-options button,
 .batch-filters button {
-  border-radius: 12px;
+  border-radius: var(--radius-control);
 }
 .batch-filters button[aria-pressed="true"] {
   background: #dce6fa;
@@ -408,7 +415,7 @@ input[type="range"]::-moz-range-thumb {
   background: transparent;
 }
 .workspace-tabs button {
-  border-radius: 10px;
+  border-radius: var(--radius-control);
 }
 .workspace-tabs button:hover {
   color: var(--ink);
@@ -427,11 +434,11 @@ input[type="range"]::-moz-range-thumb {
 .segmented {
   background: var(--glass-fill);
   box-shadow: var(--glass-edge);
-  border-radius: 12px;
+  border-radius: 10px;
 }
 .segmented button {
   color: #ccd7eb;
-  border-radius: 9px;
+  border-radius: 7px;
 }
 .segmented button[aria-pressed="true"] {
   background: #d8e4fa;
@@ -440,8 +447,8 @@ input[type="range"]::-moz-range-thumb {
 .component-list > button {
   background: #141922;
   color: var(--ink);
-  border-color: var(--border);
-  border-radius: 12px;
+  border-color: transparent;
+  border-radius: var(--radius-control);
 }
 .component-list > button:hover {
   background: #1b2330;
@@ -493,7 +500,7 @@ input[type="range"]::-moz-range-thumb {
 .map-sites button {
   background: #253247;
   color: #c6d4e9;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
 }
 .map-sites button:hover {
   background: #34445f;
@@ -533,7 +540,7 @@ input[type="range"]::-moz-range-thumb {
 .citation {
   background: #26334a;
   color: #c6d7fa;
-  border-radius: 6px;
+  border-radius: var(--radius-chip);
 }
 .citation:hover {
   background: #354868;
@@ -542,7 +549,7 @@ input[type="range"]::-moz-range-thumb {
 .document-actions {
   background: #151b25;
   color: var(--ink);
-  border-radius: 14px;
+  border-radius: var(--radius-panel);
 }
 .document-actions hr {
   border-color: var(--border);
@@ -611,6 +618,9 @@ input[type="radio"] {
     white-space: nowrap;
     font-size: 11px;
     padding-inline: 10px;
+  }
+  .global-header nav button:focus-visible {
+    outline-offset: -3px;
   }
   .header-end {
     gap: 0;

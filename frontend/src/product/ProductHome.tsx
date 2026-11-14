@@ -5,7 +5,6 @@ import type { EngineView } from "../api/types.ts";
 import VectorWordmark from "../brand/VectorWordmark.tsx";
 import { EngineIntro } from "../scene/EngineIntro.tsx";
 import PatternWaves from "../theme/PatternWaves.tsx";
-import { LiquidLens } from "../theme/LiquidLens.tsx";
 
 export function ProductHome({
   engine,
@@ -24,7 +23,6 @@ export function ProductHome({
 }) {
   const [engineDemo, setEngineDemo] = useState(location.hash === "#engine");
   const heroRef = useRef<HTMLElement>(null);
-  const wordmarkRef = useRef<HTMLDivElement>(null);
   const openEngineDemo = () => {
     setEngineDemo(true);
     history.replaceState(null, "", "#engine");
@@ -66,10 +64,10 @@ export function ProductHome({
             fade="edges"
             interactive
             cursorSize={50}
-            cursorStrength={0.6}
+            cursorStrength={1}
           />
         </div>
-        <div ref={wordmarkRef} className="entry-wordmark">
+        <div className="entry-wordmark">
           <h1 id="product-title" className="sr-only">
             Re::Source
           </h1>
@@ -90,7 +88,6 @@ export function ProductHome({
             handles={{ size: 55, spread: 23, labels: true }}
             style={{ position: "absolute", inset: 0 }}
           />
-          <LiquidLens targetRef={wordmarkRef} />
         </div>
         <div className="entry-actions">
           <h2>From a product’s parts to the people who can supply them.</h2>
