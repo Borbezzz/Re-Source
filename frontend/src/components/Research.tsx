@@ -23,10 +23,12 @@ export function Activity({
   events,
   connection,
   onEvidence,
+  eventLabel,
 }: {
   events: DomainEvent[];
   connection: ConnectionState;
   onEvidence: (id: string) => void;
+  eventLabel?: (event: DomainEvent) => string;
 }) {
   const [all, setAll] = useState(false);
   const relevant = events.filter(
@@ -57,6 +59,9 @@ export function Activity({
                 className={`event-mark ${e.type.endsWith("failed") ? "failed" : ""}`}
               />
               <div>
+                {eventLabel && (
+                  <p className="activity-part-label">{eventLabel(e)}</p>
+                )}
                 <div className="event-meta">
                   <span>{human(e.type.replace(".", " · "))}</span>
                   <time dateTime={e.occurred_at}>
