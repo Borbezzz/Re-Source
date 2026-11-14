@@ -1,0 +1,275 @@
+{
+  "$defs": {
+    "DraftField": {
+      "additionalProperties": false,
+      "properties": {
+        "block": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Block"
+        },
+        "editable": {
+          "default": true,
+          "title": "Editable",
+          "type": "boolean"
+        },
+        "field_id": {
+          "title": "Field Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "provenance": {
+          "$ref": "#/$defs/FieldProvenance",
+          "default": {
+            "check_refs": [],
+            "edited_at": null,
+            "edited_by": null,
+            "evidence_refs": [],
+            "origin": "evidence",
+            "source_fact_ids": [],
+            "transform": "copy"
+          }
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "responsible": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Responsible"
+        },
+        "status": {
+          "default": "filled",
+          "enum": [
+            "filled",
+            "missing",
+            "completion_task",
+            "invalid"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "field_id",
+        "label"
+      ],
+      "title": "DraftField",
+      "type": "object"
+    },
+    "FieldProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "check_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Check Refs",
+          "type": "array"
+        },
+        "edited_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edited At"
+        },
+        "edited_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edited By"
+        },
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "origin": {
+          "default": "evidence",
+          "enum": [
+            "evidence",
+            "selection",
+            "decision",
+            "case",
+            "computed",
+            "user_edit",
+            "completion_task"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "source_fact_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Fact Ids",
+          "type": "array"
+        },
+        "transform": {
+          "default": "copy",
+          "title": "Transform",
+          "type": "string"
+        }
+      },
+      "title": "FieldProvenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "applicability": {
+      "additionalProperties": true,
+      "title": "Applicability",
+      "type": "object"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "draft_id": {
+      "title": "Draft Id",
+      "type": "string"
+    },
+    "fields": {
+      "items": {
+        "$ref": "#/$defs/DraftField"
+      },
+      "title": "Fields",
+      "type": "array"
+    },
+    "generation_id": {
+      "title": "Generation Id",
+      "type": "string"
+    },
+    "review_state": {
+      "default": "draft",
+      "enum": [
+        "draft",
+        "in_review",
+        "approved",
+        "changes_requested"
+      ],
+      "title": "Review State",
+      "type": "string"
+    },
+    "scenario_run_id": {
+      "title": "Scenario Run Id",
+      "type": "string"
+    },
+    "selection_id": {
+      "title": "Selection Id",
+      "type": "string"
+    },
+    "status": {
+      "default": "current",
+      "enum": [
+        "current",
+        "superseded",
+        "stale"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "template_id": {
+      "title": "Template Id",
+      "type": "string"
+    },
+    "template_title": {
+      "title": "Template Title",
+      "type": "string"
+    },
+    "template_version": {
+      "title": "Template Version",
+      "type": "string"
+    },
+    "validation": {
+      "additionalProperties": true,
+      "title": "Validation",
+      "type": "object"
+    },
+    "version": {
+      "title": "Version",
+      "type": "integer"
+    },
+    "why_included": {
+      "title": "Why Included",
+      "type": "string"
+    }
+  },
+  "required": [
+    "draft_id",
+    "case_id",
+    "scenario_run_id",
+    "template_id",
+    "template_version",
+    "template_title",
+    "version",
+    "selection_id",
+    "generation_id",
+    "fields",
+    "validation",
+    "why_included",
+    "applicability",
+    "created_at"
+  ],
+  "title": "DocumentDraft",
+  "type": "object"
+}

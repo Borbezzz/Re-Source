@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    },
+    "SignalStatus": {
+      "enum": [
+        "active",
+        "corrected",
+        "retracted"
+      ],
+      "title": "SignalStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assertion": {
+      "additionalProperties": true,
+      "title": "Assertion",
+      "type": "object"
+    },
+    "category": {
+      "enum": [
+        "geopolitical_tariff",
+        "climate",
+        "logistics",
+        "port_facility",
+        "evidence",
+        "business"
+      ],
+      "title": "Category",
+      "type": "string"
+    },
+    "confidence": {
+      "default": 1.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin",
+      "default": "synthetic_demo"
+    },
+    "effective_from": {
+      "format": "date-time",
+      "title": "Effective From",
+      "type": "string"
+    },
+    "expiry_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expiry At"
+    },
+    "label": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Label"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "provenance": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Provenance",
+      "type": "object"
+    },
+    "published_at": {
+      "format": "date-time",
+      "title": "Published At",
+      "type": "string"
+    },
+    "scope": {
+      "additionalProperties": true,
+      "description": "{entity_ids:[], site_ids:[], geo_ids:[], route_ids:[], materials:[]}",
+      "title": "Scope",
+      "type": "object"
+    },
+    "signal_id": {
+      "title": "Signal Id",
+      "type": "string"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "source_event_id": {
+      "title": "Source Event Id",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/SignalStatus",
+      "default": "active"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "signal_id",
+    "source",
+    "source_event_id",
+    "category",
+    "title",
+    "scope",
+    "assertion",
+    "published_at",
+    "observed_at",
+    "effective_from"
+  ],
+  "title": "RiskSignal",
+  "type": "object"
+}

@@ -1,0 +1,128 @@
+[
+  {
+    "supplier_id": "SUP-NVA",
+    "legal_entity_name": "Northvale Aero Spares B.V.",
+    "registry": {
+      "jurisdiction": "NL",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "distributor",
+      "seller"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "supplier_id": "SUP-CAL",
+    "legal_entity_name": "Calderbrook Aerospace Supply Ltd",
+    "registry": {
+      "jurisdiction": "GB",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "distributor",
+      "seller",
+      "part145_repair"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "supplier_id": "SUP-PEN",
+    "legal_entity_name": "Pennine Precision Components Ltd",
+    "registry": {
+      "jurisdiction": "GB",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "manufacturer"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "supplier_id": "SUP-LOW",
+    "legal_entity_name": "Lowmarsh Trading Ltd",
+    "registry": {
+      "jurisdiction": "GB",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "broker",
+      "seller"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "supplier_id": "SUP-ESK",
+    "legal_entity_name": "Esker Component Exchange Ltd",
+    "registry": {
+      "jurisdiction": "GB",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "distributor",
+      "seller"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "supplier_id": "SUP-HAR",
+    "legal_entity_name": "Harbourline Aero Components Ltd",
+    "registry": {
+      "jurisdiction": "GB",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "distributor",
+      "seller",
+      "part145_repair"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "supplier_id": "SUP-MER",
+    "legal_entity_name": "Meridane Turbine Parts GmbH",
+    "registry": {
+      "jurisdiction": "DE",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "oem_distributor",
+      "seller"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "supplier_id": "SUP-CST",
+    "legal_entity_name": "Coastreach Surplus Ltd",
+    "registry": {
+      "jurisdiction": "IE",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "broker",
+      "seller"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "supplier_id": "SUP-KES",
+    "legal_entity_name": "Kestrelmoor Fabrication Ltd",
+    "registry": {
+      "jurisdiction": "GB",
+      "company_number": null,
+      "check": "synthetic entity \u2014 not looked up"
+    },
+    "roles": [
+      "manufacturer"
+    ],
+    "data_origin": "synthetic_demo"
+  }
+]

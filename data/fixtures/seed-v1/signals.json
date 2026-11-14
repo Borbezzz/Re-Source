@@ -1,0 +1,241 @@
+[
+  {
+    "fixture_id": "SIG-RTM-CLOSURE",
+    "signal_id": "sig-rtm-closure-v1",
+    "source": "scenario-port-feed",
+    "source_event_id": "PORT-NLRTM-2026-1116-01",
+    "version": 1,
+    "category": "port_facility",
+    "title": "Port of Rotterdam ro-ro terminals closed (scenario)",
+    "scope": {
+      "geo_ids": [
+        "GEO-PORT-NLRTM"
+      ],
+      "entity_ids": [],
+      "site_ids": [],
+      "route_ids": [],
+      "materials": []
+    },
+    "assertion": {
+      "type": "port_closure",
+      "severity": 0.8,
+      "transport_delay_days": 7.0,
+      "surcharge": {
+        "amount": "2500.00",
+        "currency": "GBP"
+      },
+      "description": "Ro-ro and container terminals closed after industrial action; rerouting via Zeebrugge adds about 7 days (scenario)."
+    },
+    "published_at": "2026-11-16T08:00:00Z",
+    "observed_at": "2026-11-16T08:00:00Z",
+    "effective_from": "2026-11-16T08:00:00Z",
+    "expiry_at": "2026-11-26T08:00:00Z",
+    "provenance": {
+      "feed": "Scenario signal",
+      "note": "Presenter-injected scripted scenario signal"
+    },
+    "confidence": 0.9,
+    "status": "active",
+    "data_origin": "synthetic_demo",
+    "label": "Scenario signal"
+  },
+  {
+    "fixture_id": "SIG-RTM-CLOSURE-CORRECTION",
+    "signal_id": "sig-rtm-closure-v2",
+    "source": "scenario-port-feed",
+    "source_event_id": "PORT-NLRTM-2026-1116-01",
+    "version": 2,
+    "category": "port_facility",
+    "title": "Port of Rotterdam closure revised: partial reopening (scenario)",
+    "scope": {
+      "geo_ids": [
+        "GEO-PORT-NLRTM"
+      ],
+      "entity_ids": [],
+      "site_ids": [],
+      "route_ids": [],
+      "materials": []
+    },
+    "assertion": {
+      "type": "port_closure",
+      "severity": 0.5,
+      "transport_delay_days": 3.0,
+      "surcharge": {
+        "amount": "1000.00",
+        "currency": "GBP"
+      },
+      "description": "Partial reopening; backlog adds about 3 days (scenario)."
+    },
+    "published_at": "2026-11-16T08:00:00Z",
+    "observed_at": "2026-11-16T08:00:00Z",
+    "effective_from": "2026-11-16T08:00:00Z",
+    "expiry_at": "2026-11-22T08:00:00Z",
+    "provenance": {
+      "feed": "Scenario signal",
+      "corrects": "sig-rtm-closure-v1"
+    },
+    "confidence": 0.9,
+    "status": "corrected",
+    "data_origin": "synthetic_demo",
+    "label": "Scenario signal"
+  },
+  {
+    "fixture_id": "SIG-RTM-CLOSURE-RETRACTION",
+    "signal_id": "sig-rtm-closure-v3",
+    "source": "scenario-port-feed",
+    "source_event_id": "PORT-NLRTM-2026-1116-01",
+    "version": 3,
+    "category": "port_facility",
+    "title": "Port of Rotterdam closure retracted (scenario)",
+    "scope": {
+      "geo_ids": [
+        "GEO-PORT-NLRTM"
+      ],
+      "entity_ids": [],
+      "site_ids": [],
+      "route_ids": [],
+      "materials": []
+    },
+    "assertion": {
+      "type": "port_closure",
+      "severity": 0.0,
+      "transport_delay_days": 0.0,
+      "surcharge": {
+        "amount": "0.00",
+        "currency": "GBP"
+      },
+      "description": "Earlier closure report retracted."
+    },
+    "published_at": "2026-11-16T08:00:00Z",
+    "observed_at": "2026-11-16T08:00:00Z",
+    "effective_from": "2026-11-16T08:00:00Z",
+    "expiry_at": null,
+    "provenance": {
+      "feed": "Scenario signal",
+      "retracts": "sig-rtm-closure-v1"
+    },
+    "confidence": 0.95,
+    "status": "retracted",
+    "data_origin": "synthetic_demo",
+    "label": "Scenario signal"
+  },
+  {
+    "fixture_id": "SIG-KHH-TYPHOON",
+    "signal_id": "sig-khh-typhoon-v1",
+    "source": "scenario-weather-feed",
+    "source_event_id": "WX-TWKHH-2026-1116",
+    "version": 1,
+    "category": "climate",
+    "title": "Typhoon suspends operations at Port of Kaohsiung (scenario, unrelated)",
+    "scope": {
+      "geo_ids": [
+        "GEO-PORT-TWKHH"
+      ],
+      "entity_ids": [],
+      "site_ids": [],
+      "route_ids": [],
+      "materials": []
+    },
+    "assertion": {
+      "type": "port_closure",
+      "severity": 0.7,
+      "transport_delay_days": 4.0,
+      "surcharge": {
+        "amount": "0.00",
+        "currency": "GBP"
+      },
+      "description": "Unrelated to any active case route."
+    },
+    "published_at": "2026-11-16T08:00:00Z",
+    "observed_at": "2026-11-16T08:00:00Z",
+    "effective_from": "2026-11-16T08:00:00Z",
+    "expiry_at": "2026-11-20T08:00:00Z",
+    "provenance": {
+      "feed": "Scenario signal"
+    },
+    "confidence": 0.8,
+    "status": "active",
+    "data_origin": "synthetic_demo",
+    "label": "Scenario signal"
+  },
+  {
+    "fixture_id": "SIG-HAM-STRIKE",
+    "signal_id": "sig-ham-strike-v1",
+    "source": "scenario-port-feed",
+    "source_event_id": "PORT-DEHAM-2026-1118-01",
+    "version": 1,
+    "category": "logistics",
+    "title": "Announced 48-hour dock strike at Port of Hamburg from day 2 (scenario)",
+    "scope": {
+      "geo_ids": [
+        "GEO-PORT-DEHAM"
+      ],
+      "entity_ids": [],
+      "site_ids": [],
+      "route_ids": [],
+      "materials": []
+    },
+    "assertion": {
+      "type": "port_strike",
+      "severity": 0.6,
+      "transport_delay_days": 2.0,
+      "surcharge": {
+        "amount": "300.00",
+        "currency": "GBP"
+      },
+      "description": "Future-effective strike; shared Meridane site affects two cases."
+    },
+    "published_at": "2026-11-16T10:00:00Z",
+    "observed_at": "2026-11-16T10:00:00Z",
+    "effective_from": "2026-11-18T08:00:00Z",
+    "expiry_at": "2026-11-20T08:00:00Z",
+    "provenance": {
+      "feed": "Scenario signal"
+    },
+    "confidence": 0.85,
+    "status": "active",
+    "data_origin": "synthetic_demo",
+    "label": "Scenario signal"
+  },
+  {
+    "fixture_id": "SIG-TARIFF-EU-AERO",
+    "signal_id": "sig-tariff-eu-aero-v1",
+    "source": "scenario-trade-feed",
+    "source_event_id": "TARIFF-GB-EU-AERO-2026-11",
+    "version": 1,
+    "category": "geopolitical_tariff",
+    "title": "Proposed customs inspection uplift for EU-origin aero parts (scenario, low severity)",
+    "scope": {
+      "geo_ids": [],
+      "entity_ids": [],
+      "site_ids": [],
+      "route_ids": [],
+      "materials": [],
+      "origin_countries": [
+        "NL",
+        "DE"
+      ]
+    },
+    "assertion": {
+      "type": "customs_inspection",
+      "severity": 0.2,
+      "transport_delay_days": 0.5,
+      "surcharge": {
+        "amount": "0.00",
+        "currency": "GBP"
+      },
+      "description": "Adds half a day of customs handling for EU-origin consignments."
+    },
+    "published_at": "2026-11-16T11:00:00Z",
+    "observed_at": "2026-11-16T11:00:00Z",
+    "effective_from": "2026-12-16T08:00:00Z",
+    "expiry_at": null,
+    "provenance": {
+      "feed": "Scenario signal"
+    },
+    "confidence": 0.6,
+    "status": "active",
+    "data_origin": "synthetic_demo",
+    "label": "Scenario signal"
+  }
+]

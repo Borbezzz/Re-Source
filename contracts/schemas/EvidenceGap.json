@@ -1,0 +1,78 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "allowed_sources": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Sources",
+      "type": "array"
+    },
+    "attempts": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Attempts",
+      "type": "array"
+    },
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "desired": {
+      "title": "Desired",
+      "type": "string"
+    },
+    "gap_id": {
+      "title": "Gap Id",
+      "type": "string"
+    },
+    "priority": {
+      "default": 1,
+      "title": "Priority",
+      "type": "integer"
+    },
+    "requirement_id": {
+      "title": "Requirement Id",
+      "type": "string"
+    },
+    "site_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Site Id"
+    },
+    "status": {
+      "default": "open",
+      "enum": [
+        "open",
+        "resolved",
+        "exhausted"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "gap_id",
+    "case_id",
+    "candidate_id",
+    "requirement_id",
+    "desired",
+    "allowed_sources"
+  ],
+  "title": "EvidenceGap",
+  "type": "object"
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "geo_id": "GEO-PORT-NLRTM",
+    "name": "Port of Rotterdam (NLRTM)",
+    "kind": "port",
+    "lat": 51.95,
+    "lon": 4.14
+  },
+  {
+    "geo_id": "GEO-PORT-GBHRW",
+    "name": "Harwich International Port (GBHRW)",
+    "kind": "port",
+    "lat": 51.95,
+    "lon": 1.26
+  },
+  {
+    "geo_id": "GEO-PORT-DEHAM",
+    "name": "Port of Hamburg (DEHAM)",
+    "kind": "port",
+    "lat": 53.53,
+    "lon": 9.97
+  },
+  {
+    "geo_id": "GEO-PORT-GBIMM",
+    "name": "Port of Immingham (GBIMM)",
+    "kind": "port",
+    "lat": 53.63,
+    "lon": -0.19
+  },
+  {
+    "geo_id": "GEO-PORT-IEDUB",
+    "name": "Dublin Port (IEDUB)",
+    "kind": "port",
+    "lat": 53.35,
+    "lon": -6.2
+  },
+  {
+    "geo_id": "GEO-PORT-GBHLY",
+    "name": "Holyhead Port (GBHLY)",
+    "kind": "port",
+    "lat": 53.31,
+    "lon": -4.63
+  },
+  {
+    "geo_id": "GEO-PORT-TWKHH",
+    "name": "Port of Kaohsiung (TWKHH)",
+    "kind": "port",
+    "lat": 22.61,
+    "lon": 120.28
+  }
+]

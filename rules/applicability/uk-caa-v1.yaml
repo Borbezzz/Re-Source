@@ -1,0 +1,69 @@
+# UK CAA applicability catalogue (PRD FR-07, DISC-03). Version: uk-caa-v1.
+#
+# Operator role assumed by the scenario: a UK Part 145 maintenance organisation (with CAMO support)
+# replacing an engine component. Rules associate each route + organisation role + activity with the
+# document package actually needed. Distinguishes:
+#   - release/traceability records supplied with the part (verified, not authored, by the operator)
+#   - internal quality records the operator must complete (supplier control, component acceptance)
+#   - an authority application, only when a route genuinely needs one (Part 21 Subpart F production
+#     without a production organisation approval).
+#
+# Verification status (2026-11-14): source pages located in the CAA regulatory library / caa.co.uk;
+# exact current issue numbers of the PDF templates are NOT yet confirmed (open DISC-03 item, see
+# decisions.md D-011). Templates are represented faithfully by block structure and linked to source.
+catalogue_version: uk-caa-v1
+jurisdiction: UK CAA
+operator_role: UK Part 145 maintenance organisation
+rules:
+  - rule_id: APP-BUY-RELEASED
+    title: BUY — serviceable or new spare released on a CAA Form 1
+    when: {route: BUY, release_certificate_present: true}
+    explanation: >-
+      A used or new component bought for installation must arrive with an authorised release certificate
+      (CAA Form 1) and be accepted by the maintenance organisation under UK Part 145.A.42 before fitment.
+      No authority application is required; the package goes to the operator's quality/technical records.
+    package: [TPL-CAA-FORM1-MO, TPL-COMPONENT-ACCEPTANCE, TPL-SUPPLIER-APPROVAL]
+    destination_type: internal_quality_records
+    authority_application: false
+    basis:
+      - https://regulatorylibrary.caa.co.uk/1321-2014/Content/AMC%20GM/AMC1%20145%20A%2042%20a%20i%20Components.htm
+      - https://www.caa.co.uk/commercial-industry/aircraft/airworthiness/approval-information-and-guidance/guidance-on-acceptance-of-components/
+  - rule_id: APP-BUY-NO-CERT
+    title: BUY — no release certificate available
+    when: {route: BUY, release_certificate_present: false}
+    explanation: >-
+      Without an authorised release certificate the component cannot be accepted for installation;
+      the route stays pending until a certificate is obtained (or the part is re-certified by an approved organisation).
+    package: []
+    destination_type: none
+    authority_application: false
+    blocks_selection: true
+    basis:
+      - https://regulatorylibrary.caa.co.uk/1321-2014/Content/AMC%20GM/AMC1%20145%20A%2042%20a%20i%20Components.htm
+  - rule_id: APP-MAKE-POA
+    title: MAKE — manufacturer holds a Part 21 Subpart G approval covering the part at this site
+    when: {route: MAKE, poa_covers_part_and_site: true}
+    explanation: >-
+      A production organisation approval (UK Part 21 Subpart G) holder releases newly manufactured parts on a
+      CAA Form 1 (Part 21 version). The operator records supplier approval, the first article inspection
+      acceptance and component acceptance. No authority application is required.
+    package: [TPL-CAA-FORM1-21, TPL-FAI-ACCEPTANCE, TPL-COMPONENT-ACCEPTANCE, TPL-SUPPLIER-APPROVAL]
+    destination_type: internal_quality_records
+    authority_application: false
+    basis:
+      - https://regulatorylibrary.caa.co.uk/748-2012/Content/Regs/07550_Annex_I_Appendix_I_PART_21.htm
+  - rule_id: APP-MAKE-NO-POA
+    title: MAKE — no production approval covering the part at this site
+    when: {route: MAKE, poa_covers_part_and_site: false}
+    explanation: >-
+      Production without a production organisation approval requires a letter of agreement under UK Part 21
+      Subpart F, applied for on CAA Form 60 ("Application for agreement of production under Part 21 Subpart F").
+      Under Subpart F the CAA itself issues the release certificate. Until the agreement exists the route is
+      feasible but not ready to select; the application is shown as the authority-application branch.
+    package: [TPL-CAA-FORM-60]
+    destination_type: caa_application_simulated
+    authority_application: true
+    blocks_selection: true
+    basis:
+      - https://regulatorylibrary.caa.co.uk/748-2012/Content/AMC%20GM%201/AMC%2021%20B%20120%20c%201%20Evaluation.htm
+      - https://legislation.gov.uk/eur/2012/748/annex/I/section/B/division/subpart+f

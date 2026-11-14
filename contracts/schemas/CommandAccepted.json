@@ -1,0 +1,56 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "case_revision": {
+      "title": "Case Revision",
+      "type": "integer"
+    },
+    "command_id": {
+      "title": "Command Id",
+      "type": "string"
+    },
+    "events_url": {
+      "title": "Events Url",
+      "type": "string"
+    },
+    "generation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Generation Id"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "accepted",
+        "already_running",
+        "duplicate"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "command_id",
+    "run_id",
+    "case_id",
+    "status",
+    "events_url",
+    "case_revision"
+  ],
+  "title": "CommandAccepted",
+  "type": "object"
+}

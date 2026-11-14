@@ -1,0 +1,612 @@
+{
+  "$defs": {
+    "CaseState": {
+      "enum": [
+        "ready",
+        "investigating",
+        "recommendations_ready",
+        "reassessing",
+        "selected",
+        "documents_preparing",
+        "documents_ready",
+        "submission_simulated",
+        "installation_visualized",
+        "restored_visualized",
+        "waiting_for_evidence",
+        "interrupted",
+        "failed",
+        "selection_stale",
+        "documents_stale"
+      ],
+      "title": "CaseState",
+      "type": "string"
+    },
+    "ComponentInstance": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "data_origin": {
+          "$ref": "#/$defs/DataOrigin",
+          "default": "synthetic_demo"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "engine_id": {
+          "title": "Engine Id",
+          "type": "string"
+        },
+        "failure_story": {
+          "additionalProperties": true,
+          "title": "Failure Story",
+          "type": "object"
+        },
+        "mesh_mapping": {
+          "$ref": "#/$defs/MeshMapping"
+        },
+        "part_identity": {
+          "title": "Part Identity",
+          "type": "string"
+        },
+        "position": {
+          "title": "Position",
+          "type": "string"
+        },
+        "requirement_set_id": {
+          "title": "Requirement Set Id",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "string"
+        },
+        "short_description": {
+          "title": "Short Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "engine_id",
+        "component_id",
+        "case_id",
+        "display_name",
+        "short_description",
+        "part_identity",
+        "revision",
+        "position",
+        "requirement_set_id",
+        "mesh_mapping",
+        "failure_story"
+      ],
+      "title": "ComponentInstance",
+      "type": "object"
+    },
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    },
+    "MeshMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "camera_focus": {
+          "additionalProperties": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "description": "{position:[x,y,z], target:[x,y,z]}",
+          "title": "Camera Focus",
+          "type": "object"
+        },
+        "exploded_offset": {
+          "description": "[x,y,z] offset applied in exploded view",
+          "items": {
+            "type": "number"
+          },
+          "title": "Exploded Offset",
+          "type": "array"
+        },
+        "hotspot_anchor": {
+          "description": "[x,y,z] world-space anchor for the hotspot",
+          "items": {
+            "type": "number"
+          },
+          "title": "Hotspot Anchor",
+          "type": "array"
+        },
+        "node_name": {
+          "title": "Node Name",
+          "type": "string"
+        },
+        "removal_vector": {
+          "description": "[x,y,z] direction used by the removal animation",
+          "items": {
+            "type": "number"
+          },
+          "title": "Removal Vector",
+          "type": "array"
+        }
+      },
+      "required": [
+        "node_name",
+        "hotspot_anchor",
+        "exploded_offset",
+        "camera_focus",
+        "removal_vector"
+      ],
+      "title": "MeshMapping",
+      "type": "object"
+    },
+    "Mode": {
+      "enum": [
+        "live",
+        "seeded",
+        "replay"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "MonitoringStatus": {
+      "enum": [
+        "active",
+        "paused",
+        "closed"
+      ],
+      "title": "MonitoringStatus",
+      "type": "string"
+    },
+    "Route": {
+      "enum": [
+        "BUY",
+        "MAKE"
+      ],
+      "title": "Route",
+      "type": "string"
+    },
+    "Selection": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_at": {
+          "format": "date-time",
+          "title": "Accepted At",
+          "type": "string"
+        },
+        "accepted_case_revision": {
+          "title": "Accepted Case Revision",
+          "type": "integer"
+        },
+        "actor": {
+          "title": "Actor",
+          "type": "string"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "candidate_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Label"
+        },
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "decision_id": {
+          "title": "Decision Id",
+          "type": "string"
+        },
+        "decision_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decision Label"
+        },
+        "evidence_hash": {
+          "title": "Evidence Hash",
+          "type": "string"
+        },
+        "idempotency_key": {
+          "title": "Idempotency Key",
+          "type": "string"
+        },
+        "replayed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replayed"
+        },
+        "route": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Route"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "scenario_run_id": {
+          "title": "Scenario Run Id",
+          "type": "string"
+        },
+        "selection_id": {
+          "title": "Selection Id",
+          "type": "string"
+        },
+        "stale_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stale Reason"
+        },
+        "status": {
+          "default": "current",
+          "enum": [
+            "current",
+            "stale",
+            "superseded"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "selection_id",
+        "case_id",
+        "scenario_run_id",
+        "candidate_id",
+        "decision_id",
+        "accepted_case_revision",
+        "evidence_hash",
+        "actor",
+        "accepted_at",
+        "idempotency_key"
+      ],
+      "title": "Selection",
+      "type": "object"
+    },
+    "TaskStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "finished_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Finished At"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Started At"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "reused"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "name",
+        "status"
+      ],
+      "title": "TaskStatus",
+      "type": "object"
+    },
+    "VisualState": {
+      "enum": [
+        "assembled",
+        "exploded",
+        "failed",
+        "removed",
+        "replacement_ready",
+        "installed",
+        "running"
+      ],
+      "title": "VisualState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "active_generation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Active Generation Id"
+    },
+    "allowed_visual_actions": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Visual Actions",
+      "type": "array"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "component": {
+      "$ref": "#/$defs/ComponentInstance"
+    },
+    "current_decision_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Current Decision Id"
+    },
+    "current_package_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Current Package Id"
+    },
+    "current_selection": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Selection"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin",
+      "default": "synthetic_demo"
+    },
+    "decision_labels": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "title": "Decision Labels",
+      "type": "object"
+    },
+    "engine_id": {
+      "title": "Engine Id",
+      "type": "string"
+    },
+    "event_cursor": {
+      "title": "Event Cursor",
+      "type": "integer"
+    },
+    "events_url": {
+      "title": "Events Url",
+      "type": "string"
+    },
+    "initial_decision_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Initial Decision Id"
+    },
+    "input_revision": {
+      "title": "Input Revision",
+      "type": "integer"
+    },
+    "latest_receipt_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Latest Receipt Id"
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode"
+    },
+    "monitoring": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Monitoring"
+    },
+    "monitoring_status": {
+      "$ref": "#/$defs/MonitoringStatus"
+    },
+    "pending_change_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Pending Change Ids",
+      "type": "array"
+    },
+    "prior_stable_state": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CaseState"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "provenance": {
+      "additionalProperties": true,
+      "title": "Provenance",
+      "type": "object"
+    },
+    "revision": {
+      "title": "Revision",
+      "type": "integer"
+    },
+    "scenario_now": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scenario Now"
+    },
+    "scenario_run_id": {
+      "title": "Scenario Run Id",
+      "type": "string"
+    },
+    "stale_reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Stale Reasons",
+      "type": "array"
+    },
+    "state": {
+      "$ref": "#/$defs/CaseState"
+    },
+    "tasks": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/TaskStatus"
+      },
+      "title": "Tasks",
+      "type": "array"
+    },
+    "visual_state": {
+      "$ref": "#/$defs/VisualState"
+    }
+  },
+  "required": [
+    "case_id",
+    "scenario_run_id",
+    "engine_id",
+    "component",
+    "state",
+    "revision",
+    "input_revision",
+    "mode",
+    "visual_state",
+    "monitoring_status",
+    "current_decision_id",
+    "initial_decision_id",
+    "event_cursor",
+    "events_url",
+    "provenance"
+  ],
+  "title": "CaseView",
+  "type": "object"
+}

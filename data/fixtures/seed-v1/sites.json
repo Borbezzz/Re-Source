@@ -1,0 +1,280 @@
+[
+  {
+    "site_id": "SITE-NVA-RTM",
+    "supplier_id": "SUP-NVA",
+    "name": "Northvale Rotterdam distribution centre",
+    "address": "Waalhaven Z.z. (synthetic), Rotterdam",
+    "geography": {
+      "country": "NL",
+      "geo_id": "GEO-CITY-NLRTM",
+      "lat": 51.885,
+      "lon": 4.43
+    },
+    "roles": [
+      "warehouse",
+      "shipping"
+    ],
+    "capabilities": [
+      "stock_holding"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-nva-rtm",
+      "metric-ppm-site-nva-rtm"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-CAL-MAN",
+    "supplier_id": "SUP-CAL",
+    "name": "Calderbrook Manchester repair & stores",
+    "address": "Airport Logistics Park (synthetic), Manchester",
+    "geography": {
+      "country": "GB",
+      "geo_id": "GEO-CITY-GBMAN",
+      "lat": 53.36,
+      "lon": -2.27
+    },
+    "roles": [
+      "warehouse",
+      "repair_station"
+    ],
+    "capabilities": [
+      "stock_holding",
+      "fuel_nozzle_flow_test"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-cal-man",
+      "metric-ppm-site-cal-man"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-CAL-GLA",
+    "supplier_id": "SUP-CAL",
+    "name": "Calderbrook Glasgow stores",
+    "address": "Abbotsinch Road (synthetic), Paisley",
+    "geography": {
+      "country": "GB",
+      "geo_id": "GEO-CITY-GBGLA",
+      "lat": 55.87,
+      "lon": -4.43
+    },
+    "roles": [
+      "warehouse"
+    ],
+    "capabilities": [
+      "stock_holding"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-cal-gla",
+      "metric-ppm-site-cal-gla"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-PEN-SHF",
+    "supplier_id": "SUP-PEN",
+    "name": "Pennine Precision Sheffield works",
+    "address": "Advanced Manufacturing Park (synthetic), Sheffield",
+    "geography": {
+      "country": "GB",
+      "geo_id": "GEO-CITY-GBSHF",
+      "lat": 53.39,
+      "lon": -1.38
+    },
+    "roles": [
+      "manufacturing"
+    ],
+    "capabilities": [
+      "5_axis_machining",
+      "vacuum_brazing",
+      "heat_treatment",
+      "fpi_ndt"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-pen-shf",
+      "metric-ppm-site-pen-shf"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-PEN-ROT",
+    "supplier_id": "SUP-PEN",
+    "name": "Pennine Precision Rotherham annexe",
+    "address": "Templeborough (synthetic), Rotherham",
+    "geography": {
+      "country": "GB",
+      "geo_id": "GEO-CITY-GBROT",
+      "lat": 53.42,
+      "lon": -1.38
+    },
+    "roles": [
+      "manufacturing"
+    ],
+    "capabilities": [
+      "sheet_metal_forming",
+      "tig_welding"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-pen-rot",
+      "metric-ppm-site-pen-rot"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-LOW-LTN",
+    "supplier_id": "SUP-LOW",
+    "name": "Lowmarsh Luton unit",
+    "address": "Airport Way (synthetic), Luton",
+    "geography": {
+      "country": "GB",
+      "geo_id": "GEO-CITY-GBLTN",
+      "lat": 51.88,
+      "lon": -0.37
+    },
+    "roles": [
+      "warehouse"
+    ],
+    "capabilities": [
+      "stock_holding"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-low-ltn",
+      "metric-ppm-site-low-ltn"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-ESK-BHX",
+    "supplier_id": "SUP-ESK",
+    "name": "Esker Birmingham stores",
+    "address": "Elmdon Trading Estate (synthetic), Birmingham",
+    "geography": {
+      "country": "GB",
+      "geo_id": "GEO-CITY-GBBHX",
+      "lat": 52.45,
+      "lon": -1.73
+    },
+    "roles": [
+      "warehouse"
+    ],
+    "capabilities": [
+      "stock_holding"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-esk-bhx",
+      "metric-ppm-site-esk-bhx"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-HAR-SOU",
+    "supplier_id": "SUP-HAR",
+    "name": "Harbourline Southampton workshop",
+    "address": "Eastleigh Business Park (synthetic), Southampton",
+    "geography": {
+      "country": "GB",
+      "geo_id": "GEO-CITY-GBSOU",
+      "lat": 50.95,
+      "lon": -1.36
+    },
+    "roles": [
+      "warehouse",
+      "repair_station"
+    ],
+    "capabilities": [
+      "stock_holding",
+      "ngv_inspection"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-har-sou",
+      "metric-ppm-site-har-sou"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-MER-HAM",
+    "supplier_id": "SUP-MER",
+    "name": "Meridane Hamburg logistics hub",
+    "address": "Finkenwerder (synthetic), Hamburg",
+    "geography": {
+      "country": "DE",
+      "geo_id": "GEO-CITY-DEHAM",
+      "lat": 53.54,
+      "lon": 9.84
+    },
+    "roles": [
+      "warehouse",
+      "shipping"
+    ],
+    "capabilities": [
+      "stock_holding",
+      "export_documentation"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-mer-ham",
+      "metric-ppm-site-mer-ham"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-CST-DUB",
+    "supplier_id": "SUP-CST",
+    "name": "Coastreach Dublin store",
+    "address": "Swords Business Campus (synthetic), Dublin",
+    "geography": {
+      "country": "IE",
+      "geo_id": "GEO-CITY-IEDUB",
+      "lat": 53.45,
+      "lon": -6.22
+    },
+    "roles": [
+      "warehouse"
+    ],
+    "capabilities": [
+      "stock_holding"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-cst-dub",
+      "metric-ppm-site-cst-dub"
+    ],
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "site_id": "SITE-KES-BRS",
+    "supplier_id": "SUP-KES",
+    "name": "Kestrelmoor Bristol fabrication shop",
+    "address": "Filton Enterprise Zone (synthetic), Bristol",
+    "geography": {
+      "country": "GB",
+      "geo_id": "GEO-CITY-GBBRS",
+      "lat": 51.52,
+      "lon": -2.57
+    },
+    "roles": [
+      "manufacturing"
+    ],
+    "capabilities": [
+      "sheet_metal_forming",
+      "tig_welding",
+      "heat_treatment",
+      "fpi_ndt"
+    ],
+    "qualified_scope_refs": [],
+    "metric_refs": [
+      "metric-otd-site-kes-brs",
+      "metric-ppm-site-kes-brs"
+    ],
+    "data_origin": "synthetic_demo"
+  }
+]

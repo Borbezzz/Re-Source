@@ -1,0 +1,21 @@
+requirement_set_id: RS-REQ-FN-1001
+version: "v1"
+component_id: component-primary
+engine_configuration: RS-TF2-CFG-A
+part_identity: {part_number: RS-FN-1001, revision: "D", family: fuel_nozzle}
+data_origin: synthetic_demo
+note: Requirement parameters are a scenario design pending DISC-02 authoritative technical sources.
+requirements:
+  - {id: REQ-FN-ID-01, template: ID}
+  - {id: REQ-FN-IC-01, template: IC}
+  - {id: REQ-FN-REL-01, template: REL}
+  - {id: REQ-FN-TRC-01, template: TRC}
+  - {id: REQ-FN-QMS-01, template: QMS}
+  - {id: REQ-FN-LEG-01, template: LEG}
+  - {id: REQ-FN-QTE-01, template: QTE}
+  - {id: REQ-FN-POA-01, template: POA, params: {family: fuel_nozzle}}
+  - {id: REQ-FN-DD-01, template: DD}
+  - {id: REQ-FN-SPC-01, template: SPC}
+  - {id: REQ-FN-FAI-01, template: FAI}
+  - {id: REQ-FN-LOG-01, template: LOG}
+  - {id: REQ-FN-REG-01, template: REG}

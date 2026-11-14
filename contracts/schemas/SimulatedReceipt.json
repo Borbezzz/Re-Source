@@ -1,0 +1,93 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "destination_label": {
+      "title": "Destination Label",
+      "type": "string"
+    },
+    "destination_type": {
+      "title": "Destination Type",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "label": {
+      "default": "SIMULATED \u2014 no real submission was made",
+      "title": "Label",
+      "type": "string"
+    },
+    "package_hash": {
+      "title": "Package Hash",
+      "type": "string"
+    },
+    "package_id": {
+      "title": "Package Id",
+      "type": "string"
+    },
+    "package_version": {
+      "title": "Package Version",
+      "type": "integer"
+    },
+    "payload_hash": {
+      "title": "Payload Hash",
+      "type": "string"
+    },
+    "receipt_id": {
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "scenario_run_id": {
+      "title": "Scenario Run Id",
+      "type": "string"
+    },
+    "selection_id": {
+      "title": "Selection Id",
+      "type": "string"
+    },
+    "simulated_at": {
+      "format": "date-time",
+      "title": "Simulated At",
+      "type": "string"
+    },
+    "status": {
+      "default": "accepted_simulated",
+      "enum": [
+        "accepted_simulated",
+        "historical"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "submitted_documents": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Submitted Documents",
+      "type": "array"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "case_id",
+    "scenario_run_id",
+    "selection_id",
+    "package_id",
+    "package_version",
+    "package_hash",
+    "destination_type",
+    "destination_label",
+    "submitted_documents",
+    "payload_hash",
+    "idempotency_key",
+    "simulated_at"
+  ],
+  "title": "SimulatedReceipt",
+  "type": "object"
+}

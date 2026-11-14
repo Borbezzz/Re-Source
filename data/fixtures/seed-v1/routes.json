@@ -1,0 +1,176 @@
+[
+  {
+    "route_id": "R-RTM-HWC",
+    "from_site_id": "SITE-NVA-RTM",
+    "mode": "ro-ro ferry + road",
+    "label": "Rotterdam \u2192 Harwich ro-ro \u2192 East Midlands",
+    "base_transport_days": 2.0,
+    "freight": {
+      "amount": "1800.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.1,
+    "passes_through": [
+      "GEO-PORT-NLRTM",
+      "GEO-PORT-GBHRW"
+    ],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-MAN-EMA",
+    "from_site_id": "SITE-CAL-MAN",
+    "mode": "road",
+    "label": "Manchester \u2192 East Midlands by road",
+    "base_transport_days": 1.0,
+    "freight": {
+      "amount": "600.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.05,
+    "passes_through": [],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-GLA-EMA",
+    "from_site_id": "SITE-CAL-GLA",
+    "mode": "road",
+    "label": "Glasgow \u2192 East Midlands by road",
+    "base_transport_days": 1.0,
+    "freight": {
+      "amount": "750.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.05,
+    "passes_through": [],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-SHF-EMA",
+    "from_site_id": "SITE-PEN-SHF",
+    "mode": "dedicated courier",
+    "label": "Sheffield \u2192 East Midlands courier",
+    "base_transport_days": 1.0,
+    "freight": {
+      "amount": "500.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.1,
+    "passes_through": [],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-ROT-EMA",
+    "from_site_id": "SITE-PEN-ROT",
+    "mode": "dedicated courier",
+    "label": "Rotherham \u2192 East Midlands courier",
+    "base_transport_days": 1.0,
+    "freight": {
+      "amount": "500.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.1,
+    "passes_through": [],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-LTN-EMA",
+    "from_site_id": "SITE-LOW-LTN",
+    "mode": "road",
+    "label": "Luton \u2192 East Midlands by road",
+    "base_transport_days": 0.5,
+    "freight": {
+      "amount": "400.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.05,
+    "passes_through": [],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-BHX-EMA",
+    "from_site_id": "SITE-ESK-BHX",
+    "mode": "road",
+    "label": "Birmingham \u2192 East Midlands by road",
+    "base_transport_days": 0.5,
+    "freight": {
+      "amount": "400.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.05,
+    "passes_through": [],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-SOU-EMA",
+    "from_site_id": "SITE-HAR-SOU",
+    "mode": "road",
+    "label": "Southampton \u2192 East Midlands by road",
+    "base_transport_days": 1.0,
+    "freight": {
+      "amount": "650.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.05,
+    "passes_through": [],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-HAM-IMM",
+    "from_site_id": "SITE-MER-HAM",
+    "mode": "short-sea + road",
+    "label": "Hamburg \u2192 Immingham short-sea \u2192 East Midlands",
+    "base_transport_days": 3.0,
+    "freight": {
+      "amount": "1400.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.05,
+    "passes_through": [
+      "GEO-PORT-DEHAM",
+      "GEO-PORT-GBIMM"
+    ],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-DUB-HLY",
+    "from_site_id": "SITE-CST-DUB",
+    "mode": "ferry + road",
+    "label": "Dublin \u2192 Holyhead ferry \u2192 East Midlands",
+    "base_transport_days": 2.0,
+    "freight": {
+      "amount": "900.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.15,
+    "passes_through": [
+      "GEO-PORT-IEDUB",
+      "GEO-PORT-GBHLY"
+    ],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  },
+  {
+    "route_id": "R-BRS-EMA",
+    "from_site_id": "SITE-KES-BRS",
+    "mode": "road",
+    "label": "Bristol \u2192 East Midlands by road",
+    "base_transport_days": 0.5,
+    "freight": {
+      "amount": "450.00",
+      "currency": "GBP"
+    },
+    "baseline_exposure": 0.05,
+    "passes_through": [],
+    "destination": "Operator MRO base, East Midlands (synthetic)",
+    "data_origin": "synthetic_demo"
+  }
+]

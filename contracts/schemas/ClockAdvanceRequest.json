@@ -1,0 +1,28 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "hours": {
+      "exclusiveMinimum": 0,
+      "maximum": 1440,
+      "title": "Hours",
+      "type": "number"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    }
+  },
+  "required": [
+    "hours"
+  ],
+  "title": "ClockAdvanceRequest",
+  "type": "object"
+}

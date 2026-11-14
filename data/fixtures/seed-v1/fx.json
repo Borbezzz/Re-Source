@@ -1,0 +1,11 @@
+{
+  "fx_version": "fx-2026-11-14-scenario",
+  "base": "GBP",
+  "rates": {
+    "EUR": "0.8700",
+    "USD": "0.7900",
+    "GBP": "1.0000"
+  },
+  "source": "Scenario fixture FX table (not a market quote)",
+  "as_of": "2026-11-14"
+}

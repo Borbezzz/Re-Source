@@ -1,0 +1,64 @@
+{
+  "$defs": {
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "asset": {
+      "additionalProperties": true,
+      "title": "Asset",
+      "type": "object"
+    },
+    "component_instance_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Component Instance Ids",
+      "type": "array"
+    },
+    "configuration_revision": {
+      "title": "Configuration Revision",
+      "type": "string"
+    },
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin",
+      "default": "synthetic_demo"
+    },
+    "display_name": {
+      "title": "Display Name",
+      "type": "string"
+    },
+    "engine_id": {
+      "title": "Engine Id",
+      "type": "string"
+    },
+    "representative_note": {
+      "title": "Representative Note",
+      "type": "string"
+    },
+    "scenario_manifest_version": {
+      "title": "Scenario Manifest Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "engine_id",
+    "display_name",
+    "representative_note",
+    "configuration_revision",
+    "component_instance_ids",
+    "scenario_manifest_version",
+    "asset"
+  ],
+  "title": "EngineConfiguration",
+  "type": "object"
+}

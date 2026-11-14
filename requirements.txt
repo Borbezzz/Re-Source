@@ -1,0 +1,308 @@
+absl-py==2.5.1
+    # via ortools
+aiosqlite==0.22.1
+    # via langgraph-checkpoint-sqlite
+annotated-doc==0.0.6
+    # via fastapi
+annotated-types==0.8.0
+    # via pydantic
+anyio==4.16.0
+    # via
+    #   fastapi
+    #   httpx
+    #   httpx2
+    #   langsmith
+    #   mlflow-skinny
+    #   openai
+    #   starlette
+    #   watchfiles
+cachetools==7.3.1
+    # via mlflow-skinny
+certifi==2026.10.23
+    # via
+    #   databricks-sdk
+    #   httpcore
+    #   httpx
+    #   langchain-core
+    #   requests
+cffi==2.1.1 ; platform_python_implementation != 'PyPy'
+    # via cryptography
+charset-normalizer==3.5.2
+    # via requests
+click==8.5.1
+    # via
+    #   mlflow-skinny
+    #   uvicorn
+cloudpickle==3.1.2
+    # via mlflow-skinny
+cryptography==50.0.2
+    # via google-auth
+databricks-sdk==0.166.0
+    # via
+    #   mlflow-skinny
+    #   resource-recovery
+databricks-sql-connector==4.9.0
+    # via resource-recovery
+distro==1.9.0
+    # via langsmith
+et-xmlfile==2.0.0
+    # via openpyxl
+fastapi==0.162.7
+    # via
+    #   mlflow-skinny
+    #   resource-recovery
+gitdb==4.0.12
+    # via gitpython
+gitpython==3.2.1
+    # via mlflow-skinny
+google-auth==2.62.2
+    # via databricks-sdk
+h11==0.16.0
+    # via
+    #   httpcore
+    #   httpcore2
+    #   uvicorn
+httpcore==1.0.9
+    # via httpx
+httpcore2==2.16.0 ; sys_platform != 'emscripten'
+    # via httpx2
+httptools==0.9.0
+    # via uvicorn
+httpx==0.28.1
+    # via
+    #   langchain-core
+    #   langgraph-sdk
+    #   resource-recovery
+httpx2==2.16.0
+    # via
+    #   langsmith
+    #   openai
+httpx2-jsfetch==1.0 ; sys_platform == 'emscripten'
+    # via httpx2
+idna==3.20
+    # via
+    #   anyio
+    #   httpx
+    #   httpx2
+    #   requests
+immutabledict==4.3.1
+    # via ortools
+importlib-metadata==10.2.0
+    # via mlflow-skinny
+jiter==0.19.0
+    # via openai
+jsonpatch==1.47
+    # via langchain-core
+jsonpointer==3.12
+    # via jsonpatch
+langchain-core==1.8.0
+    # via
+    #   langgraph
+    #   langgraph-checkpoint
+    #   langgraph-prebuilt
+    #   langgraph-sdk
+langchain-protocol==0.0.21
+    # via
+    #   langchain-core
+    #   langgraph-sdk
+langgraph==1.2.22
+    # via resource-recovery
+langgraph-checkpoint==4.3.2
+    # via
+    #   langgraph
+    #   langgraph-checkpoint-sqlite
+    #   langgraph-prebuilt
+langgraph-checkpoint-sqlite==3.1.3
+    # via resource-recovery
+langgraph-prebuilt==1.1.2
+    # via langgraph
+langgraph-sdk==0.4.14
+    # via langgraph
+langsmith==0.14.17
+    # via langchain-core
+lazy-importer==0.1.0
+    # via importlib-metadata
+lz4==4.4.5
+    # via databricks-sql-connector
+mlflow-skinny==3.18.0
+    # via resource-recovery
+numpy==2.5.4
+    # via
+    #   ortools
+    #   pandas
+oauthlib==4.0.1
+    # via databricks-sql-connector
+openai==3.51.0
+    # via resource-recovery
+openpyxl==3.1.5
+    # via databricks-sql-connector
+opentelemetry-api==1.45.2
+    # via
+    #   fastapi
+    #   mlflow-skinny
+    #   opentelemetry-sdk
+    #   opentelemetry-semantic-conventions
+opentelemetry-proto==1.45.2
+    # via mlflow-skinny
+opentelemetry-sdk==1.45.2
+    # via mlflow-skinny
+opentelemetry-semantic-conventions==0.66b2
+    # via opentelemetry-sdk
+orjson==3.13.0
+    # via
+    #   langgraph-sdk
+    #   langsmith
+ormsgpack==1.13.1
+    # via langgraph-checkpoint
+ortools==9.15.6755
+    # via resource-recovery
+packaging==26.3
+    # via
+    #   langchain-core
+    #   langsmith
+    #   mlflow-skinny
+pandas==3.1.1
+    # via
+    #   databricks-sql-connector
+    #   ortools
+protobuf==6.33.6
+    # via
+    #   databricks-sdk
+    #   mlflow-skinny
+    #   opentelemetry-proto
+    #   ortools
+psycopg==3.3.9
+    # via resource-recovery
+psycopg-binary==3.3.9 ; implementation_name != 'pypy'
+    # via psycopg
+pyasn1==0.6.5
+    # via pyasn1-modules
+pyasn1-modules==0.4.2
+    # via google-auth
+pybreaker==1.4.1
+    # via databricks-sql-connector
+pycparser==3.12 ; implementation_name != 'PyPy' and platform_python_implementation != 'PyPy'
+    # via cffi
+pydantic==2.14.3
+    # via
+    #   fastapi
+    #   langchain-core
+    #   langgraph
+    #   langsmith
+    #   mlflow-skinny
+    #   openai
+    #   resource-recovery
+pydantic-core==2.50.4
+    # via pydantic
+pyjwt==2.15.1
+    # via databricks-sql-connector
+python-dateutil==2.9.0.post0
+    # via
+    #   databricks-sql-connector
+    #   pandas
+python-dotenv==1.2.4
+    # via
+    #   mlflow-skinny
+    #   resource-recovery
+    #   uvicorn
+python-multipart==0.0.33
+    # via mlflow-skinny
+pyyaml==6.0.3
+    # via
+    #   langchain-core
+    #   mlflow-skinny
+    #   resource-recovery
+    #   uvicorn
+requests==2.34.2
+    # via
+    #   databricks-sdk
+    #   databricks-sql-connector
+    #   langsmith
+    #   mlflow-skinny
+    #   requests-toolbelt
+requests-toolbelt==1.0.0
+    # via langsmith
+six==1.17.0
+    # via python-dateutil
+smmap==5.0.3
+    # via gitdb
+sniffio==1.3.1
+    # via
+    #   langsmith
+    #   openai
+sqlalchemy==2.1.8
+    # via resource-recovery
+sqlite-vec==0.1.9
+    # via langgraph-checkpoint-sqlite
+sqlparse==0.6.1
+    # via mlflow-skinny
+starlette==1.10.0
+    # via
+    #   fastapi
+    #   mlflow-skinny
+tenacity==9.2.1
+    # via langchain-core
+thrift==0.25.0
+    # via databricks-sql-connector
+truststore==0.10.5 ; sys_platform != 'emscripten'
+    # via
+    #   httpcore2
+    #   httpx2
+typing-extensions==4.16.0
+    # via
+    #   anyio
+    #   fastapi
+    #   httpx2
+    #   langchain-core
+    #   langchain-protocol
+    #   langsmith
+    #   mlflow-skinny
+    #   openai
+    #   opentelemetry-api
+    #   opentelemetry-sdk
+    #   opentelemetry-semantic-conventions
+    #   ortools
+    #   psycopg
+    #   pydantic
+    #   pydantic-core
+    #   sqlalchemy
+    #   starlette
+    #   typing-inspection
+typing-inspection==0.4.5
+    # via
+    #   fastapi
+    #   pydantic
+tzdata==2026.6 ; sys_platform == 'emscripten' or sys_platform == 'win32'
+    # via
+    #   pandas
+    #   psycopg
+urllib3==2.8.0
+    # via
+    #   databricks-sdk
+    #   databricks-sql-connector
+    #   requests
+uuid-utils==0.19.0
+    # via
+    #   langchain-core
+    #   langsmith
+uvicorn==0.54.0
+    # via
+    #   mlflow-skinny
+    #   resource-recovery
+uvloop==0.23.0 ; platform_python_implementation != 'PyPy' and sys_platform != 'cygwin' and sys_platform != 'win32'
+    # via uvicorn
+watchfiles==1.3.0
+    # via uvicorn
+websockets==17.4
+    # via
+    #   langgraph-sdk
+    #   langsmith
+    #   uvicorn
+xxhash==4.1.0
+    # via
+    #   langgraph
+    #   langsmith
+zipp==4.1.2
+    # via importlib-metadata
+zstandard==0.25.0
+    # via langsmith

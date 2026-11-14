@@ -1,0 +1,84 @@
+{
+  "$defs": {
+    "Mode": {
+      "enum": [
+        "live",
+        "seeded",
+        "replay"
+      ],
+      "title": "Mode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "barrier_count": {
+      "default": 0,
+      "title": "Barrier Count",
+      "type": "integer"
+    },
+    "case_map": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Case Map",
+      "type": "object"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "fixture_version": {
+      "title": "Fixture Version",
+      "type": "string"
+    },
+    "manifest_version": {
+      "title": "Manifest Version",
+      "type": "string"
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode"
+    },
+    "previous_run_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Previous Run Ids",
+      "type": "array"
+    },
+    "replay_source_run_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Replay Source Run Id"
+    },
+    "scenario_now": {
+      "format": "date-time",
+      "title": "Scenario Now",
+      "type": "string"
+    },
+    "scenario_run_id": {
+      "title": "Scenario Run Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "scenario_run_id",
+    "mode",
+    "fixture_version",
+    "manifest_version",
+    "scenario_now",
+    "case_map",
+    "created_at"
+  ],
+  "title": "ScenarioRunView",
+  "type": "object"
+}

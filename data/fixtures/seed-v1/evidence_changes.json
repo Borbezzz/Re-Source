@@ -1,0 +1,49 @@
+[
+  {
+    "fixture_id": "EVC-SB-0042-REVB",
+    "title": "Design holder issues SB RS-SB-73-0042 Rev B (scenario evidence change)",
+    "new_evidence": {
+      "version_id": "ev-sb-fn-0042-b",
+      "document_id": "doc-sb-fn-0042",
+      "title": "Service bulletin RS-SB-73-0042 Rev B \u2014 fuel nozzle tip",
+      "doc_type": "service_bulletin",
+      "hash": "sha256:51cd45a35f2f426facc67e3e480dc917198cd8b03420a54018b152ae0c63383a",
+      "source_url": null,
+      "storage_uri": "/Volumes/workspace/resource/evidence/ev-sb-fn-0042-b.txt",
+      "authority": "design_holder",
+      "authority_rank": 100,
+      "issuer": "Representative engine design holder (synthetic)",
+      "subject_ids": [
+        "RS-FN-1001"
+      ],
+      "site_id": null,
+      "revision": "B",
+      "effective_at": "2026-11-16T08:00:00Z",
+      "expiry_at": null,
+      "retrieved_at": "2026-11-14T12:00:00Z",
+      "data_origin": "synthetic_demo",
+      "validation_state": "unvalidated",
+      "supersedes_version_id": "ev-sb-fn-0042-a",
+      "content_text": "SERVICE BULLETIN RS-SB-73-0042 REV B \u2014 FUEL NOZZLE TIP\nRecord type: SYNTHETIC DEMONSTRATION RECORD \u2014 not a real document\n\nSB NUMBER: RS-SB-73-0042\nREVISION: B\nAPPLICABLE PART NUMBER: RS-FN-1001\nMIN DRAWING REVISION: F\nEFFECTIVE DATE: 2026-11-16\nINSTRUCTION: Newly manufactured nozzles shall conform to drawing revision F; revision E drawings withdrawn for new manufacture.",
+      "expected_facts": {
+        "sb_number": "RS-SB-73-0042",
+        "revision": "B",
+        "applicable_part_number": "RS-FN-1001",
+        "min_drawing_revision": "F",
+        "effective_date": "2026-11-16",
+        "instruction": "Newly manufactured nozzles shall conform to drawing revision F; revision E drawings withdrawn for new manufacture."
+      }
+    },
+    "supersedes_version_id": "ev-sb-fn-0042-a",
+    "relationships": [
+      {
+        "from_id": "ev-sb-fn-0042-b",
+        "from_type": "evidence",
+        "to_id": "RS-FN-1001",
+        "to_type": "part",
+        "relation_type": "applies_to"
+      }
+    ],
+    "note": "MAKE builds to drawing rev E no longer meet the minimum drawing revision; affects Offer C and every primary interchangeability check."
+  }
+]

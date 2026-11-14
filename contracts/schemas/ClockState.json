@@ -1,0 +1,28 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "executed_transitions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Executed Transitions",
+      "type": "array"
+    },
+    "scenario_now": {
+      "format": "date-time",
+      "title": "Scenario Now",
+      "type": "string"
+    },
+    "scenario_run_id": {
+      "title": "Scenario Run Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "scenario_run_id",
+    "scenario_now",
+    "executed_transitions"
+  ],
+  "title": "ClockState",
+  "type": "object"
+}

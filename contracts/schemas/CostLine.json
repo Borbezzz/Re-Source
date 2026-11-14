@@ -1,0 +1,64 @@
+{
+  "$defs": {
+    "Money": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "description": "Decimal amount as a string-safe decimal",
+          "title": "Amount",
+          "type": "string"
+        },
+        "currency": {
+          "description": "ISO 4217 code",
+          "maxLength": 3,
+          "minLength": 3,
+          "title": "Currency",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "title": "Money",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "converted": {
+      "$ref": "#/$defs/Money"
+    },
+    "fx_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fx Version"
+    },
+    "label": {
+      "title": "Label",
+      "type": "string"
+    },
+    "original": {
+      "$ref": "#/$defs/Money"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    }
+  },
+  "required": [
+    "label",
+    "original",
+    "converted",
+    "source"
+  ],
+  "title": "CostLine",
+  "type": "object"
+}

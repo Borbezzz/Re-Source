@@ -1,0 +1,75 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "check_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Check Refs",
+      "type": "array"
+    },
+    "edited_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Edited At"
+    },
+    "edited_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Edited By"
+    },
+    "evidence_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "origin": {
+      "default": "evidence",
+      "enum": [
+        "evidence",
+        "selection",
+        "decision",
+        "case",
+        "computed",
+        "user_edit",
+        "completion_task"
+      ],
+      "title": "Origin",
+      "type": "string"
+    },
+    "source_fact_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Fact Ids",
+      "type": "array"
+    },
+    "transform": {
+      "default": "copy",
+      "title": "Transform",
+      "type": "string"
+    }
+  },
+  "title": "FieldProvenance",
+  "type": "object"
+}

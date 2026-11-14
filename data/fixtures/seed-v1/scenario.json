@@ -1,0 +1,13 @@
+{
+  "fixture_version": "seed-v1",
+  "scenario_clock_start": "2026-11-16T08:00:00Z",
+  "seed": 20261116,
+  "operator": {
+    "name": "Demo operator MRO (synthetic)",
+    "role": "UK Part 145 maintenance organisation with CAMO support",
+    "approval_reference": "UK.145.90000 (synthetic)",
+    "base": "East Midlands"
+  },
+  "primary_signal_fixture_id": "SIG-RTM-CLOSURE",
+  "data_origin": "synthetic_demo"
+}

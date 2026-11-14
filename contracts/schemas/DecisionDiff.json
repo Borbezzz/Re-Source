@@ -1,0 +1,257 @@
+{
+  "$defs": {
+    "FieldChange": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "title": "After"
+        },
+        "before": {
+          "title": "Before"
+        },
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "field",
+        "before",
+        "after"
+      ],
+      "title": "FieldChange",
+      "type": "object"
+    },
+    "RankMove": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "from_rank": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "From Rank"
+        },
+        "from_score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "From Score"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "to_rank": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "To Rank"
+        },
+        "to_score": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "To Score"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "label",
+        "from_rank",
+        "to_rank",
+        "from_score",
+        "to_score"
+      ],
+      "title": "RankMove",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "changed_fields": {
+      "items": {
+        "$ref": "#/$defs/FieldChange"
+      },
+      "title": "Changed Fields",
+      "type": "array"
+    },
+    "diff_id": {
+      "title": "Diff Id",
+      "type": "string"
+    },
+    "downstream_invalidations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Downstream Invalidations",
+      "type": "array"
+    },
+    "explanation": {
+      "title": "Explanation",
+      "type": "string"
+    },
+    "from_decision_id": {
+      "title": "From Decision Id",
+      "type": "string"
+    },
+    "impact_paths": {
+      "default": [],
+      "items": {
+        "items": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "title": "Impact Paths",
+      "type": "array"
+    },
+    "preferred_after": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Preferred After"
+    },
+    "preferred_before": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Preferred Before"
+    },
+    "rank_moves": {
+      "items": {
+        "$ref": "#/$defs/RankMove"
+      },
+      "title": "Rank Moves",
+      "type": "array"
+    },
+    "rerun_check_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Rerun Check Ids",
+      "type": "array"
+    },
+    "reused_check_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reused Check Ids",
+      "type": "array"
+    },
+    "to_decision_id": {
+      "title": "To Decision Id",
+      "type": "string"
+    },
+    "trigger": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Trigger"
+    },
+    "trigger_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Trigger Id"
+    },
+    "user_action_needed": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "User Action Needed"
+    }
+  },
+  "required": [
+    "diff_id",
+    "case_id",
+    "from_decision_id",
+    "to_decision_id",
+    "trigger_id",
+    "changed_fields",
+    "rank_moves",
+    "rerun_check_ids",
+    "reused_check_ids",
+    "preferred_before",
+    "preferred_after",
+    "explanation"
+  ],
+  "title": "DecisionDiff",
+  "type": "object"
+}
