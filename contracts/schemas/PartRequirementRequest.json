@@ -1,0 +1,31 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "component_id": {
+      "title": "Component Id",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    },
+    "upload_id": {
+      "title": "Upload Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "upload_id",
+    "component_id"
+  ],
+  "title": "PartRequirementRequest",
+  "type": "object"
+}

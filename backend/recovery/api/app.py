@@ -16,10 +16,10 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Any, Callable, Optional
 
-from fastapi import FastAPI, Header, Query, Request
+from fastapi import FastAPI, File, Form, Header, Query, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.concurrency import run_in_threadpool
 
@@ -432,6 +432,96 @@ async def case_event_history(case_id: str, after: int = 0, run_id: Optional[str]
     s = services()
     rid = await run_in_threadpool(s.views.run_id, run_id)
     return await run_in_threadpool(s.store.events_after, rid, case_id, after, limit)
+
+
+# ============================================================================================== intake & mesh (contract v1.1)
+_ERR = {404: {"model": M.ApiError}, 409: {"model": M.ApiError}, 413: {"model": M.ApiError}, 422: {"model": M.ApiError}}
+
+
+def _intake() -> Any:
+    s = services()
+    if getattr(s, "intake", None) is None:
+        raise unavailable("intake service not available")
+    return s.intake
+
+
+@app.post("/api/v1/intake/uploads", status_code=201, response_model=None, responses={201: {"model": M.IntakeUpload}, **_ERR})
+async def intake_upload(file: UploadFile = File(...), kind: str = Form(...), engine_id: str = Form("engine-demo-001"),
+                        component_id: Optional[str] = Form(None)) -> JSONResponse:
+    """Upload a blueprint, part-requirements document or segmented GLB. Content-addressed: identical bytes return the existing upload."""
+    from ..services.intake import MAX_UPLOAD_BYTES
+
+    buf = bytearray()
+    while chunk := await file.read(1024 * 1024):
+        buf.extend(chunk)
+        if len(buf) > MAX_UPLOAD_BYTES:
+            raise DomainError(413, "PAYLOAD_TOO_LARGE", f"upload exceeds {MAX_UPLOAD_BYTES // (1024 * 1024)} MB")
+    rec = await run_in_threadpool(_intake().upload, bytes(buf), file.filename or "upload", kind, engine_id, component_id or None)
+    return JSONResponse(status_code=201 if not rec.get("duplicate_of") else 200, content=json.loads(st.dumps(rec)))
+
+
+@app.get("/api/v1/intake/uploads/{upload_id}", response_model=None, responses={200: {"model": M.IntakeUpload}, **_ERR})
+async def intake_get_upload(upload_id: str) -> dict:
+    svc = _intake()
+    return svc.public_upload(await run_in_threadpool(svc.get_upload, upload_id))
+
+
+@app.get("/api/v1/intake/uploads/{upload_id}/content", response_class=Response)
+async def intake_upload_content(upload_id: str) -> Response:
+    """Raw bytes with the stored media type (e.g. an activated GLB for the 3D scene)."""
+    data, media_type, filename = await run_in_threadpool(_intake().content, upload_id)
+    return Response(content=data, media_type=media_type, headers={"Content-Disposition": f'inline; filename="{filename}"',
+                                                                  "Cache-Control": "private, max-age=3600", "X-Content-Type-Options": "nosniff"})
+
+
+@app.post("/api/v1/intake/part-requirements", status_code=202, response_model=None, responses={202: {"model": M.PartRequirementDraft}, **_ERR})
+async def intake_part_requirements(body: M.PartRequirementRequest, idempotency_key: Optional[str] = Header(None)) -> JSONResponse:
+    svc = _intake()
+    return await idempotent("intake:preq", _key(idempotency_key, body.model_dump()), body.model_dump(mode="json", exclude={"idempotency_key"}),
+                            lambda: svc.start_part_requirements(body.upload_id, body.component_id), 202)
+
+
+@app.get("/api/v1/intake/part-requirements/{draft_id}", response_model=None, responses={200: {"model": M.PartRequirementDraft}, **_ERR})
+async def intake_get_draft(draft_id: str) -> dict:
+    return await run_in_threadpool(_intake().get_draft, draft_id)
+
+
+@app.patch("/api/v1/intake/part-requirements/{draft_id}", response_model=None, responses={200: {"model": M.PartRequirementDraft}, **_ERR})
+async def intake_patch_draft(draft_id: str, body: M.PartRequirementPatch, idempotency_key: Optional[str] = Header(None)) -> JSONResponse:
+    svc = _intake()
+    return await idempotent(f"intake:preq:{draft_id}", _key(idempotency_key, body.model_dump()), body.model_dump(mode="json", exclude={"idempotency_key"}),
+                            lambda: svc.patch_draft(draft_id, body.model_dump(mode="json")))
+
+
+@app.post("/api/v1/intake/mesh-jobs", status_code=201, response_model=None, responses={201: {"model": M.MeshJob}, **_ERR})
+async def intake_mesh_job(body: M.MeshJobRequest, idempotency_key: Optional[str] = Header(None)) -> JSONResponse:
+    svc = _intake()
+    payload = body.model_dump(mode="json", exclude={"idempotency_key"})
+    return await idempotent("intake:mesh", _key(idempotency_key, body.model_dump()), payload, lambda: svc.create_mesh_job(payload), 201)
+
+
+@app.get("/api/v1/intake/mesh-jobs/{job_id}", response_model=None, responses={200: {"model": M.MeshJob}, **_ERR})
+async def intake_get_mesh_job(job_id: str) -> dict:
+    return await run_in_threadpool(_intake().get_job, job_id)
+
+
+@app.post("/api/v1/intake/mesh-jobs/{job_id}/activate", response_model=None, responses={200: {"model": M.ManifestProvenance}, **_ERR})
+async def intake_activate_mesh_job(job_id: str) -> dict:
+    prov = await run_in_threadpool(_intake().activate_job, job_id)
+    return {k: v for k, v in prov.items() if k != "anchors"}
+
+
+@app.get("/api/v1/intake/manifest", response_model=None, responses={200: {"model": M.ManifestProvenance}})
+async def intake_manifest() -> dict:
+    prov = await run_in_threadpool(_intake().provenance)
+    return {k: v for k, v in prov.items() if k != "anchors"}
+
+
+@app.post("/api/v1/intake/manifest/reset", response_model=None, responses={200: {"model": M.ManifestProvenance}})
+async def intake_manifest_reset() -> dict:
+    prov = await run_in_threadpool(_intake().reset_manifest)
+    return {k: v for k, v in prov.items() if k != "anchors"}
+# ============================================================================================== end intake & mesh
 
 
 # ---------------------------------------------------------------------------------------------- frontend bundle

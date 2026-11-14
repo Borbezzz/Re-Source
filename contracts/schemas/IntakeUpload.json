@@ -1,0 +1,120 @@
+{
+  "$defs": {
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "component_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Component Id"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin",
+      "default": "provided_document"
+    },
+    "duplicate_of": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Set when identical bytes were already uploaded (deduplicated by sha256)",
+      "title": "Duplicate Of"
+    },
+    "engine_id": {
+      "title": "Engine Id",
+      "type": "string"
+    },
+    "filename": {
+      "title": "Filename",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "blueprint",
+        "part_requirements",
+        "mesh_glb"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "media_type": {
+      "title": "Media Type",
+      "type": "string"
+    },
+    "mirrors": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Mirrors",
+      "type": "array"
+    },
+    "sha256": {
+      "title": "Sha256",
+      "type": "string"
+    },
+    "size_bytes": {
+      "title": "Size Bytes",
+      "type": "integer"
+    },
+    "status": {
+      "default": "received",
+      "enum": [
+        "received",
+        "mirrored",
+        "mirror_failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "storage_uri": {
+      "description": "Authoritative location: a Unity Catalog volume path when mirrored, else local cache",
+      "title": "Storage Uri",
+      "type": "string"
+    },
+    "upload_id": {
+      "title": "Upload Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "upload_id",
+    "sha256",
+    "kind",
+    "filename",
+    "media_type",
+    "size_bytes",
+    "engine_id",
+    "storage_uri",
+    "created_at"
+  ],
+  "title": "IntakeUpload",
+  "type": "object"
+}

@@ -310,6 +310,183 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/intake/manifest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Intake Manifest */
+        get: operations["intake_manifest_api_v1_intake_manifest_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/intake/manifest/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Intake Manifest Reset */
+        post: operations["intake_manifest_reset_api_v1_intake_manifest_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/intake/mesh-jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Intake Mesh Job */
+        post: operations["intake_mesh_job_api_v1_intake_mesh_jobs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/intake/mesh-jobs/{job_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Intake Get Mesh Job */
+        get: operations["intake_get_mesh_job_api_v1_intake_mesh_jobs__job_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/intake/mesh-jobs/{job_id}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Intake Activate Mesh Job */
+        post: operations["intake_activate_mesh_job_api_v1_intake_mesh_jobs__job_id__activate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/intake/part-requirements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Intake Part Requirements */
+        post: operations["intake_part_requirements_api_v1_intake_part_requirements_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/intake/part-requirements/{draft_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Intake Get Draft */
+        get: operations["intake_get_draft_api_v1_intake_part_requirements__draft_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Intake Patch Draft */
+        patch: operations["intake_patch_draft_api_v1_intake_part_requirements__draft_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/intake/uploads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Intake Upload
+         * @description Upload a blueprint, part-requirements document or segmented GLB. Content-addressed: identical bytes return the existing upload.
+         */
+        post: operations["intake_upload_api_v1_intake_uploads_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/intake/uploads/{upload_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Intake Get Upload */
+        get: operations["intake_get_upload_api_v1_intake_uploads__upload_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/intake/uploads/{upload_id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Intake Upload Content
+         * @description Raw bytes with the stored media type (e.g. an activated GLB for the 3D scene).
+         */
+        get: operations["intake_upload_content_api_v1_intake_uploads__upload_id__content_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/packages/{package_id}/download": {
         parameters: {
             query?: never;
@@ -560,6 +737,20 @@ export interface components {
              * @default false
              */
             retryable: boolean;
+        };
+        /** Body_intake_upload_api_v1_intake_uploads_post */
+        Body_intake_upload_api_v1_intake_uploads_post: {
+            /** Component Id */
+            component_id?: string | null;
+            /**
+             * Engine Id
+             * @default engine-demo-001
+             */
+            engine_id: string;
+            /** File */
+            file: string;
+            /** Kind */
+            kind: string;
         };
         /** CandidateOffer */
         CandidateOffer: {
@@ -1603,6 +1794,56 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** IntakeUpload */
+        IntakeUpload: {
+            /** Component Id */
+            component_id?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** @default provided_document */
+            data_origin: components["schemas"]["DataOrigin"];
+            /**
+             * Duplicate Of
+             * @description Set when identical bytes were already uploaded (deduplicated by sha256)
+             */
+            duplicate_of?: string | null;
+            /** Engine Id */
+            engine_id: string;
+            /** Filename */
+            filename: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "blueprint" | "part_requirements" | "mesh_glb";
+            /** Media Type */
+            media_type: string;
+            /**
+             * Mirrors
+             * @default []
+             */
+            mirrors: string[];
+            /** Sha256 */
+            sha256: string;
+            /** Size Bytes */
+            size_bytes: number;
+            /**
+             * Status
+             * @default received
+             * @enum {string}
+             */
+            status: "received" | "mirrored" | "mirror_failed";
+            /**
+             * Storage Uri
+             * @description Authoritative location: a Unity Catalog volume path when mirrored, else local cache
+             */
+            storage_uri: string;
+            /** Upload Id */
+            upload_id: string;
+        };
         /** Locator */
         Locator: {
             /** Bbox */
@@ -1615,6 +1856,102 @@ export interface components {
             page?: number | null;
             /** Section */
             section?: string | null;
+        };
+        /** ManifestProvenance */
+        ManifestProvenance: {
+            /** Activated At */
+            activated_at?: string | null;
+            /** Glb Path */
+            glb_path?: string | null;
+            /** Job Id */
+            job_id?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "generated" | "procedural";
+            /** Manifest Version */
+            manifest_version: string;
+            /**
+             * Node Names
+             * @default {}
+             */
+            node_names: {
+                [key: string]: string;
+            };
+            /** Previous Manifest Version */
+            previous_manifest_version?: string | null;
+            /** Provider */
+            provider?: string | null;
+            /**
+             * Source Refs
+             * @description component_id → source reference of its mesh
+             * @default {}
+             */
+            source_refs: {
+                [key: string]: components["schemas"]["SourceRef"] | null;
+            };
+            /** Upload Id */
+            upload_id?: string | null;
+        };
+        /** MeshExpectation */
+        MeshExpectation: {
+            /** Component Id */
+            component_id: string;
+            /** Node Name */
+            node_name: string;
+            source_ref?: components["schemas"]["SourceRef"] | null;
+        };
+        /** MeshJob */
+        MeshJob: {
+            /** Activated At */
+            activated_at?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Engine Id */
+            engine_id: string;
+            /**
+             * Expected
+             * @default []
+             */
+            expected: components["schemas"]["MeshExpectation"][];
+            /** Job Id */
+            job_id: string;
+            /** Manifest Candidate */
+            manifest_candidate?: {
+                [key: string]: unknown;
+            } | null;
+            /** Manifest Version */
+            manifest_version?: string | null;
+            /** Message */
+            message: string;
+            /** Provider */
+            provider: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "succeeded" | "failed" | "provider_required";
+            /** Upload Id */
+            upload_id: string;
+            validation?: components["schemas"]["MeshValidation"] | null;
+        };
+        /** MeshJobRequest */
+        MeshJobRequest: {
+            /**
+             * Engine Id
+             * @default engine-demo-001
+             */
+            engine_id: string;
+            /** Expected */
+            expected?: components["schemas"]["MeshExpectation"][] | null;
+            /** Idempotency Key */
+            idempotency_key?: string | null;
+            /** Upload Id */
+            upload_id: string;
         };
         /** MeshMapping */
         MeshMapping: {
@@ -1642,6 +1979,83 @@ export interface components {
              * @description [x,y,z] direction used by the removal animation
              */
             removal_vector: number[];
+        };
+        /** MeshNodeCheck */
+        MeshNodeCheck: {
+            /** Bbox Max */
+            bbox_max?: number[] | null;
+            /** Bbox Min */
+            bbox_min?: number[] | null;
+            /** Centre */
+            centre?: number[] | null;
+            /** Component Id */
+            component_id: string;
+            /**
+             * Has Source Ref
+             * @default false
+             */
+            has_source_ref: boolean;
+            /**
+             * Inside Bounds
+             * @default false
+             */
+            inside_bounds: boolean;
+            /** Is Mesh */
+            is_mesh: boolean;
+            /** Node Name */
+            node_name: string;
+            /**
+             * Non Degenerate Axes
+             * @default 0
+             */
+            non_degenerate_axes: number;
+            /** Ok */
+            ok: boolean;
+            /** Present */
+            present: boolean;
+            /**
+             * Problems
+             * @default []
+             */
+            problems: string[];
+            source_ref?: components["schemas"]["SourceRef"] | null;
+            /** Unique */
+            unique: boolean;
+            /**
+             * Vertex Count
+             * @default 0
+             */
+            vertex_count: number;
+        };
+        /** MeshValidation */
+        MeshValidation: {
+            /** Checks */
+            checks: components["schemas"]["MeshNodeCheck"][];
+            /** Engine Bounds */
+            engine_bounds: {
+                [key: string]: number[];
+            };
+            /** Mesh Count */
+            mesh_count: number;
+            /** Node Count */
+            node_count: number;
+            /**
+             * Note
+             * @default Bounding boxes use node translation/scale; rotations are not applied (approximate world bounds).
+             */
+            note: string;
+            /** Ok */
+            ok: boolean;
+            /**
+             * Problems
+             * @default []
+             */
+            problems: string[];
+            /**
+             * Validated At
+             * Format: date-time
+             */
+            validated_at: string;
         };
         /**
          * Mode
@@ -1674,6 +2088,101 @@ export interface components {
          * @enum {string}
          */
         MonitoringStatus: "active" | "paused" | "closed";
+        /** PartRequirementDraft */
+        PartRequirementDraft: {
+            /**
+             * Affected Case Ids
+             * @default []
+             */
+            affected_case_ids: string[];
+            /** Change Id */
+            change_id?: string | null;
+            /** Component Id */
+            component_id: string;
+            /** Confirmed At */
+            confirmed_at?: string | null;
+            /** Confirmed By */
+            confirmed_by?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Draft Id */
+            draft_id: string;
+            /**
+             * Extraction
+             * @default {}
+             */
+            extraction: {
+                [key: string]: unknown;
+            };
+            /**
+             * Fields
+             * @default []
+             */
+            fields: components["schemas"]["RequirementField"][];
+            /**
+             * History
+             * @default []
+             */
+            history: {
+                [key: string]: unknown;
+            }[];
+            /**
+             * Overlay
+             * @description Requirement overlay applied to the component's requirement set on confirm
+             */
+            overlay?: {
+                [key: string]: unknown;
+            } | null;
+            /** Scenario Run Id */
+            scenario_run_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "extracting" | "needs_review" | "confirmed" | "rejected" | "failed";
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Upload Id */
+            upload_id: string;
+            /** Version */
+            version: number;
+        };
+        /** PartRequirementPatch */
+        PartRequirementPatch: {
+            /** Action */
+            action?: ("confirm" | "reject") | null;
+            /**
+             * Actor
+             * @default demo-operator
+             */
+            actor: string;
+            /** Expected Version */
+            expected_version: number;
+            /**
+             * Field Edits
+             * @default {}
+             */
+            field_edits: {
+                [key: string]: unknown;
+            };
+            /** Idempotency Key */
+            idempotency_key?: string | null;
+        };
+        /** PartRequirementRequest */
+        PartRequirementRequest: {
+            /** Component Id */
+            component_id: string;
+            /** Idempotency Key */
+            idempotency_key?: string | null;
+            /** Upload Id */
+            upload_id: string;
+        };
         /** PlanStep */
         PlanStep: {
             /**
@@ -1866,6 +2375,39 @@ export interface components {
             value: number;
             /** Window */
             window: string;
+        };
+        /** RequirementField */
+        RequirementField: {
+            /** Confidence */
+            confidence?: number | null;
+            /** Edited At */
+            edited_at?: string | null;
+            /** Edited By */
+            edited_by?: string | null;
+            /** Extraction Mode */
+            extraction_mode?: string | null;
+            /** Label */
+            label: string;
+            /** Name */
+            name: string;
+            /**
+             * Required
+             * @default false
+             */
+            required: boolean;
+            source_ref?: components["schemas"]["SourceRef"] | null;
+            /** Unit */
+            unit?: string | null;
+            /** Validation Note */
+            validation_note?: string | null;
+            /**
+             * Validation State
+             * @default unknown
+             * @enum {string}
+             */
+            validation_state: "valid" | "invalid" | "unknown";
+            /** Value */
+            value?: unknown;
         };
         /** RiskSignal */
         RiskSignal: {
@@ -2181,6 +2723,29 @@ export interface components {
             site_id: string;
             /** Supplier Id */
             supplier_id: string;
+        };
+        /**
+         * SourceRef
+         * @description Where a value came from inside an uploaded document or blueprint.
+         */
+        SourceRef: {
+            /**
+             * Bbox
+             * @description [x0, y0, x1, y1] in the source page's coordinate space
+             */
+            bbox?: number[] | null;
+            /** Element Id */
+            element_id?: string | null;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Line */
+            line?: number | null;
+            /** Note */
+            note?: string | null;
+            /** Page */
+            page?: number | null;
+            /** Upload Id */
+            upload_id?: string | null;
         };
         /** StartInvestigationRequest */
         StartInvestigationRequest: {
@@ -2687,6 +3252,7 @@ export interface operations {
             query?: never;
             header?: {
                 "idempotency-key"?: string | null;
+                "x-forwarded-email"?: string | null;
             };
             path: {
                 case_id: string;
@@ -2995,6 +3561,555 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+        };
+    };
+    intake_manifest_api_v1_intake_manifest_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManifestProvenance"];
+                };
+            };
+        };
+    };
+    intake_manifest_reset_api_v1_intake_manifest_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManifestProvenance"];
+                };
+            };
+        };
+    };
+    intake_mesh_job_api_v1_intake_mesh_jobs_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MeshJobRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeshJob"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    intake_get_mesh_job_api_v1_intake_mesh_jobs__job_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeshJob"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    intake_activate_mesh_job_api_v1_intake_mesh_jobs__job_id__activate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManifestProvenance"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    intake_part_requirements_api_v1_intake_part_requirements_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PartRequirementRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartRequirementDraft"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    intake_get_draft_api_v1_intake_part_requirements__draft_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draft_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartRequirementDraft"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    intake_patch_draft_api_v1_intake_part_requirements__draft_id__patch: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                draft_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PartRequirementPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartRequirementDraft"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    intake_upload_api_v1_intake_uploads_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_intake_upload_api_v1_intake_uploads_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntakeUpload"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    intake_get_upload_api_v1_intake_uploads__upload_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                upload_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntakeUpload"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    intake_upload_content_api_v1_intake_uploads__upload_id__content_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                upload_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -3543,6 +4658,11 @@ export const EVENT_TYPES = [
   "run.recovered",
   "run.completed",
   "run.failed",
-  "control.snapshot_required"
+  "control.snapshot_required",
+  "intake.uploaded",
+  "intake.extracted",
+  "intake.validated",
+  "intake.confirmed",
+  "manifest.updated"
 ] as const;
 export type DomainEventType = (typeof EVENT_TYPES)[number];

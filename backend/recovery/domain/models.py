@@ -697,6 +697,8 @@ EVENT_TYPES = [
     "case.state_changed",
     "run.interrupted", "run.recovered", "run.completed", "run.failed",
     "control.snapshot_required",
+    # intake & mesh (contract v1.1)
+    "intake.uploaded", "intake.extracted", "intake.validated", "intake.confirmed", "manifest.updated",
 ]
 
 
@@ -933,6 +935,160 @@ class Readiness(Contract):
     status: Literal["ok", "degraded", "unavailable"]
     capabilities: dict[str, dict[str, Any]]
     checked_at: datetime
+
+
+# ----------------------------------------------------------------------------------------------
+# Intake & mesh (contract v1.1, additive)
+# ----------------------------------------------------------------------------------------------
+
+IntakeKind = Literal["blueprint", "part_requirements", "mesh_glb"]
+
+
+class SourceRef(Contract):
+    """Where a value came from inside an uploaded document or blueprint."""
+
+    upload_id: Optional[str] = None
+    page: Optional[int] = None
+    bbox: Optional[list[float]] = Field(None, description="[x0, y0, x1, y1] in the source page's coordinate space")
+    excerpt: Optional[str] = None
+    line: Optional[int] = None
+    element_id: Optional[str] = None
+    note: Optional[str] = None
+
+
+class IntakeUpload(Contract):
+    upload_id: str
+    sha256: str
+    kind: IntakeKind
+    filename: str
+    media_type: str
+    size_bytes: int
+    engine_id: str
+    component_id: Optional[str] = None
+    storage_uri: str = Field(description="Authoritative location: a Unity Catalog volume path when mirrored, else local cache")
+    mirrors: list[str] = []
+    status: Literal["received", "mirrored", "mirror_failed"] = "received"
+    duplicate_of: Optional[str] = Field(None, description="Set when identical bytes were already uploaded (deduplicated by sha256)")
+    created_at: datetime
+    data_origin: DataOrigin = DataOrigin.provided_document
+
+
+class RequirementField(Contract):
+    name: str
+    label: str
+    value: Any = None
+    unit: Optional[str] = None
+    required: bool = False
+    source_ref: Optional[SourceRef] = None
+    confidence: Optional[float] = None
+    validation_state: Literal["valid", "invalid", "unknown"] = "unknown"
+    validation_note: Optional[str] = None
+    extraction_mode: Optional[str] = None
+    edited_by: Optional[str] = None
+    edited_at: Optional[datetime] = None
+
+
+class PartRequirementDraft(Contract):
+    draft_id: str
+    upload_id: str
+    component_id: str
+    scenario_run_id: str
+    version: int
+    status: Literal["extracting", "needs_review", "confirmed", "rejected", "failed"]
+    fields: list[RequirementField] = []
+    extraction: dict[str, Any] = {}
+    history: list[dict[str, Any]] = []
+    change_id: Optional[str] = None
+    affected_case_ids: list[str] = []
+    confirmed_by: Optional[str] = None
+    confirmed_at: Optional[datetime] = None
+    overlay: Optional[dict[str, Any]] = Field(None, description="Requirement overlay applied to the component's requirement set on confirm")
+    created_at: datetime
+    updated_at: datetime
+
+
+class PartRequirementRequest(Contract):
+    upload_id: str
+    component_id: str
+    idempotency_key: Optional[str] = None
+
+
+class PartRequirementPatch(Contract):
+    expected_version: int
+    field_edits: dict[str, Any] = {}
+    action: Optional[Literal["confirm", "reject"]] = None
+    actor: str = "demo-operator"
+    idempotency_key: Optional[str] = None
+
+
+class MeshExpectation(Contract):
+    component_id: str
+    node_name: str
+    source_ref: Optional[SourceRef] = None
+
+
+class MeshNodeCheck(Contract):
+    component_id: str
+    node_name: str
+    present: bool
+    unique: bool
+    is_mesh: bool
+    vertex_count: int = 0
+    bbox_min: Optional[list[float]] = None
+    bbox_max: Optional[list[float]] = None
+    centre: Optional[list[float]] = None
+    non_degenerate_axes: int = 0
+    inside_bounds: bool = False
+    has_source_ref: bool = False
+    source_ref: Optional[SourceRef] = None
+    ok: bool
+    problems: list[str] = []
+
+
+class MeshValidation(Contract):
+    ok: bool
+    checks: list[MeshNodeCheck]
+    engine_bounds: dict[str, list[float]]
+    node_count: int
+    mesh_count: int
+    problems: list[str] = []
+    validated_at: datetime
+    note: str = "Bounding boxes use node translation/scale; rotations are not applied (approximate world bounds)."
+
+
+class MeshJobRequest(Contract):
+    upload_id: str
+    engine_id: str = "engine-demo-001"
+    expected: Optional[list[MeshExpectation]] = None
+    idempotency_key: Optional[str] = None
+
+
+class MeshJob(Contract):
+    job_id: str
+    upload_id: str
+    engine_id: str
+    provider: str
+    status: Literal["queued", "running", "succeeded", "failed", "provider_required"]
+    message: str
+    expected: list[MeshExpectation] = []
+    validation: Optional[MeshValidation] = None
+    manifest_candidate: Optional[dict[str, Any]] = None
+    created_at: datetime
+    activated_at: Optional[datetime] = None
+    manifest_version: Optional[str] = None
+
+
+class ManifestProvenance(Contract):
+    manifest_version: str
+    kind: Literal["generated", "procedural"]
+    provider: Optional[str] = None
+    job_id: Optional[str] = None
+    upload_id: Optional[str] = None
+    glb_path: Optional[str] = None
+    activated_at: Optional[datetime] = None
+    source_refs: dict[str, Optional[SourceRef]] = Field({}, description="component_id → source reference of its mesh")
+    node_names: dict[str, str] = {}
+    previous_manifest_version: Optional[str] = None
 
 
 RankedCandidate.model_rebuild()

@@ -64,6 +64,9 @@ class Services:
             self.projection = ProjectionWorker(self)
         except Exception as exc:  # noqa: BLE001
             log.warning("projection worker unavailable: %s", exc)
+        from .intake import IntakeService
+
+        self.intake = IntakeService(self)
         self.checkpointer, self.checkpointer_kind = make_checkpointer()
         self.graph = build_graph(self, self.checkpointer)
         self.coordinator = Coordinator(self, self.graph)

@@ -67,7 +67,8 @@ the demo flow/inputs and to change the backend when the demo needs it (keep `int
 0. **Repo description** — setting it was blocked (repo settings belong to the lead). Proposed: "Re-Source: aerospace recovery agent — finds, verifies and re-plans jet-engine part replacements (BUY/MAKE) with continuous risk monitoring, UK CAA paperwork and a 3D engine view. FastAPI + LangGraph + Databricks."
 1. **Folder ownership + model provider** — @Borbezzz to confirm on the board (AGENTS.md: the lead assigns folders; D-001 OpenAI instead of Claude).
 2. **AI Search** endpoint not provisioned (keyword retrieval in use). Lakebase is provisioned (D-017).
-3. **Intake/mesh extension (contract v1.1)** promised to Yixin's Astra on the board — in progress.
+3. **Intake/mesh v1.1 is implemented** (133 tests pass offline; see `interface.md` §7a) but NOT yet deployed to the App. To deploy: upload `backend/recovery/**` to `/Workspace/Shared/ReSource/app-src`, run `GRANT READ VOLUME, WRITE VOLUME ON VOLUME workspace.resource.rs_uploads TO \`f1202d5b-9f1c-4495-b4ec-17a5f7806222\``, then redeploy. Known gap: decision `requirements_version` does not yet reflect a confirmed requirement overlay (only identity checks show it).
+4. **Live App click-through** not yet verified (needs a signed-in Databricks browser session).
 4. **DISC-03:** exact current issue numbers of the CAA Form 1 PDFs and CAA Form 60 unconfirmed.
 
 ## Next steps

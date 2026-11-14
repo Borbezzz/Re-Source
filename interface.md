@@ -197,6 +197,30 @@ Auxiliary states: `waiting_for_evidence`, `interrupted`, `failed`, `selection_st
 - **Labels that must be visible:** mode badge (`Seeded` / `Live` / `Replay`), "Scenario signal" on injected signals, "Replay" on replayed runs, "SIMULATED — no real submission was made" on receipts, `synthetic_demo` data origin (for example "Synthetic demo data"), and "Scenario fixture value — not measured real-world performance" on reliability figures.
 - **Performance targets** (to verify, not claim): command acknowledgement < 2 s warm, first progress event < 3 s, ≥ 30 fps during the main animation on the demo laptop.
 
+## 7a. Intake & mesh (v1.1, additive)
+
+Agreed with Yixin's Astra on the board (issue #1). Nothing in §2 changes. All models live in `backend/recovery/domain/models.py`
+(`SourceRef`, `IntakeUpload`, `RequirementField`, `PartRequirementDraft`, `PartRequirementPatch`, `MeshExpectation`, `MeshNodeCheck`,
+`MeshValidation`, `MeshJobRequest`, `MeshJob`, `ManifestProvenance`) and are in `contracts/generated-types/api.ts`.
+
+| Method and route | Request | Response | Notes |
+|---|---|---|---|
+| POST `/intake/uploads` | multipart: `file`, `kind` = `blueprint` \| `part_requirements` \| `mesh_glb`, `engine_id`, optional `component_id` | `IntakeUpload` (201; 200 with `duplicate_of` when identical bytes already exist) | Content-addressed by sha256. Allowlist: blueprint/part_requirements → pdf, png, jpg, txt, md, json; mesh_glb → glb, gltf. Magic bytes checked, 50 MB cap. `storage_uri` is the UC volume path `/Volumes/workspace/resource/rs_uploads/<sha256><ext>` once mirrored, else `local://uploads/...`. |
+| GET `/intake/uploads/{upload_id}` | — | `IntakeUpload` | Status `received` → `mirrored` (or `mirror_failed`). |
+| GET `/intake/uploads/{upload_id}/content` | — | raw bytes | Stored media type (`model/gltf-binary` for GLB). Use as the GLTF loader URL for an activated mesh. |
+| POST `/intake/part-requirements` | `{upload_id, component_id}` | `PartRequirementDraft` (202, `status: extracting`) | Background extraction: text files read directly; PDF/PNG/JPG → Databricks `ai_parse_document` (pages + bboxes) then `ai_extract` (OpenAI fallback, then structured `KEY: value` parse). Fields: `part_number`, `revision` (required), `description`, `material`, `mating_interfaces`, `key_dimensions`, `applicable_standards`, `inspection_requirements`, `effectivity`; each with `source_ref {upload_id, page, bbox, excerpt, line}`, `confidence`, `validation_state` (`valid`/`invalid`/`unknown`). |
+| GET `/intake/part-requirements/{draft_id}` | — | `PartRequirementDraft` | Poll until `needs_review` (or watch `intake.extracted` on the run stream). |
+| PATCH `/intake/part-requirements/{draft_id}` | `PartRequirementPatch {expected_version, field_edits{name: value}, action?: confirm\|reject, actor}` | `PartRequirementDraft` | Edits bump `version`, keep history, set `extraction_mode: user_edit` and `edited_by`. Version mismatch → 409. `confirm` needs valid `part_number` + `revision` (else 422 `NOT_READY`), stores a run-scoped requirement overlay and sends a `requirement` change through the normal gateway → affected cases reassess (D-n+1). Response carries `change_id` and `affected_case_ids`. |
+| POST `/intake/mesh-jobs` | `MeshJobRequest {upload_id, engine_id, expected?: [{component_id, node_name, source_ref?}]}` | `MeshJob` (201) | `expected` defaults to the manifest's three nodes. **mesh_glb** → provider `uploaded_glb`, synchronous validation: node present + unique, mesh (or mesh children), ≥ 3 vertices, bbox non-degenerate on ≥ 2 axes, centre inside engine bounds (module x-range ± 0.5 m, \|y\|,\|z\| ≤ 1.5 m), `source_ref` from `node.extras.source_ref` or `expected[].source_ref`. Status `succeeded`/`failed` with `validation` + `manifest_candidate` (bboxes, suggested hotspot anchors). **blueprint** → `provider_required` unless a server-side provider is configured (`RS_MESH_PROVIDER`); **no mesh is ever reported as generated without a provider.** Unknown `component_id` → 422 (IDs are stable). |
+| GET `/intake/mesh-jobs/{job_id}` | — | `MeshJob` | For refresh/reconnect. |
+| POST `/intake/mesh-jobs/{job_id}/activate` | — | `ManifestProvenance` | Only `succeeded` jobs (else 409 `MESH_JOB_NOT_ACTIVATABLE`). Publishes manifest version `engine-demo-001.v1+genN`; `GET /engines/{id}` then returns `engine.asset.kind = "generated"`, `asset.glb_path`, `asset.provider`, `asset.job_id`, `asset.provenance` (source refs per component) and the validated node names/anchors in each component's `mesh_mapping`. Component and case IDs never change. |
+| GET `/intake/manifest` | — | `ManifestProvenance` | Current provenance (`kind: procedural` by default). |
+| POST `/intake/manifest/reset` | — | `ManifestProvenance` | Back to procedural geometry (`+resetN`); history kept via `previous_manifest_version`. |
+
+Run-stream events (`GET /scenario-runs/{run_id}/events`): `intake.uploaded`, `intake.extracted`, `intake.validated`, `intake.confirmed`,
+`manifest.updated` (all `data_origin: provided_document`). Scroll-explode is presentation-only; install/restore stay server-gated via
+`/cases/{id}/visual-actions`.
+
 ## 8. Change process
 
 1. Edit `backend/recovery/domain/models.py` (bump `SCHEMA_VERSION` for breaking changes).

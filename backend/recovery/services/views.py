@@ -39,7 +39,10 @@ class Views:
                           "stale": bool(case["stale_reasons"])})
         engine = {k: v for k, v in cat.engine.items() if k in ("engine_id", "display_name", "representative_note", "configuration_revision",
                                                                "component_instance_ids", "scenario_manifest_version", "asset", "data_origin")}
-        return {"engine": engine, "operating_story": cat.engine.get("operating_story"), "components": cat.manifest["components"], "cases": cases,
+        components = cat.manifest["components"]
+        if getattr(self.s, "intake", None) is not None:  # active manifest override + provenance (intake v1.1)
+            engine, components = self.s.intake.apply_to_engine_view(engine, components)
+        return {"engine": engine, "operating_story": cat.engine.get("operating_story"), "components": components, "cases": cases,
                 "scenario_run_id": rid, "mode": run["mode"], "visual_states": cat.manifest.get("visual_states", [])}
 
     def tasks(self, run_id: str, case_id: str, generation_id: Optional[str]) -> list[dict]:

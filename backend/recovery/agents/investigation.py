@@ -10,6 +10,7 @@ idempotent given its inputs so a resumed checkpoint can re-run an interrupted no
 
 from __future__ import annotations
 
+import copy
 import time
 import uuid
 from datetime import datetime, timezone
@@ -71,6 +72,8 @@ class InvestigationNodes:
         sigs = [s for s in state["signals"] if signal_matches_route(s, route, site)]
         comp = self.cat.component_for_case(state["case_id"])
         req_set = self.cat.requirement_sets[comp["requirement_set_id"]]
+        if state.get("requirements"):  # carries any confirmed requirement overlay
+            req_set = {**req_set, "part_identity": state["requirements"][0]["params"]["part_identity"]}
         return R.CandidateContext(
             case_id=state["case_id"], offer=offer, site=site, supplier=self.cat.suppliers[offer["supplier_id"]], route=route,
             component=comp, docs=state["docs"].get(cid, []), facts=state["facts"], now=datetime.fromisoformat(state["now"].replace("Z", "+00:00")),
@@ -103,7 +106,18 @@ class InvestigationNodes:
         tr = self.tools(state)
         with tr.call("get_requirement_set", "task-reqs", "Loading versioned requirement set", {"requirement_set_id": state["requirement_set_id"]}) as r:
             reqs = self.cat.requirements_for(state["requirement_set_id"])
-            r["summary"] = f"{len(reqs)} requirements ({sum(1 for q in reqs if q['mandatory'])} mandatory) from {state['requirement_set_id']} v1"
+            comp_id = self.cat.case_to_component[state["case_id"]]
+            overlay = self.s.store.kv_get(f"req_overlay:{state['run_id']}:{comp_id}")
+            if overlay:  # confirmed part requirements (intake v1.1) override the requirement set's part identity
+                reqs = copy.deepcopy(reqs)
+                for q in reqs:
+                    q["params"]["part_identity"] = {**q["params"]["part_identity"], **overlay["part_identity"]}
+                    if q["template_code"] == "ID":
+                        q["version"] = f"{q['version']}+{overlay['draft_id']}.v{overlay['draft_version']}"
+                        q["overlay"] = {"draft_id": overlay["draft_id"], "draft_version": overlay["draft_version"],
+                                        "change_id": overlay.get("change_id"), "source_refs": overlay.get("source_refs", {})}
+            r["summary"] = (f"{len(reqs)} requirements ({sum(1 for q in reqs if q['mandatory'])} mandatory) from {state['requirement_set_id']} v1"
+                            + (f" + confirmed part requirements {overlay['draft_id']} v{overlay['draft_version']}" if overlay else ""))
             r["count"] = len(reqs)
         now = self.s.run_state.now(state["run_id"])
         signals = self.s.run_state.active_signals(state["run_id"], now)

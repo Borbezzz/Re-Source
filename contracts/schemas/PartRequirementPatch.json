@@ -1,0 +1,53 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "anyOf": [
+        {
+          "enum": [
+            "confirm",
+            "reject"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Action"
+    },
+    "actor": {
+      "default": "demo-operator",
+      "title": "Actor",
+      "type": "string"
+    },
+    "expected_version": {
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "field_edits": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Field Edits",
+      "type": "object"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    }
+  },
+  "required": [
+    "expected_version"
+  ],
+  "title": "PartRequirementPatch",
+  "type": "object"
+}
