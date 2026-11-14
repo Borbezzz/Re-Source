@@ -14,7 +14,7 @@ Branch: `codex/jet-engine-frontend`, based on backend PR #6 at `c5b2b68` (includ
 
 ## Verified on Vercel
 
-Verified team/project `borbez2s-projects/resource`. Production source **81b8661**, deployment **dpl_ESxqJDjb9D47sgDkR7Hqj89PrWTT**, was promoted after connected browser checks. Public URL: https://resource-borbez2s-projects.vercel.app . Immutable URL: https://resource-lm0ngyhrs-borbez2s-projects.vercel.app . Builds include both `services/backend/fastapi` and `services/backend/_py_subscribers/queue__worker`. Tests use fresh anonymous browser contexts, ordinary requests and no bypass token.
+Verified team/project `borbez2s-projects/resource`. Core connected browser checks passed on **81b8661** (`resource-lm0ngyhrs-borbez2s-projects.vercel.app`). The diagnostics-only update **bd74f63**, deployment **dpl_9gUX6tYPFGTr4y4tDUmZLMc2WJn5**, also passes anonymous detailed readiness. Public URL: https://resource-borbez2s-projects.vercel.app . Updated immutable URL: https://resource-fuq3iezev-borbez2s-projects.vercel.app . Builds include both `services/backend/fastapi` and `services/backend/_py_subscribers/queue__worker`. Tests use fresh anonymous browser contexts, ordinary requests and no bypass token.
 
 | Connected check | Result / evidence |
 |---|---|
@@ -32,7 +32,7 @@ The first cold supplier check exceeded the old 60-second assertion window. Conne
 
 Production uses the parent-configured PAT route; Preview has no production credentials. API startup fails closed rather than falling back to SQLite. Queue delivery and persisted SSE reconnect are verified, but **forced termination/redelivery of a live Vercel worker has not been exercised**. Checkpoint restart and duplicate suppression have local regression coverage. Upload mirroring and reload succeeded; the tests did not force an API instance replacement to prove a cache miss. SSE reconnect did not force placement on a different instance. No claim of chaos/failover certification is made.
 
-The readiness response's live `operational_store` and `checkpointer` checks report Postgres correctly. Older optional capability descriptions still claim the App does not use Postgres and describe a Databricks App runtime. This diagnostics discrepancy was handed to Bede on issue #1; it does not reflect the actual connected store. AI Search is unprovisioned and keyword retrieval is used.
+Readiness descriptions were corrected by Bede in `2219a60`, integrated as `bd74f63`. Four regression tests, one contract test and seven Vercel runtime tests pass. Live anonymous JSON now reports `operational_store: Lakebase Postgres`, `lakebase: 1 instance(s); app uses Postgres`, and `agent_runtime: FastAPI BFF + LangGraph on Vercel, with postgres checkpointer`. The existing `agent_runtime.ok=false` means the optional Agent Bricks/AgentKit runtime is not used; it is not a failure of the configured LangGraph runtime. AI Search is unprovisioned and keyword retrieval is used. The prior full-suite count above predates these four added diagnostic tests; only the relevant 12 tests were rerun for this narrow change.
 
 Blueprint-to-segmented-mesh provider is unconfigured. The backend honestly returns `provider_required`; this build does not solve PDF-to-engine reconstruction. Uploaded engineering fields beyond identity/revision remain manual-review unknowns. These are product gaps, separate from deployment credentials.
 
