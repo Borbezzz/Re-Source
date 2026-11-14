@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import copy
+from contextvars import copy_context
 import json
 import logging
 import os
@@ -31,7 +32,7 @@ from ..domain.extraction import coerce, field_key, normalise_for_compare, parse_
 
 log = logging.getLogger("recovery.intake")
 
-MAX_UPLOAD_BYTES = 50 * 1024 * 1024
+MAX_UPLOAD_BYTES = (4 if settings.serverless else 50) * 1024 * 1024
 MEDIA_TYPES = {".pdf": "application/pdf", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".txt": "text/plain",
                ".md": "text/markdown", ".json": "application/json", ".glb": "model/gltf-binary", ".gltf": "model/gltf+json"}
 ALLOWED_BY_KIND = {
@@ -103,11 +104,15 @@ class IntakeService:
         except Exception:  # noqa: BLE001 - events never block intake
             log.exception("intake event failed")
 
+    def _scope_key(self, key: str) -> str:
+        # Uploads, extraction drafts and active manifests belong to this run.
+        return f"run:{self._run_id()}:{key}" if settings.public_demo and key.startswith("intake:") else key
+
     def _kv(self, key: str) -> Optional[dict]:
-        return self.s.store.kv_get(key)
+        return self.s.store.kv_get(self._scope_key(key))
 
     def _put(self, key: str, value: Any) -> None:
-        self.s.store.kv_set(key, value)
+        self.s.store.kv_set(self._scope_key(key), value)
 
     # ------------------------------------------------------------------ uploads
     def upload(self, data: bytes, filename: str, kind: str, engine_id: str = "engine-demo-001", component_id: Optional[str] = None) -> dict:
@@ -134,15 +139,22 @@ class IntakeService:
             existing = self._kv(f"intake:upload:{existing_id}")
             if existing:
                 return {**existing, "duplicate_of": existing_id}
+        if settings.serverless:
+            # Never acknowledge an upload that exists only on an ephemeral worker disk.
+            vpath = blob_store.mirror(sha, ext)
+            if not vpath:
+                raise DomainError(503, "UPLOAD_STORAGE_UNAVAILABLE", "Durable document storage is unavailable; retry later.")
         upload_id = f"upl-{uuid.uuid4().hex[:12]}"
         rec = {"upload_id": upload_id, "sha256": sha, "kind": kind, "filename": os.path.basename(filename)[:200], "media_type": MEDIA_TYPES[ext],
                "size_bytes": len(data), "engine_id": engine_id, "component_id": component_id, "storage_uri": f"local://uploads/{sha}{ext}",
                "mirrors": [], "status": "received", "duplicate_of": None, "created_at": _now(), "data_origin": "provided_document", "ext": ext}
+        if settings.serverless:
+            rec.update(storage_uri=vpath, status="mirrored")
         self._put(f"intake:upload:{upload_id}", rec)
         self._put(dedup_key, upload_id)
         self._emit("intake.uploaded", f"Upload received: {rec['filename']} ({kind}, {len(data):,} bytes)",
                    {"upload_id": upload_id, "kind": kind, "sha256": sha, "component_id": component_id})
-        if databricks_sql.configured:
+        if databricks_sql.configured and not settings.serverless:
             threading.Thread(target=self._mirror, args=(upload_id,), daemon=True, name=f"mirror-{upload_id}").start()
         return self.public_upload(rec)
 
@@ -193,7 +205,13 @@ class IntakeService:
                  "status": "extracting", "fields": [], "extraction": {"started_at": now}, "history": [], "change_id": None,
                  "affected_case_ids": [], "confirmed_by": None, "confirmed_at": None, "overlay": None, "created_at": now, "updated_at": now}
         self._put(f"intake:draft:{draft_id}", draft)
-        t = threading.Thread(target=self._extract_safe, args=(draft_id,), daemon=True, name=f"extract-{draft_id}")
+        if settings.job_backend == "vercel":
+            self.s.jobs.enqueue("extract", self._run_id(), {"draft_id": draft_id}, key=draft_id)
+            return draft
+        from ..runtime.context import job_run_id
+        ctx = copy_context()
+        ctx.run(job_run_id.set, self._run_id())
+        t = threading.Thread(target=ctx.run, args=(self._extract_safe, draft_id), daemon=True, name=f"extract-{draft_id}")
         with self._lock:
             self._threads[draft_id] = t
         t.start()

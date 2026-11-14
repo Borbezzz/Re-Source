@@ -9,7 +9,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-load_dotenv(REPO_ROOT / ".env", override=False)
+if not os.getenv("VERCEL"):
+    load_dotenv(REPO_ROOT / ".env", override=False)
 
 
 def _bool(name: str, default: bool = False) -> bool:
@@ -21,11 +22,15 @@ def _bool(name: str, default: bool = False) -> bool:
 
 @dataclass(frozen=True)
 class Settings:
+    serverless: bool = _bool("VERCEL")
+    public_demo: bool = _bool("RS_PUBLIC_DEMO", _bool("VERCEL"))
+    job_backend: str = os.getenv("RS_JOB_BACKEND", "vercel" if _bool("VERCEL") else "thread")
+    sse_max_seconds: float = float(os.getenv("RS_SSE_MAX_SECONDS", "50"))
     repo_root: Path = REPO_ROOT
     data_dir: Path = REPO_ROOT / "data"
     rules_dir: Path = REPO_ROOT / "rules"
     templates_dir: Path = REPO_ROOT / "templates"
-    var_dir: Path = field(default_factory=lambda: Path(os.getenv("RS_VAR_DIR", str(REPO_ROOT / "var"))))
+    var_dir: Path = field(default_factory=lambda: Path(os.getenv("RS_VAR_DIR", "/tmp/resource" if os.getenv("VERCEL") else str(REPO_ROOT / "var"))))
     fixture_version: str = os.getenv("RS_FIXTURE_VERSION", "seed-v1")
     manifest_id: str = os.getenv("RS_MANIFEST", "engine-demo-001")
 
@@ -35,7 +40,7 @@ class Settings:
     # Locally set RS_USE_LAKEBASE=1 (+ PGHOST/PGUSER) to use it with a token minted from your Databricks auth.
     lakebase_instance: str = os.getenv("RS_LAKEBASE_INSTANCE", "resource-ops")
     lakebase_schema: str = os.getenv("RS_LAKEBASE_SCHEMA", "resource_ops")
-    use_lakebase: bool = _bool("RS_USE_LAKEBASE", bool(os.getenv("PGHOST")) and bool(os.getenv("DATABRICKS_APP_NAME") or os.getenv("DATABRICKS_APP_PORT")))
+    use_lakebase: bool = _bool("RS_USE_LAKEBASE", bool(os.getenv("PGHOST")) and bool(os.getenv("VERCEL") or os.getenv("DATABRICKS_APP_NAME") or os.getenv("DATABRICKS_APP_PORT")))
 
     # Models (the app's own OpenAI key; never used for building the app).
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
@@ -75,7 +80,7 @@ class Settings:
     max_case_workers: int = int(os.getenv("RS_MAX_CASE_WORKERS", "3"))
     outbox_max_attempts: int = int(os.getenv("RS_OUTBOX_MAX_ATTEMPTS", "5"))
     pacing_ms: int = int(os.getenv("RS_PACING_MS", "350"))  # presentation pacing between visible steps
-    prewarm: bool = _bool("RS_PREWARM", True)  # warm SQL warehouse + extraction cache at startup (PRD §11)
+    prewarm: bool = _bool("RS_PREWARM", not _bool("VERCEL"))  # warm SQL warehouse + extraction cache at startup (PRD §11)
 
     # Frontend static bundle served by the BFF in deployment
     frontend_dist: Path = REPO_ROOT / "frontend" / "dist"

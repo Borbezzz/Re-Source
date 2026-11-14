@@ -12,6 +12,8 @@ import hashlib
 import json
 import logging
 import uuid
+import threading
+import time
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Any, Callable, Optional
@@ -31,6 +33,15 @@ from ..runtime.tracing import init_tracing, tracing_state
 
 log = logging.getLogger("recovery.api")
 SERVICES: Any = None
+_SERVICE_LOCK = threading.Lock()
+
+def initialise_services() -> Any:
+    global SERVICES
+    with _SERVICE_LOCK:
+        if SERVICES is None:
+            from ..services.container import Services
+            SERVICES = Services()
+    return SERVICES
 
 
 def services() -> Any:
@@ -44,11 +55,9 @@ async def lifespan(app: FastAPI):  # noqa: ANN201
     global SERVICES
     logging.basicConfig(level=logging.INFO)
     init_tracing()
-    from ..services.container import Services
-
-    if SERVICES is None:
-        SERVICES = await run_in_threadpool(Services)
-    await run_in_threadpool(SERVICES.scenario.ensure_run)
+    SERVICES = await run_in_threadpool(initialise_services)
+    if not settings.public_demo:
+        await run_in_threadpool(SERVICES.scenario.ensure_run)
     await run_in_threadpool(SERVICES.coordinator.recover_interrupted)
     if settings.prewarm:
         import threading
@@ -81,7 +90,7 @@ async def validation_error(request: Request, exc: RequestValidationError) -> JSO
 @app.exception_handler(Exception)
 async def unhandled(request: Request, exc: Exception) -> JSONResponse:
     log.exception("unhandled error")
-    return JSONResponse(status_code=500, content={"code": "INTERNAL", "message": str(exc)[:300], "retryable": True, "case_revision": None,
+    return JSONResponse(status_code=500, content={"code": "INTERNAL", "message": "An internal operation failed. Please retry.", "retryable": True, "case_revision": None,
                                                  "details": {}, "correlation_id": str(uuid.uuid4())})
 
 
@@ -91,6 +100,11 @@ def _hash(body: Any) -> str:
 
 async def idempotent(scope: str, key: Optional[str], body: Any, fn: Callable[[], Any], status_code: int = 200) -> JSONResponse:
     s = services()
+    if settings.job_backend == "vercel":
+        await run_in_threadpool(s.jobs.recover_dispatches)
+    if settings.public_demo:
+        from ..runtime.context import visitor_id
+        scope = f"visitor:{visitor_id.get()}:{scope}"
     if not key:
         key = f"auto-{uuid.uuid4()}"
     prior = await run_in_threadpool(s.store.idem_get, scope, key)
@@ -142,7 +156,7 @@ async def readiness(refresh: bool = False, detail: bool = False) -> dict:
         "model": {"ok": s.model.available, "model": s.model.model, "usage": s.model.usage, "last_error": s.model.last_error},
         "extraction": {"ok": True, "backend": s.extractor.last_mode, "last_error": s.extractor.last_error},
     })
-    if not detail:  # detailed diagnostics restricted to the team view
+    if not detail or settings.public_demo:  # public visitors cannot request internal errors
         for v in matrix["capabilities"].values():
             if isinstance(v, dict):
                 v.pop("last_error", None)
@@ -190,6 +204,10 @@ async def get_decision(case_id: str, decision_id: str, include_facts: bool = Fal
     d = await run_in_threadpool(services().decisions.get, decision_id)
     if not d or d["case_id"] != case_id:
         raise not_found(f"decision {decision_id}")
+    if settings.public_demo:
+        from ..runtime.context import visitor_id
+        if services().store.kv_get(f"run_owner:{d['scenario_run_id']}") != visitor_id.get():
+            raise not_found("decision")
     if not include_facts:
         d = {k: v for k, v in d.items() if k != "facts"}
     return d
@@ -209,8 +227,11 @@ async def get_diff(case_id: str, from_: str = Query(..., alias="from"), to: str 
 async def create_selection(case_id: str, body: M.SelectionRequest, idempotency_key: Optional[str] = Header(None),
                            x_forwarded_email: Optional[str] = Header(None)) -> JSONResponse:
     s = services()
-    if x_forwarded_email:  # Databricks Apps forward the signed-in user's identity; selections record the real actor
+    if x_forwarded_email and not settings.public_demo:  # Databricks Apps forward the signed-in user's identity; selections record the real actor
         body = body.model_copy(update={"actor": x_forwarded_email})
+    if settings.public_demo:
+        from ..runtime.context import PUBLIC_ACTOR
+        body = body.model_copy(update={"actor": PUBLIC_ACTOR})
     rid = await run_in_threadpool(s.views.run_id, None)
     key = _key(idempotency_key, body.model_dump()) or f"auto-{uuid.uuid4()}"
     return await idempotent(f"select:{rid}:{case_id}", key, body.model_dump(mode="json", exclude={"idempotency_key"}),
@@ -231,6 +252,9 @@ async def patch_document(target_id: str, body: M.DocumentPatchRequest, idempoten
     s = services()
     if s.documents is None:
         raise unavailable("document service not available")
+    if settings.public_demo:
+        from ..runtime.context import PUBLIC_ACTOR
+        body = body.model_copy(update={"actor": PUBLIC_ACTOR})
     rid = await run_in_threadpool(s.views.run_id, None)
     return await idempotent(f"doc:{rid}:{target_id}", _key(idempotency_key, body.model_dump()), body.model_dump(mode="json", exclude={"idempotency_key"}),
                             lambda: s.documents.patch(rid, target_id, body.model_dump(mode="json")))
@@ -374,7 +398,9 @@ async def _sse(run_id: str, case_id: str, after: int, request: Request):  # noqa
     s = services()
     q = s.bus.subscribe(run_id, case_id)
     last = after
+    deadline = time.monotonic() + settings.sse_max_seconds
     try:
+        yield "retry: 1000\n\n"
         max_seq = await run_in_threadpool(s.store.max_sequence, run_id, case_id)
         if after > max_seq:
             ctrl = {"type": "control.snapshot_required", "summary": "Event cursor is ahead of retained history; refresh the case projection",
@@ -385,24 +411,21 @@ async def _sse(run_id: str, case_id: str, after: int, request: Request):  # noqa
         for e in backlog:
             last = e["sequence"]
             yield f"id: {e['sequence']}\ndata: {st.dumps(e)}\n\n"
-        while True:
+        while time.monotonic() < deadline:
             if await request.is_disconnected():
                 break
+            # Lakebase is authoritative across instances. Local notifications
+            # only shorten the wait; they cannot be the delivery authority.
             try:
-                e = await asyncio.wait_for(q.get(), timeout=15.0)
+                await asyncio.wait_for(q.get(), timeout=1.0)
             except asyncio.TimeoutError:
+                pass
+            batch = await run_in_threadpool(s.store.events_after, run_id, case_id, last, 5000)
+            for event in batch:
+                last = event["sequence"]
+                yield f"id: {last}\ndata: {st.dumps(event)}\n\n"
+            if not batch:
                 yield ": heartbeat\n\n"
-                continue
-            if e["sequence"] <= last:
-                continue  # dedupe: already sent from backlog
-            if e["sequence"] > last + 1:
-                # gap between backlog and live: fill from the store to keep per-case order
-                for g in await run_in_threadpool(s.store.events_after, run_id, case_id, last, 5000):
-                    if g["sequence"] < e["sequence"]:
-                        last = g["sequence"]
-                        yield f"id: {g['sequence']}\ndata: {st.dumps(g)}\n\n"
-            last = e["sequence"]
-            yield f"id: {e['sequence']}\ndata: {st.dumps(e)}\n\n"
     finally:
         s.bus.unsubscribe(run_id, case_id, q)
 
@@ -489,6 +512,9 @@ async def intake_get_draft(draft_id: str) -> dict:
 @app.patch("/api/v1/intake/part-requirements/{draft_id}", response_model=None, responses={200: {"model": M.PartRequirementDraft}, **_ERR})
 async def intake_patch_draft(draft_id: str, body: M.PartRequirementPatch, idempotency_key: Optional[str] = Header(None)) -> JSONResponse:
     svc = _intake()
+    if settings.public_demo:
+        from ..runtime.context import PUBLIC_ACTOR
+        body = body.model_copy(update={"actor": PUBLIC_ACTOR})
     return await idempotent(f"intake:preq:{draft_id}", _key(idempotency_key, body.model_dump()), body.model_dump(mode="json", exclude={"idempotency_key"}),
                             lambda: svc.patch_draft(draft_id, body.model_dump(mode="json")))
 
@@ -528,7 +554,10 @@ async def intake_manifest_reset() -> dict:
 if settings.frontend_dist.exists():
     app.mount("/", StaticFiles(directory=str(settings.frontend_dist), html=True), name="frontend")
 else:
-    @app.get("/", response_class=HTMLResponse)
+    @app.get("/", response_class=HTMLResponse, include_in_schema=False)
     async def root() -> str:
         return ("<html><body style='font-family:system-ui;padding:2rem'><h1>Re-Source API</h1><p>The frontend bundle (frontend/dist) is not built yet. "
                 "API docs: <a href='/docs'>/docs</a>. Contract: interface.md.</p></body></html>")
+
+from ..runtime.public_demo import PublicDemoSession
+app.add_middleware(PublicDemoSession, service_provider=initialise_services)

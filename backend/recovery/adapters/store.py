@@ -302,11 +302,23 @@ class OperationalStore:
 
     # ------------------------------------------------------------------ runs
     def create_run(self, run: dict) -> None:
+        from ..runtime.context import visitor_id
+        visitor = visitor_id.get()
         with self.tx() as c:
-            c.execute(update(runs).values(is_current=0))
-            c.execute(insert(runs).values(**run, is_current=1, created_at=now_iso()))
+            if not visitor:
+                c.execute(update(runs).values(is_current=0))
+            c.execute(insert(runs).values(**run, is_current=0 if visitor else 1, created_at=now_iso()))
+            if visitor:
+                self.kv_set(f"visitor:{visitor}:current", run["run_id"])
+                self.kv_set(f"run_owner:{run['run_id']}", visitor)
 
     def current_run(self) -> Optional[dict]:
+        from ..runtime.context import visitor_id, job_run_id
+        if job_run_id.get():
+            return self.get_run(job_run_id.get())
+        if visitor_id.get():
+            rid = self.kv_get(f"visitor:{visitor_id.get()}:current")
+            return self.get_run(rid) if rid else None
         with self.tx() as c:
             row = c.execute(select(runs).where(runs.c.is_current == 1)).mappings().first()
         return dict(row) if row else None
@@ -319,7 +331,9 @@ class OperationalStore:
     def list_runs(self) -> list[dict]:
         with self.tx() as c:
             rows = c.execute(select(runs).order_by(runs.c.created_at.desc())).mappings().all()
-        return [dict(r) for r in rows]
+        from ..runtime.context import visitor_id
+        visitor = visitor_id.get()
+        return [dict(r) for r in rows if not visitor or self.kv_get(f"run_owner:{r['run_id']}") == visitor]
 
     def update_run(self, run_id: str, **values: Any) -> None:
         with self.tx() as c:

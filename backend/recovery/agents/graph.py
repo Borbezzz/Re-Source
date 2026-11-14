@@ -91,15 +91,35 @@ def build_graph(services: Any, checkpointer: Any = None):  # noqa: ANN201
 
 def make_checkpointer() -> tuple[Any, str]:
     """One graph-checkpoint authority. SQLite file locally; Postgres (Lakebase) when configured."""
-    if settings.operational_db_url.startswith("postgresql"):
-        try:
-            from langgraph.checkpoint.postgres import PostgresSaver  # type: ignore
+    if settings.db_url.startswith("postgresql"):
+        from langgraph.checkpoint.postgres import PostgresSaver
+        from psycopg import sql
+        from psycopg.rows import dict_row
+        from psycopg_pool import ConnectionPool
+        from sqlalchemy.engine import make_url
+        from ..adapters.lakebase import token_provider
 
-            saver = PostgresSaver.from_conn_string(settings.operational_db_url)
-            saver.setup()
-            return saver, "postgres"
-        except Exception:  # noqa: BLE001 - fall back to local file
-            pass
+        url = make_url(settings.db_url)
+        def connection_kwargs():
+            return {"host": url.host, "port": url.port or 5432, "user": url.username,
+                    "dbname": url.database, "password": url.password or token_provider(),
+                    "sslmode": url.query.get("sslmode", "require"), "autocommit": True,
+                    "prepare_threshold": 0, "row_factory": dict_row}
+        def configure(conn):
+            conn.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(sql.Identifier(settings.lakebase_schema)))
+            conn.execute(sql.SQL("SET search_path TO {}").format(sql.Identifier(settings.lakebase_schema)))
+        pool = ConnectionPool(kwargs=connection_kwargs, configure=configure, min_size=0, max_size=4,
+                              max_lifetime=1800, timeout=30, open=True)
+        saver = PostgresSaver(pool)
+        # Multiple cold HTTP/queue instances may initialise simultaneously.
+        # Serialise checkpoint DDL/migration records, not normal graph writes.
+        with pool.connection() as setup_conn:
+            setup_conn.execute("SELECT pg_advisory_lock(hashtextextended('resource:checkpoint-schema', 0))")
+            try:
+                saver.setup()
+            finally:
+                setup_conn.execute("SELECT pg_advisory_unlock(hashtextextended('resource:checkpoint-schema', 0))")
+        return saver, "postgres"
     from langgraph.checkpoint.sqlite import SqliteSaver
 
     conn = sqlite3.connect(str(settings.checkpoint_path), check_same_thread=False)

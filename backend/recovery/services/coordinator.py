@@ -11,6 +11,7 @@ import asyncio
 import logging
 import threading
 import uuid
+from contextvars import copy_context
 from datetime import datetime, timezone
 from typing import Any, Optional
 
@@ -98,12 +99,22 @@ class Coordinator:
         self.s.store.put(st.generations, gen_id, run_id, {"generation_id": gen_id, "case_id": case_id, "kind": kind, "target_input_revision": target_rev,
                                                           "trigger_id": trigger_id, "status": "running", "started_at": _now()},
                          case_id=case_id, status="running", target_input_revision=target_rev, kind=kind)
+        if settings.job_backend == "vercel":
+            case = self.s.store.get_case(run_id, case_id)
+            self.s.jobs.prepare("generation", run_id, dict(case_id=case_id, gen_id=gen_id, kind=kind,
+                                mode=case["mode"], trigger=None, affected=None), gen_id)
         return gen_id
 
     # ------------------------------------------------------------------ execution
     def _launch(self, run_id: str, case_id: str, gen_id: str, *, kind: str, mode: str, trigger: Optional[dict] = None,
                 affected: Optional[list] = None, resume: bool = False) -> None:
-        t = threading.Thread(target=self._run, name=f"gen-{gen_id}", daemon=True,
+        if settings.job_backend == "vercel":
+            self.s.jobs.enqueue("generation", run_id, dict(case_id=case_id, gen_id=gen_id, kind=kind, mode=mode, trigger=trigger, affected=affected), key=gen_id)
+            return
+        from ..runtime.context import job_run_id
+        context = copy_context()
+        context.run(job_run_id.set, run_id)
+        t = threading.Thread(target=context.run, args=(self._run,), name=f"gen-{gen_id}", daemon=True,
                              kwargs=dict(run_id=run_id, case_id=case_id, gen_id=gen_id, kind=kind, mode=mode, trigger=trigger,
                                          affected=affected, resume=resume))
         with self._lock:
@@ -177,6 +188,10 @@ class Coordinator:
         """On process start: running generations were interrupted by the previous process."""
         s = self.s
         resumed = []
+        if settings.job_backend == "vercel":
+            # Another function may own a running generation. Queue redelivery and
+            # database locks recover work; a cold API instance must not steal it.
+            return resumed
         for row in s.store.find(st.generations, status="running"):
             gen = row["payload"]
             run_id, case_id = row["run_id"], row["case_id"]

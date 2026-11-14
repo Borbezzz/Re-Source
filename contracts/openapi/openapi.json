@@ -5533,24 +5533,6 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/": {
-      "get": {
-        "operationId": "root__get",
-        "responses": {
-          "200": {
-            "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "description": "Successful Response"
-          }
-        },
-        "summary": "Root"
-      }
-    },
     "/api/v1/cases/{case_id}": {
       "get": {
         "operationId": "get_case_api_v1_cases__case_id__get",
