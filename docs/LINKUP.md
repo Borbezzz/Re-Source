@@ -31,7 +31,7 @@ Create an API key in your [Linkup account](https://app.linkup.so). Store it in a
 ignored local file, or supply `LINKUP_API_KEY` through your process environment:
 
 ```sh
-cp .env.example .env
+cp -n .env.example .env
 ```
 
 Edit `.env` locally to populate `LINKUP_API_KEY`. Load this trusted local file in the
@@ -71,8 +71,14 @@ standard search when successful, and returns source URLs/snippets:
 Expect a successful JSON response with a nonempty `results` array. Authentication,
 credits, permissions and network errors must be resolved before reporting live
 access as verified. An empty result is not evidence that a supplier or approval
-does not exist. No live API check was run during installation because no key was
-available in the setup environment.
+does not exist.
+
+Verified on 2026-11-14 with the request above: HTTP 200, 20 results, including the
+CAA's official Part-145 approval pages. The key was loaded from a user-provided
+local document and configured in the ignored local `.env` with owner-only file
+permissions. No credential is included in this branch; each new checkout needs its
+own local configuration. This verifies Search connectivity, not access to every
+endpoint or the product's future runtime adapter.
 
 The REST field is **`q`**, as specified in the
 [current Search endpoint reference](https://docs.linkup.so/pages/documentation/endpoints/search/reference).
