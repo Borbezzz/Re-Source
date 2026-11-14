@@ -13,6 +13,7 @@ from ..config import settings
 
 from ..adapters import store as st
 from ..domain.errors import conflict, invalid, not_found
+from .catalog_identity import identity as catalog_identity
 from .run_state import iso, parse_ts
 
 
@@ -52,25 +53,25 @@ class ScenarioService:
             from ..runtime.context import visitor_id
             if s.store.kv_get(f"run_owner:{replay_source_run_id}") != visitor_id.get():
                 raise not_found("replay source")
-        previous = s.store.current_run()
-        if previous:
-            s.monitoring.pause_run(previous["run_id"])
         run_id = str(uuid.uuid4())
         start = parse_ts(cat.scenario["scenario_clock_start"])
-        s.store.create_run({"run_id": run_id, "mode": mode, "fixture_version": cat.fixture_version, "manifest_version": cat.manifest["manifest_version"],
-                            "scenario_now": iso(start), "status": "active", "replay_source_run_id": replay_source_run_id, "barrier_count": 0,
-                            "manifest_version_counter": 1})
-        case_map = {}
-        for comp in cat.manifest["components"]:
-            s.store.insert_case({"run_id": run_id, "case_id": comp["case_id"], "component_id": comp["component_id"], "state": "ready",
-                                 "revision": 1, "input_revision": 1, "mode": mode, "visual_state": "assembled", "monitoring_status": "active",
-                                 "stale_reasons": "[]", "decision_labels": "{}", "event_seq": 0})
-            s.monitoring.create_subscription(run_id, comp["case_id"])
-            s.bus.publish(run_id, comp["case_id"], "case.state_changed", f"Case ready: {comp['display_name']}",
-                          {"state": "ready", "mode": mode, "fixture_version": cat.fixture_version})
-            case_map[comp["component_id"]] = comp["case_id"]
-        s.changes.register_evidence_expiry_timers(run_id, start)
-        s.bus.publish(run_id, "__run__", "case.started", f"Scenario run created ({mode})", {"previous_run_id": previous and previous["run_id"]})
+        with s.store.tx():
+            previous = s.store.current_run()
+            if previous:
+                s.monitoring.pause_run(previous["run_id"])
+            s.store.create_run({"run_id": run_id, "mode": mode, "fixture_version": cat.fixture_version, "manifest_version": cat.manifest["manifest_version"],
+                                "scenario_now": iso(start), "status": "active", "replay_source_run_id": replay_source_run_id, "barrier_count": 0,
+                                "manifest_version_counter": 1})
+            s.store.kv_set(f"run_catalog:{run_id}", catalog_identity(cat))
+            for comp in cat.manifest["components"]:
+                s.store.insert_case({"run_id": run_id, "case_id": comp["case_id"], "component_id": comp["component_id"], "state": "ready",
+                                     "revision": 1, "input_revision": 1, "mode": mode, "visual_state": "assembled", "monitoring_status": "active",
+                                     "stale_reasons": "[]", "decision_labels": "{}", "event_seq": 0})
+                s.monitoring.create_subscription(run_id, comp["case_id"])
+                s.bus.publish(run_id, comp["case_id"], "case.state_changed", f"Case ready: {comp['display_name']}",
+                              {"state": "ready", "mode": mode, "fixture_version": cat.fixture_version})
+            s.changes.register_evidence_expiry_timers(run_id, start)
+            s.bus.publish(run_id, "__run__", "case.started", f"Scenario run created ({mode})", {"previous_run_id": previous and previous["run_id"]})
         if mode == "replay":
             if settings.job_backend == "vercel":
                 s.jobs.enqueue("replay", run_id, {"source_run_id": replay_source_run_id}, key=f"replay:{run_id}")
