@@ -7,6 +7,7 @@ Linkup. Detailed diagnostics are for the team view; secrets are never included.
 
 from __future__ import annotations
 
+import os
 import threading
 import time
 from datetime import datetime, timezone
@@ -99,16 +100,35 @@ def _probe_ai_search() -> dict:
             "alternative": "delta_sql_keyword / in_memory_keyword"}
 
 
-def _probe_lakebase() -> dict:
+def _probe_lakebase(services: Any) -> dict:
     if not settings.databricks_host and not settings.databricks_server_hostname:
         return {"ok": False, "detail": "not configured"}
     data = _rest_get("/api/2.0/database/instances")
     inst = [i.get("name") for i in data.get("database_instances", [])]
-    using = bool(settings.operational_db_url.startswith("postgresql"))
+    store = getattr(services, "store", None)
+    using = store is not None and not store.is_sqlite
+    if store is None:
+        detail = f"{len(inst)} instance(s); operational store not initialised"
+    elif inst:
+        detail = f"{len(inst)} instance(s); app {'uses' if using else 'does not use'} Postgres"
+    else:
+        detail = ("no database instances returned; app uses Postgres" if using
+                  else "no database instances returned; app uses SQLite")
     return {"ok": bool(inst) and using, "instances": inst,
-            "detail": (f"{len(inst)} instance(s); app {'uses' if using else 'does not use'} Postgres") if inst
-            else "none provisioned — operational store runs on SQLite (Postgres/Lakebase-ready via RS_OPERATIONAL_DB_URL)",
+            "detail": detail,
             "alternative": "sqlite operational store"}
+
+
+def _agent_runtime(services: Any) -> dict:
+    if os.getenv("VERCEL"):
+        runtime = "Vercel"
+    elif os.getenv("DATABRICKS_APP_NAME") or os.getenv("DATABRICKS_APP_PORT"):
+        runtime = "Databricks App"
+    else:
+        runtime = "local or other host"
+    checkpointer = getattr(services, "checkpointer_kind", "unknown")
+    return {"ok": False, "detail": f"Agent Bricks Agent Runtime / AgentKit DurableAgentServer not used: FastAPI BFF + LangGraph on {runtime}, "
+            f"with {checkpointer} checkpointer", "alternative": "fastapi_langgraph_checkpointer"}
 
 
 def _probe_apps() -> dict:
@@ -177,7 +197,7 @@ def capability_matrix(services: Any, refresh: bool = False) -> dict[str, Any]:
         "ai_functions": _probe_ai_functions,
         "delta_tables": _probe_delta,
         "ai_search": _probe_ai_search,
-        "lakebase": _probe_lakebase,
+        "lakebase": lambda: _probe_lakebase(services),
         "databricks_app": _probe_apps,
         "mlflow": _probe_mlflow,
         "model": _probe_model,
@@ -189,8 +209,7 @@ def capability_matrix(services: Any, refresh: bool = False) -> dict[str, Any]:
     with ThreadPoolExecutor(max_workers=len(probes)) as pool:
         futures = {name: pool.submit(_timed, fn) for name, fn in probes.items()}
         caps: dict[str, dict] = {name: f.result() for name, f in futures.items()}
-    caps["agent_runtime"] = {"ok": False, "detail": "Agent Bricks Agent Runtime / AgentKit DurableAgentServer not used: FastAPI BFF + LangGraph "
-                             "with a persistent checkpointer runs in-process (Databricks App target)", "alternative": "fastapi_langgraph_checkpointer"}
+    caps["agent_runtime"] = _agent_runtime(services)
     search = getattr(services, "search", None)
     if search is not None:
         try:
