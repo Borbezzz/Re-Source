@@ -61,7 +61,38 @@ test("engine demo renders real geometry without API readiness and reverses its s
     );
     await page.setViewportSize({ width: 390, height: 844 });
     await page.getByRole("button", { name: "Close details ×" }).click();
+    await expect
+      .poll(async () =>
+        page.locator(".mesh-pin").evaluateAll((pins) => {
+          const rects = pins.map((p) => p.getBoundingClientRect());
+          return rects.every((r, i) =>
+            rects.every(
+              (other, j) =>
+                i === j ||
+                r.right <= other.left ||
+                r.left >= other.right ||
+                r.bottom <= other.top ||
+                r.top >= other.bottom,
+            ),
+          );
+        }),
+      )
+      .toBe(true);
     await page.screenshot({ path: ".impeccable/review/intro-mobile.png" });
+    await page.getByRole("button", { name: "Explode", exact: true }).click();
+    await expect(page.locator(".scene-root")).toHaveAttribute(
+      "data-settled",
+      "true",
+    );
+    await page.screenshot({
+      path: ".impeccable/review/intro-mobile-exploded.png",
+    });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.getByRole("button", { name: "Assemble", exact: true }).click();
+    await expect(page.locator(".scene-root")).toHaveAttribute(
+      "data-separation",
+      "0.000",
+    );
     await page
       .getByRole("button", { name: "Parts, requirements & source upload" })
       .click();

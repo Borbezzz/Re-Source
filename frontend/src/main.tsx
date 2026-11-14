@@ -6,3 +6,4 @@ import App from "./App.tsx";
 createRoot(document.getElementById("root")!).render(<App />);
 
 import "./investigation.css";
+import "./theme/dark-glass.css";

@@ -1,4 +1,4 @@
-# ReSource — PRD v2, discussion draft
+# Re::Source — PRD v2, discussion draft
 
 Date: 14 November 2026
 Status: Yixin has authorized parallel implementation of the confirmed v2 requirements in issues #10 and #11. This draft supersedes conflicting earlier engine-only/UI directions for that scoped work. Proposals and unresolved business/output choices remain undecided. See IMPLEMENTATION-HANDOFF.md.
@@ -96,3 +96,16 @@ Yixin subsequently requested that this work be split between Astra and Bede's ag
 - [Wordmark source reference](references/wordmark-reference.tsx)
 - [Globe source reference](references/globe-reference.tsx)
 - https://github.com/pbakaus/impeccable
+
+
+## Latest authorized visual and demo increment
+
+Yixin requested parallel subagents, a dark theme, the exact React Bits PatternWaves silk background, liquid-glass title/control treatment and an example demo traversing the real app screens. Re::Source is the working display-name proposal; this does not rename technical identities.
+
+- White-on-black silk waves, edge fade, pointer radius 50 and strength 0.6; static/reduced-motion/unsupported-WebGL treatment.
+- Refractive title hover plus glass-styled native controls with keyboard/touch support. Blue title rig/coordinates and lens hide outside the interaction region.
+- A licensed premade engine cutaway prepared in Blender replaces procedural engine presentation; uploaded meshes keep precedence and case identities remain stable.
+- Start demo uses actual upload/review/assembly/investigation/evidence/comparison/document screens and APIs in a new isolated seeded run. Inputs/offers/simulations are labelled, and manual evidence review and approval gates remain.
+- The guide explicitly exposes the model-provider gap and separate prepared-assembly choice. This increment does not claim arbitrary blueprint reconstruction, full uploaded-spec engineering evaluation or enabled research for every product.
+
+OpenAI gpt-5.4-mini is enabled in the deployed app configuration. OpenAI handles configured structured extraction/explanations; Databricks extraction can run first. Ranking and eligibility are deterministic rules. No runtime Anthropic path was identified in the code audit.

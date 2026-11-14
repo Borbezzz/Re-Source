@@ -14,7 +14,7 @@ import {
   Settings2,
 } from "lucide-react";
 import { staleReasonText } from "./api/guards.ts";
-import { api } from "./api/client.ts";
+import { api, type Command } from "./api/client.ts";
 import { useCase, useCommand } from "./api/useCase.ts";
 import type { ComponentInstance, EngineView, Schema } from "./api/types.ts";
 import {
@@ -30,6 +30,13 @@ import { ProductHome } from "./product/ProductHome.tsx";
 import { Intake } from "./components/Intake.tsx";
 import { Activity, Research } from "./components/Research.tsx";
 import { Documents } from "./components/Documents.tsx";
+import { DemoGuide } from "./demo/DemoGuide.tsx";
+import {
+  readDemoSession,
+  saveDemoSession,
+  type DemoScreen,
+  type DemoSession,
+} from "./demo/session.ts";
 const InvestigationWorkspace = lazy(() =>
   import("./investigation/InvestigationWorkspace.tsx").then((m) => ({
     default: m.InvestigationWorkspace,
@@ -47,11 +54,29 @@ const shortName = (c: ComponentInstance) =>
         : c.display_name;
 
 export default function App() {
+  const [demo, setDemo] = useState(readDemoSession);
+  const [demoSourceBusy, setDemoSourceBusy] = useState(false),
+    [demoStartFailed, setDemoStartFailed] = useState(false);
+  const [workspaceTab, setWorkspaceTab] = useState<Tab>(() =>
+    location.hash === "#demo/suppliers"
+      ? "suppliers"
+      : location.hash === "#demo/documents"
+        ? "documents"
+        : "assembly",
+  );
   const [engine, setEngine] = useState<EngineView | null>(null),
     [error, setError] = useState(""),
-    [entered, setEntered] = useState(false);
-  const [intro, setIntro] = useState(() => location.hash !== "#sources"),
-    [initialPart, setInitialPart] = useState<string | null>(null);
+    [entered, setEntered] = useState(
+      () => Boolean(readDemoSession()) && location.hash.startsWith("#demo/"),
+    );
+  const [intro, setIntro] = useState(
+      () =>
+        location.hash !== "#sources" &&
+        !(readDemoSession() && location.hash.startsWith("#demo/")),
+    ),
+    [initialPart, setInitialPart] = useState<string | null>(
+      () => readDemoSession()?.partId ?? null,
+    );
   const [intakeVersion, setIntakeVersion] = useState(0);
   const [investigating, setInvestigating] = useState(
     () =>
@@ -69,6 +94,33 @@ export default function App() {
   const [mode, setMode] = useState<Schema<"Mode">>("seeded"),
     [runBusy, setRunBusy] = useState(false),
     [settings, setSettings] = useState(false);
+  const updateDemo = (value: DemoSession | null) => {
+    saveDemoSession(value);
+    setDemo(value);
+  };
+  const changeWorkspaceTab = (value: Tab) => {
+    setWorkspaceTab(value);
+    if (demo) history.replaceState(null, "", `#demo/${value}`);
+  };
+  const openDemoScreen = (screen: DemoScreen) => {
+    if (screen === "sources") {
+      openSources();
+      return;
+    }
+    if (screen === "investigations") {
+      setInvestigating(true);
+      history.replaceState(null, "", "#investigations");
+    } else {
+      setInvestigating(false);
+      setIntro(false);
+      setEntered(true);
+      changeWorkspaceTab(screen);
+    }
+    window.scrollTo(0, 0);
+  };
+  const startingDemo = useRef(false),
+    initialConnection = useRef<Promise<EngineView> | null>(null),
+    demoRunCommand = useRef<Command<Schema<"ScenarioRunView">> | null>(null);
   const refresh = async () => {
     try {
       const value = await api.engine();
@@ -84,8 +136,77 @@ export default function App() {
     }
   };
   useEffect(() => {
-    void refresh();
+    // Establish the anonymous visitor session before creating an isolated demo.
+    initialConnection.current = api.engine();
+    void initialConnection.current
+      .then((value) => {
+        setEngine(value);
+        setMode(value.mode);
+        setError("");
+      })
+      .catch((e: unknown) =>
+        setError(
+          e instanceof Error
+            ? e.message
+            : "Unable to connect to the recovery service.",
+        ),
+      );
   }, []);
+  useEffect(() => {
+    if (engine && demo && engine.scenario_run_id !== demo.runId) {
+      updateDemo(null);
+      setInitialPart(null);
+      if (location.hash.startsWith("#demo/")) openSources();
+    }
+  }, [engine?.scenario_run_id, demo?.runId]);
+  const startDemo = async () => {
+    if (startingDemo.current || demoSourceBusy) return;
+    startingDemo.current = true;
+    setRunBusy(true);
+    setDemoStartFailed(false);
+    setSettings(false);
+    updateDemo(null);
+    openSources();
+    try {
+      if (!engine) {
+        try {
+          await initialConnection.current;
+        } catch {
+          initialConnection.current = api.engine();
+          await initialConnection.current;
+        }
+      }
+      demoRunCommand.current ??= api.newRun("seeded");
+      const run = await demoRunCommand.current.execute();
+      const value = await api.engine(run.scenario_run_id);
+      const component = value.components.find(
+        (c) => c.part_identity === "RS-FN-1001",
+      );
+      if (!component)
+        throw new Error(
+          "The prepared engine profile is unavailable on this server.",
+        );
+      setEngine(value);
+      setMode(value.mode);
+      setError("");
+      setInitialPart(null);
+      setWorkspaceTab("assembly");
+      updateDemo({
+        runId: value.scenario_run_id,
+        componentId: component.component_id,
+      });
+      setIntakeVersion((version) => version + 1);
+      demoRunCommand.current = null;
+    } catch (e) {
+      setDemoStartFailed(true);
+      setError(
+        e instanceof Error ? e.message : "Could not start the prepared demo.",
+      );
+    } finally {
+      startingDemo.current = false;
+      setRunBusy(false);
+    }
+  };
   const newRun = async () => {
     setRunBusy(true);
     try {
@@ -93,6 +214,8 @@ export default function App() {
         .newRun(mode, mode === "replay" ? engine?.scenario_run_id : undefined)
         .execute();
       await refresh();
+      updateDemo(null);
+      setInitialPart(null);
       setIntakeVersion((version) => version + 1);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not start this run.");
@@ -115,12 +238,12 @@ export default function App() {
             history.replaceState(null, "", location.pathname + location.search);
             window.scrollTo(0, 0);
           }}
-          aria-label="ReSource home"
+          aria-label="Re::Source home"
         >
           <span className="brand-mark">
             <Layers3 size={23} />
           </span>
-          ReSource
+          Re::Source
         </button>
         <nav aria-label="Main navigation">
           <button
@@ -191,7 +314,7 @@ export default function App() {
           </label>
           <button
             className="secondary"
-            disabled={runBusy || !engine}
+            disabled={runBusy || demoSourceBusy || !engine}
             onClick={() => void newRun()}
           >
             <RotateCcw size={15} />
@@ -204,9 +327,39 @@ export default function App() {
         </section>
       )}
       {error && !intro && (
-        <ErrorNotice retry={() => void refresh()}>{error}</ErrorNotice>
+        <ErrorNotice
+          retry={() => void (demoStartFailed ? startDemo() : refresh())}
+        >
+          {error}
+        </ErrorNotice>
       )}
       <div id="main-content">
+        {runBusy && startingDemo.current && (
+          <Loading>Creating an isolated prepared-demo run…</Loading>
+        )}
+        {demo &&
+          engine?.scenario_run_id === demo.runId &&
+          (!intro || investigating) && (
+            <DemoGuide
+              key={`demo-guide:${demo.runId}`}
+              session={demo}
+              screen={
+                investigating
+                  ? "investigations"
+                  : !entered
+                    ? "sources"
+                    : workspaceTab
+              }
+              onSession={updateDemo}
+              onBusyChange={setDemoSourceBusy}
+              onSourcesLoaded={() => {
+                setIntakeVersion((version) => version + 1);
+                openSources();
+              }}
+              onNavigate={openDemoScreen}
+              onExit={() => updateDemo(null)}
+            />
+          )}
         {investigating ? (
           <Suspense fallback={<Loading>Opening investigations…</Loading>}>
             <InvestigationWorkspace
@@ -215,6 +368,9 @@ export default function App() {
               onReconnect={() => void refresh()}
               onPart={(id) => {
                 setInitialPart(id);
+                if (demo) updateDemo({ ...demo, partId: id });
+                setWorkspaceTab(demo ? "suppliers" : "assembly");
+                if (demo) history.replaceState(null, "", "#demo/suppliers");
                 setEntered(true);
                 setIntro(false);
                 setInvestigating(false);
@@ -229,8 +385,10 @@ export default function App() {
             connectionFailed={Boolean(error)}
             onRetry={() => void refresh()}
             onSources={openSources}
+            {...{ onStartDemo: () => void startDemo() }}
             onPart={(id) => {
               setInitialPart(id);
+              setWorkspaceTab("assembly");
               setEntered(true);
               setIntro(false);
               window.scrollTo(0, 0);
@@ -250,6 +408,13 @@ export default function App() {
             key={engine.scenario_run_id}
             engine={engine}
             initialPart={initialPart}
+            tab={workspaceTab}
+            onTabChange={changeWorkspaceTab}
+            onPartChosen={(id) => {
+              setInitialPart(id);
+              if (demo) updateDemo({ ...demo, partId: id });
+            }}
+            autoInvestigate={!demo}
           />
         )}
       </div>
@@ -259,12 +424,19 @@ export default function App() {
 function Workspace({
   engine,
   initialPart,
+  tab,
+  onTabChange,
+  onPartChosen,
+  autoInvestigate,
 }: {
   engine: EngineView;
   initialPart: string | null;
+  tab: Tab;
+  onTabChange: (value: Tab) => void;
+  onPartChosen: (id: string) => void;
+  autoInvestigate: boolean;
 }) {
   const [selected, setSelected] = useState<string | null>(initialPart),
-    [tab, setTab] = useState<Tab>("assembly"),
     [explosion, setExplosion] = useState(0),
     [focus, setFocus] = useState(0);
   const [reduced, setReduced] = useState(
@@ -305,13 +477,14 @@ function Workspace({
   }, [tab, reduced, scrollMotion, selected]);
   const choose = (id: string) => {
     setSelected(id);
+    onPartChosen(id);
   };
   const direct = (n: number) => {
     setScrollMotion(false);
     setExplosion(n);
   };
   const changeTab = (value: Tab) => {
-    setTab(value);
+    onTabChange(value);
     window.scrollTo({ top: 0, behavior: "instant" });
   };
   const scene = (visual?: Schema<"VisualState">) => (
@@ -330,7 +503,7 @@ function Workspace({
               ? engine.engine.asset.provider === "uploaded_glb"
                 ? "Uploaded mesh · validated nodes"
                 : human(engine.engine.asset.kind)
-              : "Procedural demo mesh"}
+              : "Prepared cutaway"}
           </Badge>
         </div>
         <div
@@ -414,7 +587,16 @@ function Workspace({
         </div>
         <p className="geometry-note">
           Illustrative geometry. Requirements and engineering compatibility come
-          from source evidence.
+          from source evidence.{" "}
+          {typeof engine.engine.asset.glb_path !== "string" && (
+            <a
+              href="/models/licenses/engine-sources.txt"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Model sources & attribution
+            </a>
+          )}
         </p>
       </div>
     </section>
@@ -461,6 +643,7 @@ function Workspace({
           setTab={changeTab}
           scene={scene}
           onEvidence={setEvidence}
+          autoInvestigate={autoInvestigate}
         />
       ) : (
         <div className={tab === "assembly" ? "engine-layout" : "content-width"}>
@@ -508,6 +691,7 @@ function CaseWorkspace({
   setTab,
   scene,
   onEvidence,
+  autoInvestigate,
 }: {
   engine: EngineView;
   component: ComponentInstance;
@@ -515,6 +699,7 @@ function CaseWorkspace({
   setTab: (t: Tab) => void;
   scene: (v?: Schema<"VisualState">) => React.ReactNode;
   onEvidence: (id: string) => void;
+  autoInvestigate: boolean;
 }) {
   const state = useCase(component.case_id, engine.scenario_run_id),
     command = useCommand(state.refresh),
@@ -525,10 +710,10 @@ function CaseWorkspace({
   useEffect(() => {
     if (view && !started.current) {
       started.current = true;
-      if (view.state === "ready" && view.mode !== "replay")
+      if (autoInvestigate && view.state === "ready" && view.mode !== "replay")
         void command.execute(api.investigate(view));
     }
-  }, [view]);
+  }, [view, autoInvestigate]);
   useEffect(() => {
     setDiff(null);
     if (

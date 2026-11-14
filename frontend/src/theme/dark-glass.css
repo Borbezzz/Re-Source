@@ -1,0 +1,675 @@
+/* Dark material system. Native controls retain their semantics and hit areas. */
+:root {
+  color-scheme: dark;
+  --surface: #08090b;
+  --paper: #121419;
+  --ink: #f2f4f8;
+  --muted: #a8b0bf;
+  --brand: #9cbaff;
+  --soft: #1d2943;
+  --border: #ffffff20;
+  --warning: #e7bb83;
+  --radius-control: 8px;
+  --radius-field: 8px;
+  --radius-panel: 12px;
+  --radius-chip: 4px;
+  --glass-fill: linear-gradient(145deg, #ffffff18, #ffffff06 52%, #ffffff0c);
+  --glass-edge: inset 0 1px 0 #ffffff3b, inset 0 0 0 1px #ffffff1a;
+  --glass-shadow: 0 6px 20px #00000026;
+  --focus: #aac5ff;
+}
+html {
+  scrollbar-color: #596170 var(--surface);
+}
+body {
+  background: var(--surface);
+}
+::selection {
+  color: #fff;
+  background: #315bb0;
+}
+input,
+textarea {
+  caret-color: var(--brand);
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+.global-header {
+  background: #000;
+  color: var(--ink);
+  height: 72px;
+  border-bottom: 0;
+  gap: 44px;
+  backdrop-filter: blur(24px) saturate(135%);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
+}
+/* Keep the home scroll edge black while its silk field moves beneath the bar. */
+body:has(.product-home .product-entry) .global-header::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto;
+  height: 56px;
+  background: linear-gradient(#000 0 8px, #0000 56px);
+  pointer-events: none;
+}
+.wordmark {
+  color: var(--ink);
+  font-size: 23px;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+.brand-mark {
+  color: #c6d4f0;
+  width: 22px;
+}
+.global-header nav {
+  align-items: center;
+  gap: 8px;
+}
+.global-header nav button {
+  color: #adb4c2;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: var(--radius-control);
+  font-size: 12px;
+}
+.global-header nav button:hover {
+  color: #fff;
+  background: #ffffff08;
+}
+.global-header nav button.active {
+  color: #f7f8fc;
+  background: var(--glass-fill);
+  box-shadow: var(--glass-edge);
+}
+.global-header nav button.active::after {
+  display: none;
+}
+.header-end .mode-label {
+  color: var(--muted);
+}
+.header-end .icon-button {
+  color: #d9dfe9;
+}
+.header-end .icon-button:hover {
+  background: #ffffff12;
+}
+.primary,
+.secondary,
+.button-link {
+  border-radius: var(--radius-control);
+  position: relative;
+  isolation: isolate;
+  transition:
+    background 180ms ease-out,
+    box-shadow 180ms ease-out,
+    color 180ms ease-out;
+}
+.entry-cta-group > button {
+  border-radius: 14px;
+}
+.primary {
+  background: linear-gradient(165deg, #f8faff 0%, #dae1ed 100%);
+  color: #141923;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    inset 0 -1px 0 #a0aabc,
+    var(--glass-shadow);
+}
+.primary:hover:not(:disabled) {
+  background: #fff;
+  color: #090c12;
+}
+.secondary,
+.button-link {
+  background: var(--glass-fill);
+  color: #eef2f8;
+  box-shadow: var(--glass-edge), var(--glass-shadow);
+  backdrop-filter: blur(18px) saturate(145%);
+  -webkit-backdrop-filter: blur(18px) saturate(145%);
+}
+.secondary:hover:not(:disabled),
+.button-link:hover {
+  background: #ffffff1c;
+  color: #fff;
+}
+.primary:active:not(:disabled),
+.secondary:active:not(:disabled) {
+  box-shadow: inset 0 2px 8px #0003;
+}
+.text-button,
+.icon-button {
+  color: var(--brand);
+  border-radius: var(--radius-control);
+}
+.text-button:hover,
+.icon-button:hover {
+  background: #ffffff0c;
+}
+button:disabled {
+  opacity: 0.45;
+}
+select,
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+textarea,
+.draft-field textarea {
+  color: var(--ink);
+  border-color: var(--border);
+  background-color: #14171e;
+  border-radius: var(--radius-field);
+}
+input::placeholder,
+textarea::placeholder {
+  color: #979fad;
+  opacity: 1;
+}
+input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 32px;
+  background: transparent;
+  cursor: pointer;
+  accent-color: var(--brand);
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 10px;
+  background: #ffffff24;
+  box-shadow: inset 0 1px 3px #0005;
+}
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -8.5px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fff, #b8c5dc);
+  box-shadow:
+    inset 0 1px 1px #fff,
+    0 3px 8px #0005;
+}
+input[type="range"]::-moz-range-track {
+  height: 5px;
+  border-radius: 10px;
+  background: #ffffff24;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 50%;
+  background: #e2e9f5;
+  box-shadow: 0 3px 8px #0005;
+}
+.skip-link {
+  background: var(--paper);
+  color: var(--ink);
+}
+.run-settings,
+.upload-slot,
+.draft,
+.requirements-panel,
+.candidate-detail,
+.evidence-panel,
+.inspector,
+.workspace-tabs,
+.intake-help,
+.intake-preview,
+.upload-field,
+.source-preview,
+.source-preview pre,
+.requirement-fields,
+.generation-panel {
+  background: var(--paper);
+  color: var(--ink);
+}
+.upload-slot,
+.draft,
+.requirements-panel,
+.candidate-detail {
+  border-radius: var(--radius-panel);
+}
+.badge {
+  color: #b8ccff;
+  background: #22304a;
+}
+.badge.good {
+  color: #a0dbbc;
+  background: #1c3529;
+}
+.badge.warning {
+  color: #f2cc99;
+  background: #392b1c;
+}
+.status.good {
+  color: #93d5b0;
+}
+.status.bad {
+  color: #f3a297;
+}
+.status.unknown {
+  color: #edc18c;
+}
+.error-notice {
+  background: #381d20;
+  color: #fac0b9;
+}
+.warning-box {
+  background: #30281b;
+  color: #edc99a;
+}
+.failure-finding {
+  background: #30281b;
+}
+.failure-finding h3,
+.failure-finding p {
+  color: #edc99a;
+}
+.source-region blockquote {
+  background: #1c222d;
+}
+.source-region {
+  border-color: var(--border);
+}
+.source-excerpt {
+  background: #1b2028;
+}
+.evidence-backdrop {
+  background: #0008;
+  backdrop-filter: blur(5px);
+}
+.assembly-track .assembly-sticky,
+.product-home .intro-sticky,
+.intro-sticky,
+.engine-intro {
+  background: #0d1015;
+}
+.product-home .assembly-track {
+  background: #000;
+  border-top: 0;
+}
+.product-home .assembly-track .assembly-sticky {
+  background: linear-gradient(#000, #0d1015 150px);
+}
+.product-home .assembly-track .part-sidebar {
+  background: linear-gradient(#000, #11141a 150px);
+  border-left: 0;
+}
+.part-sidebar,
+.intro-inspector {
+  background: #11141a;
+  border-color: var(--border);
+}
+.assembly-title {
+  padding-top: 36px;
+}
+.asset-status {
+  font-size: 12px;
+}
+.assembly-controls {
+  padding-top: 16px;
+  padding-bottom: 20px;
+}
+.assembly-controls > div,
+.intro-direct {
+  background: var(--glass-fill);
+  box-shadow: var(--glass-edge);
+  border: 0;
+  border-radius: 14px;
+  padding: 4px 14px;
+  gap: 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.assembly-controls button {
+  padding: 8px 2px;
+  font-size: 12px;
+}
+.assembly-controls > div > button,
+.intro-direct > button {
+  border-radius: 10px;
+}
+.assembly-controls button:hover,
+.intro-direct button:hover {
+  color: #fff;
+}
+.prepared-part-list > button {
+  border-radius: var(--radius-control);
+  min-height: 44px;
+}
+.prepared-part-list > button:hover {
+  background: #ffffff0a;
+}
+.prepared-part-list > button[aria-pressed="true"],
+.parts button[aria-pressed="true"],
+.intro-stage .module-strip button[aria-pressed="true"] {
+  background: #1b2b48;
+  color: #c7d8ff;
+  border-color: #7198dc70;
+}
+.part-checkbox {
+  border-color: #727c90;
+}
+[aria-pressed="true"] > .part-checkbox {
+  background: #aac5ff;
+  color: #101b30;
+  border-color: #aac5ff;
+}
+.selection-chips button {
+  border-radius: var(--radius-chip);
+  color: #c7d8ff;
+  background: #21314f;
+}
+.module-strip {
+  border-color: var(--border);
+}
+.module-strip button,
+.intro-stage .module-strip button {
+  color: #bac3d3;
+}
+.module-strip button span {
+  color: #9ca8bb;
+}
+.intro-stage .module-strip button:hover,
+.intro-parts button:hover:not(:disabled) {
+  color: #fff;
+  background: #202b3c;
+  border-color: #ffffff30;
+}
+.intro-parts button {
+  color: var(--ink);
+  background: #191e27;
+}
+.intro-requirements dl > div {
+  border-color: var(--border);
+}
+.batch-start-form {
+  border-radius: var(--radius-panel);
+}
+.batch-part-options button,
+.batch-filters button {
+  border-radius: var(--radius-control);
+}
+.batch-filters button[aria-pressed="true"] {
+  background: #dce6fa;
+  color: #16213a;
+  border-color: transparent;
+}
+/* The real sourcing workflow retains legacy surfaces outside the hero. */
+.workspace-toolbar {
+  background: #11141be8;
+  color: var(--ink);
+  border-color: var(--border);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+.workspace-tabs {
+  background: transparent;
+}
+.workspace-tabs button {
+  border-radius: var(--radius-control);
+}
+.workspace-tabs button:hover {
+  color: var(--ink);
+  background: #ffffff0b;
+}
+.workspace-tabs button.active {
+  background: #24324d;
+  color: #c7d8ff;
+}
+.breadcrumb {
+  color: var(--muted);
+}
+.breadcrumb strong {
+  color: var(--ink);
+}
+.segmented {
+  background: var(--glass-fill);
+  box-shadow: var(--glass-edge);
+  border-radius: 10px;
+}
+.segmented button {
+  color: #ccd7eb;
+  border-radius: 7px;
+}
+.segmented button[aria-pressed="true"] {
+  background: #d8e4fa;
+  color: #16213a;
+}
+.component-list > button {
+  background: #141922;
+  color: var(--ink);
+  border-color: transparent;
+  border-radius: var(--radius-control);
+}
+.component-list > button:hover {
+  background: #1b2330;
+}
+.component-list > button.selected {
+  background: #1d2e4c;
+  border-color: #7499dd;
+}
+.component-list > button > svg,
+.component-number,
+.scene-orientation,
+.upload-field > svg,
+.inspector-empty > svg {
+  color: var(--muted);
+}
+.scene-orientation span {
+  background: #667289;
+}
+.mesh-pin.active,
+.input-steps li.current::before {
+  color: #15213a;
+}
+.research-top > .activity,
+.batch-research-top > .activity {
+  background: var(--paper);
+  color: var(--ink);
+}
+.event-mark {
+  background: #91c5ac;
+}
+.event-mark.failed {
+  background: #f0a092;
+}
+.supply-map {
+  background: #131a23;
+  color: var(--ink);
+}
+.supply-map[role="status"] {
+  padding: 24px;
+  color: var(--muted);
+}
+.map-heading span,
+.map-caption {
+  color: var(--muted);
+}
+.supply-map > svg > g:first-child {
+  fill: #59697d;
+}
+.map-sites button {
+  background: #253247;
+  color: #c6d4e9;
+  border-radius: var(--radius-control);
+}
+.map-sites button:hover {
+  background: #34445f;
+  color: #fff;
+}
+.map-sites button.chosen {
+  background: #b9cefa;
+  color: #16213a;
+}
+.comparison-table {
+  background: var(--paper);
+  color: var(--ink);
+}
+.comparison-table th {
+  background: #1b222d;
+  color: #bec7d6;
+}
+.comparison-table td {
+  border-color: var(--border);
+}
+.comparison-table tbody tr:hover {
+  background: #1a202b;
+}
+.comparison-table tr.selected-row {
+  background: #1b2b45;
+}
+.comparison-table tr.selected-row:hover {
+  background: #213554;
+}
+.comparison-table td:first-child > .badge {
+  color: #b8ccff;
+}
+.decision-diff {
+  background: #172b24;
+  color: #c8e2d4;
+}
+.citation {
+  background: #26334a;
+  color: #c6d7fa;
+  border-radius: var(--radius-chip);
+}
+.citation:hover {
+  background: #354868;
+  color: #fff;
+}
+.document-actions {
+  background: #151b25;
+  color: var(--ink);
+  border-radius: var(--radius-panel);
+}
+.document-actions hr {
+  border-color: var(--border);
+}
+.receipt {
+  border-color: #ffffff30;
+  color: var(--ink);
+}
+.source-preview iframe {
+  background: var(--paper);
+}
+select option {
+  background: #14171e;
+  color: var(--ink);
+}
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #9cbaff;
+}
+.facts dt,
+.draft summary .muted,
+.event-meta {
+  color: #aeb8c9;
+}
+.warning,
+.warning-box .muted {
+  color: #edc99a;
+}
+@media (max-width: 1050px) {
+  .global-header {
+    gap: 24px;
+    padding-inline: 24px;
+  }
+  .global-header nav {
+    gap: 2px;
+  }
+  .global-header nav button {
+    padding-inline: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .global-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    height: 108px;
+    padding: 12px 16px 8px;
+    gap: 5px 16px;
+  }
+  .global-header .wordmark {
+    font-size: 21px;
+    flex-shrink: 0;
+  }
+  .global-header nav {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 38px;
+    justify-content: space-between;
+    overflow-x: auto;
+    scrollbar-width: none;
+    min-width: 0;
+  }
+  .global-header nav button {
+    flex: 0 0 auto;
+    min-width: max-content;
+    white-space: nowrap;
+    font-size: 11px;
+    padding-inline: 10px;
+  }
+  .global-header nav button:focus-visible {
+    outline-offset: -3px;
+  }
+  .header-end {
+    gap: 0;
+    grid-row: 1;
+    grid-column: 2;
+    margin-left: 0;
+  }
+  .brand-mark,
+  .header-end .mode-label {
+    display: none;
+  }
+  .assembly-controls > div {
+    padding-inline: 12px;
+    gap: 10px;
+  }
+  .assembly-controls > span {
+    padding-bottom: 10px;
+  }
+  .intro-direct {
+    padding: 4px 10px;
+  }
+  .product-entry {
+    min-height: max(650px, calc(100svh - 108px));
+  }
+}
+@media (max-width: 480px) {
+  .global-header {
+    gap: 10px;
+  }
+  .global-header nav button {
+    font-size: 11px;
+    padding-inline: 9px;
+  }
+  .global-header .header-end {
+    margin-left: 0;
+  }
+  .global-header .icon-button {
+    min-width: 34px;
+    padding: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms !important;
+  }
+}

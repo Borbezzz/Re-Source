@@ -15,20 +15,16 @@ test("source selections survive the initial engine connection", async ({
   });
   await page.goto("/#sources");
   const inputs = page.locator("input[type=file]");
-  await inputs
-    .nth(0)
-    .setInputFiles({
-      name: "blueprint.txt",
-      mimeType: "text/plain",
-      buffer: Buffer.from("Synthetic blueprint"),
-    });
-  await inputs
-    .nth(1)
-    .setInputFiles({
-      name: "requirements.txt",
-      mimeType: "text/plain",
-      buffer: Buffer.from("Synthetic requirements"),
-    });
+  await inputs.nth(0).setInputFiles({
+    name: "blueprint.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("Synthetic blueprint"),
+  });
+  await inputs.nth(1).setInputFiles({
+    name: "requirements.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("Synthetic requirements"),
+  });
   const extract = page.getByRole("button", {
     name: "Extract & review requirements",
   });
@@ -174,6 +170,27 @@ test("two sources, cited review, correction, confirmation and truthful generatio
     })
     .click();
   await expect(page.locator(".inspector h2")).toHaveText("Fuel nozzle");
+  const uploadedPath = await page
+    .locator(".scene-root")
+    .getAttribute("data-asset");
+  expect(uploadedPath).toMatch(/\/intake\/uploads\/.+\/content$/);
+  await page.reload();
+  // The source workflow intentionally resumes on its own route. Reopen the
+  // assembly in the same visitor/run to check the persisted activated asset.
+  await expect(
+    page.getByRole("heading", { name: "Generate the assembly." }),
+  ).toBeVisible();
+  await page.goto("/#engine");
+  await page.reload();
+  await expect(page.locator(".intro-parts button").first()).toBeEnabled();
+  await expect(page.locator(".scene-root")).toHaveAttribute(
+    "data-asset",
+    uploadedPath!,
+  );
+  await expect(page.locator(".scene-root")).toHaveAttribute(
+    "data-ready",
+    "true",
+  );
 });
 
 // Three explicitly synthetic triangles test binary loading + identity mapping.

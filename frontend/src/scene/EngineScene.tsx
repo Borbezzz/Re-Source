@@ -25,11 +25,11 @@ import * as THREE from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { ComponentInstance, EngineView, Schema } from "../api/types.ts";
 import {
-  createDemoEngine,
   disposeModel,
   validateMeshMappings,
   type ModuleSpec,
 } from "./model.ts";
+import preparedEngine from "./prepared-engine.json";
 
 interface Props {
   engine: EngineView;
@@ -72,8 +72,9 @@ interface OverlayRefs {
 }
 function SceneModel({
   root,
+  clips = [],
   ...props
-}: Props & OverlayRefs & { root: THREE.Group }) {
+}: Props & OverlayRefs & { root: THREE.Group; clips?: THREE.AnimationClip[] }) {
   const {
     engine,
     selected,
@@ -85,6 +86,24 @@ function SceneModel({
   } = props;
   const controls = useRef<OrbitControlsImpl>(null);
   const { camera, invalidate, size } = useThree();
+  const authored = useMemo(() => {
+    if (!clips.length) return null;
+    const mixer = new THREE.AnimationMixer(root);
+    for (const clip of clips) {
+      const action = mixer.clipAction(clip);
+      action.setLoop(THREE.LoopOnce, 1);
+      action.clampWhenFinished = true;
+      action.play();
+    }
+    return { mixer, duration: Math.max(...clips.map((c) => c.duration)) };
+  }, [root, clips]);
+  useEffect(
+    () => () => {
+      authored?.mixer.stopAllAction();
+      authored?.mixer.uncacheRoot(root);
+    },
+    [authored, root],
+  );
   useEffect(() => {
     props.onReady();
     invalidate();
@@ -92,33 +111,25 @@ function SceneModel({
   const progress = useRef(explosion);
   const cameraTarget = useRef<THREE.Vector3 | null>(null);
   const eyeTarget = useRef<THREE.Vector3 | null>(null);
+  const focusPending = useRef(false);
   useEffect(() => {
-    const chosen = engine.components.find((c) => c.component_id === selected);
-    if (focusToken && chosen) {
-      const anchor = new THREE.Vector3().fromArray(
-        chosen.mesh_mapping.hotspot_anchor,
-      );
-      cameraTarget.current = anchor;
-      eyeTarget.current = anchor
-        .clone()
-        .add(new THREE.Vector3(-1.8, 1.25, 2.2));
-    } else {
-      cameraTarget.current = new THREE.Vector3(0, 0, 0);
-      eyeTarget.current = (
-        props.hero
-          ? new THREE.Vector3(
-              -4.1 + explosion * 2.4,
-              1.8 + explosion * 0.05,
-              5.1 + explosion * 3.6,
-            )
-          : new THREE.Vector3(-5, 2.6, 6.2)
-      ).multiplyScalar(
-        Math.max(1, (props.hero ? 1.55 : 1.4) / (size.width / size.height)),
-      );
-    }
+    focusPending.current = focusToken > 0;
+    cameraTarget.current = new THREE.Vector3(0, 0, 0);
+    eyeTarget.current = (
+      props.hero
+        ? new THREE.Vector3(
+            -3.4 - explosion * 1.1,
+            1.45 + explosion * 0.65,
+            4.5 + explosion * 3,
+          )
+        : new THREE.Vector3(-5, 2.6, 6.2)
+    ).multiplyScalar(
+      Math.max(1, (props.hero ? 1.55 : 1.4) / (size.width / size.height)),
+    );
     invalidate();
   }, [
     focusToken,
+    selected,
     engine.components,
     camera,
     invalidate,
@@ -139,11 +150,20 @@ function SceneModel({
           Math.min(delta, 0.1),
         );
     const p = progress.current;
+    if (authored) {
+      for (const clip of clips) {
+        const action = authored.mixer.clipAction(clip);
+        action.enabled = true;
+        action.paused = false;
+      }
+      authored.mixer.setTime(p * authored.duration);
+    }
     root.traverse((node) => {
       if (typeof node.userData.moduleIndex === "number") {
-        node.position.x =
-          (node.userData.moduleBaseX ?? 0) +
-          (node.userData.moduleIndex - 3) * p * (props.hero ? 0.65 : 0.48);
+        if (!authored)
+          node.position.x =
+            (node.userData.moduleBaseX ?? 0) +
+            (node.userData.moduleIndex - 3) * p * (props.hero ? 0.65 : 0.48);
         node.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             for (const material of Array.isArray(child.material)
@@ -198,6 +218,27 @@ function SceneModel({
         }
       });
     }
+    // Focus the rendered part, including its authored module transform and
+    // server-gated visual offset; manifest anchors remain source/run metadata.
+    if (focusPending.current) {
+      const chosen = engine.components.find((c) => c.component_id === selected);
+      const mesh =
+        chosen && root.getObjectByName(chosen.mesh_mapping.node_name);
+      if (mesh) {
+        root.updateMatrixWorld(true);
+        const anchor = mesh.getWorldPosition(new THREE.Vector3());
+        cameraTarget.current = anchor;
+        eyeTarget.current = anchor
+          .clone()
+          .add(
+            new THREE.Vector3(-1.8, 1.25, 2.2).multiplyScalar(
+              Math.max(1, 1.4 / (size.width / size.height)),
+            ),
+          );
+      }
+      focusPending.current = false;
+    }
+    const labelPositions: THREE.Vector2[] = [];
     for (const [index, component] of engine.components.entries()) {
       const mesh = root.getObjectByName(component.mesh_mapping.node_name);
       const pin = props.pins.current[index],
@@ -206,16 +247,45 @@ function SceneModel({
       const point = mesh.getWorldPosition(new THREE.Vector3()).project(camera);
       const x = (point.x * 0.5 + 0.5) * size.width,
         y = (-point.y * 0.5 + 0.5) * size.height;
-      const labelX = THREE.MathUtils.clamp(
+      let labelX = THREE.MathUtils.clamp(
         x + (index - 1) * 52,
         22,
         size.width - 22,
       );
-      const labelY = THREE.MathUtils.clamp(
+      let labelY = THREE.MathUtils.clamp(
         y - 44 - index * 22,
         22,
         size.height - 22,
       );
+      // Keep the three actionable labels distinct on narrow canvases. Their
+      // leaders still terminate at the exact projected mesh positions.
+      const offsets = [
+        [0, 0],
+        [-48, 0],
+        [48, 0],
+        [0, -48],
+        [0, 48],
+        [-48, -48],
+        [48, -48],
+        [-48, 48],
+        [48, 48],
+      ];
+      for (const [dx, dy] of offsets) {
+        const candidate = new THREE.Vector2(
+          THREE.MathUtils.clamp(labelX + dx, 22, size.width - 22),
+          THREE.MathUtils.clamp(labelY + dy, 22, size.height - 22),
+        );
+        if (
+          labelPositions.every(
+            (position) => position.distanceTo(candidate) >= 44,
+          )
+        ) {
+          labelX = candidate.x;
+          labelY = candidate.y;
+          break;
+        }
+      }
+      labelPositions.push(new THREE.Vector2(labelX, labelY));
       pin.style.transform =
         "translate(" + labelX + "px," + labelY + "px) translate(-50%,-50%)";
       pin.style.visibility = point.z < 1 ? "visible" : "hidden";
@@ -225,12 +295,6 @@ function SceneModel({
         line.setAttribute("x2", String(labelX));
         line.setAttribute("y2", String(labelY));
       }
-    }
-    if (props.host.current) {
-      props.host.current.dataset.settled = String(
-        Math.abs(p - explosion) < 0.01,
-      );
-      props.host.current.dataset.separation = p.toFixed(3);
     }
     if (eyeTarget.current && cameraTarget.current && controls.current) {
       if (reducedMotion) {
@@ -248,6 +312,12 @@ function SceneModel({
         eyeTarget.current = null;
         cameraTarget.current = null;
       } else invalidate();
+    }
+    if (props.host.current) {
+      props.host.current.dataset.settled = String(
+        Math.abs(p - explosion) < 0.01 && !eyeTarget.current,
+      );
+      props.host.current.dataset.separation = p.toFixed(3);
     }
     if (Math.abs(p - explosion) > 0.001) invalidate();
   });
@@ -278,18 +348,6 @@ function SceneModel({
     </>
   );
 }
-function Procedural(props: Props & OverlayRefs) {
-  const model = useMemo(
-    () =>
-      createDemoEngine(
-        props.engine.components,
-        props.engine.engine.asset.modules as ModuleSpec[] | undefined,
-      ),
-    [props.engine.components, props.engine.engine.asset.modules],
-  );
-  useEffect(() => () => disposeModel(model), [model]);
-  return <SceneModel {...props} root={model} />;
-}
 function Loaded(props: Props & OverlayRefs & { path: string }) {
   const gltf = useGLTF(props.path);
   const model = useMemo(() => {
@@ -317,20 +375,48 @@ function Loaded(props: Props & OverlayRefs & { path: string }) {
     return root;
   }, [gltf.scene, props.engine.components]);
   useEffect(() => () => disposeModel(model), [model]);
-  return <SceneModel {...props} root={model} />;
+  return (
+    <SceneModel
+      {...props}
+      root={model}
+      clips={
+        props.path === preparedEngine.asset_url ? gltf.animations : undefined
+      }
+    />
+  );
 }
 export default function EngineScene(props: Props) {
   const [lost, setLost] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [readyPath, setReadyPath] = useState<string | null>(null);
   const pins = useRef<(HTMLButtonElement | null)[]>([]),
     lines = useRef<(SVGLineElement | null)[]>([]),
     host = useRef<HTMLDivElement>(null);
-  const overlay = { pins, lines, host, onReady: () => setReady(true) };
-  const path = props.engine.engine.asset.glb_path;
+  // Compatible presentation upgrade applies to persisted runs too. Never replace
+  // an activated user mesh, change a run, or rewrite its evidence/part identities.
+  const uploadedPath = props.engine.engine.asset.glb_path;
+  const path =
+    typeof uploadedPath === "string" && uploadedPath
+      ? uploadedPath
+      : props.engine.engine.engine_id === "engine-demo-001"
+        ? preparedEngine.asset_url
+        : null;
+  const ready = !!path && readyPath === path;
+  const overlay = { pins, lines, host, onReady: () => setReadyPath(path) };
   return (
-    <div className="scene-root" ref={host} data-ready={ready}>
-      <SceneBoundary key={props.engine.engine.scenario_manifest_version}>
-        {lost ? (
+    <div
+      className="scene-root"
+      ref={host}
+      data-ready={ready}
+      data-asset={path ?? "unavailable"}
+    >
+      <SceneBoundary
+        key={path ?? props.engine.engine.scenario_manifest_version}
+      >
+        {!path ? (
+          <div className="scene-fallback" role="status">
+            No model is connected. Use the component list to continue.
+          </div>
+        ) : lost ? (
           <div className="scene-fallback">
             3D graphics were interrupted. The component list remains available.
           </div>
@@ -339,7 +425,7 @@ export default function EngineScene(props: Props) {
             frameloop="demand"
             dpr={[1, 1.5]}
             camera={{
-              position: props.hero ? [-4.1, 1.8, 5.1] : [-5, 2.6, 6.2],
+              position: props.hero ? [-3.4, 1.45, 4.5] : [-5, 2.6, 6.2],
               fov: props.hero ? 30 : 34,
             }}
             gl={{ antialias: true, alpha: true }}
@@ -377,9 +463,7 @@ export default function EngineScene(props: Props) {
               </Environment>
               {typeof path === "string" && path ? (
                 <Loaded {...props} {...overlay} path={path} />
-              ) : (
-                <Procedural {...props} {...overlay} />
-              )}
+              ) : null}
               <ContactShadows
                 position={[0, -1.25, 0]}
                 opacity={0.25}

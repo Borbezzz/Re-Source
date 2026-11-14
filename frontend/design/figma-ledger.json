@@ -185,7 +185,9 @@
     "assembled": "8:21",
     "separating": "8:58",
     "exploded": "8:95",
-    "note": "Editable layout and schematic module placement; actual scene verified with rendered browser captures."
+    "note": "Editable layout and schematic module placement; actual scene verified with rendered browser captures.",
+    "asset": "Prepared Innerscene CC0 cutaway with attributed MIT component studies; authored casing-first Blender sequence; layout schematic retained for concurrent dark-theme redesign.",
+    "assetNotes": ["23:26", "23:27", "23:28"]
   },
   "sourceIntakeRevision": {
     "removedImageNode": "3:62",

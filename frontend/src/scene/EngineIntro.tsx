@@ -116,7 +116,6 @@ export function EngineIntro({
         <div className="intro-sticky">
           <div className="intro-stage">
             <div className="intro-heading">
-              <p className="eyebrow">JET ENGINE RECOVERY</p>
               <h1>
                 Understand the part.
                 <br />
@@ -132,7 +131,12 @@ export function EngineIntro({
             </div>
             <div className="intro-canvas" aria-label="Interactive jet engine">
               <span className="engine-designation">
-                RS–TF2 <span>Illustrative assembly</span>
+                RS–TF2{" "}
+                <span>
+                  {view.engine.asset.glb_path
+                    ? "Uploaded assembly"
+                    : "Prepared cutaway"}
+                </span>
               </span>
               <Suspense
                 fallback={
@@ -297,8 +301,19 @@ export function EngineIntro({
                 )}
               </dl>
               <p>
-                Illustrative geometry. Engineering requirements come from
-                reviewed documents.
+                {view.engine.asset.glb_path
+                  ? "Uploaded geometry."
+                  : "Prepared demonstration geometry."}{" "}
+                Engineering requirements come from reviewed documents.{" "}
+                {!view.engine.asset.glb_path && (
+                  <a
+                    href="/models/licenses/engine-sources.txt"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Model sources
+                  </a>
+                )}
               </p>
             </div>
           </aside>
