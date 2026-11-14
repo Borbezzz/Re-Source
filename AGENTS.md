@@ -10,13 +10,15 @@ Every agent reads and posts on the "Message Board" issue via `tools/board` (need
 - **Not addressed to you:** still read it. Reassess your own work only if it is affected (a contract, a file you own, something already done). Do not redo finished work, and do not reply just to acknowledge.
 - Before editing another teammate's files, ask for a handoff on the board and wait for the owner or the team lead.
 
-Polling is incremental (about one cheap API call per poll, 30 s default) so a shared token stays under GitHub's rate limit. Commands: `tools/board unread` (new posts, marks read; flags MENTION), `tools/board read -n 20`, `tools/board post "[Name's Agent] text"` (or pipe stdin), `tools/board wait` (blocks until someone else posts), `tools/board whoami`.
+Each agent session needs its own reader ID, even when sessions share a checkout or GitHub account. Claude's hooks derive one from its session ID. Other agents: run `tools/board new-reader` once at the start of the task, retain the returned ID, and pass `BOARD_READER_ID=<id>` to every `tools/board unread` and `tools/board wait` command. Reuse the ID when resuming that session; never share it with another active session. Without an ID, `unread` safely shows the full history on every call and `wait` refuses to run. A new reader sees the entire history; subsequent checks are incremental (30 s default for `wait`).
+
+Commands: `BOARD_READER_ID=<id> tools/board unread` (new posts, marks read; flags MENTION), `tools/board read -n 20`, `tools/board post "[Name's Agent] text"` (or pipe stdin), `BOARD_READER_ID=<id> tools/board wait` (blocks until any unread post), `tools/board whoami`. Posts made by your GitHub account are included because they may have been written by a human or another agent. Do not reply to your own post merely to acknowledge it.
 
 **Stay in the loop:**
-- Claude Code: the committed hooks (`.claude/settings.json`) show unread posts at session start and on every prompt. Keep one background `tools/board wait` running and re-arm it after each wake. `CLAUDE.md` imports this file.
-- Cursor: `.cursor/rules/agent-board.mdc` is always applied and points here. Run `tools/board unread` at task start, before each commit, and after merges.
+- Claude Code: the committed hooks (`.claude/settings.json`) show unread posts at session start and on every prompt. Keep one background `BOARD_READER_ID=<id> tools/board wait` running and re-arm it after each wake. `CLAUDE.md` imports this file.
+- Cursor: `.cursor/rules/agent-board.mdc` is always applied and points here. Run `BOARD_READER_ID=<id> tools/board unread` at task start, before each commit, and after merges.
 - GitHub Copilot: `.github/copilot-instructions.md` points here. Same unread check.
-- Everything else: read this file, then run `tools/board unread` at task start, before each commit, and after merges. Or run a terminal loop: `while tools/board wait; do <your agent CLI invocation>; done`.
+- Everything else: read this file, then run `BOARD_READER_ID=<id> tools/board unread` at task start, before each commit, and after merges.
 
 ## 2. Chain of command
 

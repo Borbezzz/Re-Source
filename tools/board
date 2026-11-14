@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Agent message board on a GitHub issue. Needs only `gh` (authenticated).
 # Usage: tools/board <post|read|unread|wait|whoami> [args]   (see `tools/board help`)
-# Env: BOARD_ISSUE (default 1), BOARD_REPO (default: from git remote), BOARD_LOGIN (override gh user, for tests)
+# Env: BOARD_ISSUE, BOARD_REPO, BOARD_READER_ID (unique per agent session), BOARD_LOGIN
 set -u
 
 ISSUE="${BOARD_ISSUE:-1}"
@@ -9,6 +9,14 @@ ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 STATE_DIR="$ROOT/.board"
 
 die() { echo "board: $*" >&2; exit 1; }
+# Generate a reader ID once per agent session. It must be reused on each invocation.
+if [ "${1:-}" = "new-reader" ]; then
+  printf 'reader-%s-%s-%s%s\n' "$(date +%s)" "$$" "$RANDOM" "$RANDOM"
+  exit 0
+fi
+if [ -n "${BOARD_READER_ID:-}" ] && [[ ! "$BOARD_READER_ID" =~ ^[A-Za-z0-9_-]+$ ]]; then
+  die "BOARD_READER_ID must contain only letters, digits, underscores and hyphens"
+fi
 command -v gh >/dev/null 2>&1 || die "gh not found (https://cli.github.com), then run: gh auth login"
 
 valid_repo() { [[ "$1" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]; }
@@ -64,14 +72,9 @@ fi
 
 me() {
   if [ -n "${BOARD_LOGIN:-}" ]; then valid_login "$BOARD_LOGIN" && { echo "$BOARD_LOGIN"; return; }; return 1; fi
-  mkdir -p "$STATE_DIR"
-  local f="$STATE_DIR/login" l
-  if [ -s "$f" ]; then
-    l="$(cat "$f")"
-    if valid_login "$l"; then echo "$l"; return; fi
-  fi
+  local l
   l="$(gh api user --jq .login 2>/dev/null)" || return 1
-  valid_login "$l" && { echo "$l" > "$f"; echo "$l"; }
+  valid_login "$l" && echo "$l"
 }
 
 b64d() { base64 -d 2>/dev/null || base64 -D; }
@@ -79,9 +82,11 @@ b64d() { base64 -d 2>/dev/null || base64 -D; }
 # Row format: id<TAB>login<TAB>created_at<TAB>base64(body). Non-zero on gh failure.
 JQ_ROW='.[] | "\(.id)\t\(.user.login)\t\(.created_at)\t\(.body | @base64)"'
 
-# Comments updated at/after $1 (ISO time). One API call when nothing is new.
+# With no timestamp, paginate all comments; otherwise fetch changes since the cursor.
 fetch_since() {
-  gh api --paginate "repos/$REPO/issues/$ISSUE/comments?per_page=100&since=$1" --jq "$JQ_ROW" 2>/dev/null
+  local url="repos/$REPO/issues/$ISSUE/comments?per_page=100"
+  [ -z "$1" ] || url="$url&since=$1"
+  gh api --paginate "$url" --jq "$JQ_ROW" 2>/dev/null
 }
 
 # Last $1 comments without paginating the whole thread (comment count -> jump to last page(s)).
@@ -99,13 +104,20 @@ fetch_last() {
   printf '%s\n' "$acc" | awk 'NF' | tail -n "$want"
 }
 
-# Cursor file holds "<newest seen comment id> <its created_at>".
-cursor_file() { echo "$STATE_DIR/cursor-$(echo "$REPO" | tr '/' '_')-$ISSUE"; }
-get_cursor() { local f; f="$(cursor_file)"; [ -s "$f" ] && cat "$f" || echo ""; }
-set_cursor() { # $1=id $2=created_at; only moves forward
+# Independent readers have independent cursors. Without an ID, never persist state.
+cursor_file() { echo "$STATE_DIR/cursor-$(echo "$REPO" | tr '/' '_')-$ISSUE-$BOARD_READER_ID"; }
+get_cursor() {
+  [ -n "${BOARD_READER_ID:-}" ] || return 0
+  local f; f="$(cursor_file)"; [ -s "$f" ] && cat "$f" || :
+}
+set_cursor() {
+  [ -n "${BOARD_READER_ID:-}" ] || return 0
   mkdir -p "$STATE_DIR"
-  local cur; cur="$(get_cursor | cut -d' ' -f1)"
-  if [ -z "$cur" ] || [ "$1" -gt "$cur" ]; then echo "$1 $2" > "$(cursor_file)"; fi
+  local cur tmp; cur="$(get_cursor | cut -d' ' -f1)"
+  if [ -z "$cur" ] || [ "$1" -gt "$cur" ]; then
+    tmp="$(mktemp "$STATE_DIR/cursor-tmp.XXXXXX")" || return 1
+    printf '%s %s\n' "$1" "$2" > "$tmp" && mv -f "$tmp" "$(cursor_file)"
+  fi
 }
 
 # stdin: fetch lines. Prints formatted comments; $1 = login to flag mentions for (may be empty)
@@ -122,14 +134,14 @@ render() {
   done
 }
 
-# Emit unread comments by others, advance cursor. Returns 0 and prints nothing if none. 1 on fetch failure.
+# Emit all unread comments, including posts from the authenticated account.
 do_unread() {
   local all login cur cid cts new maxrow
   login="$(me)" || return 1
   cur="$(get_cursor)"; cid="${cur%% *}"; cts="${cur#* }"
   if [ -z "$cur" ] || [ "$cid" = "$cts" ]; then
-    # first run in this clone (or old-format cursor): last 10 for context
-    all="$(fetch_last 10)" || return 1
+    # A new reader needs the entire history, including older mentions.
+    all="$(fetch_since "")" || return 1
     new="$all"
   else
     all="$(fetch_since "$cts")" || return 1
@@ -137,12 +149,8 @@ do_unread() {
   fi
   [ -n "$new" ] || return 0
   maxrow="$(printf '%s\n' "$new" | sort -n -t"$(printf '\t')" -k1,1 | tail -1)"
-  new="$(printf '%s\n' "$new" | awk -F'\t' -v me="$login" 'NF && tolower($2) != tolower(me)')"
-  if [ -n "$new" ]; then
-    printf '%s\n' "$new" | render "$login"
-  fi
+  printf '%s\n' "$new" | render "$login"
   set_cursor "$(printf '%s' "$maxrow" | cut -f1)" "$(printf '%s' "$maxrow" | cut -f3)"
-  return 0
 }
 
 cmd_post() {
@@ -160,7 +168,7 @@ cmd_read() {
   local n=10
   while [ $# -gt 0 ]; do
     case "$1" in
-      -n) n="${2:-}"; shift 2 ;;
+      -n) [ $# -ge 2 ] || die "read: -n needs a number"; n="$2"; shift 2 ;;
       -n*) n="${1#-n}"; shift ;;
       *) die "read: unknown arg $1" ;;
     esac
@@ -179,14 +187,16 @@ cmd_unread() {
 
 cmd_wait() {
   local interval=30 timeout=0 start out
+  [ -n "${BOARD_READER_ID:-}" ] || die "wait needs BOARD_READER_ID; create one with tools/board new-reader and reuse it for this session"
   while [ $# -gt 0 ]; do
     case "$1" in
-      --interval) interval="${2:-}"; shift 2 ;;
-      --timeout) timeout="${2:-}"; shift 2 ;;
+      --interval) [ $# -ge 2 ] || die "wait: --interval needs a number"; interval="$2"; shift 2 ;;
+      --timeout) [ $# -ge 2 ] || die "wait: --timeout needs a number"; timeout="$2"; shift 2 ;;
       *) die "wait: unknown arg $1" ;;
     esac
   done
-  case "$interval$timeout" in *[!0-9]*|'') die "wait: --interval/--timeout need whole seconds" ;; esac
+  case "$interval" in *[!0-9]*|'') die "wait: --interval needs whole seconds" ;; esac
+  case "$timeout" in *[!0-9]*|'') die "wait: --timeout needs whole seconds" ;; esac
   start="$(date +%s)"
   while :; do
     # transient gh errors: ignore and retry next tick
@@ -212,11 +222,12 @@ case "${1:-help}" in
     cat <<USAGE
 tools/board post <text>        post a comment (or pipe text on stdin); must start with [<human>'s <agent>]
 tools/board read [-n N]        show the last N comments (default 10)
-tools/board unread             show comments by others since your last check, then mark read
+tools/board new-reader         create a reader ID for this agent session
+tools/board unread             show unread comments for BOARD_READER_ID (all without one)
 tools/board wait [--interval S] [--timeout S]
-                               block until someone else posts; print it; exit 0 (124 on timeout)
+                               wait for unread posts for BOARD_READER_ID; exit 0 (124 on timeout)
 tools/board whoami             your GitHub login
-Env: BOARD_ISSUE (default 1), BOARD_REPO, BOARD_LOGIN
+Env: BOARD_ISSUE (default 1), BOARD_REPO, BOARD_READER_ID, BOARD_LOGIN
 USAGE
     ;;
 esac
