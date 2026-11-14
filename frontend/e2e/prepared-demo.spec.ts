@@ -39,9 +39,18 @@ test("prepared demo uses the real intake, batch, evidence, decision and approval
   ).toBeDisabled();
   await page.screenshot({ path: `${artifacts}/01-upload.png`, fullPage: true });
 
+  // Uploading both documents and accepting the extraction job are separate
+  // network stages from the asynchronous provider work that follows.
+  const extractionAccepted = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/intake/part-requirements") &&
+      response.request().method() === "POST",
+    { timeout: process.env.RESOURCE_BASE_URL ? 180_000 : 60_000 },
+  );
   await guide
     .getByRole("button", { name: "Upload & extract sample sources" })
     .click();
+  expect((await extractionAccepted).status()).toBe(202);
   await expect(
     page.getByRole("heading", { name: "Review extracted fields" }),
   ).toBeVisible();

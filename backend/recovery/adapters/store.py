@@ -329,11 +329,17 @@ class OperationalStore:
         return dict(row) if row else None
 
     def list_runs(self) -> list[dict]:
-        with self.tx() as c:
-            rows = c.execute(select(runs).order_by(runs.c.created_at.desc())).mappings().all()
         from ..runtime.context import visitor_id
         visitor = visitor_id.get()
-        return [dict(r) for r in rows if not visitor or self.kv_get(f"run_owner:{r['run_id']}") == visitor]
+        query = select(runs).order_by(runs.c.created_at.desc())
+        if visitor:
+            # Ownership lives in kv as a JSON string. Filter in the same query rather than
+            # opening a transaction for every run belonging to every public visitor.
+            query = query.join(kv, and_(kv.c.key == "run_owner:" + runs.c.run_id,
+                                       kv.c.value == dumps(visitor)))
+        with self.tx() as c:
+            rows = c.execute(query).mappings().all()
+        return [dict(r) for r in rows]
 
     def update_run(self, run_id: str, **values: Any) -> None:
         with self.tx() as c:

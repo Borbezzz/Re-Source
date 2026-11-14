@@ -12,6 +12,8 @@ Date: 14 November 2026. Integrated from dark theme 5f9f61f, guided demo 097d573 
 - Native controls, pointer-exit clearing, real refraction in Chromium, reduced motion, no-WebGL fallback and background suspension were verified by the dark worker. SVG backdrop displacement remains a progressive enhancement.
 - A subsequent full-workflow review caught legacy light research/comparison panels. Their dark backgrounds and field states are corrected. The fresh working-screen reviewer returned `disposition: ship` for comparison, evidence, approval and desktop/mobile receipt captures; motion, keyboard behavior and other mobile stages were outside that capture-only scope.
 - After the contrast correction, the production build, 14 frontend invariants and the complete prepared-demo browser journey passed again.
+- Connected staging successfully extracted 12 source-linked fields with Databricks `ai_extract`. The first browser assertion expired across two uploads, job acceptance and extraction; the extraction itself completed in about 86 seconds. The test now waits separately for accepted extraction before checking its terminal review screen, and passes locally again.
+- Connected timing exposed an existing public run-history N+1 lookup. Filtering ownership in a single query preserves visitor isolation, ordering and internal no-visitor behavior while reducing the measured 30-run case from 31 SELECTs to one. Full backend suite after the fix: 181 passed, 4 skipped, including three new lookup regressions. No migration or API change is required.
 
 ## Source and provider facts
 
