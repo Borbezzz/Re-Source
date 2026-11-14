@@ -51,7 +51,7 @@ class Coordinator:
             new_rev = case["revision"] + 1
             s.store.update_case(c, run_id, case_id, state="investigating", active_generation_id=gen_id, revision=new_rev, mode=mode)
             s.bus.publish(run_id, case_id, "case.state_changed", "Investigation started", {"state": "investigating", "generation_id": gen_id}, case_revision=new_rev)
-        self._launch(run_id, case_id, gen_id, kind="investigation", mode=mode)
+        s.store.after_commit(lambda: self._launch(run_id, case_id, gen_id, kind="investigation", mode=mode))
         return {"status": "accepted", "generation_id": gen_id, "case_revision": new_rev}
 
     def request_reassessment(self, run_id: str, case_id: str, trigger: dict, affected_candidate_ids: Optional[list[str]]) -> Optional[str]:
