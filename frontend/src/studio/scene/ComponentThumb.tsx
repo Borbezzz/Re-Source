@@ -1,13 +1,17 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, useGLTF } from "@react-three/drei";
-import { Suspense, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 /**
  * Renders the *actual* selected component from the package GLB (same asset,
  * same identity) as a compact anchor thumbnail — never a generated image.
  */
-function Part({ url, nodeIds }: { url: string; nodeIds: string[] }) {
+function Part({ url, nodeIds, spin }: { url: string; nodeIds: string[]; spin: boolean }) {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    invalidate();
+  }, [invalidate, spin]);
   const gltf = useGLTF(url);
   const ref = useRef<THREE.Group>(null);
   const group = useMemo(() => {
@@ -42,8 +46,11 @@ function Part({ url, nodeIds }: { url: string; nodeIds: string[] }) {
     wrap.scale.setScalar(s);
     return wrap;
   }, [gltf, nodeIds]);
-  useFrame((_, dt) => {
-    if (ref.current) ref.current.rotation.y += dt * 0.5;
+  // Rendered on demand: the thumbnail turns only while the pointer is over it.
+  useFrame((state, dt) => {
+    if (!spin || !ref.current) return;
+    ref.current.rotation.y += Math.min(dt, 0.05) * 0.5;
+    state.invalidate();
   });
   return (
     <group ref={ref} rotation={[0.35, 0.6, 0]}>
@@ -53,9 +60,10 @@ function Part({ url, nodeIds }: { url: string; nodeIds: string[] }) {
 }
 
 export function ComponentThumb({ url, nodeIds, label }: { url: string; nodeIds: string[]; label: string }) {
+  const [spin, setSpin] = useState(false);
   return (
-    <div className="rs-thumb" role="img" aria-label={`${label} — rendered from the package model`}>
-      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 3.2], fov: 32 }} gl={{ alpha: true, antialias: true }}>
+    <div className="rs-thumb" role="img" aria-label={`${label} — rendered from the package model`} onPointerEnter={() => setSpin(true)} onPointerLeave={() => setSpin(false)}>
+      <Canvas frameloop="demand" dpr={[1, 1.5]} camera={{ position: [0, 0, 3.2], fov: 32 }} gl={{ alpha: true, antialias: true }}>
         <Suspense fallback={null}>
           <Environment resolution={64} frames={1}>
             <Lightformer intensity={2.2} position={[0, 4, 3]} scale={[8, 2, 1]} />
@@ -65,7 +73,7 @@ export function ComponentThumb({ url, nodeIds, label }: { url: string; nodeIds: 
           <ambientLight intensity={0.6} />
           <directionalLight position={[2, 3, 4]} intensity={1.6} />
           <directionalLight position={[-3, -1, -2]} intensity={0.6} color="#c4b5fd" />
-          <Part url={url} nodeIds={nodeIds} />
+          <Part url={url} nodeIds={nodeIds} spin={spin} />
         </Suspense>
       </Canvas>
     </div>

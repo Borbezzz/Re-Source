@@ -269,10 +269,13 @@ function meshSet(nodes: THREE.Object3D[]): Set<THREE.Object3D> {
 
 function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
   const { prepared: p, mode, scan, solid, selected, inspection, hovered, exploded, isolate, phase, onSelect, onInspect } = props;
-  const { gl } = useThree();
+  const { gl, invalidate } = useThree();
   useLayoutEffect(() => {
     gl.localClippingEnabled = true;
   }, [gl]);
+  const nodes = useMemo(() => inspectionNodes(p, inspection, selected), [p, inspection, selected]);
+  // Removal direction for the selected part; recomputed only when the selection or exploded layout changes.
+  const radialCache = useRef<{ key: string; v: THREE.Vector3 }>({ key: "", v: new THREE.Vector3() });
   const explodeT = useRef(0);
   const phaseT = useRef(0);
   const scanVal = useRef(WMIN);
@@ -307,7 +310,13 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
     }
   }, [p, selected, inspection, hovered, isolate]);
 
+  // The canvas renders on demand: any change that affects the picture asks for a frame.
+  useEffect(() => {
+    invalidate();
+  }, [invalidate, p, mode, scan, solid, selected, inspection, hovered, exploded, isolate, phase]);
+
   useFrame((state, dt) => {
+    const near = (a: number, b: number) => Math.abs(a - b) < 1e-3;
     // Scan + solid sweep along world X.
     const targetScan = WMIN + (WLEN + 0.6) * scan;
     scanVal.current = THREE.MathUtils.damp(scanVal.current, targetScan, 3.2, dt);
@@ -317,8 +326,13 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
     p.scanMat.uniforms.uSolid.value = solidVal.current;
     p.clip.constant = mode === "scan" ? solidVal.current : 99;
     p.scanRoot.visible = mode === "scan" && solid < 0.999;
+    let busy = mode === "scan" && !(near(scanVal.current, targetScan) && near(solidVal.current, targetSolid));
 
-    explodeT.current = THREE.MathUtils.damp(explodeT.current, exploded ? 1 : 0, 4, dt);
+    const explodeTarget = exploded ? 1 : 0;
+    explodeT.current = THREE.MathUtils.damp(explodeT.current, explodeTarget, 4, dt);
+    const exploding = !near(explodeT.current, explodeTarget);
+    if (exploding) busy = true;
+    else explodeT.current = explodeTarget;
     const e = explodeT.current;
     for (const [gid, { node, home }] of p.groups) {
       const off = EXPLODE[gid] ?? [0, 0, 0];
@@ -327,24 +341,31 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
 
     // Removal / insertion choreography for the selected part.
     if (selected) {
-      const nodes = inspectionNodes(p, inspection, selected);
       const target = phase === "remove" ? 1 : 0;
       phaseT.current = THREE.MathUtils.damp(phaseT.current, target, phase === "insert" ? 2.2 : 2.6, dt);
-      const box = boundsOf(nodes);
-      const c = box.getCenter(new THREE.Vector3());
-      const radial = new THREE.Vector3(0, c.y, c.z);
-      if (radial.lengthSq() < 0.01) radial.set(0, 1, 0);
-      radial.normalize().multiplyScalar(2.6);
-      radial.x += selected.includes("NOZZLE") ? 2.4 : -0.4;
+      if (near(phaseT.current, target)) phaseT.current = target;
+      else busy = true;
+      const key = `${selected}|${inspection?.id ?? ""}`;
+      const radial = radialCache.current.v;
+      if (radialCache.current.key !== key || exploding) {
+        radialCache.current.key = key;
+        const c = boundsOf(nodes).getCenter(new THREE.Vector3());
+        radial.set(0, c.y, c.z);
+        if (radial.lengthSq() < 0.01) radial.set(0, 1, 0);
+        radial.normalize().multiplyScalar(2.6);
+        radial.x += selected.includes("NOZZLE") ? 2.4 : -0.4;
+      }
       nodes.forEach((n) => {
         const h = p.nodeHome.get(n.userData.stableId);
         if (h) n.position.set(h.x + radial.x * phaseT.current, h.y + radial.y * phaseT.current, h.z + radial.z * phaseT.current);
       });
       // Rim brightens briefly while the replacement seats, then settles (no breathing glow).
       const u = p.highlight.userData.uniforms as { uRim: { value: number } };
-      u.uRim.value = THREE.MathUtils.damp(u.uRim.value, phase === "insert" ? 1.5 : 0.9, 3, dt);
+      const rimTarget = phase === "insert" ? 1.5 : 0.9;
+      u.uRim.value = THREE.MathUtils.damp(u.uRim.value, rimTarget, 3, dt);
+      if (!near(u.uRim.value, rimTarget)) busy = true;
     }
-    void state;
+    if (busy) state.invalidate(); // keep rendering only while something is still moving
   });
 
   return (
@@ -425,8 +446,12 @@ function SelectedCallout({ prepared, nodes, name, id, rightInset = 0, leftInset 
 
 function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, leftInset = 0, turntable, wide }: { prepared: Prepared; selected: string | null; inspection?: AssemblyItem | null; mode: SceneMode; resetKey: number; rightInset?: number; leftInset?: number; turntable: boolean; wide: boolean }) {
   const ref = useRef<CameraControls>(null);
-  const { size, camera } = useThree();
+  const { size, camera, invalidate, setEvents } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
+  // Hover tests walk every triangle of the model: skip them outside explore and while the camera is dragged.
+  const dragging = useRef(false);
+  const syncEvents = () => setEvents({ enabled: mode === "explore" && !dragging.current });
+  useEffect(syncEvents, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (import.meta.env.DEV) (window as unknown as { __rsScene: unknown }).__rsScene = { camera, controls: ref.current, prepared };
   }, [camera, prepared]);
@@ -467,11 +492,30 @@ function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, l
       const eye = center.clone().addScaledVector(VIEW_DIR, narrow ? dist * 1.15 : dist);
       void cc.setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, true);
     }
+    invalidate();
   }, [selected, inspection, mode, resetKey, prepared, size.width, size.height, inset, wide, cam, narrow]); // eslint-disable-line react-hooks/exhaustive-deps
-  useFrame((_, dt) => {
-    if (turntable && mode === "explore" && ref.current) ref.current.azimuthAngle += dt * 0.18;
+  useEffect(() => {
+    if (turntable) invalidate();
+  }, [turntable, mode, invalidate]);
+  useFrame((state, dt) => {
+    if (turntable && mode === "explore" && ref.current) {
+      ref.current.azimuthAngle += dt * 0.18;
+      state.invalidate();
+    }
   });
-  return <CameraControls ref={ref} makeDefault minDistance={1.5} maxDistance={30} smoothTime={0.35} draggingSmoothTime={0.12} enabled={mode === "explore"} />;
+  return (
+    <CameraControls
+      ref={ref}
+      makeDefault
+      minDistance={1.5}
+      maxDistance={30}
+      smoothTime={0.35}
+      draggingSmoothTime={0.12}
+      enabled={mode === "explore"}
+      onControl={() => { if (!dragging.current) { dragging.current = true; syncEvents(); } }}
+      onControlEnd={() => { dragging.current = false; syncEvents(); }}
+    />
+  );
 }
 
 function SceneContents(props: EngineCanvasProps) {
@@ -501,11 +545,14 @@ export function EngineCanvas(props: EngineCanvasProps) {
   return (
     <Canvas
       className="rs-engine-canvas"
-      dpr={[1, 1.75]}
-      frameloop={props.mode === "hidden" ? "never" : "always"}
+      dpr={props.mode === "scan" ? 1 : [1, 1.5]}
+      frameloop={props.mode === "hidden" ? "never" : "demand"}
       camera={{ position: [-8, 3.2, 14.5], fov: 30, near: 0.05, far: 100 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      onCreated={({ gl }) => {
+      onCreated={({ gl, clock }) => {
+        // On-demand frames can follow a long idle gap; cap the step so animations ease in, not jump.
+        const getDelta = clock.getDelta.bind(clock);
+        clock.getDelta = () => Math.min(getDelta(), 0.05);
         gl.toneMapping = THREE.AgXToneMapping;
         gl.toneMappingExposure = 1.12;
         gl.outputColorSpace = THREE.SRGBColorSpace;

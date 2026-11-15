@@ -202,11 +202,10 @@
 
 /* ---------- Panels & surfaces ---------- */
 .rs-panel {
-  background: var(--rs-panel);
+  /* Near-opaque instead of a backdrop blur: blurring a live 3D canvas or animated map every frame is costly. */
+  background: rgba(18, 18, 23, 0.94);
   border: 1px solid var(--rs-line);
   border-radius: var(--rs-radius-l);
-  backdrop-filter: blur(22px) saturate(1.2);
-  -webkit-backdrop-filter: blur(22px) saturate(1.2);
   box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.9);
 }
 .rs-divider { height: 1px; background: var(--rs-line); border: 0; margin: 0; }
@@ -632,9 +631,7 @@
   width: min(var(--rs-drawer-w), 100%);
   z-index: 22;
   border-left: 1px solid var(--rs-line);
-  background: rgba(13, 13, 17, 0.86);
-  backdrop-filter: blur(26px);
-  -webkit-backdrop-filter: blur(26px);
+  background: rgba(13, 13, 17, 0.96);
   display: flex;
   flex-direction: column;
 }
