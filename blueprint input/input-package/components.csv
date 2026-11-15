@@ -1,0 +1,4 @@
+component_id,role,name,part_number,revision,parent_assembly_id,node_ids,assembly_quantity,requirement_set,data_mode
+"RS-TF-FUEL-INJECTOR","secondary","Fuel injector 01","RS-DEMO-FI-001","C","combustor","rs-mech-tf-v1.combustor.m044.i000","18","REQ-FI-C","fictional_demo"
+"RS-TF-FAN-BLADE","primary","Front fan blade 01","RS-DEMO-FB-001","B","fan","rs-mech-tf-v1.fan.m000.i000","24","REQ-FB-B","fictional_demo"
+"RS-TF-CORE-NOZZLE","secondary","Core exhaust nozzle assembly","RS-DEMO-NZ-001","A","nozzle","rs-mech-tf-v1.group.nozzle","1","REQ-NZ-A","fictional_demo"

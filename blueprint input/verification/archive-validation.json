@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "uploadArchive": "mechanica-input-package.zip",
+  "uploadSha256": "05f2c16b00eb6119792033bbf94d05c265b05a702ecafd8a00c5a0e99b44dde2",
+  "rootMembers": [
+    "ATTRIBUTION.md",
+    "LICENSE-Mechanica.txt",
+    "assembly.glb",
+    "components.csv",
+    "manifest.json",
+    "requirements.json"
+  ],
+  "crc": "pass",
+  "fileHashes": "match manifest",
+  "handoffArchiveExclusions": [
+    "tools/node_modules/**",
+    ".DS_Store",
+    "__pycache__/**"
+  ],
+  "notes": "Full handoff ZIP membership/exclusions and checksums verified by primary agent after including final independent review.",
+  "handoffMemberCount": 33
+}

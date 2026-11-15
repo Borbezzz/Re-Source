@@ -1,0 +1,131 @@
+import assert from "node:assert/strict";
+import { readdir, readFile } from "node:fs/promises";
+import path from "node:path";
+import test, { after } from "node:test";
+import { fileURLToPath } from "node:url";
+
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { createServer } from "vite";
+
+const root = fileURLToPath(new URL("..", import.meta.url));
+const vite = await createServer({
+  appType: "custom",
+  configFile: false,
+  root,
+  resolve: { alias: { "@": root } },
+  server: { middlewareMode: true },
+});
+
+after(async () => {
+  await vite.close();
+});
+
+async function readCssTree(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const contents = await Promise.all(
+    entries.map(async (entry) => {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        return readCssTree(entryPath);
+      }
+      return entry.name.endsWith(".css") ? readFile(entryPath, "utf8") : "";
+    }),
+  );
+  return contents.join("\n");
+}
+
+test("retains catalog utilities and emits Engine Atlas styles", async () => {
+  const css = await readCssTree(path.join(root, "dist"));
+  const catalog = await readFile(
+    path.join(root, "vendor", "shadcn-tailwind-4.13.0.css"), "utf8",
+  );
+
+  assert.match(css, /--tw-enter-opacity/);
+  // Tailwind only emits referenced utilities. Unused catalog utilities remain
+  // available in the vendor source without being required in every app bundle.
+  assert.match(catalog, /scrollbar-width:\s*none/);
+  assert.match(catalog, /scroll-fade-reveal-b/);
+  assert.match(catalog, /mask-image:/);
+  assert.match(catalog, /tw-shimmer/);
+  assert.match(css, /\.scene-host\s+canvas/);
+  assert.match(css, /\.master-explode-control/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+});
+
+test("forwards progress semantics to the primitive", async () => {
+  const { Progress } = await vite.ssrLoadModule("/components/ui/progress.tsx");
+  const html = renderToStaticMarkup(React.createElement(Progress, { value: 37 }));
+
+  assert.match(html, /aria-valuenow="37"/);
+  assert.match(html, /aria-valuetext="37%"/);
+  assert.match(html, /data-state="loading"/);
+});
+
+test("emits chart themes for the starter's media dark mode", async () => {
+  const { ChartStyle } = await vite.ssrLoadModule("/components/ui/chart.tsx");
+  const html = renderToStaticMarkup(
+    React.createElement(ChartStyle, {
+      id: "contract",
+      config: {
+        latency: { theme: { light: "#ffffff", dark: "#000000" } },
+      },
+    }),
+  );
+
+  assert.match(html, /\[data-chart=contract\]/);
+  assert.match(html, /@media \(prefers-color-scheme: dark\)/);
+  assert.doesNotMatch(html, /\.dark/);
+});
+
+test("renders sidebar skeletons deterministically", async () => {
+  const { SidebarMenuSkeleton } = await vite.ssrLoadModule(
+    "/components/ui/sidebar.tsx",
+  );
+  const first = renderToStaticMarkup(React.createElement(SidebarMenuSkeleton));
+  const second = renderToStaticMarkup(React.createElement(SidebarMenuSkeleton));
+
+  assert.equal(first, second);
+  assert.match(first, /--skeleton-width:70%/);
+});
+
+test("walkthrough stations announce their explanation and expose labeled navigation", async () => {
+  const { default: WalkthroughCard } = await vite.ssrLoadModule("/components/engine/walkthrough-card.tsx");
+  const props = {
+    station: { title: "Compress the charge", body: "The piston rises and compresses the mixture." },
+    componentNames: ["Pistons", "Connecting rods"],
+    total: 5, index: 0, playing: true,
+    onPrevious() {}, onNext() {}, onTogglePlaying() {}, onExit() {},
+  };
+  const first = renderToStaticMarkup(React.createElement(WalkthroughCard, props));
+  assert.match(first, /aria-live="polite" aria-atomic="true">[\s\S]*Compress the charge[\s\S]*The piston rises and compresses the mixture\.[\s\S]*Connecting rods/);
+  assert.match(first, /<button[^>]*disabled=""[^>]*aria-label="Previous station"/);
+  assert.match(first, /aria-label="Next station"/);
+  assert.match(first, /aria-label="Pause walkthrough"/);
+  assert.match(first, /aria-label="Exit walkthrough"/);
+  assert.match(first, /<progress[^>]*value="1" max="5"[^>]*aria-label="Walkthrough progress"/);
+  const last = renderToStaticMarkup(React.createElement(WalkthroughCard, { ...props, index: 4, playing: false }));
+  assert.match(last, /<button[^>]*disabled=""[^>]*aria-label="Next station"/);
+  assert.match(last, /aria-label="Play walkthrough"/);
+  assert.match(last, /Station 5 of 5/);
+});
+
+test("cutaway controls preserve simple depth and label the full orientation ranges", async () => {
+  const { default: SectionControls } = await vite.ssrLoadModule("/components/engine/section-controls.tsx");
+  const { DEFAULT_SECTION_PLANE } = await vite.ssrLoadModule("/lib/engine/section-plane.ts");
+  const html = renderToStaticMarkup(React.createElement(SectionControls, {
+    depth: 52, plane: DEFAULT_SECTION_PLANE,
+    onDepthChange() {}, onPlaneChange() {}, onReset() {},
+  }));
+  assert.match(html, /<label[^>]*>Section depth<\/label>/);
+  assert.match(html, /type="range" role="slider" min="0" max="100" step="1"[^>]*aria-valuenow="52"/);
+  assert.match(html, /aria-expanded="false"[^>]*aria-controls="[^"]+"/);
+  assert.match(html, /aria-label="Cutting plane controls" hidden=""/);
+  assert.match(html, /min="-180" max="180" step="1"[^>]*aria-label="Yaw"/);
+  assert.match(html, /min="-90" max="90" step="1"[^>]*aria-label="Pitch"/);
+  for (const preset of ["Top", "Side", "Front", "Along axis"]) assert.match(html, new RegExp(`>${preset}</button>`));
+  assert.match(html, /aria-label="Reset cutting plane"/);
+  assert.match(html, /Flip cut side/);
+  assert.match(html, /type="checkbox"/);
+  assert.match(html, /Show cutting plane/);
+});

@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "1.0",
+  "dataMode": "fictional_demo",
+  "authority": "buyer_defined_hackathon_fixture",
+  "engineeringApprovalStatus": "not_established",
+  "sets": [
+    {
+      "id": "REQ-FI-C",
+      "componentId": "RS-TF-FUEL-INJECTOR",
+      "partNumber": "RS-DEMO-FI-001",
+      "revision": "C",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-FB-B",
+      "componentId": "RS-TF-FAN-BLADE",
+      "partNumber": "RS-DEMO-FB-001",
+      "revision": "B",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-NZ-A",
+      "componentId": "RS-TF-CORE-NOZZLE",
+      "partNumber": "RS-DEMO-NZ-001",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    }
+  ]
+}

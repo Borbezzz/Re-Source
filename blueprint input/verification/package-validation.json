@@ -1,0 +1,62 @@
+{
+  "status": "pass",
+  "checks": [
+    "GLB header and byte length",
+    "SHA-256 file integrity",
+    "No external texture/buffer dependencies",
+    "GLTFLoader parse round trip",
+    "Unique persistent IDs",
+    "CSV/manifest component identity, role, counts and requirement consistency",
+    "Three component-to-node and requirement mappings",
+    "Round-trip bounds within 1e-4 visualization units",
+    "Upstream injector/blade occurrence counts",
+    "1835 independent pieces; attached decorations distinguished"
+  ],
+  "meshOccurrences": 2075,
+  "components": [
+    {
+      "componentId": "RS-TF-FUEL-INJECTOR",
+      "nodeIds": [
+        "rs-mech-tf-v1.combustor.m044.i000"
+      ],
+      "roundTripBounds": [
+        0.20000000298023235,
+        0.17000000178813934,
+        0.17000000178813934
+      ],
+      "status": "pass"
+    },
+    {
+      "componentId": "RS-TF-FAN-BLADE",
+      "nodeIds": [
+        "rs-mech-tf-v1.fan.m000.i000"
+      ],
+      "roundTripBounds": [
+        0.8128810971975327,
+        1.6000001430511475,
+        0.8920455574989319
+      ],
+      "status": "pass"
+    },
+    {
+      "componentId": "RS-TF-CORE-NOZZLE",
+      "nodeIds": [
+        "rs-mech-tf-v1.group.nozzle"
+      ],
+      "roundTripBounds": [
+        1.4499998092651367,
+        2.152746059000492,
+        2.1639999225735664
+      ],
+      "status": "pass"
+    }
+  ],
+  "notValidated": [
+    "physical dimensions",
+    "manufacturing tolerances",
+    "OEM applicability",
+    "supplier qualification",
+    "procurement integration",
+    "performance across devices"
+  ]
+}
