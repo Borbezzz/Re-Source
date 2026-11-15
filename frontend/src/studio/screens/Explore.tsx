@@ -6,6 +6,8 @@ import type { SourcingNeed } from "../data/checks.ts";
 import { ComponentThumb } from "../scene/ComponentThumb.tsx";
 import { DESTINATION } from "../data/sites.ts";
 
+const MAX_PURCHASE_QUANTITY = 100;
+
 export function ComponentsPanel({ components, selected, onSelect }: { components: PackageComponent[]; selected: string | null; onSelect: (id: string) => void }) {
   const [open, setOpen] = useState(true);
   const ordered = [...components].sort((a, b) => (a.role === "primary" ? -1 : b.role === "primary" ? 1 : 0));
@@ -94,8 +96,8 @@ export function ContextCard({
     ? "Quantity must be at least 1."
     : !Number.isInteger(quantityValue)
       ? "Quantity must be a whole number."
-      : quantityValue > component.assemblyQuantity
-        ? `Quantity must be at most ${component.assemblyQuantity}.`
+      : quantityValue > MAX_PURCHASE_QUANTITY
+        ? `Quantity must be at most ${MAX_PURCHASE_QUANTITY}.`
         : null;
   return (
     <motion.section
@@ -174,7 +176,7 @@ export function ContextCard({
                 className="rs-input"
                 type="number"
                 min={1}
-                max={component.assemblyQuantity}
+                max={MAX_PURCHASE_QUANTITY}
                 step={1}
                 required
                 value={quantity}
@@ -183,7 +185,7 @@ export function ContextCard({
                 onChange={(e) => {
                   setQuantity(e.target.value);
                   const value = e.target.valueAsNumber;
-                  if (Number.isInteger(value) && value >= 1 && value <= component.assemblyQuantity) {
+                  if (Number.isInteger(value) && value >= 1 && value <= MAX_PURCHASE_QUANTITY) {
                     onNeed({ ...need, quantity: value });
                   }
                 }}
