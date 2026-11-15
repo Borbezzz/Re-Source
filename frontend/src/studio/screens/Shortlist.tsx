@@ -143,7 +143,7 @@ export function ShortlistDrawer({
                 </tr>
                 <tr>
                   <th>Availability</th>
-                  <td>{focus.checks.find((c) => c.id === "availability")!.status === "pass" ? "Awaiting supplier confirmation" : focus.checks.find((c) => c.id === "availability")!.note}</td>
+                  <td>{focus.checks.find((c) => c.id === "availability")!.status === "pass" && !focus.available ? "Awaiting supplier confirmation" : focus.checks.find((c) => c.id === "availability")!.note}</td>
                 </tr>
               </tbody>
             </table>

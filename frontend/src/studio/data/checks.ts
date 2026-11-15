@@ -25,6 +25,8 @@ export interface Assessed {
   reason: string; // headline for excluded/awaiting
   arrival: Date;
   dispatchDays: number;
+  /** Demo: this site's stock is shown as confirmed available. */
+  available: boolean;
   score: number;
   rank: number | null;
 }
@@ -56,11 +58,13 @@ export function assess(
   candidate: ProductCandidate,
   required: { partNumber: string; revision: string; condition: string },
   need: SourcingNeed,
-  opts: { today?: Date; disrupted?: boolean } = {},
+  opts: { today?: Date; disrupted?: boolean; availableSite?: string | null } = {},
 ): Assessed | null {
-  const site = SITES[candidate.candidate_id];
-  if (!site) return null;
+  const fixture = SITES[candidate.candidate_id];
+  if (!fixture) return null;
   const today = opts.today ?? new Date();
+  const available = candidate.candidate_id === opts.availableSite;
+  const site = available ? availableFixture(fixture, candidate, need, today) : fixture;
   const disruption = opts.disrupted && DISRUPTION.affects(candidate.candidate_id) ? DISRUPTION.extraDispatchDays : 0;
   const dispatchDays = (candidate.lead_time_days ?? 7) + disruption;
   const arrival = addDays(today, dispatchDays + site.transitDays);
@@ -99,7 +103,7 @@ export function assess(
             id: "availability",
             label: CHECK_LABELS.availability,
             status: disruption ? "unknown" : "pass",
-            note: disruption ? "Stock held; release date pending supplier update" : `${site.stock} in stock · supplier claim, unconfirmed`,
+            note: disruption ? "Stock held; release date pending supplier update" : available ? `${site.stock} in stock · available now` : `${site.stock} in stock · supplier claim, unconfirmed`,
           },
   );
   checks.push(
@@ -131,13 +135,47 @@ export function assess(
     reason: fail ? fail.note : unknown ? unknown.note : "All mandatory checks passed",
     arrival,
     dispatchDays,
+    available,
     score: 0,
     rank: null,
   };
 }
 
+/**
+ * Demo: the site chosen for this search run presents full evidence, enough stock
+ * for the requested quantity and the exact part/revision/condition, and ships
+ * quickly enough to arrive by the required date where its dispatch time allows.
+ */
+function availableFixture(site: SiteFixture, candidate: ProductCandidate, need: SourcingNeed, today: Date): SiteFixture {
+  const requiredBy = new Date(`${need.requiredBy}T23:59:00`);
+  const window = Math.floor((requiredBy.getTime() - today.getTime()) / DAY) - (candidate.lead_time_days ?? 7);
+  const { offeredPartNumber: _pn, offeredRevision: _rev, offeredCondition: _cond, ...rest } = site;
+  return {
+    ...rest,
+    applicability: "provided",
+    traceability: "provided",
+    siteEvidence: "provided",
+    stock: Math.max(site.stock ?? 0, need.quantity),
+    transitDays: Math.max(1, Math.min(site.transitDays, window)),
+  };
+}
+
+/**
+ * Demo: choose one site per search run to show as available. Prefers sites whose
+ * dispatch time can still meet the required date, and never the site the
+ * simulated disruption targets, so the disruption story still changes the ranking.
+ */
+export function pickAvailableSite(candidates: ProductCandidate[], need: SourcingNeed, today = new Date()): string | null {
+  const known = candidates.filter((c) => SITES[c.candidate_id] && !DISRUPTION.affects(c.candidate_id));
+  if (!known.length) return null;
+  const requiredBy = new Date(`${need.requiredBy}T23:59:00`).getTime();
+  const fits = known.filter((c) => today.getTime() + ((c.lead_time_days ?? 7) + 1) * DAY <= requiredBy);
+  const pool = fits.length ? fits : [...known].sort((a, b) => (a.lead_time_days ?? 7) - (b.lead_time_days ?? 7)).slice(0, 1);
+  return pool[Math.floor(Math.random() * pool.length)].candidate_id;
+}
+
 /** Rank eligible candidates: speed 0.5, cost 0.35 (budget preference), evidence 0.15. */
-export function rankAll(list: Assessed[], need: SourcingNeed): Assessed[] {
+export function rankAll(list: Assessed[], need: SourcingNeed, pinned: string | null = null): Assessed[] {
   const eligible = list.filter((a) => a.state === "eligible");
   const minPrice = Math.min(...eligible.map((a) => a.candidate.price ?? Infinity));
   const requiredBy = new Date(`${need.requiredBy}T23:59:00`).getTime();
@@ -154,6 +192,9 @@ export function rankAll(list: Assessed[], need: SourcingNeed): Assessed[] {
     a.score = Math.round((0.5 * speed + 0.35 * cost + 0.15) * 1000) / 10;
   }
   eligible.sort((x, y) => y.score - x.score || x.arrival.getTime() - y.arrival.getTime());
+  // Demo: the available site always makes the recommended list (it takes the last slot if needed).
+  const pinnedAt = pinned ? eligible.findIndex((a) => a.candidate.candidate_id === pinned) : -1;
+  if (pinnedAt > 2) eligible.splice(2, 0, ...eligible.splice(pinnedAt, 1));
   eligible.slice(0, 3).forEach((a, i) => (a.rank = i + 1));
   eligible.slice(3).forEach((a) => (a.rank = null));
   return list;

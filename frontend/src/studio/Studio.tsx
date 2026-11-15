@@ -9,7 +9,7 @@ import type { MapMode } from "./map/SupplierMap.tsx";
 const loadMap = () => import("./map/SupplierMap.tsx");
 const SupplierMap = lazy(() => loadMap().then((m) => ({ default: m.SupplierMap })));
 import { PROFILE_FOR_PACKAGE, SAMPLE_PACKAGE_URL, readDesignPackage, type DesignPackage, type StepId, type PackageComponent } from "./data/package.ts";
-import { CHECK_ORDER, assess, counts, defaultNeed, rankAll, type Assessed, type SourcingNeed } from "./data/checks.ts";
+import { CHECK_ORDER, assess, counts, defaultNeed, pickAvailableSite, rankAll, type Assessed, type SourcingNeed } from "./data/checks.ts";
 import { DESTINATION, DISRUPTION } from "./data/sites.ts";
 import { journeyApi } from "./api.ts";
 import type { ProductCandidate, ProductProject } from "../product-flow/types.ts";
@@ -51,6 +51,7 @@ export function Studio() {
   const [resetKey, setResetKey] = useState(0);
   const [need, setNeed] = useState<SourcingNeed>(() => defaultNeed());
   const [candidates, setCandidates] = useState<ProductCandidate[]>([]);
+  const [availableSite, setAvailableSite] = useState<string | null>(null);
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [checkingId, setCheckingId] = useState<string | null>(null);
   const [checkProgress, setCheckProgress] = useState<Record<string, number>>({});
@@ -88,9 +89,9 @@ export function Studio() {
   const assessed = useMemo(() => {
     if (!component) return [];
     const req = { partNumber: component.partNumber, revision: component.revision, condition: requirement?.condition === "new" ? "New" : (requirement?.condition ?? "New") };
-    const list = candidates.map((c) => assess(c, req, need, { disrupted })).filter(Boolean) as Assessed[];
-    return rankAll(list, need);
-  }, [candidates, component, requirement, need, disrupted]);
+    const list = candidates.map((c) => assess(c, req, need, { disrupted, availableSite })).filter(Boolean) as Assessed[];
+    return rankAll(list, need, availableSite);
+  }, [candidates, component, requirement, need, disrupted, availableSite]);
   const visibleCounts = useMemo(() => counts(assessed.filter((a) => checked.has(a.candidate.candidate_id))), [assessed, checked]);
   const top = assessed.find((a) => a.rank === 1) ?? null;
   useEffect(() => {
@@ -200,6 +201,7 @@ export function Studio() {
     setBusy("research");
     setError(null);
     setCandidates([]);
+    setAvailableSite(null);
     setChecked(new Set());
     setCheckProgress({});
     setDisrupted(false);
@@ -214,6 +216,7 @@ export function Studio() {
       setProject(p);
       const r = p.research.find((x) => x.part_id === partId);
       if (!r || r.status !== "complete") throw new Error(r?.error ?? "Supplier research failed.");
+      setAvailableSite(pickAvailableSite(r.candidates, need));
       setCandidates(r.candidates);
       setDiscoveredAt(new Date(r.completed_at ?? Date.now()));
       await wait(1500);
@@ -224,7 +227,7 @@ export function Studio() {
     } finally {
       setBusy(null);
     }
-  }, [project, partId]);
+  }, [project, partId, need]);
 
   // Animated, per-candidate qualification. Candidate discovery precedes checks;
   // up to two candidates are checked in parallel; pins update as results land.
@@ -361,6 +364,7 @@ export function Studio() {
     setInspectedId(null);
     setHovered(null);
     setCandidates([]);
+    setAvailableSite(null);
     setError(null);
     setSolid(0);
     setPhase("idle");
