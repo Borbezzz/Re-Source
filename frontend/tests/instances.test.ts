@@ -90,6 +90,82 @@ test("a retired transparent preview cannot intercept picking after its part move
   assert.equal(ray.intersectObject(renderer.root, true).length, 0);
 });
 
+for (const fallback of [false, true]) {
+  test(`cut-through picking follows world-space planes and restores the housing (${fallback ? "transparent copy" : "instances"})`, () => {
+    const geometry = new THREE.PlaneGeometry(8, 8);
+    const shellMaterial = new THREE.MeshStandardMaterial({ transparent: fallback });
+    const shell = new THREE.Mesh(geometry, shellMaterial);
+    const inside = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial());
+    const root = new THREE.Group();
+    root.position.set(2, 1, 3);
+    shell.position.z = 2;
+    root.add(shell, inside);
+    root.updateMatrixWorld(true);
+    const renderer = new AssemblyInstances([shell, inside]);
+    renderer.sync();
+    renderer.root.updateMatrixWorld(true);
+    const pick = (x: number) => {
+      const ray = new THREE.Raycaster(new THREE.Vector3(x, 1, 10), new THREE.Vector3(0, 0, -1));
+      const hit = ray.intersectObject(renderer.root, true)[0];
+      return hit && sourceMesh(hit.object, hit.instanceId);
+    };
+    assert.equal(pick(2), shell);
+    shellMaterial.clippingPlanes = [
+      new THREE.Plane(new THREE.Vector3(0, 0, -1), 4),
+      new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0),
+    ];
+    shellMaterial.clipIntersection = true;
+    assert.equal(pick(2), inside, "the removed housing cannot intercept an internal part");
+    assert.equal(pick(-1), shell, "the retained intake lip remains selectable");
+    shellMaterial.clipIntersection = false;
+    assert.equal(pick(-1), inside, "union clipping discards a hit behind either plane");
+    shellMaterial.clippingPlanes = null;
+    assert.equal(pick(2), shell, "turning cut-through off restores full housing picking");
+    renderer.dispose();
+    geometry.dispose();
+    shellMaterial.dispose();
+    inside.material.dispose();
+  });
+}
+
+test("clipped front faces pass clicks through while the visible rear housing remains selectable", () => {
+  const material = new THREE.MeshStandardMaterial({ side: THREE.DoubleSide,
+    clippingPlanes: [new THREE.Plane(new THREE.Vector3(0, 0, -1), 0)] });
+  const source = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), material);
+  source.updateMatrixWorld(true);
+  const renderer = new AssemblyInstances([source]);
+  renderer.sync();
+  renderer.root.updateMatrixWorld(true);
+  const ray = new THREE.Raycaster(new THREE.Vector3(0, 0, 10), new THREE.Vector3(0, 0, -1));
+  const hit = ray.intersectObject(renderer.root, true)[0];
+  assert.equal(hit.point.z, -2);
+  assert.equal(sourceMesh(hit.object, hit.instanceId), source);
+  renderer.dispose();
+  source.geometry.dispose();
+  material.dispose();
+});
+
+test("multi-material copies use the intersected face's clipping and visibility", () => {
+  const visible = new THREE.MeshStandardMaterial();
+  const front = visible.clone();
+  front.clippingPlanes = [new THREE.Plane(new THREE.Vector3(0, 0, -1), 0)];
+  const source = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), [visible, visible, visible, visible, front, visible]);
+  source.updateMatrixWorld(true);
+  const renderer = new AssemblyInstances([source]);
+  renderer.sync();
+  renderer.root.updateMatrixWorld(true);
+  const ray = new THREE.Raycaster(new THREE.Vector3(0, 0, 10), new THREE.Vector3(0, 0, -1));
+  assert.equal(ray.intersectObject(renderer.root, true).length, 0);
+  front.clippingPlanes = null;
+  assert.equal(sourceMesh(ray.intersectObject(renderer.root, true)[0].object), source);
+  front.visible = false;
+  assert.equal(ray.intersectObject(renderer.root, true).length, 0);
+  renderer.dispose();
+  source.geometry.dispose();
+  front.dispose();
+  visible.dispose();
+});
+
 test("disposing draw batches leaves shared model assets intact", () => {
   const { sources } = fixture();
   const material = new THREE.MeshStandardMaterial();

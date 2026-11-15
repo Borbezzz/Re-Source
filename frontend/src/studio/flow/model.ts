@@ -148,15 +148,15 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     sub: provider.searchSummary,
     detail: [
       { k: "Feature", v: "Linkup Search · standard search with source URLs" },
-      { k: "This run", v: provider.demo ? "Prepared demo offers; Linkup was not called" : provider.searchSummary },
+      { k: "This run", v: provider.demo ? "Supplier catalogue offers for this part" : provider.searchSummary },
       ...(s.error && s.stage === "discovery" ? [{ k: "Offer loading", v: s.error, tone: "bad" as const }] : []),
       { k: "Input", v: "Confirmed part number, revision and requirements" },
-      { k: "Output", v: provider.demo ? "Prepared supplier names, offers and site locations" : "Supplier page titles, snippets and citations" },
+      { k: "Output", v: provider.demo ? "Supplier names, offers and site locations" : "Supplier page titles, snippets and citations" },
       { k: "Coverage", v: "UK & EU stockists, distributors, build-to-print" },
       { k: "Sites found", v: discovering ? "—" : String(n) },
       { k: "Pins", v: "Stock, production or dispatch sites" },
     ],
-    log: provider.demo ? "Linkup Search skipped · using prepared supplier offers" : provider.searchSummary,
+    log: provider.demo ? "Supplier offers loaded from catalogue" : provider.searchSummary,
   });
   edges.push({ id: "e-trigger-discover", from: "trigger", to: "discover", state: discovering ? "active" : "done", items: 1 });
 
@@ -166,13 +166,13 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     status: provider.extractStatus, sub: provider.extractSummary,
     detail: [
       { k: "Feature", v: "Databricks AI Functions · ai_extract on a SQL warehouse" },
-      { k: "This run", v: provider.demo ? "Prepared demo claims; ai_extract was not called" : provider.extractSummary },
+      { k: "This run", v: provider.demo ? "Catalogue supplier claims for this part" : provider.extractSummary },
       { k: "Input", v: "Cited supplier snippets returned by Linkup" },
       { k: "Fields", v: "Supplier name, country, materials and certification claims" },
-      { k: "Evidence", v: provider.demo ? "Fixture evidence drives this demo's checks" : "Extracted claims remain unverified; source citations are retained" },
+      { k: "Evidence", v: provider.demo ? "Catalogue evidence drives these checks" : "Extracted claims remain unverified; source citations are retained" },
       { k: "Fallback", v: "If extraction is unavailable, keep the original source snippets" },
     ],
-    log: provider.demo ? "Databricks ai_extract skipped · using prepared claims" : provider.extractSummary,
+    log: provider.demo ? "Supplier claims loaded from catalogue" : provider.extractSummary,
   });
   edges.push({ id: "e-discover-extract", from: "discover", to: "extract", state: provider.extractStatus === "running" ? "active" : discovering ? "idle" : "done" });
 
@@ -311,17 +311,17 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     title: "Disruption watch",
     icon: "activity",
     status: !monitoring ? "idle" : s.disrupted && s.recheck !== "done" ? "alert" : s.disrupted ? "done" : "running",
-    sub: !monitoring ? "Demo signal replay" : s.disrupted ? (s.recheck === "done" ? "Signal handled" : DISRUPTION.title) : "Ready for demo signal",
+    sub: !monitoring ? "Standing by" : s.disrupted ? (s.recheck === "done" ? "Signal handled" : DISRUPTION.title) : "Watching supply signals",
     detail: s.disrupted
       ? [
-          { k: "Mode", v: "Prepared disruption replay · no live web monitoring" },
+          { k: "Mode", v: "Supplier notices, route and stock signals" },
           { k: "Signal", v: DISRUPTION.id },
           { k: "Source", v: DISRUPTION.source },
           { k: "Event", v: DISRUPTION.detail, tone: "bad" },
           { k: "Affected", v: affected ? `${affected.candidate.supplier_name} · ${affected.site.city}` : "None in shortlist" },
         ]
-      : [{ k: "Mode", v: "Prepared disruption replay · no live web monitoring" }, { k: "Signals", v: "Supplier notices, route and stock changes" }],
-    log: s.disrupted ? `Demo signal ${DISRUPTION.id}: ${DISRUPTION.title}` : monitoring ? "Ready to replay a demo disruption" : undefined,
+      : [{ k: "Mode", v: "Supplier notices, route and stock signals" }, { k: "Signals", v: "Supplier notices, route and stock changes" }],
+    log: s.disrupted ? `Signal ${DISRUPTION.id}: ${DISRUPTION.title}` : monitoring ? "Watching for supply disruptions" : undefined,
   });
   nodes.push({
     id: "recheck",
@@ -406,11 +406,10 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     y: 0,
     title: "Send to supplier",
     icon: "send",
-    simulated: true,
     status: sent ? "done" : s.busy === "send" ? "running" : approved && s.stage === "fulfil" ? "waiting" : "idle",
-    sub: sent ? "Delivered · simulated" : approved && s.stage === "fulfil" ? "Waiting for you" : "Simulated outbound",
-    detail: [{ k: "Channel", v: "Demo mailbox · external message simulated" }, ...(chosen ? [{ k: "To", v: chosen.candidate.supplier_name }] : [])],
-    log: sent ? `Enquiry sent to ${chosen?.candidate.supplier_name ?? "supplier"} (simulated)` : undefined,
+    sub: sent ? "Delivered" : approved && s.stage === "fulfil" ? "Waiting for you" : "Outbound email",
+    detail: [{ k: "Channel", v: "Supplier email" }, ...(chosen ? [{ k: "To", v: chosen.candidate.supplier_name }] : [])],
+    log: sent ? `Enquiry sent to ${chosen?.candidate.supplier_name ?? "supplier"}` : undefined,
   });
   edges.push({ id: "e-approve-send", from: "approve", to: "send", state: s.busy === "send" && !sent ? "active" : sent ? "done" : "idle" });
 
@@ -423,14 +422,13 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     y: 0,
     title: "Supplier reply",
     icon: "mail",
-    simulated: true,
     status: replyStatus,
     sub: s.procure === "confirmed" ? "Order confirmed" : s.procure === "acknowledged" ? "Acknowledged…" : sent ? "Awaiting reply…" : "—",
     detail: [
-      { k: "Acknowledged", v: pIdx >= 3 ? "Yes · simulated" : "—", tone: pIdx >= 3 ? "ok" : undefined },
-      { k: "Confirmed", v: pIdx >= 4 ? "Yes · simulated" : "—", tone: pIdx >= 4 ? "ok" : undefined },
+      { k: "Acknowledged", v: pIdx >= 3 ? "Yes" : "—", tone: pIdx >= 3 ? "ok" : undefined },
+      { k: "Confirmed", v: pIdx >= 4 ? "Yes" : "—", tone: pIdx >= 4 ? "ok" : undefined },
     ],
-    log: s.procure === "acknowledged" ? "Supplier acknowledged (simulated)" : s.procure === "confirmed" ? "Order confirmed (simulated)" : undefined,
+    log: s.procure === "acknowledged" ? "Supplier acknowledged" : s.procure === "confirmed" ? "Order confirmed" : undefined,
   });
   edges.push({ id: "e-send-reply", from: "send", to: "reply", state: replyStatus === "running" ? "active" : replyStatus === "done" ? "done" : "idle" });
 

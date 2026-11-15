@@ -1,6 +1,6 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, useGLTF } from "@react-three/drei";
-import { memo, Suspense, useEffect, useMemo, useRef } from "react";
+import { memo, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { AssemblyInstances } from "./instances.ts";
 
@@ -11,7 +11,7 @@ const THUMB_RESIZE = { offsetSize: true };
  * Renders the *actual* selected component from the package GLB (same asset,
  * same identity) as a compact anchor thumbnail — never a generated image.
  */
-function Part({ url, nodeIds }: { url: string; nodeIds: string[] }) {
+function Part({ url, nodeIds, spin }: { url: string; nodeIds: string[]; spin: boolean }) {
   const gltf = useGLTF(url);
   const ref = useRef<THREE.Group>(null);
   const prepared = useMemo(() => {
@@ -53,8 +53,13 @@ function Part({ url, nodeIds }: { url: string; nodeIds: string[] }) {
     return { wrap, instances, mat };
   }, [gltf, nodeIds]);
   useEffect(() => () => { prepared.instances.dispose(); prepared.mat.dispose(); }, [prepared]);
-  useFrame((_, dt) => {
-    if (ref.current) ref.current.rotation.y += dt * 0.5;
+  // Rendered on demand: the thumbnail turns only while the pointer is over it.
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => { invalidate(); }, [invalidate, spin, prepared]);
+  useFrame((state, dt) => {
+    if (!spin || !ref.current) return;
+    ref.current.rotation.y += Math.min(dt, 0.05) * 0.5;
+    state.invalidate();
   });
   return (
     <group ref={ref} rotation={[0.35, 0.6, 0]}>
@@ -77,12 +82,13 @@ const ThumbLighting = memo(function ThumbLighting() {
 });
 
 export const ComponentThumb = memo(function ComponentThumb({ url, nodeIds, label }: { url: string; nodeIds: string[]; label: string }) {
+  const [spin, setSpin] = useState(false);
   return (
-    <div className="rs-thumb" role="img" aria-label={`${label} — rendered from the package model`}>
-      <Canvas resize={THUMB_RESIZE} dpr={[1, 2]} camera={{ position: [0, 0, 3.2], fov: 32 }} gl={{ alpha: true, antialias: true }}>
+    <div className="rs-thumb" role="img" aria-label={`${label} — rendered from the package model`} onPointerEnter={() => setSpin(true)} onPointerLeave={() => setSpin(false)}>
+      <Canvas resize={THUMB_RESIZE} frameloop="demand" dpr={[1, 1.5]} camera={{ position: [0, 0, 3.2], fov: 32 }} gl={{ alpha: true, antialias: true }}>
         <Suspense fallback={null}>
           <ThumbLighting />
-          <Part url={url} nodeIds={nodeIds} />
+          <Part url={url} nodeIds={nodeIds} spin={spin} />
         </Suspense>
       </Canvas>
     </div>

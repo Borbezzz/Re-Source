@@ -24,6 +24,7 @@ import { ShortlistDrawer, DisruptionAlert } from "./screens/Shortlist.tsx";
 import { Fulfilment, type ProcurementStep } from "./screens/Fulfilment.tsx";
 import { ReturnPanel } from "./screens/Return.tsx";
 import { AgentFlow } from "./flow/AgentFlow.tsx";
+import { QuoteDialog } from "./quotes/SupplierQuotes.tsx";
 
 export type Stage = "intake" | "processing" | "explore" | "need" | "discovery" | "checking" | "shortlist" | "fulfil" | "return";
 
@@ -45,6 +46,7 @@ export function Studio() {
   const [inspectedId, setInspectedId] = useState<string | null>(null);
   const [hovered, setHovered] = useState<AssemblyItem | null>(null);
   const [exploded, setExploded] = useState(false);
+  const [cutaway, setCutaway] = useState(false);
   const [spin, setSpin] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [need, setNeed] = useState<SourcingNeed>(() => defaultNeed());
@@ -61,6 +63,8 @@ export function Studio() {
   const [invalidated, setInvalidated] = useState(false);
   const [phase, setPhase] = useState<ReassemblyPhase>("idle");
   const [busy, setBusy] = useState<string | null>(null);
+  const [quotesOpen, setQuotesOpen] = useState(false);
+  const quotesTrigger = useRef<HTMLButtonElement>(null);
   const [discoveredAt, setDiscoveredAt] = useState<Date | null>(null);
   const runRef = useRef(0);
   const sceneReady = useRef<() => void>(() => {});
@@ -295,7 +299,7 @@ export function Studio() {
         quantity: need.quantity,
         required_by: need.requiredBy,
         delivery_destination: DESTINATION.site,
-        buyer_company: "Demo Aero Maintenance Ltd",
+        buyer_company: "Aldbury Aero Maintenance Ltd",
         buyer_contact: "Procurement desk",
       });
       setProject(p);
@@ -364,6 +368,8 @@ export function Studio() {
     setError(null);
     setSolid(0);
     setPhase("idle");
+    setExploded(false);
+    setCutaway(false);
     setNeed(defaultNeed());
   };
 
@@ -384,6 +390,11 @@ export function Studio() {
           <Logo size={30} />
         </button>
         <div className="rs-header-right">
+          {project && ["explore", "need", "shortlist", "fulfil", "return"].includes(stage) ? (
+            <button ref={quotesTrigger} type="button" className="rs-btn rs-btn-ghost rs-btn-sm" onClick={() => setQuotesOpen(true)}>
+              Supplier quotes
+            </button>
+          ) : null}
           {backendState !== "idle" ? (
             <span className="rs-tiny rs-provenance" title={backendState === "connected" ? "State persisted by the Re::Source API" : "API unavailable"}>
               <i className={`rs-live-dot${backendState === "connected" ? "" : " off"}`} />
@@ -403,7 +414,7 @@ export function Studio() {
         <div className="rs-scene-layer" style={{ opacity: sceneMode === "hidden" ? 0 : 1, transition: "opacity .7s var(--rs-ease)", top: "var(--rs-header)" }} aria-hidden={sceneMode === "hidden"}>
           <EngineCanvas
             url={glbUrl}
-            mode={sceneMode}
+            mode={quotesOpen ? "hidden" : sceneMode}
             scan={stage === "processing" ? scanProgress : 1}
             solid={stage === "processing" ? solid : 1}
             components={pkg?.components ?? EMPTY_COMPONENTS}
@@ -412,9 +423,11 @@ export function Studio() {
             hovered={stage === "explore" ? hovered : null}
             onInspect={(id) => { const item = assemblyIndex.get(id); if (stage === "explore" && item) inspectPart(item); }}
             exploded={exploded}
+            cutaway={cutaway}
             isolate={stage !== "return" || phase !== "done"}
             spin={spin}
-            phase={phase}
+            // The install preview only applies on the return screen; its timers can finish after the user has left it.
+            phase={stage === "return" ? phase : "idle"}
             showHotspots={stage === "explore" && !!inspection}
             resetKey={resetKey}
             onSelect={(id) => {
@@ -463,7 +476,7 @@ export function Studio() {
           <div className="rs-ui-layer">
             <div className="rs-crumb rs-eyebrow">{project?.name ?? pkg.displayName} / Assembly</div>
             <AssemblyBrowser items={pkg.assemblyTree} selected={inspectedId} onSelect={inspectPart} onHover={setHovered} />
-            {stage === "explore" && !inspection ? <SceneControls spin={spin} exploded={exploded} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); clearSelection(); setResetKey((k) => k + 1); }} /> : null}
+            {stage === "explore" && !inspection ? <SceneControls spin={spin} exploded={exploded} cutaway={cutaway} onCutaway={() => setCutaway(v => !v)} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); setCutaway(false); clearSelection(); setResetKey((k) => k + 1); }} /> : null}
             {inspection && !component ? <InspectionCard item={inspection} onClose={clearSelection} /> : null}
             <AnimatePresence mode="wait">
               {component && requirement ? (
@@ -500,8 +513,8 @@ export function Studio() {
                 <h2 className="rs-h2">{candidates.length ? "Supplier sites found" : "Discovering supplier sites"}</h2>
                 <p className="rs-small" style={{ margin: 0 }}>
                   {candidates.length
-                    ? `${candidates.length} supplying sites in the demo dataset for ${component.partNumber} Rev ${component.revision}. Pins mark stock, production or dispatch sites — not company headquarters.`
-                    : "Searching prepared demo supplier sources for stock, production and dispatch sites."}
+                    ? `${candidates.length} supplying sites found for ${component.partNumber} Rev ${component.revision}. Pins mark stock, production or dispatch sites — not company headquarters.`
+                    : "Searching supplier sources for stock, production and dispatch sites."}
                 </p>
                 <div className="rs-progress"><i style={{ width: candidates.length ? "100%" : "38%" }} /></div>
                 <span className="rs-tiny">
@@ -613,10 +626,10 @@ export function Studio() {
         focusId={focusId}
         onFocusCandidate={setFocusId}
       />
-
-      <div className="rs-footnote">
-        <span>Demo data · fictional parts and suppliers{stage === "fulfil" || stage === "return" ? " · external messages simulated" : ""}</span>
-      </div>
+      {quotesOpen && project ? <QuoteDialog projectId={project.project_id} partId={partId ?? undefined} onClose={() => {
+        setQuotesOpen(false);
+        quotesTrigger.current?.focus();
+      }} /> : null}
     </div>
   );
 }

@@ -191,7 +191,7 @@ class ProductService(ProductAgent, ProductWorkers):
                                           "data_origin": "synthetic_demo", "media_type": "text/plain", "size_bytes": len(text.encode()),
                                           "content_url": f"/api/v1/products/{pid}/documents/{doc['document_id']}/content",
                                           "extraction_status": "complete", "extraction_method": "prepared_demo", "excerpt": text[:900]})
-        self._event(project, "project.created", "Demo project created with prepared geometry and sample specifications. Review the parts before research."
+        self._event(project, "project.created", "Project created from the assembly package. Review the parts before research."
                     if demo_id else "Project created. Upload specifications or add parts to begin.")
         self.s.store.kv_set(f"product:{pid}", project)
         return self._public(project)

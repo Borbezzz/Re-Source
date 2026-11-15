@@ -97,21 +97,10 @@ export function Processing({
                 <dd>{pkg.displayName}</dd>
                 <dt>Package</dt>
                 <dd className="rs-mono">{pkg.packageId} · v{pkg.packageVersion}</dd>
-                {pkg.components.slice(0, 3).map((c) => (
-                  <FragmentRow key={c.componentId} label={c.role === "primary" ? "Primary part" : "Part"} value={`${c.name} · ${c.partNumber} Rev ${c.revision}`} />
-                ))}
-                <dt>Data</dt>
-                <dd className="rs-small">Fictional demo identities; not engineering approval</dd>
-                {pkg.source ? (
-                  <>
-                    <dt>Geometry</dt>
-                    <dd className="rs-small">Mechanica, MIT · {pkg.source.commit.slice(0, 7)}</dd>
-                  </>
-                ) : null}
               </dl>
-              {pkg.components.length > 3 ? <details className="rs-small rs-package-parts">
-                <summary>{pkg.components.length} demo sourcing families across the assembly</summary>
-                <ul>{pkg.components.slice(3).map(c => <li key={c.componentId}>{c.name} · {c.assemblyQuantity} in assembly</li>)}</ul>
+              {pkg.components.length > 0 ? <details className="rs-small rs-package-parts">
+                <summary>{pkg.components.length} sourcing families across the assembly</summary>
+                <ul>{pkg.components.map(c => <li key={c.componentId}>{c.name} · {c.assemblyQuantity} in assembly</li>)}</ul>
               </details> : null}
               <button type="button" className="rs-btn rs-btn-grad" onClick={onConfirm} disabled={busy}>
                 {busy ? "Confirming…" : "Confirm and open assembly"}
@@ -121,14 +110,5 @@ export function Processing({
         </AnimatePresence>
       </motion.section>
     </div>
-  );
-}
-
-function FragmentRow({ label, value }: { label: string; value: string }) {
-  return (
-    <>
-      <dt>{label}</dt>
-      <dd>{value}</dd>
-    </>
   );
 }

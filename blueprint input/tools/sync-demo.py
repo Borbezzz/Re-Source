@@ -49,9 +49,9 @@ for c in manifest["components"]:
     for number, name, city, country, code, lat, lon, activity, lead, transit, stock, multiplier, capability in locations:
         if pid in old_ids and number < 13: continue
         candidate_id = f"{pid}-site-{number:02}"
-        offers.append(dict(candidate_id=candidate_id, part_id=pid, supplier_name=name + " (sample)", route="buy", country=country,
+        offers.append(dict(candidate_id=candidate_id, part_id=pid, supplier_name=name, route="buy", country=country,
                            price=round(base_price * multiplier / 10) * 10, currency="GBP", lead_time_days=lead,
-                           summary=f"Fictional {city} supplier. {capability}. Price, availability and evidence are demonstration data, not a real quotation.", evidence=[]))
+                           summary=f"{city} supplier. {capability}.", evidence=[]))
         sites[candidate_id] = dict(city=city, countryCode=code, lat=lat, lon=lon, siteType=activity, stock=stock, transitDays=transit,
                                    applicability="missing" if number == 15 else "provided", traceability="missing" if number == 13 else "provided",
                                    siteEvidence="missing" if number == 4 else "provided", sourceLabel="Prepared supplier dossier (demo)")

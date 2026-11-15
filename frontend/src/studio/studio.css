@@ -202,11 +202,10 @@
 
 /* ---------- Panels & surfaces ---------- */
 .rs-panel {
-  background: var(--rs-panel);
+  /* Near-opaque instead of a backdrop blur: blurring a live 3D canvas or animated map every frame is costly. */
+  background: rgba(18, 18, 23, 0.94);
   border: 1px solid var(--rs-line);
   border-radius: var(--rs-radius-l);
-  backdrop-filter: blur(22px) saturate(1.2);
-  -webkit-backdrop-filter: blur(22px) saturate(1.2);
   box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.9);
 }
 .rs-divider { height: 1px; background: var(--rs-line); border: 0; margin: 0; }
@@ -230,20 +229,6 @@
 .rs-badge.bad { color: var(--rs-bad); border-color: rgba(248, 113, 113, 0.25); background: rgba(248, 113, 113, 0.07); }
 .rs-badge.grad { color: var(--rs-text); background: var(--rs-grad-soft); border-color: rgba(139, 92, 246, 0.3); }
 .rs-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
-
-.rs-footnote {
-  position: absolute;
-  right: 32px;
-  bottom: 22px;
-  z-index: 30;
-  font-size: 12px;
-  color: var(--rs-text-3);
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  pointer-events: none;
-}
-.rs-footnote > * { pointer-events: auto; }
 
 /* ---------- Stage layout ---------- */
 .rs-stage { position: absolute; inset: 0; }
@@ -635,9 +620,7 @@
   width: min(var(--rs-drawer-w), 100%);
   z-index: 22;
   border-left: 1px solid var(--rs-line);
-  background: rgba(13, 13, 17, 0.86);
-  backdrop-filter: blur(26px);
-  -webkit-backdrop-filter: blur(26px);
+  background: rgba(13, 13, 17, 0.96);
   display: flex;
   flex-direction: column;
 }
@@ -767,7 +750,6 @@
   .rs-return-panel { left: 12px; right: 12px; width: auto; top: auto; bottom: 12px; }
   .rs-process-panel { left: 12px; bottom: 12px; width: calc(100% - 24px); }
   .rs-legend { left: 16px; gap: 12px; flex-wrap: wrap; }
-  .rs-footnote { right: 16px; }
   .rs-crumb { left: 16px; }
   .rs-drop { grid-template-columns: auto 1fr; }
   .rs-drop > .rs-btn { grid-column: 1 / -1; }
@@ -778,11 +760,6 @@
   .rs-studio *, .rs-studio *::before { transition-duration: 0.01ms !important; }
 }
 
-/* Map stages carry provenance in their own panels; keep the corner clear for the drawer. */
-.rs-studio[data-stage="checking"] > .rs-footnote,
-.rs-studio[data-stage="shortlist"] > .rs-footnote,
-.rs-studio[data-stage="fulfil"] > .rs-footnote,
-.rs-studio[data-stage="return"] > .rs-footnote { display: none; }
 @media (max-width: 900px) {
   .rs-alert { left: 12px !important; right: 12px; width: auto !important; bottom: 46% !important; }
 }
@@ -791,7 +768,6 @@
 @media (max-width: 700px) {
   .rs-header-link:not([href="#help"]), .rs-provenance { display: none; }
   .rs-logo-word { font-size: 18px; }
-  .rs-footnote { display: none; }
   .rs-intake { padding: 24px 16px; place-items: start; padding-top: 48px; }
   .rs-drop { padding: 22px 4px; gap: 14px; }
   .rs-drop-copy strong { font-size: 19px; }
@@ -802,7 +778,7 @@
   .rs-comp { padding: 10px 12px; font-size: 14.5px; }
   .rs-studio:has(.rs-context) .rs-components { display: none; }
   .rs-context { top: auto; bottom: 12px; max-height: 70%; overflow: auto; padding: 18px; }
-  .rs-scene-controls { left: 12px; right: 12px; top: 10px; justify-content: center; }
+  .rs-scene-controls { left: 12px; right: 12px; top: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
   .rs-scene-controls .rs-btn { min-height: 34px; padding: 0 11px; font-size: 13px; }
   .rs-check-panel { padding: 18px; gap: 12px; }
   .rs-h2 { font-size: 22px; }

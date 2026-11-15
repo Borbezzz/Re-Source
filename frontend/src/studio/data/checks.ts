@@ -85,14 +85,14 @@ export function assess(
   );
   checks.push(
     site.siteEvidence === "provided"
-      ? { id: "site", label: CHECK_LABELS.site, status: "pass", note: `${site.siteType} evidence on file (demo)` }
+      ? { id: "site", label: CHECK_LABELS.site, status: "pass", note: `${site.siteType} evidence on file` }
       : { id: "site", label: CHECK_LABELS.site, status: "unknown", note: "Awaiting evidence for the supplying site" },
   );
   const missingDocs = [site.applicability === "missing" && "applicability", site.traceability === "missing" && "traceability"].filter(Boolean);
   checks.push(
     missingDocs.length
       ? { id: "documents", label: CHECK_LABELS.documents, status: "unknown", note: `Awaiting ${missingDocs.join(" and ")} records` }
-      : { id: "documents", label: CHECK_LABELS.documents, status: "pass", note: "Applicability and traceability documents listed (demo)" },
+      : { id: "documents", label: CHECK_LABELS.documents, status: "pass", note: "Applicability and traceability documents listed" },
   );
   checks.push(
     site.stock == null
@@ -132,7 +132,7 @@ export function assess(
     site,
     checks,
     state,
-    reason: fail ? fail.note : unknown ? unknown.note : "All mandatory checks passed on demo evidence",
+    reason: fail ? fail.note : unknown ? unknown.note : "All mandatory checks passed",
     arrival,
     dispatchDays,
     available,

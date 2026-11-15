@@ -77,7 +77,7 @@ test("full-detail assembly sleeps at rest and wakes for controls and the complet
   await page.getByRole("button", { name: "Select supplier", exact: true }).click();
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Approve enquiry", exact: true }).click();
-  await page.getByRole("button", { name: "Send enquiry (simulated)", exact: true }).click();
+  await page.getByRole("button", { name: "Send enquiry", exact: true }).click();
   await page.getByRole("button", { name: "Preview reassembly", exact: true }).click();
   const partOffset = () => page.evaluate(() => {
     const p = (window as any).__rsScene.prepared;
