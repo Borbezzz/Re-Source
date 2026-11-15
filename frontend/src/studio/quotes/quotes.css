@@ -1,3 +1,5 @@
+/* Supplier quotes: import, compare and review source-backed offers. */
+
 .rs-quote-dialog {
   position: fixed;
   inset: 0;
@@ -8,112 +10,266 @@
   margin: 0;
   padding: 0;
   border: 0;
-  background: var(--rs-bg);
+  background:
+    radial-gradient(900px 420px at 12% -8%, rgba(56, 189, 248, 0.09), transparent 70%),
+    radial-gradient(800px 460px at 96% 4%, rgba(139, 92, 246, 0.1), transparent 70%),
+    var(--rs-bg);
   color: var(--rs-text);
   color-scheme: dark;
+  overflow: auto;
 }
+.rs-quote-dialog::backdrop { background: rgba(5, 5, 8, 0.7); backdrop-filter: blur(6px); }
+.rs-quote-dialog[open] { animation: rs-quote-in 0.4s var(--rs-ease) both; }
 
 .rs-quote-page {
   overflow: auto;
   color-scheme: dark;
+  background:
+    radial-gradient(900px 420px at 12% -8%, rgba(56, 189, 248, 0.09), transparent 70%),
+    radial-gradient(800px 460px at 96% 4%, rgba(139, 92, 246, 0.1), transparent 70%),
+    var(--rs-bg);
 }
 
 .rs-quote-workspace {
   max-width: 1320px;
   margin: 0 auto;
-  padding: 42px clamp(18px, 4vw, 56px) 64px;
+  padding: 40px clamp(16px, 4vw, 56px) 72px;
   color: var(--rs-text);
 }
+.rs-quote-workspace *, .rs-quote-workspace *::before, .rs-quote-workspace *::after { box-sizing: border-box; }
+.rs-quote-workspace p { margin: 0; }
 
+/* ---------- Heading ---------- */
 .rs-quote-heading {
   display: grid;
   justify-items: start;
-  gap: 8px;
-  margin-bottom: 32px;
+  gap: 6px;
+  margin-bottom: 30px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rs-line);
+  position: relative;
 }
+.rs-quote-heading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 140px;
+  height: 1px;
+  background: var(--rs-grad);
+}
+.rs-quote-heading .rs-link { font-size: 13px; color: var(--rs-text-2); gap: 6px; }
+.rs-quote-heading .rs-link:hover { color: var(--rs-text); }
+.rs-quote-heading .rs-link:hover svg { transform: translateX(-3px); }
 .rs-quote-heading .rs-h2 {
-  margin-top: 10px;
+  margin-top: 14px;
+  font-size: clamp(28px, 3.4vw, 38px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  background: linear-gradient(180deg, #fff 30%, rgba(244, 241, 234, 0.62));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.rs-quote-workspace p {
-  margin: 0;
+.rs-quote-project {
+  font: 500 12px var(--rs-mono);
+  letter-spacing: 0.02em;
+  color: var(--rs-text-3);
+  text-transform: uppercase;
 }
+
+/* ---------- Layout and cards ---------- */
 .rs-quote-layout {
   display: grid;
-  grid-template-columns: minmax(245px, 310px) minmax(0, 1fr);
-  gap: clamp(22px, 4vw, 48px);
+  grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 36px);
   align-items: start;
+}
+.rs-quote-intake,
+.rs-quote-comparison {
+  position: relative;
+  border-radius: var(--rs-radius-l);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(22, 22, 28, 0.94), rgba(14, 14, 18, 0.94)) padding-box,
+    linear-gradient(160deg, rgba(244, 241, 234, 0.2), rgba(244, 241, 234, 0.05) 45%, rgba(139, 92, 246, 0.28)) border-box;
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  animation: rs-quote-in 0.55s var(--rs-ease) both;
 }
 .rs-quote-intake {
   display: grid;
   gap: 18px;
-  padding: 20px;
-  background: var(--rs-panel-solid);
-  border: 1px solid var(--rs-line-2);
-  border-radius: var(--rs-radius);
+  padding: 22px;
+  position: sticky;
+  top: 24px;
 }
+.rs-quote-comparison {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: 22px;
+  animation-delay: 0.08s;
+}
+.rs-quote-comparison > [role="status"]:empty { display: none; }
+.rs-quote-comparison > [role="status"]:not(:empty) {
+  justify-self: start;
+  padding: 7px 12px;
+  border-radius: 99px;
+  border: 1px solid rgba(74, 222, 156, 0.3);
+  background: rgba(74, 222, 156, 0.07);
+  color: var(--rs-ok);
+  font-size: 12.5px;
+  animation: rs-quote-in 0.35s var(--rs-ease) both;
+}
+
+.rs-quote-title { display: flex; align-items: center; gap: 10px; }
+.rs-quote-icon {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 8px;
+  color: var(--rs-text);
+  background: var(--rs-grad-soft);
+  border: 1px solid var(--rs-line-2);
+}
+
+/* ---------- Form ---------- */
 .rs-quote-intake form,
 .rs-quote-intake label,
 .rs-quote-review label,
 .rs-quote-selectors label {
   display: grid;
-  gap: 6px;
+  gap: 7px;
   min-width: 0;
-  font-size: 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--rs-text-2);
+  letter-spacing: 0.01em;
 }
-.rs-quote-intake form {
-  gap: 15px;
-}
+.rs-quote-intake form { gap: 16px; }
 .rs-quote-workspace :is(select, input, textarea) {
   max-width: 100%;
   width: 100%;
   min-width: 0;
-  min-height: 40px;
+  min-height: 42px;
+  font-size: 14px;
+  color: var(--rs-text);
+  background: rgba(9, 9, 12, 0.7);
+  border: 1px solid var(--rs-line-2);
+  border-radius: 10px;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.rs-quote-workspace :is(select, input, textarea):hover { border-color: rgba(244, 241, 234, 0.26); }
+.rs-quote-workspace :is(select, input, textarea):focus {
+  outline: none;
+  border-color: rgba(56, 189, 248, 0.7);
+  background: rgba(9, 9, 12, 0.95);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
 }
 .rs-quote-workspace textarea {
   resize: vertical;
   height: auto;
-  min-height: 112px;
+  min-height: 120px;
+  padding: 11px 12px;
+  line-height: 1.5;
 }
-.rs-quote-workspace :is(input, textarea)::placeholder {
-  color: var(--rs-text-2);
-}
+.rs-quote-workspace :is(input, textarea)::placeholder { color: var(--rs-text-3); }
+.rs-quote-intake .rs-mono { color: var(--rs-text-3); font-size: 11.5px; font-weight: 400; }
+
+/* Segmented source picker */
 .rs-quote-source-picker {
-  display: flex;
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.rs-quote-source-picker legend {
-  margin-bottom: 5px;
-  font-size: 14px;
-}
-.rs-quote-source-picker label {
-  display: flex;
-  align-items: center;
-  min-height: 32px;
-}
-.rs-quote-source-picker input {
-  width: auto;
-  min-height: auto;
-  accent-color: var(--rs-violet);
-}
-.rs-quote-file::file-selector-button {
-  border: 1px solid var(--rs-line-2);
-  border-radius: var(--rs-radius-s);
-  background: var(--rs-raise-2);
-  color: var(--rs-text);
-  padding: 4px 7px;
-  margin-right: 8px;
-  font: inherit;
-}
-.rs-quote-comparison {
   display: grid;
-  gap: 14px;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin: 0;
+  padding: 4px;
+  border: 1px solid var(--rs-line-2);
+  border-radius: 12px;
+  background: rgba(9, 9, 12, 0.7);
   min-width: 0;
 }
-.rs-quote-comparison > [role="status"]:empty {
-  display: none;
+.rs-quote-source-picker legend {
+  /* Floated so it becomes a grid item; span both columns above the toggle. */
+  float: left;
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 2px 4px 0;
+  margin-bottom: 2px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--rs-text-2);
+}
+.rs-quote-intake .rs-quote-source-picker label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--rs-text-2);
+  cursor: pointer;
+  transition: background 0.25s var(--rs-ease), color 0.2s, box-shadow 0.25s;
+}
+.rs-quote-intake .rs-quote-source-picker label:hover { color: var(--rs-text); }
+.rs-quote-intake .rs-quote-source-picker label:has(input:checked) {
+  color: var(--rs-text);
+  background: var(--rs-raise-2);
+  box-shadow: inset 0 0 0 1px var(--rs-line-2), 0 6px 18px -10px rgba(139, 92, 246, 0.8);
+}
+.rs-quote-workspace .rs-quote-source-picker input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.rs-quote-source-picker label:has(input:focus-visible) { outline: 2px solid var(--rs-cyan); outline-offset: 2px; }
+
+/* PDF drop zone */
+.rs-quote-workspace input.rs-quote-file {
+  min-height: 96px;
+  padding: 18px 14px;
+  border: 1px dashed rgba(244, 241, 234, 0.24);
+  border-radius: 12px;
+  background:
+    radial-gradient(240px 80px at 50% 0%, rgba(56, 189, 248, 0.08), transparent 70%),
+    rgba(9, 9, 12, 0.6);
+  color: var(--rs-text-2);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.rs-quote-workspace input.rs-quote-file:hover { border-color: rgba(56, 189, 248, 0.6); background-color: rgba(56, 189, 248, 0.04); }
+.rs-quote-file::file-selector-button {
+  display: block;
+  margin: 0 0 8px;
+  padding: 7px 12px;
+  border: 1px solid var(--rs-line-2);
+  border-radius: 8px;
+  background: var(--rs-raise-2);
+  color: var(--rs-text);
+  font: 500 12.5px var(--rs-sans);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.rs-quote-file:hover::file-selector-button { background: rgba(244, 241, 234, 0.1); border-color: rgba(244, 241, 234, 0.3); }
+.rs-quote-drop .rs-small { font: 400 11px var(--rs-mono); color: var(--rs-text-3); }
+
+.rs-quote-intake .rs-btn-grad { width: 100%; justify-content: center; min-height: 42px; }
+
+/* ---------- Comparison ---------- */
+.rs-quote-empty {
+  padding: 36px 20px;
+  text-align: center;
+  border: 1px dashed var(--rs-line-2);
+  border-radius: var(--rs-radius);
+  background: var(--rs-raise);
 }
 .rs-quote-selectors,
 .rs-quote-review {
@@ -121,91 +277,223 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
+.rs-quote-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--rs-line);
+  border-radius: var(--rs-radius);
+  background: rgba(9, 9, 12, 0.45);
+  scrollbar-width: thin;
+  scrollbar-color: var(--rs-muted) transparent;
+}
 .rs-quote-table {
   table-layout: fixed;
   width: 100%;
   overflow-wrap: anywhere;
+  font-size: 13.5px;
   font-variant-numeric: tabular-nums;
 }
 .rs-quote-table th,
 .rs-quote-table td {
-  padding: 10px 12px;
+  padding: 11px 14px;
   vertical-align: top;
   text-align: left;
 }
-.rs-quote-table :is(th, td):first-child {
-  width: 25%;
+.rs-quote-table tr { border-bottom: 1px solid var(--rs-line); transition: background 0.18s; }
+.rs-quote-table tbody tr:last-child { border-bottom: 0; }
+.rs-quote-table tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
+.rs-quote-table :is(th, td):first-child { width: 26%; }
+.rs-quote-table tbody th { font-size: 12px; color: var(--rs-text-3); letter-spacing: 0.01em; }
+.rs-quote-table td { color: var(--rs-text); }
+.rs-quote-table td + td, .rs-quote-table th + th, .rs-quote-table th + td { border-left: 1px solid var(--rs-line); }
+/* Prices, quantities, dates and identifiers read best in mono (rows follow FIELDS order). */
+.rs-quote-table tbody tr:nth-child(-n + 6) td,
+.rs-quote-table tbody tr:nth-child(n + 9):nth-child(-n + 12) td {
+  font-family: var(--rs-mono);
+  font-size: 12.5px;
+  letter-spacing: -0.01em;
 }
-.rs-quote-table thead {
-  background: var(--rs-raise);
+.rs-quote-table tbody tr:first-child td { font-size: 14px; font-weight: 550; color: #fff; }
+.rs-quote-table thead { background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)); }
+.rs-quote-table thead th {
+  padding-block: 14px;
+  position: relative;
+  color: var(--rs-text-3);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  vertical-align: bottom;
 }
+.rs-quote-table thead th + th { text-transform: none; letter-spacing: normal; }
+.rs-quote-table thead th + th::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: var(--rs-grad);
+  opacity: 0.85;
+}
+.rs-quote-table thead th:nth-child(3)::before { background: linear-gradient(90deg, #38bdf8, #4ade9c); }
 .rs-quote-supplier {
   display: block;
   color: var(--rs-text);
-  font-weight: 620;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
 }
+.rs-quote-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font: 500 11px var(--rs-mono);
+  color: var(--rs-text-3);
+}
+.rs-quote-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px 2px 7px;
+  border-radius: 99px;
+  font: 600 11px var(--rs-sans);
+  border: 1px solid var(--rs-line-2);
+}
+.rs-quote-state::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+.rs-quote-state.is-reviewed { color: var(--rs-ok); border-color: rgba(74, 222, 156, 0.35); background: rgba(74, 222, 156, 0.07); }
+.rs-quote-state.is-pending { color: var(--rs-wait); border-color: rgba(251, 191, 36, 0.35); background: rgba(251, 191, 36, 0.07); }
 .rs-quote-supplier-note {
   display: block;
-}
-.rs-quote-missing {
-  color: var(--rs-text-2);
-}
-.rs-quote-issues {
-  padding-left: 16px;
-  margin: 0;
-  color: var(--rs-wait);
-  font-size: 13px;
-}
-.rs-quote-issues li + li {
+  width: fit-content;
   margin-top: 6px;
+  padding: 1px 7px;
+  border-radius: 6px;
+  font: 500 10.5px var(--rs-sans);
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.12);
+  border: 1px solid rgba(139, 92, 246, 0.3);
 }
+.rs-quote-missing { color: var(--rs-text-3); font-family: var(--rs-sans); font-style: italic; font-size: 12.5px; font-weight: 400; }
+.rs-quote-issues {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.rs-quote-issues li {
+  position: relative;
+  padding: 7px 10px 7px 24px;
+  border-radius: 8px;
+  color: #fde68a;
+  background: rgba(251, 191, 36, 0.07);
+  border: 1px solid rgba(251, 191, 36, 0.22);
+}
+.rs-quote-issues li::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 13px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rs-wait);
+}
+.rs-quote-clear { display: inline-flex; align-items: center; gap: 6px; color: var(--rs-ok); font-size: 12.5px; }
+.rs-quote-clear::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ---------- Source review ---------- */
+.rs-quote-evidence { display: grid; gap: 10px; }
 .rs-quote-evidence > details {
-  border-top: 1px solid var(--rs-line-2);
+  border: 1px solid var(--rs-line);
+  border-radius: var(--rs-radius);
+  background: rgba(255, 255, 255, 0.018);
+  transition: border-color 0.25s, background 0.25s;
 }
+.rs-quote-evidence > details:hover { border-color: var(--rs-line-2); }
+.rs-quote-evidence > details[open] { border-color: rgba(139, 92, 246, 0.35); background: rgba(139, 92, 246, 0.035); }
 .rs-quote-workspace summary {
   cursor: pointer;
-  min-height: 42px;
-  padding: 11px 0;
+  min-height: 44px;
+  padding: 12px 14px;
   overflow-wrap: anywhere;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
 }
+.rs-quote-workspace summary::-webkit-details-marker { display: none; }
+.rs-quote-workspace summary::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--rs-text-2);
+  border-bottom: 1.5px solid var(--rs-text-2);
+  transform: rotate(-45deg);
+  transition: transform 0.25s var(--rs-ease);
+}
+.rs-quote-workspace details[open] > summary::before { transform: rotate(45deg); }
+.rs-quote-workspace summary:hover { color: #fff; }
 .rs-quote-evidence-body {
   display: grid;
   gap: 12px;
   justify-items: start;
-  padding-bottom: 16px;
+  padding: 2px 16px 16px;
+  animation: rs-quote-in 0.3s var(--rs-ease) both;
 }
+.rs-quote-evidence-body > .rs-link { font-size: 13px; gap: 8px; color: var(--rs-cyan); }
 .rs-quote-excerpts {
   display: grid;
-  gap: 8px;
+  gap: 2px;
+  width: 100%;
   margin: 0;
   color: var(--rs-text-2);
-  font-size: 14px;
+  font-size: 13px;
   overflow-wrap: anywhere;
+  border-left: 1px solid var(--rs-line-2);
 }
-.rs-quote-excerpts dt {
-  font-weight: 620;
-  color: var(--rs-text);
-}
-.rs-quote-excerpts dd {
-  margin: 2px 0 0;
-}
+.rs-quote-excerpts > div { padding: 6px 0 6px 14px; position: relative; }
+.rs-quote-excerpts > div::before { content: ""; position: absolute; left: -3px; top: 12px; width: 5px; height: 5px; border-radius: 50%; background: var(--rs-text-3); }
+.rs-quote-excerpts dt { font-size: 12px; font-weight: 600; color: var(--rs-text); }
+.rs-quote-excerpts dd { margin: 2px 0 0; line-height: 1.5; }
 .rs-quote-raw {
   width: 100%;
+  border: 1px solid var(--rs-line);
+  border-radius: 10px;
+  background: rgba(9, 9, 12, 0.4);
 }
+.rs-quote-workspace .rs-quote-raw summary { min-height: 38px; padding: 9px 12px; font-size: 12.5px; color: var(--rs-text-2); }
+.rs-quote-raw[open] { padding-bottom: 12px; }
+.rs-quote-raw > :not(summary) { margin-inline: 12px; }
 .rs-quote-raw pre {
   max-height: 260px;
   overflow: auto;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   margin-top: 0;
-  padding: 12px;
-  background: var(--rs-panel-solid);
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  background: #07070a;
   border: 1px solid var(--rs-line);
-  border-radius: var(--rs-radius-s);
-  font: inherit;
+  border-radius: 8px;
+  font: 400 12px/1.6 var(--rs-mono);
+  color: var(--rs-text-2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--rs-muted) transparent;
 }
+.rs-quote-raw .rs-small[role="status"] { margin-left: 10px; font-size: 12px; color: var(--rs-ok); }
 .rs-quote-review {
   width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(9, 9, 12, 0.5);
+  border: 1px solid var(--rs-line-2);
 }
 .rs-quote-actions {
   display: flex;
@@ -215,34 +503,53 @@
 }
 .rs-quote-error {
   color: var(--rs-bad);
-  font-size: 14px;
+  font-size: 13px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(248, 113, 113, 0.07);
+  border: 1px solid rgba(248, 113, 113, 0.3);
 }
 .rs-quote-message {
   display: grid;
   justify-items: start;
   gap: 12px;
+  padding: 18px;
+  border-radius: var(--rs-radius);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  background: rgba(248, 113, 113, 0.05);
 }
-.rs-quote-workspace :focus-visible {
-  outline: 2px solid var(--rs-cyan);
-  outline-offset: 3px;
+.rs-quote-workspace > p[role="status"] { display: inline-flex; align-items: center; gap: 10px; }
+.rs-quote-workspace > p[role="status"]::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--rs-line-2);
+  border-top-color: var(--rs-cyan);
+  animation: rs-quote-spin 0.8s linear infinite;
 }
+.rs-quote-workspace :focus-visible { outline: 2px solid var(--rs-cyan); outline-offset: 3px; }
+.rs-quote-workspace :is(select, input, textarea):focus-visible { outline: none; }
 
+@keyframes rs-quote-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes rs-quote-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 900px) {
+  .rs-quote-layout { grid-template-columns: minmax(0, 1fr); }
+  .rs-quote-intake { position: relative; top: 0; }
+}
 @media (max-width: 760px) {
-  .rs-quote-workspace {
-    padding-top: 22px;
-  }
-  .rs-quote-heading {
-    margin-bottom: 22px;
-  }
-  .rs-quote-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  .rs-quote-workspace { padding-top: 22px; }
+  .rs-quote-heading { margin-bottom: 20px; padding-bottom: 18px; }
+  .rs-quote-intake, .rs-quote-comparison { padding: 16px; border-radius: var(--rs-radius); }
+  .rs-quote-selectors, .rs-quote-review { grid-template-columns: minmax(0, 1fr); }
   .rs-quote-table th,
-  .rs-quote-table td {
-    padding-inline: 6px;
-    font-size: 13px;
-  }
-  .rs-quote-table :is(th, td):first-child {
-    width: 28%;
-  }
+  .rs-quote-table td { padding: 9px 8px; font-size: 12.5px; }
+  .rs-quote-table :is(th, td):first-child { width: 30%; }
+  .rs-quote-supplier { font-size: 13.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rs-quote-dialog[open], .rs-quote-intake, .rs-quote-comparison, .rs-quote-evidence-body,
+  .rs-quote-comparison > [role="status"]:not(:empty) { animation: none; }
+  .rs-quote-workspace > p[role="status"]::before { animation-duration: 2.4s; }
 }

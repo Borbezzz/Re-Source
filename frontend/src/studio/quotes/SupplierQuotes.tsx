@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { ArrowLeft, FileText, Plus } from "lucide-react";
+import { ArrowLeft, FileText, FileUp, Plus, Scale } from "lucide-react";
 import type { ProductPart } from "../../product-flow/types.ts";
 import "./quotes.css";
 
@@ -191,7 +191,9 @@ export function SupplierQuotes({
         <h1 id={headingId} className="rs-h2">
           Supplier quotes
         </h1>
-        {collection && <p className="rs-small">{collection.project_name}</p>}
+        {collection && (
+          <p className="rs-small rs-quote-project">{collection.project_name}</p>
+        )}
       </header>
       {!collection &&
         (error ? (
@@ -221,7 +223,12 @@ export function SupplierQuotes({
       {part && (
         <div className="rs-quote-layout">
           <section className="rs-quote-intake" aria-label="Import a quote">
-            <h2 className="rs-h3">Import a quote</h2>
+            <h2 className="rs-h3 rs-quote-title">
+              <span className="rs-quote-icon" aria-hidden="true">
+                <FileUp size={15} />
+              </span>
+              Import a quote
+            </h2>
             <form onSubmit={importQuote} key={partId}>
               <label>
                 Part
@@ -284,7 +291,7 @@ export function SupplierQuotes({
                 </label>
               </fieldset>
               {source === "pdf" ? (
-                <label>
+                <label className="rs-quote-drop">
                   Quote PDF
                   <input
                     className="rs-input rs-quote-file"
@@ -326,12 +333,17 @@ export function SupplierQuotes({
             className="rs-quote-comparison"
             aria-label="Quote comparison"
           >
-            <h2 className="rs-h3">Compare quotes</h2>
+            <h2 className="rs-h3 rs-quote-title">
+              <span className="rs-quote-icon" aria-hidden="true">
+                <Scale size={15} />
+              </span>
+              Compare quotes
+            </h2>
             <p className="rs-small" role="status">
               {notice}
             </p>
             {quotes.length === 0 ? (
-              <p className="rs-small">
+              <p className="rs-small rs-quote-empty">
                 Import a quote for {part.name} to see its terms here.
               </p>
             ) : (
@@ -372,6 +384,7 @@ export function SupplierQuotes({
                     ))}
                   </div>
                 )}
+                <div className="rs-quote-table-wrap">
                 <table
                   className="rs-table rs-quote-table"
                   aria-label={`Supplier quotes for ${part.name}`}
@@ -384,9 +397,13 @@ export function SupplierQuotes({
                           <span className="rs-quote-supplier">
                             {quote.supplier}
                           </span>
-                          <span className="rs-small">
-                            {quote.reviewed ? "Reviewed" : "Needs review"} ·{" "}
-                            {quote.source_kind === "pdf" ? "PDF" : "Reply"}
+                          <span className="rs-small rs-quote-meta">
+                            <span
+                              className={`rs-quote-state ${quote.reviewed ? "is-reviewed" : "is-pending"}`}
+                            >
+                              {quote.reviewed ? "Reviewed" : "Needs review"}
+                            </span>{" "}
+                            · {quote.source_kind === "pdf" ? "PDF" : "Reply"}
                           </span>
                         </th>
                       ))}
@@ -423,13 +440,16 @@ export function SupplierQuotes({
                               ))}
                             </ul>
                           ) : (
-                            "No gaps flagged"
+                            <span className="rs-quote-clear">
+                              No gaps flagged
+                            </span>
                           )}
                         </td>
                       ))}
                     </tr>
                   </tbody>
                 </table>
+                </div>
                 <div className="rs-quote-evidence">
                   {compared.map((quote) => (
                     <QuoteEvidence
