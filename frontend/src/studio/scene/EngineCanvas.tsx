@@ -1,9 +1,11 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { CameraControls, Environment, Html, Lightformer, useGLTF } from "@react-three/drei";
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { memo, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { PackageComponent } from "../data/package.ts";
 import type { AssemblyItem } from "../data/assembly.ts";
+import { AssemblyInstances, sourceMesh } from "./instances.ts";
+import { ScanLines } from "./scan-lines.ts";
 
 /*
  * Art direction follows Astra's (gpt-6-astra) review in
@@ -90,16 +92,17 @@ const thermalUniforms = () => ({
 
 function makeScanMaterial() {
   return new THREE.ShaderMaterial({
-    wireframe: true,
     transparent: true,
     depthWrite: false,
     depthTest: true,
     blending: THREE.NormalBlending,
     uniforms: { uReveal: { value: WMIN }, uSolid: { value: WMIN - 1 }, ...thermalUniforms() },
     vertexShader: /* glsl */ `
+      attribute mat4 scanMatrix;
       varying float vX;
       void main(){
-        vec4 wp = modelMatrix * vec4(position, 1.0);
+        vec4 localPosition = scanMatrix * vec4(position, 1.0);
+        vec4 wp = modelMatrix * localPosition;
         vX = wp.x;
         gl_Position = projectionMatrix * viewMatrix * wp;
       }`,
@@ -152,6 +155,9 @@ function makeHighlight(clip: THREE.Plane) {
 interface Prepared {
   root: THREE.Group;
   scanRoot: THREE.Group;
+  instances: AssemblyInstances;
+  scanInstances: ScanLines;
+  transformVersion: number;
   meshes: THREE.Mesh[];
   groups: Map<string, { node: THREE.Object3D; home: THREE.Vector3 }>;
   compNodes: Map<string, THREE.Object3D[]>;
@@ -192,7 +198,7 @@ function boundsOf(nodes: THREE.Object3D[]) {
 
 function usePrepared(url: string, components: PackageComponent[]): Prepared {
   const gltf = useGLTF(url);
-  return useMemo(() => {
+  const prepared = useMemo(() => {
     const root = gltf.scene.clone(true) as THREE.Group;
     root.position.x = -CENTER_X;
     const clip = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 99);
@@ -240,21 +246,29 @@ function usePrepared(url: string, components: PackageComponent[]): Prepared {
       }
     });
     const compHome = new Map<string, THREE.Vector3[]>();
+    root.updateMatrixWorld(true);
+    const instances = new AssemblyInstances(meshes);
+    const scanInstances = new ScanLines(meshes, scanMat, true);
+    instances.sync();
+    return { root, scanRoot: scanInstances.root, instances, scanInstances, transformVersion: 0, meshes, groups, compNodes, compHome, byStable, nodeHome, mats, casingPlanes, highlight, hover, context, scanMat, clip };
+  }, [gltf]);
+  useEffect(() => () => {
+    prepared.instances.dispose();
+    prepared.scanInstances.dispose();
+    [...Object.values(prepared.mats), prepared.highlight, prepared.hover, prepared.context, prepared.scanMat].forEach(m => m.dispose());
+  }, [prepared]);
+  // Metadata arrives after the model URL. Bind it without rebuilding geometry, buffers or materials.
+  return useMemo(() => {
+    const compNodes = new Map<string, THREE.Object3D[]>();
+    const compHome = new Map<string, THREE.Vector3[]>();
     for (const c of components) {
-      const nodes = c.nodeIds.map((id) => byStable.get(id)).filter(Boolean) as THREE.Object3D[];
+      const nodes = c.nodeIds.flatMap(id => { const node = prepared.byStable.get(id); return node ? [node] : []; });
       compNodes.set(c.componentId, nodes);
-      compHome.set(c.componentId, nodes.map((n) => n.position.clone()));
-      nodes.forEach((n) => n.traverse((m) => ((m as THREE.Mesh).isMesh ? (m.userData.comp = c.componentId) : null)));
+      compHome.set(c.componentId, nodes.map(n => n.position.clone()));
+      nodes.forEach(n => n.traverse(m => { if ((m as THREE.Mesh).isMesh) m.userData.comp = c.componentId; }));
     }
-    const scanRoot = root.clone(true) as THREE.Group;
-    scanRoot.traverse((o) => {
-      if ((o as THREE.Mesh).isMesh) {
-        (o as THREE.Mesh).material = scanMat;
-        o.raycast = () => {};
-      }
-    });
-    return { root, scanRoot, meshes, groups, compNodes, compHome, byStable, nodeHome, mats, casingPlanes, highlight, hover, context, scanMat, clip };
-  }, [gltf, components]);
+    return { ...prepared, compNodes, compHome };
+  }, [prepared, components]);
 }
 
 function inspectionNodes(p: Prepared, inspection: AssemblyItem | null | undefined, selected: string | null): THREE.Object3D[] {
@@ -273,13 +287,34 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
   useLayoutEffect(() => {
     gl.localClippingEnabled = true;
   }, [gl]);
-  const nodes = useMemo(() => inspectionNodes(p, inspection, selected), [p, inspection, selected]);
-  // Removal direction for the selected part; recomputed only when the selection or exploded layout changes.
-  const radialCache = useRef<{ key: string; v: THREE.Vector3 }>({ key: "", v: new THREE.Vector3() });
   const explodeT = useRef(0);
   const phaseT = useRef(0);
   const scanVal = useRef(WMIN);
   const solidVal = useRef(WMIN - 1);
+  const movingNodes = useMemo(() => inspectionNodes(p, inspection, selected), [p, inspection, selected]);
+  const removalOffset = useMemo(() => {
+    p.root.updateMatrixWorld(true);
+    const c = boundsOf(movingNodes).getCenter(new THREE.Vector3());
+    const radial = new THREE.Vector3(0, c.y, c.z);
+    if (radial.lengthSq() < 0.01) radial.set(0, 1, 0);
+    radial.normalize().multiplyScalar(2.6);
+    radial.x += selected?.includes("NOZZLE") ? 2.4 : -0.4;
+    return radial;
+  }, [p, movingNodes, selected]);
+  useEffect(() => {
+    invalidate();
+    return () => {
+      if (phaseT.current === 0) return;
+      phaseT.current = 0;
+      for (const node of movingNodes) {
+        const home = p.nodeHome.get(node.userData.stableId);
+        if (home) node.position.copy(home);
+      }
+      p.root.updateMatrixWorld(true);
+      p.instances.sync();
+      p.transformVersion++;
+    };
+  }, [p, movingNodes, invalidate]);
 
   // Casing: whole while scanning/solidifying; intake-preserving cutaway when exploring.
   useEffect(() => {
@@ -308,81 +343,77 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
         else m.visible = false;
       } else m.material = m.userData.baseMat;
     }
-  }, [p, selected, inspection, hovered, isolate]);
-
-  // The canvas renders on demand: any change that affects the picture asks for a frame.
-  useEffect(() => {
+    p.root.updateMatrixWorld(true);
+    p.instances.sync();
     invalidate();
-  }, [invalidate, p, mode, scan, solid, selected, inspection, hovered, exploded, isolate, phase]);
+  }, [p, selected, inspection, hovered, isolate, invalidate]);
 
-  useFrame((state, dt) => {
-    const near = (a: number, b: number) => Math.abs(a - b) < 1e-3;
-    // Scan + solid sweep along world X.
-    const targetScan = WMIN + (WLEN + 0.6) * scan;
-    scanVal.current = THREE.MathUtils.damp(scanVal.current, targetScan, 3.2, dt);
-    const targetSolid = solid <= 0 ? WMIN - 1 : WMIN + (WLEN + 0.8) * solid;
-    solidVal.current = THREE.MathUtils.damp(solidVal.current, targetSolid, 3.6, dt);
-    p.scanMat.uniforms.uReveal.value = scanVal.current;
-    p.scanMat.uniforms.uSolid.value = solidVal.current;
+  useFrame((_, delta) => {
+    const dt = Math.min(delta, 0.05);
+    let moving = false;
+    const damp = (value: number, target: number, speed: number) => {
+      if (Math.abs(value - target) < 0.001) return target;
+      moving = true;
+      return THREE.MathUtils.damp(value, target, speed, dt);
+    };
+    // Scan outlines and the full-detail solid sweep share the original world-space reveal.
+    if (mode === "scan") {
+      scanVal.current = damp(scanVal.current, WMIN + (WLEN + 0.6) * scan, 3.2);
+      solidVal.current = damp(solidVal.current, solid <= 0 ? WMIN - 1 : WMIN + (WLEN + 0.8) * solid, 3.6);
+      p.scanMat.uniforms.uReveal.value = scanVal.current;
+      p.scanMat.uniforms.uSolid.value = solidVal.current;
+    }
     p.clip.constant = mode === "scan" ? solidVal.current : 99;
     p.scanRoot.visible = mode === "scan" && solid < 0.999;
-    let busy = mode === "scan" && !(near(scanVal.current, targetScan) && near(solidVal.current, targetSolid));
+    p.instances.root.visible = mode !== "scan" || solidVal.current > WMIN;
 
-    const explodeTarget = exploded ? 1 : 0;
-    explodeT.current = THREE.MathUtils.damp(explodeT.current, explodeTarget, 4, dt);
-    const exploding = !near(explodeT.current, explodeTarget);
-    if (exploding) busy = true;
-    else explodeT.current = explodeTarget;
+    const previousExplode = explodeT.current;
+    explodeT.current = damp(previousExplode, exploded ? 1 : 0, 4);
     const e = explodeT.current;
-    for (const [gid, { node, home }] of p.groups) {
+    let transformsChanged = e !== previousExplode;
+    if (transformsChanged) for (const [gid, { node, home }] of p.groups) {
       const off = EXPLODE[gid] ?? [0, 0, 0];
       node.position.set(home.x + off[0] * e, home.y + off[1] * e, home.z + off[2] * e);
     }
 
-    // Removal / insertion choreography for the selected part.
     if (selected) {
-      const target = phase === "remove" ? 1 : 0;
-      phaseT.current = THREE.MathUtils.damp(phaseT.current, target, phase === "insert" ? 2.2 : 2.6, dt);
-      if (near(phaseT.current, target)) phaseT.current = target;
-      else busy = true;
-      const key = `${selected}|${inspection?.id ?? ""}`;
-      const radial = radialCache.current.v;
-      if (radialCache.current.key !== key || exploding) {
-        radialCache.current.key = key;
-        const c = boundsOf(nodes).getCenter(new THREE.Vector3());
-        radial.set(0, c.y, c.z);
-        if (radial.lengthSq() < 0.01) radial.set(0, 1, 0);
-        radial.normalize().multiplyScalar(2.6);
-        radial.x += selected.includes("NOZZLE") ? 2.4 : -0.4;
+      const previousPhase = phaseT.current;
+      phaseT.current = damp(previousPhase, phase === "remove" ? 1 : 0, phase === "insert" ? 2.2 : 2.6);
+      if (phaseT.current !== previousPhase) {
+        transformsChanged = true;
+        for (const n of movingNodes) {
+          const h = p.nodeHome.get(n.userData.stableId);
+          if (h) n.position.copy(h).addScaledVector(removalOffset, phaseT.current);
+        }
       }
-      nodes.forEach((n) => {
-        const h = p.nodeHome.get(n.userData.stableId);
-        if (h) n.position.set(h.x + radial.x * phaseT.current, h.y + radial.y * phaseT.current, h.z + radial.z * phaseT.current);
-      });
-      // Rim brightens briefly while the replacement seats, then settles (no breathing glow).
       const u = p.highlight.userData.uniforms as { uRim: { value: number } };
-      const rimTarget = phase === "insert" ? 1.5 : 0.9;
-      u.uRim.value = THREE.MathUtils.damp(u.uRim.value, rimTarget, 3, dt);
-      if (!near(u.uRim.value, rimTarget)) busy = true;
+      u.uRim.value = damp(u.uRim.value, phase === "insert" ? 1.5 : 0.9, 3);
     }
-    if (busy) state.invalidate(); // keep rendering only while something is still moving
+    if (transformsChanged) {
+      p.root.updateMatrixWorld(true);
+      p.instances.sync();
+      p.transformVersion++;
+    }
+    if (moving) invalidate();
   });
 
   return (
     <>
       <primitive object={p.scanRoot} />
       <primitive
-        object={p.root}
-        onPointerDown={(ev: { stopPropagation: () => void; object: THREE.Object3D }) => {
-          if (mode !== "explore" || !ev.object.visible) return;
+        object={p.instances.root}
+        onPointerDown={(ev: { stopPropagation: () => void; object: THREE.Object3D; instanceId?: number }) => {
+          const source = sourceMesh(ev.object, ev.instanceId);
+          if (mode !== "explore" || !source?.visible) return;
           ev.stopPropagation();
-          const stable = ev.object.userData.attachedToStableId ?? ev.object.userData.stableId;
+          const stable = source.userData.attachedToStableId ?? source.userData.stableId;
           if (stable && onInspect) { onInspect(stable); return; }
-          const comp = componentOf(ev.object) ?? (ev.object.userData?.comp as string | null);
+          const comp = componentOf(source) ?? (source.userData?.comp as string | null);
           if (comp) onSelect?.(comp);
         }}
-        onPointerOver={(ev: { object: THREE.Object3D }) => {
-          if (mode === "explore" && ev.object.visible && ev.object.userData?.stableId) document.body.style.cursor = "pointer";
+        onPointerOver={(ev: { object: THREE.Object3D; instanceId?: number }) => {
+          const source = sourceMesh(ev.object, ev.instanceId);
+          if (mode === "explore" && source?.visible && source.userData?.stableId) document.body.style.cursor = "pointer";
         }}
         onPointerOut={() => (document.body.style.cursor = "")}
       />
@@ -400,7 +431,7 @@ function projectWithViewOffset(el: THREE.Object3D, camera: THREE.Camera, size: {
 function SelectedCallout({ prepared, nodes, name, id, rightInset = 0, leftInset = 0 }: { prepared: Prepared; nodes: THREE.Object3D[]; name: string; id: string; rightInset?: number; leftInset?: number }) {
   const anchor = useRef<THREE.Group>(null);
   const callout = useRef<HTMLDivElement>(null);
-  const frame = useRef(0);
+  const version = useRef(-1);
   const bounds = useMemo(() => new THREE.Box3(), []);
   const layout = useRef("");
   const updateAnchor = () => {
@@ -409,10 +440,11 @@ function SelectedCallout({ prepared, nodes, name, id, rightInset = 0, leftInset 
     bounds.makeEmpty();
     nodes.forEach(node => bounds.expandByObject(node));
     if (!bounds.isEmpty()) bounds.getCenter(anchor.current.position);
+    version.current = prepared.transformVersion;
   };
   useLayoutEffect(updateAnchor, [prepared, nodes]);
   useFrame(() => {
-    if (frame.current++ % 6 === 0) updateAnchor(); // follow assembly motion without traversing every mesh each frame
+    if (version.current !== prepared.transformVersion) updateAnchor();
   });
   const position = (el: THREE.Object3D, camera: THREE.Camera, size: { width: number; height: number }) => {
     const point = projectWithViewOffset(el, camera, size);
@@ -446,15 +478,11 @@ function SelectedCallout({ prepared, nodes, name, id, rightInset = 0, leftInset 
 
 function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, leftInset = 0, turntable, wide }: { prepared: Prepared; selected: string | null; inspection?: AssemblyItem | null; mode: SceneMode; resetKey: number; rightInset?: number; leftInset?: number; turntable: boolean; wide: boolean }) {
   const ref = useRef<CameraControls>(null);
-  const { size, camera, invalidate, setEvents } = useThree();
+  const { size, camera, gl, invalidate } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
-  // Hover tests walk every triangle of the model: skip them outside explore and while the camera is dragged.
-  const dragging = useRef(false);
-  const syncEvents = () => setEvents({ enabled: mode === "explore" && !dragging.current });
-  useEffect(syncEvents, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (import.meta.env.DEV) (window as unknown as { __rsScene: unknown }).__rsScene = { camera, controls: ref.current, prepared };
-  }, [camera, prepared]);
+    if (import.meta.env.DEV) (window as unknown as { __rsScene: unknown }).__rsScene = { camera, controls: ref.current, prepared, gl };
+  }, [camera, prepared, gl]);
   // Offset the projection so the subject centres in the space left of side panels.
   const narrow = size.width < 700;
   const inset = narrow ? 0 : rightInset + leftInset;
@@ -463,7 +491,8 @@ function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, l
     if (offsetX !== 0) cam.setViewOffset(size.width, size.height, offsetX, 0, size.width, size.height);
     else cam.clearViewOffset();
     cam.updateProjectionMatrix();
-  }, [cam, offsetX, size.width, size.height]);
+    invalidate();
+  }, [cam, offsetX, size.width, size.height, invalidate]);
 
   useEffect(() => {
     const cc = ref.current;
@@ -492,42 +521,37 @@ function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, l
       const eye = center.clone().addScaledVector(VIEW_DIR, narrow ? dist * 1.15 : dist);
       void cc.setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, true);
     }
-    invalidate();
   }, [selected, inspection, mode, resetKey, prepared, size.width, size.height, inset, wide, cam, narrow]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (turntable) invalidate();
-  }, [turntable, mode, invalidate]);
-  useFrame((state, dt) => {
+  useFrame((_, dt) => {
     if (turntable && mode === "explore" && ref.current) {
-      ref.current.azimuthAngle += dt * 0.18;
-      state.invalidate();
+      ref.current.azimuthAngle += Math.min(dt, 0.05) * 0.18;
+      invalidate();
     }
   });
-  return (
-    <CameraControls
-      ref={ref}
-      makeDefault
-      minDistance={1.5}
-      maxDistance={30}
-      smoothTime={0.35}
-      draggingSmoothTime={0.12}
-      enabled={mode === "explore"}
-      onControl={() => { if (!dragging.current) { dragging.current = true; syncEvents(); } }}
-      onControlEnd={() => { dragging.current = false; syncEvents(); }}
-    />
-  );
+  return <CameraControls ref={ref} makeDefault minDistance={1.5} maxDistance={30} smoothTime={0.35} draggingSmoothTime={0.12} enabled={mode === "explore"} />;
 }
 
 function SceneContents(props: EngineCanvasProps) {
   const prepared = usePrepared(props.url, props.components);
+  const [ready, setReady] = useState<ScanLines | null>(null);
+  const [failure, setFailure] = useState<{ scan: ScanLines; error: unknown } | null>(null);
   const nodes = useMemo(() => inspectionNodes(prepared, props.inspection, props.selected), [prepared, props.inspection, props.selected]);
   const component = props.components.find(c => c.componentId === props.selected);
   const label = props.inspection?.children.length ? (component?.name ?? props.inspection.name) : (props.inspection?.name ?? component?.name);
   const { onReady } = props;
   useEffect(() => {
-    const id = setTimeout(() => onReady?.(), 0);
-    return () => clearTimeout(id);
-  }, [prepared, onReady]);
+    let cancelled = false;
+    void prepared.scanInstances.ready.then(() => {
+      if (cancelled) return;
+      setReady(prepared.scanInstances);
+      onReady?.();
+    }).catch(error => {
+      if (!cancelled) setFailure({ scan: prepared.scanInstances, error });
+    });
+    return () => { cancelled = true; };
+  }, [prepared.scanInstances, onReady]);
+  if (failure?.scan === prepared.scanInstances) throw failure.error;
+  if (ready !== prepared.scanInstances) return null;
   return (
     <>
       <Engine {...props} prepared={prepared} />
@@ -541,18 +565,34 @@ function SceneContents(props: EngineCanvasProps) {
 
 const lookAtOrigin = (o: THREE.Object3D) => o.lookAt(0, 0, 0);
 
+// Environment's cube capture depends on children identity. Keep it stable across scan/progress updates.
+const StudioLighting = memo(function StudioLighting() {
+  return <Environment resolution={512} frames={1}>
+    <Lightformer position={[0, 6, 2]} scale={[11, 4, 1]} color="#fff5e9" intensity={3} onUpdate={lookAtOrigin} />
+    <Lightformer position={[-2, 2, 6]} scale={[8, 1.2, 1]} color="#ffffff" intensity={1.8} onUpdate={lookAtOrigin} />
+    <Lightformer position={[2, 3, -5]} scale={[9, 0.7, 1]} color="#eef2f5" intensity={2.2} onUpdate={lookAtOrigin} />
+    <Lightformer position={[-6, 0, 1]} scale={[3, 3, 1]} color="#ffffff" intensity={0.65} onUpdate={lookAtOrigin} />
+  </Environment>;
+});
+
 export function EngineCanvas(props: EngineCanvasProps) {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const [frozenSize, setFrozenSize] = useState<{ width: number; height: number }>();
+  useLayoutEffect(() => {
+    if (props.mode !== "hidden" || !canvas.current) return;
+    const { width, height } = canvas.current.getBoundingClientRect();
+    setFrozenSize({ width, height });
+  }, [props.mode]);
   return (
     <Canvas
+      ref={canvas}
       className="rs-engine-canvas"
-      dpr={props.mode === "scan" ? 1 : [1, 1.5]}
+      style={props.mode === "hidden" ? frozenSize : undefined}
+      dpr={[1, 1.5]}
       frameloop={props.mode === "hidden" ? "never" : "demand"}
       camera={{ position: [-8, 3.2, 14.5], fov: 30, near: 0.05, far: 100 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      onCreated={({ gl, clock }) => {
-        // On-demand frames can follow a long idle gap; cap the step so animations ease in, not jump.
-        const getDelta = clock.getDelta.bind(clock);
-        clock.getDelta = () => Math.min(getDelta(), 0.05);
+      onCreated={({ gl }) => {
         gl.toneMapping = THREE.AgXToneMapping;
         gl.toneMappingExposure = 1.12;
         gl.outputColorSpace = THREE.SRGBColorSpace;
@@ -560,13 +600,8 @@ export function EngineCanvas(props: EngineCanvasProps) {
       }}
       onPointerMissed={() => props.mode === "explore" && props.phase === "idle" && props.onSelect?.(null)}
     >
+      <StudioLighting />
       <Suspense fallback={null}>
-        <Environment resolution={512} frames={1}>
-          <Lightformer position={[0, 6, 2]} scale={[11, 4, 1]} color="#fff5e9" intensity={3} onUpdate={lookAtOrigin} />
-          <Lightformer position={[-2, 2, 6]} scale={[8, 1.2, 1]} color="#ffffff" intensity={1.8} onUpdate={lookAtOrigin} />
-          <Lightformer position={[2, 3, -5]} scale={[9, 0.7, 1]} color="#eef2f5" intensity={2.2} onUpdate={lookAtOrigin} />
-          <Lightformer position={[-6, 0, 1]} scale={[3, 3, 1]} color="#ffffff" intensity={0.65} onUpdate={lookAtOrigin} />
-        </Environment>
         <SceneContents {...props} />
       </Suspense>
     </Canvas>

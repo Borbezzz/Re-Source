@@ -1,0 +1,33 @@
+{
+  "baseline": "7ea27db",
+  "errors": [],
+  "phases": {
+    "upload": {
+      "sampleMs": 3755.3,
+      "frameCount": 205,
+      "p95FrameMs": 16.7,
+      "maxFrameMs": 166.6,
+      "longTaskDurationsMs": [
+        164,
+        155
+      ]
+    },
+    "select": {
+      "sampleMs": 2280.9,
+      "frameCount": 130,
+      "p95FrameMs": 16.7,
+      "maxFrameMs": 133.4,
+      "longTaskDurationsMs": []
+    },
+    "sourcing": {
+      "sampleMs": 5000.0,
+      "frameCount": 265,
+      "p95FrameMs": 33.3,
+      "maxFrameMs": 100,
+      "longTaskDurationsMs": [
+        118,
+        51
+      ]
+    }
+  }
+}

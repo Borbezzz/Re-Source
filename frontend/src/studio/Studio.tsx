@@ -438,7 +438,7 @@ export function Studio() {
               selectedId={focusId}
               onSelect={(id) => setFocusId(id)}
               disruptedId={disruptedId}
-              insetRight={stage === "shortlist" ? 0.34 : stage === "checking" ? 0.3 : 0}
+              insetRight={stage === "shortlist" ? 0.34 : 0.3}
             />
             </Suspense>
           </motion.div>
@@ -591,6 +591,8 @@ export function Studio() {
 
       {/* Live n8n-style agent workflow (portal; Scene / Split / Workflow views). */}
       <AgentFlow
+        project={project}
+        partId={partId}
         stage={stage}
         part={component ? { name: component.name, partNumber: component.partNumber, revision: component.revision } : null}
         need={need}
