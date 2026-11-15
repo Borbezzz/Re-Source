@@ -149,6 +149,7 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     detail: [
       { k: "Feature", v: "Linkup Search · standard search with source URLs" },
       { k: "This run", v: provider.demo ? "Prepared demo offers; Linkup was not called" : provider.searchSummary },
+      ...(s.error && s.stage === "discovery" ? [{ k: "Offer loading", v: s.error, tone: "bad" as const }] : []),
       { k: "Input", v: "Confirmed part number, revision and requirements" },
       { k: "Output", v: provider.demo ? "Prepared supplier names, offers and site locations" : "Supplier page titles, snippets and citations" },
       { k: "Coverage", v: "UK & EU stockists, distributors, build-to-print" },
