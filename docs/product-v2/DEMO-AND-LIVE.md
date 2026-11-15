@@ -4,6 +4,24 @@ Implementation target, 15 November 2026. This resolves the earlier product-flow
 draft using Yixin's direction: product-agnostic assemblies, several prepared demo
 models, reviewed requirements, parallel research and a concrete decision output.
 
+## Navigation and continuity
+
+Home introduces the product and prepared assembly. **New investigation** starts
+with an uploaded design package or one of the prepared demos. **Investigations**
+shows this browser visitor's saved projects, including unfinished drafts, running
+research, reviewable results and simulated completions.
+
+Each project has one URL and one continuous page: review sources → select assembly
+parts → research and compare suppliers → review the RFQ → approve and simulate.
+Completed sections become expandable summaries. Leaving and reopening a project
+resumes the persisted work; research continues in the durable queue. Unsaved part
+edits require a choice before navigating away and are never overwritten by
+background extraction. Old product/upload links open the corresponding new entry.
+
+The dashboard reads `GET /api/v1/products?limit=100`, a private, uncached list of
+owned summaries ordered by newest update. It exposes counts and progress, not
+source text, documents or model payloads. It shows at most the latest 100 projects.
+
 ## What the demo demonstrates
 
 Choose a toy car, turbofan engine or table lamp. Each project owns its parts,
