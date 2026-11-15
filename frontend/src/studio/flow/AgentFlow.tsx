@@ -70,8 +70,8 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
 
   const { nodes, edges } = useMemo(() => buildGraph(props), [props.stage, props.part?.name, props.part?.partNumber, props.part?.revision, props.need, props.assessed, props.checked, props.progress, props.disrupted, props.recheck, props.procure, props.chosenId, props.phase, props.busy, props.error, props.project, props.partId]);
   const loadingOffers = props.stage === "discovery" && props.busy === "research" && !props.assessed.length && !props.error;
-  const status = loadingOffers ? { label: "Loading offers", tone: "run" as const } : runStatus(nodes);
-  const live = loadingOffers ? "discover" : liveStep(nodes);
+  const status = props.error ? { label: "Error", tone: "bad" as const } : loadingOffers ? { label: "Loading offers", tone: "run" as const } : runStatus(nodes);
+  const live = loadingOffers || (props.error && props.stage === "discovery") ? "discover" : liveStep(nodes);
   const focus = pinned && (pinned === "qualify" || nodes.some((n) => n.id === pinned)) ? pinned : live;
   const group = useMemo(() => stepGroup(focus, nodes), [focus, nodes]);
 

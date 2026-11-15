@@ -56,3 +56,20 @@ test("workflow names provider features without claiming demo calls ran", async (
   await page.screenshot({ path: info.outputPath("databricks-workflow-mobile.png") });
   expect(errors).toEqual([]);
 });
+
+test("a failed demo request remains an error without blaming a skipped provider", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.locator('input[type="file"]').first().setInputFiles(archive);
+  await page.getByRole("button", { name: "Confirm and open assembly", exact: true }).click();
+  await page.getByRole("button", { name: "Expand Fan blades", exact: true }).click();
+  await page.getByRole("button", { name: "Fan blade 03", exact: true }).click();
+  await page.getByRole("button", { name: /^Change supplier/ }).click();
+  await page.route("**/investigations", route => route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ detail: "Offer store unavailable" }) }));
+  await page.getByRole("button", { name: "Find suppliers", exact: true }).click();
+  await expect(page.locator(".fl-run")).toHaveText("Error");
+  const output = page.getByRole("region", { name: "Stage output" });
+  await expect(output).toContainText("Offer store unavailable");
+  await expect(output).toContainText("Linkup was not called");
+  await expect(output.locator(".fl-insp-status")).toHaveText("Skipped");
+});
