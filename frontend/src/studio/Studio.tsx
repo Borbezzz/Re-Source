@@ -410,7 +410,8 @@ export function Studio() {
             exploded={exploded}
             isolate={stage !== "return" || phase !== "done"}
             spin={spin}
-            phase={phase}
+            // The install preview only applies on the return screen; its timers can finish after the user has left it.
+            phase={stage === "return" ? phase : "idle"}
             showHotspots={stage === "explore" && !!inspection}
             resetKey={resetKey}
             onSelect={(id) => {
