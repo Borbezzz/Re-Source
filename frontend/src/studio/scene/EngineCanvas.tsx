@@ -31,6 +31,7 @@ export interface EngineCanvasProps {
   hovered?: AssemblyItem | null;
   onInspect?: (id: string) => void;
   exploded: boolean;
+  cutaway: boolean;
   isolate: boolean;
   spin: boolean;
   phase: ReassemblyPhase;
@@ -59,7 +60,7 @@ const EXPLODE: Record<string, [number, number, number]> = {
   turbine: [1.05, 0, 0],
   nozzle: [2.2, 0, 0],
   shaft: [0, 0, 0],
-  casing: [0, 3.4, 0],
+  casing: [0, 6.5, 0],
 };
 /** Per-part inspection framing: view direction, fit factor and minimum radius. */
 const FOCUS: Record<string, { dir: THREE.Vector3; k: number; minR: number; axis?: number }> = {
@@ -282,7 +283,7 @@ function meshSet(nodes: THREE.Object3D[]): Set<THREE.Object3D> {
 }
 
 function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
-  const { prepared: p, mode, scan, solid, selected, inspection, hovered, exploded, isolate, phase, onSelect, onInspect } = props;
+  const { prepared: p, mode, scan, solid, selected, inspection, hovered, exploded, cutaway, isolate, phase, onSelect, onInspect } = props;
   const { gl, invalidate } = useThree();
   useLayoutEffect(() => {
     gl.localClippingEnabled = true;
@@ -316,15 +317,16 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
     };
   }, [p, movingNodes, invalidate]);
 
-  // Casing: whole while scanning/solidifying; intake-preserving cutaway when exploring.
+  // Only the explicit cut-through view clips the housing; scan/reveal still use their sweep plane.
   useEffect(() => {
     const scanning = mode === "scan";
     for (const m of [p.mats.casing, p.mats.casingDetail]) {
-      m.clippingPlanes = scanning ? p.casingPlanes.scan : p.casingPlanes.cut;
-      m.clipIntersection = !scanning;
+      m.clippingPlanes = scanning ? p.casingPlanes.scan : cutaway ? p.casingPlanes.cut : null;
+      m.clipIntersection = !scanning && cutaway;
       m.needsUpdate = true;
     }
-  }, [p, mode]);
+    invalidate();
+  }, [p, mode, cutaway, invalidate]);
 
   // Selection: metal + thermal rim; isolate keeps nearby context opaque and hides the rest.
   useEffect(() => {
@@ -402,9 +404,10 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
       <primitive object={p.scanRoot} />
       <primitive
         object={p.instances.root}
-        onPointerDown={(ev: { stopPropagation: () => void; object: THREE.Object3D; instanceId?: number }) => {
+        onClick={(ev: { stopPropagation: () => void; object: THREE.Object3D; instanceId?: number; delta: number }) => {
           const source = sourceMesh(ev.object, ev.instanceId);
-          if (mode !== "explore" || !source?.visible) return;
+          // Select after release: reframing on pointer-down can turn the same click into a miss.
+          if (mode !== "explore" || ev.delta > 2 || !source?.visible) return;
           ev.stopPropagation();
           const stable = source.userData.attachedToStableId ?? source.userData.stableId;
           if (stable && onInspect) { onInspect(stable); return; }
@@ -476,7 +479,7 @@ function SelectedCallout({ prepared, nodes, name, id, rightInset = 0, leftInset 
   );
 }
 
-function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, leftInset = 0, turntable, wide }: { prepared: Prepared; selected: string | null; inspection?: AssemblyItem | null; mode: SceneMode; resetKey: number; rightInset?: number; leftInset?: number; turntable: boolean; wide: boolean }) {
+function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, leftInset = 0, turntable, wide, exploded }: { prepared: Prepared; selected: string | null; inspection?: AssemblyItem | null; mode: SceneMode; resetKey: number; rightInset?: number; leftInset?: number; turntable: boolean; wide: boolean; exploded: boolean }) {
   const ref = useRef<CameraControls>(null);
   const { size, camera, gl, invalidate } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
@@ -513,6 +516,25 @@ function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, l
       const c = sphere.center.clone();
       if (f.axis != null) c.set(c.x, c.y * f.axis, c.z * f.axis); // pull toward the engine axis for disc context
       fit(c, Math.max(sphere.radius, f.minR), f.k, f.dir);
+    } else if (exploded) {
+      // Frame the destination bounds before the animation, including the lifted housing.
+      prepared.root.updateMatrixWorld(true);
+      const box = boundsOf([prepared.root]);
+      for (const [id, { node, home }] of prepared.groups) {
+        const target = home.clone().add(new THREE.Vector3(...(EXPLODE[id] ?? [0, 0, 0])));
+        const delta = target.sub(node.position).applyMatrix3(new THREE.Matrix3().setFromMatrix4(node.parent!.matrixWorld));
+        box.union(boundsOf([node]).translate(delta));
+      }
+      const center = box.getCenter(new THREE.Vector3());
+      const right = new THREE.Vector3(0, 1, 0).cross(VIEW_DIR).normalize();
+      const up = VIEW_DIR.clone().cross(right).normalize();
+      let distance = 0;
+      for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y]) for (const z of [box.min.z, box.max.z]) {
+        const corner = new THREE.Vector3(x, y, z).sub(center);
+        distance = Math.max(distance, corner.dot(VIEW_DIR) + Math.max(Math.abs(corner.dot(right)) / Math.tan(h), Math.abs(corner.dot(up)) / Math.tan(v)));
+      }
+      const eye = center.clone().addScaledVector(VIEW_DIR, distance * 1.12);
+      void cc.setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, true);
     } else {
       // Whole assembly fills ~85% of the unobstructed width (long axis dominates).
       const halfLen = WLEN / 2;
@@ -521,7 +543,7 @@ function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, l
       const eye = center.clone().addScaledVector(VIEW_DIR, narrow ? dist * 1.15 : dist);
       void cc.setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, true);
     }
-  }, [selected, inspection, mode, resetKey, prepared, size.width, size.height, inset, wide, cam, narrow]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selected, inspection, mode, resetKey, prepared, size.width, size.height, inset, wide, cam, narrow, exploded]); // eslint-disable-line react-hooks/exhaustive-deps
   useFrame((_, dt) => {
     if (turntable && mode === "explore" && ref.current) {
       ref.current.azimuthAngle += Math.min(dt, 0.05) * 0.18;
@@ -558,7 +580,7 @@ function SceneContents(props: EngineCanvasProps) {
       {props.showHotspots && props.mode === "explore" && props.phase === "idle" && label && nodes.length > 0 ? (
         <SelectedCallout key={props.inspection?.id ?? props.selected} prepared={prepared} nodes={nodes} name={label} id={props.inspection?.id ?? props.selected!} rightInset={props.rightInset} leftInset={props.leftInset} />
       ) : null}
-      <Rig prepared={prepared} selected={props.selected} inspection={props.inspection} mode={props.mode} resetKey={props.resetKey} rightInset={props.rightInset} leftInset={props.leftInset} turntable={props.spin && props.phase === "idle"} wide={!!props.wide} />
+      <Rig prepared={prepared} selected={props.selected} inspection={props.inspection} mode={props.mode} resetKey={props.resetKey} rightInset={props.rightInset} leftInset={props.leftInset} turntable={props.spin && props.phase === "idle"} wide={!!props.wide} exploded={props.exploded} />
     </>
   );
 }

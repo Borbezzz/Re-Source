@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { motion } from "motion/react";
-import { ArrowLeft, ArrowRight, ChevronDown, Expand, Minimize2, RefreshCcw, RotateCw, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, Expand, Minimize2, RefreshCcw, RotateCw, Scissors, X } from "lucide-react";
 import type { PackageComponent, RequirementSet } from "../data/package.ts";
 import type { SourcingNeed } from "../data/checks.ts";
 import { ComponentThumb } from "../scene/ComponentThumb.tsx";
@@ -45,11 +45,14 @@ export function ComponentsPanel({ components, selected, onSelect }: { components
   );
 }
 
-export function SceneControls({ spin, exploded, onSpin, onExplode, onReset }: { spin: boolean; exploded: boolean; onSpin: () => void; onExplode: () => void; onReset: () => void }) {
+export function SceneControls({ spin, exploded, cutaway, onCutaway, onSpin, onExplode, onReset }: { spin: boolean; exploded: boolean; cutaway: boolean; onCutaway: () => void; onSpin: () => void; onExplode: () => void; onReset: () => void }) {
   return (
     <motion.div className="rs-scene-controls" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
       <button type="button" className={`rs-btn${spin ? " is-active" : ""}`} aria-pressed={spin} onClick={onSpin}>
         <RotateCw size={15} /> Rotate
+      </button>
+      <button type="button" className={`rs-btn${cutaway ? " is-active" : ""}`} aria-pressed={cutaway} onClick={onCutaway} title="Cut through the middle of the housing to select internal parts">
+        <Scissors size={15} /> Cut through
       </button>
       <button type="button" className={`rs-btn${exploded ? " is-active" : ""}`} aria-pressed={exploded} onClick={onExplode}>
         {exploded ? <Minimize2 size={15} /> : <Expand size={15} />} {exploded ? "Assemble" : "Explode"}
