@@ -4944,6 +4944,63 @@
         "title": "ProductDocument",
         "type": "object"
       },
+      "ProductEnquiry": {
+        "additionalProperties": false,
+        "properties": {
+          "buyer_company": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Buyer Company",
+            "type": "string"
+          },
+          "buyer_contact": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Buyer Contact",
+            "type": "string"
+          },
+          "delivery_destination": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Delivery Destination",
+            "type": "string"
+          },
+          "part_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Part Id",
+            "type": "string"
+          },
+          "quantity": {
+            "maximum": 1000000.0,
+            "minimum": 1.0,
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "required_by": {
+            "format": "date",
+            "title": "Required By",
+            "type": "string"
+          },
+          "selected_item": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Selected Item",
+            "type": "string"
+          }
+        },
+        "required": [
+          "part_id",
+          "selected_item",
+          "quantity",
+          "required_by",
+          "delivery_destination",
+          "buyer_company",
+          "buyer_contact"
+        ],
+        "title": "ProductEnquiry",
+        "type": "object"
+      },
       "ProductEvent": {
         "additionalProperties": false,
         "properties": {
@@ -5468,6 +5525,16 @@
             "title": "Created At",
             "type": "string"
           },
+          "enquiry": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductEnquiry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "input_version": {
             "title": "Input Version",
             "type": "integer"
@@ -5571,6 +5638,11 @@
             "title": "Requirements",
             "type": "array"
           },
+          "rfq_subject": {
+            "default": "",
+            "title": "Rfq Subject",
+            "type": "string"
+          },
           "rfq_text": {
             "title": "Rfq Text",
             "type": "string"
@@ -5592,6 +5664,23 @@
           "rfq_text"
         ],
         "title": "ProductPackageItem",
+        "type": "object"
+      },
+      "ProductPackageRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "enquiry": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductEnquiry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "ProductPackageRequest",
         "type": "object"
       },
       "ProductPart": {
@@ -5754,7 +5843,7 @@
             "items": {
               "$ref": "#/components/schemas/ProductPart"
             },
-            "maxItems": 50,
+            "maxItems": 200,
             "minItems": 1,
             "title": "Parts",
             "type": "array"
@@ -11781,6 +11870,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ProductPackageRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {

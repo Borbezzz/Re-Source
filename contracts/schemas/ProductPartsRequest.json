@@ -265,7 +265,7 @@
       "items": {
         "$ref": "#/$defs/ProductPart"
       },
-      "maxItems": 50,
+      "maxItems": 200,
       "minItems": 1,
       "title": "Parts",
       "type": "array"

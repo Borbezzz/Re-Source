@@ -3090,6 +3090,26 @@ export interface components {
              */
             size_bytes: number;
         };
+        /** ProductEnquiry */
+        ProductEnquiry: {
+            /** Buyer Company */
+            buyer_company: string;
+            /** Buyer Contact */
+            buyer_contact: string;
+            /** Delivery Destination */
+            delivery_destination: string;
+            /** Part Id */
+            part_id: string;
+            /** Quantity */
+            quantity: number;
+            /**
+             * Required By
+             * Format: date
+             */
+            required_by: string;
+            /** Selected Item */
+            selected_item: string;
+        };
         /** ProductEvent */
         ProductEvent: {
             /** Created At */
@@ -3266,6 +3286,7 @@ export interface components {
             approved_by?: string | null;
             /** Created At */
             created_at: string;
+            enquiry?: components["schemas"]["ProductEnquiry"] | null;
             /** Input Version */
             input_version: number;
             /** Items */
@@ -3307,10 +3328,19 @@ export interface components {
             quantity: number;
             /** Requirements */
             requirements: components["schemas"]["ProductRequirement"][];
+            /**
+             * Rfq Subject
+             * @default
+             */
+            rfq_subject: string;
             /** Rfq Text */
             rfq_text: string;
             /** Supplier Name */
             supplier_name: string;
+        };
+        /** ProductPackageRequest */
+        ProductPackageRequest: {
+            enquiry?: components["schemas"]["ProductEnquiry"] | null;
         };
         /** ProductPart */
         ProductPart: {
@@ -6300,7 +6330,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ProductPackageRequest"] | null;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {

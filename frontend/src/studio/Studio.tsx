@@ -10,7 +10,7 @@ const loadMap = () => import("./map/SupplierMap.tsx");
 const SupplierMap = lazy(() => loadMap().then((m) => ({ default: m.SupplierMap })));
 import { PROFILE_FOR_PACKAGE, SAMPLE_PACKAGE_URL, readDesignPackage, type DesignPackage, type StepId, type PackageComponent } from "./data/package.ts";
 import { CHECK_ORDER, assess, counts, defaultNeed, rankAll, type Assessed, type SourcingNeed } from "./data/checks.ts";
-import { DESTINATION, DISRUPTION } from "./data/sites.ts";
+import { DISRUPTION } from "./data/sites.ts";
 import { journeyApi } from "./api.ts";
 import type { ProductCandidate, ProductProject } from "../product-flow/types.ts";
 import { Intake } from "./screens/Intake.tsx";
@@ -418,7 +418,7 @@ export function Studio() {
         selected_item: component.name,
         quantity: need.quantity,
         required_by: need.requiredBy,
-        delivery_destination: DESTINATION.site,
+        delivery_destination: need.destination,
         buyer_company: "Demo Aero Maintenance Ltd",
         buyer_contact: "Procurement desk",
       });
