@@ -45,6 +45,7 @@ export function Studio() {
   const [inspectedId, setInspectedId] = useState<string | null>(null);
   const [hovered, setHovered] = useState<AssemblyItem | null>(null);
   const [exploded, setExploded] = useState(false);
+  const [cutaway, setCutaway] = useState(false);
   const [spin, setSpin] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [need, setNeed] = useState<SourcingNeed>(() => defaultNeed());
@@ -360,6 +361,8 @@ export function Studio() {
     setError(null);
     setSolid(0);
     setPhase("idle");
+    setExploded(false);
+    setCutaway(false);
     setNeed(defaultNeed());
   };
 
@@ -408,6 +411,7 @@ export function Studio() {
             hovered={stage === "explore" ? hovered : null}
             onInspect={(id) => { const item = assemblyIndex.get(id); if (stage === "explore" && item) inspectPart(item); }}
             exploded={exploded}
+            cutaway={cutaway}
             isolate={stage !== "return" || phase !== "done"}
             spin={spin}
             phase={phase}
@@ -459,7 +463,7 @@ export function Studio() {
           <div className="rs-ui-layer">
             <div className="rs-crumb rs-eyebrow">{project?.name ?? pkg.displayName} / Assembly</div>
             <AssemblyBrowser items={pkg.assemblyTree} selected={inspectedId} onSelect={inspectPart} onHover={setHovered} />
-            {stage === "explore" && !inspection ? <SceneControls spin={spin} exploded={exploded} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); clearSelection(); setResetKey((k) => k + 1); }} /> : null}
+            {stage === "explore" && !inspection ? <SceneControls spin={spin} exploded={exploded} cutaway={cutaway} onCutaway={() => setCutaway(v => !v)} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); setCutaway(false); clearSelection(); setResetKey((k) => k + 1); }} /> : null}
             {inspection && !component ? <InspectionCard item={inspection} onClose={clearSelection} /> : null}
             <AnimatePresence mode="wait">
               {component && requirement ? (
