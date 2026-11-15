@@ -273,7 +273,7 @@ Select fields use a dark fill, separator border, field radius, and the frontmatt
 
 The global header is black with pale identity and muted navigation labels, matching the hero's upper fade. The active item uses pale text and a restrained tonal background. Header navigation remains in a horizontal row on small screens with reduced gaps and hidden nonessential mark detail.
 
-Engine workspace tabs remain a distinct dark toolbar with a cobalt-wash selected state. Their existing wrapping behavior and accessible selected state remain intact.
+The shared header has three destinations: Home, Investigations and New investigation. Investigations opens a private list of saved projects, with current progress and a direct Continue action. A project uses one progressive vertical workspace rather than stage tabs. Completed sources, assembly and research collapse into summaries with a Review action; the next required action stays open. Research and supplier comparison share one section. Existing engine bookmarks remain available under the shared header. On mobile the brand and three navigation links occupy two rows without horizontal overflow.
 
 ### Prepared assembly and selection
 
@@ -281,7 +281,7 @@ The eight prepared visual groups share stable component and node IDs. Clicking t
 
 Reversible Anime.js scroll progress drives prepared separation. Ordinary scene movement damps toward that progress; reduced motion applies direct values. Assemble, Explode, and a labelled range input from 0 to 1 with 0.01 steps are always available. Direct input disables scroll separation and switches the hint to direct controls without adding a reset button. Reduced motion uses a static wordmark and removes the extended scroll track. Model loading and failure text keep the part list usable when rendering is unavailable.
 
-The geometry label and source-required dimensions/material text stay beside the landing preview. Continue through Choose a demo product to review sample specifications and research any of the three prepared profiles. The shared product workspace provides a country-level dotted globe tied to actual investigation records; unknown locations remain unplotted. Engine operations remains a separate entry to the legacy recovery workflow.
+The geometry label and source-required dimensions/material text stay beside the landing preview. Continue through Choose a demo product to review sample specifications and research any of the three prepared profiles. The shared product workspace provides a country-level dotted globe tied to actual investigation records; unknown locations remain unplotted. Existing engine bookmarks preserve access to the legacy recovery workflow.
 
 ### Wordmark
 
@@ -313,7 +313,7 @@ The working engine flow retains source-link buttons with inline document icons, 
 
 ## Guided demo and prepared engine
 
-Start demo opens the three-product gallery. Each prepared product uses a visitor-owned project with source review, assembly selection, parallel research, comparison and a reviewable RFQ package. Sample documents and quotes are explicitly labelled. Exact-package approval and simulated receipts remain user actions. Upload blueprint enters the same workflow with discovered or manually entered parts. The legacy engine guide remains under Engine operations.
+Start demo opens the three-product gallery. Each prepared product uses a visitor-owned project with source review, assembly selection, parallel research, comparison and a reviewable RFQ package. Sample documents and quotes are explicitly labelled. Exact-package approval and simulated receipts remain user actions. Upload blueprint enters the same workflow with discovered or manually entered parts. Existing deep links preserve the legacy engine guide.
 
 The engine viewport uses the licensed Blender-prepared cutaway for compatible engine cases, including existing runs; activated uploaded GLBs take precedence. Casing-first separation, module spread, reverse scrolling and focus follow actual mesh transforms. Source notices and an editable Blender project are supplied; visual counterparts do not establish engineering compatibility.
 
@@ -324,8 +324,7 @@ Desktop/mobile captures and a fresh independent Impeccable review found two mate
 
 ## Shared product workspace
 
-The gallery uses large named rows; source review uses editable parts and expandable
-quotes. Workflow tabs remain visible on desktop and horizontally scroll on mobile.
+New investigation offers a design-package entry and large named prepared-demo rows; source review uses editable parts and expandable quotes. Each project advances through one continuous workspace with completed-section summaries instead of workflow tabs.
 Assembly controls use a direct separation slider without a reset control; local
 studio lighting preserves metal detail. The part list remains available after a
 model load failure. Model options disclose attribution and uploaded-node mappings.
@@ -333,4 +332,4 @@ model load failure. Model options disclose attribution and uploaded-node mapping
 Research cards retain task status, sample/public labels, source links and unknown
 requirements. Country centroids are explicitly representative, never precise
 supplier addresses. The RFQ screen displays the actual package before approval;
-its acknowledgement resets when the package changes.
+its acknowledgement resets when the package changes. Source edits are protected during navigation and remain mounted when a section collapses. Extraction and pending saves temporarily disable editing so later responses cannot erase a newer draft.

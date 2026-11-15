@@ -1,0 +1,229 @@
+.global-header.app-header {
+  justify-content: space-between;
+  gap: 32px;
+}
+.app-header .wordmark {
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.app-header nav a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 14px;
+  transition:
+    color 160ms,
+    background 160ms;
+}
+.app-header nav a:hover {
+  color: var(--ink);
+  background: #ffffff0a;
+}
+.app-header nav a[aria-current="page"] {
+  color: var(--ink);
+  background: #ffffff10;
+}
+.app-header nav a:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.workspace-main {
+  min-height: calc(100svh - 72px);
+}
+.workspace-main:focus,
+.product-home:focus {
+  outline: none;
+}
+.workspace-loading {
+  padding: 48px 24px;
+  color: var(--muted);
+}
+.investigations-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 60px 40px 80px;
+}
+.investigations-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+.investigations-heading h1 {
+  font-size: 36px;
+  font-weight: 580;
+  letter-spacing: -0.035em;
+  margin: 0 0 12px;
+}
+.investigations-page p {
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 70ch;
+}
+.investigations-heading p {
+  margin: 0;
+}
+.investigations-heading > a {
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+.investigations-list-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  color: var(--muted);
+  padding-bottom: 14px;
+  font-size: 12px;
+}
+.investigations-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+.investigations-list li {
+  border-bottom: 1px solid var(--border);
+}
+.investigation-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.6fr) 110px;
+  gap: 32px;
+  padding: 28px 12px;
+  align-items: center;
+  color: var(--ink);
+  text-decoration: none;
+  border-radius: 4px;
+}
+.investigation-row:hover {
+  background: #ffffff06;
+}
+.investigation-identity h2 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+.investigation-identity p {
+  margin: 0;
+  font-size: 14px;
+}
+.investigation-progress {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+.investigation-progress time {
+  color: var(--muted);
+  font-size: 12px;
+}
+.investigation-progress .is-running {
+  color: var(--brand);
+}
+.investigation-resume {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+.investigations-privacy {
+  margin-top: 24px;
+  font-size: 12px;
+}
+.investigations-empty {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+}
+.investigations-empty h2 {
+  font-size: 25px;
+  letter-spacing: -0.025em;
+  font-weight: 550;
+}
+.investigations-empty .text-button {
+  padding-left: 0;
+  text-decoration: none;
+}
+.investigations-error {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+}
+.investigations-error p {
+  margin: 0;
+}
+@media (max-width: 800px) {
+  .global-header.app-header {
+    gap: 16px;
+    padding-inline: 24px;
+  }
+  .app-header nav a {
+    padding: 12px;
+    font-size: 14px;
+  }
+  .investigations-page {
+    padding: 40px 24px 60px;
+  }
+  .investigations-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+  .investigation-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
+    padding: 24px 4px;
+  }
+  .investigation-progress {
+    grid-column: 1;
+  }
+  .investigation-resume {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+}
+@media (max-width: 600px) {
+  .global-header.app-header {
+    height: auto;
+    min-height: 108px;
+    padding: 14px 20px 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .global-header.app-header .wordmark {
+    font-size: 17px;
+  }
+  .global-header.app-header nav {
+    order: 2;
+    width: 100%;
+    flex: 1 0 100%;
+    justify-content: space-between;
+    overflow: visible;
+    gap: 4px;
+  }
+  .app-header nav a {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  .investigations-page {
+    padding: 32px 20px 56px;
+  }
+  .investigations-heading h1 {
+    font-size: 32px;
+  }
+  .investigation-resume {
+    font-size: 0;
+  }
+  .investigations-error {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -562,7 +562,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * Projects
+         * @description List this visitor's saved projects, newest update first, without document or model contents.
+         */
+        get: operations["projects_api_v1_products_get"];
         put?: never;
         /** Create */
         post: operations["create_api_v1_products_post"];
@@ -3053,6 +3057,53 @@ export interface components {
             /** Version */
             version: number;
         };
+        /** ProductProjectList */
+        ProductProjectList: {
+            /** Projects */
+            projects: components["schemas"]["ProductProjectSummary"][];
+        };
+        /**
+         * ProductProjectSummary
+         * @description Dashboard fields only; project contents remain behind the owned detail route.
+         */
+        ProductProjectSummary: {
+            /**
+             * Active Research Count
+             * @description Investigations currently queued or running.
+             */
+            active_research_count: number;
+            /** Completed Research Count */
+            completed_research_count: number;
+            /** Confirmed Part Count */
+            confirmed_part_count: number;
+            /** Created At */
+            created_at: string;
+            /** Demo Id */
+            demo_id: string | null;
+            /** Failed Research Count */
+            failed_research_count: number;
+            /** Name */
+            name: string;
+            /** Package Status */
+            package_status: ("draft" | "approved" | "simulated") | null;
+            /** Part Count */
+            part_count: number;
+            /** Product Type */
+            product_type: string;
+            /** Project Id */
+            project_id: string;
+            /** Research Count */
+            research_count: number;
+            /** Selected Count */
+            selected_count: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "extracting" | "review" | "ready" | "investigating" | "results" | "packaged";
+            /** Updated At */
+            updated_at: string;
+        };
         /** ProductRequirement */
         ProductRequirement: {
             /** Key */
@@ -5225,6 +5276,38 @@ export interface operations {
                 };
                 content: {
                     "text/html": string;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    projects_api_v1_products_get: {
+        parameters: {
+            query?: {
+                /** @description Newest projects to return; defaults to 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProjectList"];
                 };
             };
             /** @description Validation Error */

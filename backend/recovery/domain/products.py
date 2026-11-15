@@ -166,6 +166,29 @@ class ProductProject(ProductContract):
     updated_at: str
 
 
+class ProductProjectSummary(ProductContract):
+    """Dashboard fields only; project contents remain behind the owned detail route."""
+    project_id: str
+    name: str
+    demo_id: str | None
+    product_type: str
+    status: Literal["draft", "extracting", "review", "ready", "investigating", "results", "packaged"]
+    created_at: str
+    updated_at: str
+    part_count: int = Field(ge=0)
+    confirmed_part_count: int = Field(ge=0)
+    research_count: int = Field(ge=0)
+    active_research_count: int = Field(ge=0, description="Investigations currently queued or running.")
+    completed_research_count: int = Field(ge=0)
+    failed_research_count: int = Field(ge=0)
+    selected_count: int = Field(ge=0)
+    package_status: Literal["draft", "approved", "simulated"] | None
+
+
+class ProductProjectList(ProductContract):
+    projects: list[ProductProjectSummary]
+
+
 class DemoProduct(ProductContract):
     demo_id: str
     name: str

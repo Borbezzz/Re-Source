@@ -5,7 +5,7 @@ import logging
 from collections.abc import Callable
 from typing import Annotated
 
-from fastapi import APIRouter, File, Form, Header, UploadFile
+from fastapi import APIRouter, File, Form, Header, Query, UploadFile
 from fastapi.responses import Response
 from starlette.concurrency import run_in_threadpool
 
@@ -25,6 +25,20 @@ def product_router(service_provider: Callable, idempotent: Callable) -> APIRoute
     async def command(project_id: str, action: str, key: str | None, body: dict, fn: Callable, status: int = 200):
         return await idempotent(f"product:{project_id}:{action}", key, body, fn, status)
 
+    async def recover_dispatches() -> None:
+        if settings.job_backend == "vercel":
+            try:
+                await run_in_threadpool(service_provider().jobs.recover_dispatches)
+            except Exception:  # noqa: BLE001 - read access must survive a temporarily unavailable queue
+                log.warning("Product queue dispatch recovery deferred")
+
+    @router.get("", response_model=P.ProductProjectList)
+    async def projects(limit: Annotated[int, Query(ge=1, le=100, description="Newest projects to return; defaults to 100.")] = 100):
+        """List this visitor's saved projects, newest update first, without document or model contents."""
+        result = await run_in_threadpool(service().list_projects, limit)
+        await recover_dispatches()
+        return result
+
     @router.get("/demos", response_model=list[P.DemoProduct])
     async def demos():
         return await run_in_threadpool(service().demos)
@@ -38,11 +52,7 @@ def product_router(service_provider: Callable, idempotent: Callable) -> APIRoute
         # Check ownership before dispatch recovery. Every returned record is scoped
         # by the opaque visitor session, even if a project ID is guessed.
         result = await run_in_threadpool(service().get, project_id)
-        if settings.job_backend == "vercel":
-            try:
-                await run_in_threadpool(service_provider().jobs.recover_dispatches)
-            except Exception:  # noqa: BLE001 - read access must survive a temporarily unavailable queue
-                log.warning("Product queue dispatch recovery deferred")
+        await recover_dispatches()
         return result
 
     @router.post("/{project_id}/documents", response_model=P.ProductProject, status_code=201)
