@@ -55,7 +55,7 @@ export function InvestigationWorkspace({
       command.current = null;
       setId(b.batch_id);
       history.replaceState(
-        null,
+        history.state,
         "",
         `#batch/${encodeURIComponent(b.batch_id)}`,
       );
@@ -75,7 +75,7 @@ export function InvestigationWorkspace({
         onPart={onPart}
         onBack={() => {
           setId("");
-          history.replaceState(null, "", "#investigations");
+          history.replaceState(history.state, "", "#investigations");
         }}
       />
     );

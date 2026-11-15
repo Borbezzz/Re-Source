@@ -1,11 +1,18 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   ArrowLeft,
   ArrowRight,
   Check,
+  ChevronDown,
   ExternalLink,
   FilePlus2,
-  Layers3,
   Plus,
   Trash2,
   Upload,
@@ -18,37 +25,73 @@ import { ProductResearch } from "./ProductResearch.tsx";
 import "./product-flow.css";
 const AssemblyScene = lazy(() => import("./AssemblyScene.tsx"));
 export type ProductEntry = "gallery" | "upload" | `project:${string}`;
-type Step = "sources" | "assembly" | "research" | "compare" | "approval";
-const steps: { id: Step; label: string }[] = [
-  { id: "sources", label: "Sources & parts" },
-  { id: "assembly", label: "Assembly" },
-  { id: "research", label: "Research" },
-  { id: "compare", label: "Compare" },
-  { id: "approval", label: "Review & approve" },
-];
-const pending = (p: ProductProject) =>
-  p.status === "extracting" ||
-  p.research.some((r) => r.status === "queued" || r.status === "running");
-const errorText = (e: unknown) =>
-  e instanceof Error ? e.message : "Something went wrong. Please try again.";
+type Step = "sources" | "assembly" | "research" | "approval";
+export type ProjectAction = (
+  label: string,
+  work: () => Promise<ProductProject>,
+  next?: Step,
+) => Promise<void>;
+const pending = (project: ProductProject) =>
+  project.status === "extracting" ||
+  project.research.some(
+    (job) => job.status === "queued" || job.status === "running",
+  );
+const resumeAt = (project: ProductProject): Step =>
+  project.package
+    ? "approval"
+    : project.research.length
+      ? "research"
+      : project.parts.length &&
+          project.parts.every((part) => part.status === "confirmed")
+        ? "assembly"
+        : "sources";
+const errorText = (error: unknown) =>
+  error instanceof Error
+    ? error.message
+    : "Something went wrong. Please try again.";
+
 export function ProductFlow({
   entry,
-  onExit,
-  onLegacy,
+  onProjectOpened,
+  onNew,
+  onDirtyChange,
 }: {
   entry: ProductEntry;
-  onExit: () => void;
-  onLegacy: () => void;
+  onProjectOpened: (id: string) => void;
+  onNew: () => void;
+  onDirtyChange?: (dirty: boolean) => void;
 }) {
-  const [project, setProject] = useState<ProductProject | null>(null),
-    [demos, setDemos] = useState<DemoProduct[]>([]),
-    [screen, setScreen] = useState(entry),
-    [step, setStep] = useState<Step>("sources"),
-    [busy, setBusy] = useState(""),
-    [error, setError] = useState(""),
-    [loading, setLoading] = useState(true),
-    [name, setName] = useState(""),
-    [selected, setSelected] = useState<string[]>([]);
+  const [project, setProject] = useState<ProductProject | null>(null);
+  const [demos, setDemos] = useState<DemoProduct[]>([]);
+  const [screen, setScreen] = useState(entry);
+  const [openSections, setOpenSections] = useState<Record<Step, boolean>>({
+    sources: true,
+    assembly: false,
+    research: false,
+    approval: false,
+  });
+  const [busy, setBusy] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [name, setName] = useState("");
+  const [selected, setSelected] = useState<string[]>([]);
+  const [sourceDirty, setSourceDirty] = useState(false);
+  const reportDirty = useRef(onDirtyChange);
+  reportDirty.current = onDirtyChange;
+  useEffect(() => {
+    reportDirty.current?.(sourceDirty);
+  }, [sourceDirty]);
+  useEffect(
+    () => () => {
+      reportDirty.current?.(false);
+    },
+    [],
+  );
+  const [focusRequest, setFocusRequest] = useState<{
+    section: Step;
+    serial: number;
+  } | null>(null);
+  const currentProject = useRef<ProductProject | null>(null);
   const actionLock = useRef(false);
   const mounted = useRef(true);
   useEffect(() => {
@@ -57,36 +100,78 @@ export function ProductFlow({
       mounted.current = false;
     };
   }, []);
-  useEffect(() => {
-    setSelected([]);
-  }, [project?.project_id]);
-  const accept = (value: ProductProject) => {
-    setProject(value);
-    if (project?.project_id !== value.project_id) setStep("sources");
-    setScreen(`project:${value.project_id}`);
-    history.replaceState(null, "", `#project/${value.project_id}`);
+  const reveal = (section: Step) => {
+    setOpenSections({
+      sources: section === "sources",
+      assembly: section === "assembly",
+      research: section === "research",
+      approval: section === "approval",
+    });
+    setFocusRequest((previous) => ({
+      section,
+      serial: (previous?.serial ?? 0) + 1,
+    }));
   };
   useEffect(() => {
+    if (!focusRequest) return;
+    const frame = requestAnimationFrame(() => {
+      const section = document.getElementById(
+        `investigation-${focusRequest.section}`,
+      );
+      const target =
+        focusRequest.section === "approval"
+          ? (section?.querySelector<HTMLElement>(".pf-simulation") ?? section)
+          : section;
+      target?.scrollIntoView({ block: "start", behavior: "instant" });
+      target?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [focusRequest]);
+  const accept = (value: ProductProject) => {
+    const isNew = currentProject.current?.project_id !== value.project_id;
+    if (!isNew && currentProject.current!.version > value.version) return;
+    currentProject.current = value;
+    setProject(value);
+    if (isNew) {
+      setSelected([]);
+      setSourceDirty(false);
+      setOpenSections({
+        sources: true,
+        assembly: false,
+        research: false,
+        approval: false,
+      });
+      onProjectOpened(value.project_id);
+    }
+  };
+  useEffect(() => {
+    const id = entry.startsWith("project:") ? entry.slice(8) : null;
+    // Creation updates the shared URL without restarting this same workspace.
+    if (id && currentProject.current?.project_id === id) {
+      setLoading(false);
+      return;
+    }
     const controller = new AbortController();
     setLoading(true);
-    const request = entry.startsWith("project:")
-      ? productApi.project(entry.slice(8), controller.signal).then((value) => {
+    setError("");
+    const request = id
+      ? productApi.project(id, controller.signal).then((value) => {
+          if (controller.signal.aborted) return;
+          currentProject.current = value;
           setProject(value);
-          setStep(
-            value.package
-              ? "approval"
-              : value.research.length
-                ? "research"
-                : value.parts.length &&
-                    value.parts.every((p) => p.status === "confirmed")
-                  ? "assembly"
-                  : "sources",
-          );
+          setSelected(value.research.map((job) => job.part_id));
+          setSourceDirty(false);
+          reveal(resumeAt(value));
         })
-      : productApi.demos(controller.signal).then(setDemos);
+      : productApi.demos(controller.signal).then((value) => {
+          if (!controller.signal.aborted) {
+            setDemos(value);
+            setScreen(entry);
+          }
+        });
     void request
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(errorText(e));
+      .catch((error) => {
+        if (!controller.signal.aborted) setError(errorText(error));
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
@@ -109,19 +194,18 @@ export function ProductFlow({
           project.project_id,
           controller.signal,
         );
-        if (!controller.signal.aborted) {
-          setProject((current) =>
-            current &&
-            current.project_id === next.project_id &&
-            current.version > next.version
-              ? current
-              : next,
-          );
+        if (
+          !controller.signal.aborted &&
+          (!currentProject.current ||
+            currentProject.current.version <= next.version)
+        ) {
+          currentProject.current = next;
+          setProject(next);
           setError("");
         }
-      } catch (e) {
+      } catch (error) {
         if (!controller.signal.aborted)
-          setError(`Updates paused: ${errorText(e)} Retrying…`);
+          setError(`Updates paused: ${errorText(error)} Retrying…`);
       }
       if (!controller.signal.aborted) timer = setTimeout(poll, 1500);
     };
@@ -131,11 +215,7 @@ export function ProductFlow({
       clearTimeout(timer);
     };
   }, [project?.project_id, active]);
-  const act = async (
-    label: string,
-    work: () => Promise<ProductProject>,
-    next?: Step,
-  ) => {
+  const act: ProjectAction = async (label, work, next) => {
     if (actionLock.current) return;
     actionLock.current = true;
     setBusy(label);
@@ -144,74 +224,43 @@ export function ProductFlow({
       const value = await work();
       if (!mounted.current) return;
       accept(value);
-      if (next) {
-        setStep(next);
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }
-    } catch (e) {
-      if (mounted.current) setError(errorText(e));
+      if (next) reveal(next);
+    } catch (error) {
+      if (mounted.current) setError(errorText(error));
     } finally {
       if (mounted.current) setBusy("");
       actionLock.current = false;
     }
   };
-  const startDemo = (demo: DemoProduct) =>
-    void act("Opening demo…", () =>
-      productApi.create({ demo_id: demo.demo_id }),
-    );
-  const startUpload = () =>
-    void act("Creating workspace…", () =>
-      productApi.create({ name: name.trim() || "New product" }),
-    );
-  const navigate = (value: Step) => {
-    setStep(value);
-    window.scrollTo(0, 0);
+  const continueAction: ProjectAction = async (label, work, next) => {
+    if (sourceDirty) {
+      setError(
+        "Save and confirm your source edits before continuing this investigation.",
+      );
+      reveal("sources");
+      return;
+    }
+    return act(label, work, next);
   };
+  const confirmed =
+    !!project?.parts.length &&
+    project.parts.every((part) => part.status === "confirmed");
+  const researched = !!project?.research.length;
+  const complete = project?.package?.status === "simulated";
+  const sourceDocumentCount =
+    project?.documents.filter((document) => document.kind !== "model").length ??
+    0;
+  const selectedSuppliers = project
+    ? Object.keys(project.selections).length
+    : 0;
+  const toggleSection = (section: Step) =>
+    setOpenSections((current) => ({
+      ...current,
+      [section]: !current[section],
+    }));
   return (
     <div className="pf-root">
-      <a className="skip-link" href="#main-content">
-        Skip to workspace
-      </a>
-      <header className="global-header pf-global">
-        <button
-          className="wordmark"
-          onClick={onExit}
-          aria-label="Re::Source home"
-        >
-          <span className="brand-mark">
-            <Layers3 size={23} />
-          </span>
-          Re::Source
-        </button>
-        <nav aria-label="Product navigation">
-          <button
-            disabled={!!busy}
-            onClick={() => {
-              setProject(null);
-              setSelected([]);
-              setStep("sources");
-              setScreen("gallery");
-              setError("");
-              history.replaceState(null, "", "#products");
-              void productApi
-                .demos()
-                .then(setDemos)
-                .catch((e) => setError(errorText(e)));
-            }}
-          >
-            Choose a product
-          </button>
-          <button onClick={onLegacy}>Engine operations</button>
-        </nav>
-        <span className="pf-mode">
-          {project?.demo_id
-            ? "Demo workspace"
-            : project
-              ? "Your product"
-              : "Parts :: sources"}
-        </span>
-      </header>
-      <main id="main-content" className="pf-main">
+      <div className="pf-main">
         {error ? (
           <div className="pf-error" role="alert">
             {error}
@@ -227,66 +276,90 @@ export function ProductFlow({
         ) : null}
         {loading ? (
           <p className="pf-loading" role="status">
-            Opening the workspace…
+            Opening the investigation…
           </p>
         ) : !project ? (
           <>
             <div className="pf-entry-heading">
-              <button className="text-button" onClick={onExit}>
-                <ArrowLeft size={16} /> Back
-              </button>
-              <h1>
-                {screen === "upload"
-                  ? "Start with your product."
-                  : "Choose a product to explore."}
-              </h1>
+              <h1>New investigation</h1>
               <p>
-                {screen === "upload"
-                  ? "Bring a blueprint, drawing or specification. Review the proposed parts before finding suppliers."
-                  : "Prepared models and sample documents. The same review, research and approval workflow as your own product."}
+                Add your design documents, or start with a prepared demo
+                package.
               </p>
             </div>
             {screen === "upload" ? (
               <form
                 className="pf-create"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  startUpload();
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void act(
+                    "Creating investigation…",
+                    () =>
+                      productApi.create({ name: name.trim() || "New product" }),
+                    "sources",
+                  );
                 }}
               >
                 <label>
                   Product name
                   <input
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(event) => setName(event.target.value)}
                     placeholder="For example, a desk lamp"
                     maxLength={160}
                   />
                 </label>
                 <p>
-                  Upload documents in the next step. You can also add parts by
-                  hand.
+                  Add your blueprint, specification or parts list next. You can
+                  also add parts by hand.
                 </p>
                 <button className="primary" disabled={!!busy}>
-                  Create workspace <ArrowRight size={16} />
+                  Continue with your product <ArrowRight size={16} />
                 </button>
                 <button
                   type="button"
                   className="text-button"
                   onClick={() => setScreen("gallery")}
                 >
-                  Try a prepared demo
+                  <ArrowLeft size={15} /> Choose a prepared demo instead
                 </button>
               </form>
             ) : (
               <>
+                <div className="pf-upload-choice">
+                  <div>
+                    <h2>Use your own design package</h2>
+                    <p>
+                      Start with a drawing, specification or bill of materials.
+                    </p>
+                  </div>
+                  <button
+                    className="primary"
+                    onClick={() => setScreen("upload")}
+                  >
+                    <Upload size={17} /> Add your documents
+                  </button>
+                </div>
+                <div className="pf-demo-heading">
+                  <h2>Or explore a prepared demo</h2>
+                  <p>
+                    Sample documents and a matching 3D model, ready for the same
+                    sourcing workflow.
+                  </p>
+                </div>
                 <div className="pf-demo-list">
                   {demos.map((demo) => (
                     <button
                       key={demo.demo_id}
                       className="pf-demo-choice"
                       disabled={!!busy}
-                      onClick={() => startDemo(demo)}
+                      onClick={() =>
+                        void act(
+                          "Opening demo investigation…",
+                          () => productApi.create({ demo_id: demo.demo_id }),
+                          "sources",
+                        )
+                      }
                     >
                       <span>
                         <strong>{demo.name}</strong>
@@ -300,31 +373,13 @@ export function ProductFlow({
                 </div>
                 {!demos.length ? (
                   <p>
-                    No prepared products are available. You can still create a
-                    workspace with your own documents.
+                    No prepared packages are available. You can still start with
+                    your own documents.
                   </p>
                 ) : null}
-                <div className="pf-upload-choice">
-                  <div>
-                    <h2>Working on something else?</h2>
-                    <p>
-                      Use your own blueprint, specification or bill of
-                      materials.
-                    </p>
-                  </div>
-                  <button
-                    className="secondary"
-                    onClick={() => {
-                      setScreen("upload");
-                      history.replaceState(null, "", "#upload");
-                    }}
-                  >
-                    <Upload size={17} /> Upload your documents
-                  </button>
-                </div>
                 <p className="pf-footnote">
-                  Demo geometry is prepared in advance. Sample quotes and
-                  simulated approvals are labelled throughout.
+                  Demo models are prepared in advance. Sample offers and
+                  simulated purchasing remain labelled.
                 </p>
               </>
             )}
@@ -335,76 +390,181 @@ export function ProductFlow({
               <div>
                 <h1>{project.name}</h1>
                 <p>
-                  {project.demo_id
-                    ? "Sample documents · prepared 3D model · simulated purchasing"
-                    : "Your documents establish the requirements. Review every proposed part."}
+                  {complete
+                    ? "Investigation complete · simulated purchasing"
+                    : project.demo_id
+                      ? "Demo investigation · sample documents and prepared geometry"
+                      : "Review your parts, find suppliers and prepare a sourcing package."}
                 </p>
               </div>
               <span className="pf-project-status">
-                {project.parts.length} parts
+                {complete
+                  ? "Complete"
+                  : active
+                    ? "Research in progress"
+                    : project.package
+                      ? "Ready for review"
+                      : researched
+                        ? "Choose suppliers"
+                        : confirmed
+                          ? "Choose parts"
+                          : "Review sources"}
               </span>
             </div>
-            <nav className="pf-steps" aria-label="Sourcing workflow">
-              {steps.map((s) => (
-                <button
-                  key={s.id}
-                  aria-current={step === s.id ? "step" : undefined}
-                  onClick={() => navigate(s.id)}
-                  disabled={s.id !== "sources" && !project.parts.length}
+            <div className="pf-continuous-flow">
+              <FlowSection
+                id="sources"
+                label="Sources & parts"
+                summary={`${sourceDocumentCount} ${sourceDocumentCount === 1 ? "document" : "documents"} · ${project.parts.length} ${confirmed ? "reviewed" : "proposed"} parts${sourceDirty ? " · unsaved edits" : ""}`}
+                completed={confirmed}
+                open={!confirmed || openSections.sources}
+                onToggle={() => toggleSection("sources")}
+              >
+                <Sources
+                  key={project.project_id}
+                  project={project}
+                  busy={busy}
+                  onAction={act}
+                  onDirtyChange={setSourceDirty}
+                />
+              </FlowSection>
+              {confirmed ? (
+                <FlowSection
+                  id="assembly"
+                  label="Assembly & selected parts"
+                  summary={
+                    researched
+                      ? `${project.research.length} parts in this investigation`
+                      : `${selected.length} parts selected`
+                  }
+                  completed={researched}
+                  open={!researched || openSections.assembly}
+                  onToggle={() => toggleSection("assembly")}
                 >
-                  {s.label}
-                </button>
-              ))}
-            </nav>
-            <div hidden={step !== "sources"}>
-              <Sources
-                key={project.project_id}
-                project={project}
-                busy={busy}
-                onAction={act}
-              />
+                  <Assembly
+                    project={project}
+                    busy={busy}
+                    selected={selected}
+                    onSelected={setSelected}
+                    onAction={continueAction}
+                  />
+                </FlowSection>
+              ) : (
+                <p className="pf-next-hint">
+                  Confirm the reviewed parts to explore the assembly and start
+                  supplier research.
+                </p>
+              )}
+              {researched ? (
+                <FlowSection
+                  id="research"
+                  label="Supplier research & choices"
+                  summary={`${project.research.filter((job) => job.status === "complete").length} of ${project.research.length} parts researched · ${selectedSuppliers} supplier ${selectedSuppliers === 1 ? "choice" : "choices"}`}
+                  completed={!!project.package}
+                  open={!project.package || openSections.research}
+                  onToggle={() => toggleSection("research")}
+                >
+                  <ProductResearch
+                    project={project}
+                    busy={busy}
+                    onAction={continueAction}
+                  />
+                </FlowSection>
+              ) : null}
+              {project.package ? (
+                <FlowSection
+                  id="approval"
+                  label="Sourcing package"
+                  summary={`${project.package.items.length} ${project.package.items.length === 1 ? "RFQ" : "RFQs"} · ${project.package.status}`}
+                  completed={complete}
+                  open={openSections.approval || !complete}
+                  onToggle={() => toggleSection("approval")}
+                >
+                  <Approval
+                    project={project}
+                    busy={busy}
+                    onAction={continueAction}
+                  />
+                </FlowSection>
+              ) : null}
             </div>
-            {step === "assembly" ? (
-              <Assembly
-                project={project}
-                busy={busy}
-                selected={selected}
-                onSelected={setSelected}
-                onAction={act}
-              />
-            ) : null}
-            {step === "research" || step === "compare" ? (
-              <ProductResearch
-                project={project}
-                comparison={step === "compare"}
-                busy={busy}
-                onAction={act}
-                onCompare={() => navigate("compare")}
-                onApproval={() => navigate("approval")}
-              />
-            ) : null}
-            {step === "approval" ? (
-              <Approval project={project} busy={busy} onAction={act} />
+            {complete ? (
+              <div className="pf-complete-next">
+                <p>
+                  This investigation is saved with its sources, supplier choices
+                  and simulated receipt.
+                </p>
+                <button className="secondary" onClick={onNew}>
+                  Start a new investigation <ArrowRight size={16} />
+                </button>
+              </div>
             ) : null}
           </>
         )}
-      </main>
+      </div>
     </div>
   );
 }
-export type ProjectAction = (
-  label: string,
-  work: () => Promise<ProductProject>,
-  next?: Step,
-) => Promise<void>;
+function FlowSection({
+  id,
+  label,
+  summary,
+  completed,
+  open,
+  onToggle,
+  children,
+}: {
+  id: Step;
+  label: string;
+  summary: string;
+  completed: boolean;
+  open: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <section
+      id={`investigation-${id}`}
+      className={`pf-flow-section ${completed ? "pf-flow-completed" : ""}`}
+      tabIndex={-1}
+      aria-label={label}
+    >
+      {completed ? (
+        <button
+          className="pf-flow-summary"
+          aria-expanded={open}
+          aria-controls={`investigation-${id}-content`}
+          onClick={onToggle}
+        >
+          <span className="pf-flow-check">
+            <Check size={16} />
+          </span>
+          <span>
+            <strong>{label}</strong>
+            <small>{summary}</small>
+          </span>
+          <span className="pf-flow-edit">
+            {open ? "Collapse" : "Review"}
+            <ChevronDown size={16} />
+          </span>
+        </button>
+      ) : null}
+      <div id={`investigation-${id}-content`} hidden={!open}>
+        {children}
+      </div>
+    </section>
+  );
+}
 function Sources({
   project,
   busy,
   onAction,
+  onDirtyChange,
 }: {
   project: ProductProject;
   busy: string;
   onAction: ProjectAction;
+  onDirtyChange: (dirty: boolean) => void;
 }) {
   const [parts, setParts] = useState<ProductPart[]>(project.parts),
     [kind, setKind] = useState("blueprint"),
@@ -412,6 +572,18 @@ function Sources({
   const fileInput = useRef<HTMLInputElement>(null);
   const partsSignature = JSON.stringify(project.parts);
   const hasEdits = JSON.stringify(parts) !== partsSignature;
+  useEffect(() => {
+    onDirtyChange(hasEdits);
+  }, [hasEdits, onDirtyChange]);
+  useEffect(() => {
+    if (!hasEdits) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [hasEdits]);
   const invalidParts = parts.some(
     (part) =>
       !part.name.trim() ||
@@ -484,7 +656,7 @@ function Sources({
           type="file"
           accept=".pdf,.txt,.md,.json,.png,.jpg,.jpeg"
           aria-label="Choose source document"
-          disabled={!!busy || project.status === "extracting"}
+          disabled={!!busy || hasEdits || project.status === "extracting"}
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (!file) return;
@@ -514,7 +686,7 @@ function Sources({
         </button>
         {hasEdits ? (
           <p className="pf-footnote">
-            Save your part edits before extracting again.
+            Save your part edits before adding documents or extracting again.
           </p>
         ) : null}
         <p className="pf-footnote">
@@ -522,7 +694,18 @@ function Sources({
           Your reviewed parts remain editable.
         </p>
       </aside>
-      <div className="pf-reviewed-parts">
+      <fieldset
+        className="pf-reviewed-parts pf-review-fields"
+        disabled={!!busy || project.status === "extracting"}
+        aria-busy={!!busy || project.status === "extracting"}
+      >
+        <legend className="sr-only">Review and confirm product parts</legend>
+        {project.status === "extracting" ? (
+          <p className="pf-editing-paused" role="status">
+            Reading your documents. Part editing will resume when extraction
+            finishes.
+          </p>
+        ) : null}
         <div className="pf-section-heading">
           <div>
             <h2>Review the parts</h2>
@@ -603,7 +786,12 @@ function Sources({
                         update(index, {
                           requirements: p.requirements.map((current, i) =>
                             i === ri
-                              ? { ...current, value: e.target.value }
+                              ? {
+                                  ...current,
+                                  value: e.target.value,
+                                  source: null,
+                                  status: "proposed",
+                                }
                               : current,
                           ),
                         })
@@ -641,6 +829,8 @@ function Sources({
                                   ? {
                                       ...item,
                                       unit: event.target.value || null,
+                                      source: null,
+                                      status: "proposed",
                                     }
                                   : item,
                               ),
@@ -738,7 +928,7 @@ function Sources({
             approval.
           </p>
         </div>
-      </div>
+      </fieldset>
     </section>
   );
 }
@@ -1052,10 +1242,13 @@ function Assembly({
             Research selected parts <ArrowRight size={16} />
           </button>
           {!confirmed ? (
-            <p>Confirm your parts in Sources & parts first.</p>
+            <p>Review and confirm your parts above first.</p>
           ) : null}
           {pending(project) ? (
-            <p>Research is already running. Follow it in the Research step.</p>
+            <p>
+              Research is running below. You can review each result as it
+              arrives.
+            </p>
           ) : null}
         </div>
       </aside>
@@ -1075,7 +1268,7 @@ function Approval({
   const packet = project.package;
   useEffect(() => setAck(false), [packet?.package_id, packet?.input_version]);
   const content = packet
-    ? `${project.name} — sourcing package\n\n${packet.notice}\n\n${packet.items.map((item) => `${item.part_name} · ${item.quantity} units\n${item.supplier_name}${item.data_origin === "synthetic_demo" ? " (sample quote)" : ""}\n\n${item.rfq_text}\n\nEvidence gaps:\n${item.evidence_gaps.map((g) => `- ${g}`).join("\n")}`).join("\n\n---\n\n")}`
+    ? `${project.name} — sourcing package\n\n${packet.notice}\n\n${packet.items.map((item) => `${item.part_name} · ${item.quantity} ${item.quantity === 1 ? "unit" : "units"}\n${item.supplier_name}${item.data_origin === "synthetic_demo" ? " (sample quote)" : ""}\n\n${item.rfq_text}\n\nEvidence gaps:\n${item.evidence_gaps.map((g) => `- ${g}`).join("\n")}`).join("\n\n---\n\n")}`
     : "";
   const download = () => {
     if (!packet) return;
@@ -1111,8 +1304,8 @@ function Approval({
               : "Choose suppliers first."}
           </h3>
           <p>
-            Select a candidate for each researched part in Compare, then build
-            the package for review.
+            Choose suppliers in the research results above, then prepare the
+            package for review.
           </p>
           <button
             className="primary"
@@ -1131,7 +1324,14 @@ function Approval({
           <p className="pf-package-status">
             {packet.status.replaceAll("_", " ")} · reviewable RFQ
           </p>
-          <pre className="pf-rfq">{content}</pre>
+          {packet.status === "draft" ? (
+            <pre className="pf-rfq">{content}</pre>
+          ) : (
+            <details className="pf-reviewed-package">
+              <summary>Read the approved sourcing package</summary>
+              <pre className="pf-rfq">{content}</pre>
+            </details>
+          )}
           <p>
             Supplier leads are not verified offers. Confirm specifications,
             price, availability and certification directly before procurement.
@@ -1153,8 +1353,11 @@ function Approval({
                 className="primary"
                 disabled={!!busy || !ack}
                 onClick={() =>
-                  void onAction("Recording your approval…", () =>
-                    productApi.approve(project.project_id, packet.package_id),
+                  void onAction(
+                    "Recording your approval…",
+                    () =>
+                      productApi.approve(project.project_id, packet.package_id),
+                    "approval",
                   )
                 }
               >
@@ -1163,7 +1366,7 @@ function Approval({
             </>
           ) : null}
           {packet.status === "approved" ? (
-            <div className="pf-simulation">
+            <div className="pf-simulation" tabIndex={-1}>
               <h3>Approval recorded.</h3>
               <p>
                 Finish the demonstration with a simulated receipt. This does not
@@ -1173,8 +1376,14 @@ function Approval({
                 className="secondary"
                 disabled={!!busy}
                 onClick={() =>
-                  void onAction("Creating simulated receipt…", () =>
-                    productApi.simulate(project.project_id, packet.package_id),
+                  void onAction(
+                    "Creating simulated receipt…",
+                    () =>
+                      productApi.simulate(
+                        project.project_id,
+                        packet.package_id,
+                      ),
+                    "approval",
                   )
                 }
               >
@@ -1183,7 +1392,7 @@ function Approval({
             </div>
           ) : null}
           {packet.receipt || packet.status === "simulated" ? (
-            <div className="pf-simulation" role="status">
+            <div className="pf-simulation" tabIndex={-1} role="status">
               <h3>Simulated receipt</h3>
               <p>
                 The demo is complete. No supplier was contacted and no order was

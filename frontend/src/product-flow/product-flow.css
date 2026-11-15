@@ -1,5 +1,4 @@
 .pf-root {
-  min-height: 100svh;
   background: var(--surface, #08090b);
   color: var(--ink, #f2f4f8);
 }
@@ -48,12 +47,6 @@
   font-size: 12px;
   line-height: 1.65;
   margin-top: 16px;
-}
-.pf-mode {
-  margin-left: auto;
-  font-size: 12px;
-  white-space: nowrap;
-  color: #a8b0bf;
 }
 .pf-entry-heading {
   padding: 6px 0 36px;
@@ -203,26 +196,6 @@
 .pf-project-status {
   white-space: nowrap;
   color: #a8b0bf;
-}
-.pf-steps {
-  display: flex;
-  gap: 6px;
-  border-bottom: 1px solid #ffffff25;
-  margin: 0 0 32px;
-  overflow-x: auto;
-  padding-bottom: 12px;
-}
-.pf-steps button {
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
-  color: #a8b0bf;
-  padding: 11px 15px;
-  white-space: nowrap;
-}
-.pf-steps button[aria-current] {
-  background: #ffffff13;
-  color: #fff;
 }
 .pf-sources {
   display: grid;
@@ -596,9 +569,6 @@
   color: #a8b0bf;
   text-align: right;
 }
-.pf-comparison .pf-candidates {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
 .pf-candidate > .text-button,
 .pf-candidate > .secondary {
   margin-top: 18px;
@@ -689,12 +659,6 @@
   .pf-main {
     padding: 26px 18px 60px;
   }
-  .pf-mode {
-    display: none;
-  }
-  .pf-global nav {
-    justify-content: flex-end;
-  }
   .pf-entry-heading {
     padding-bottom: 24px;
   }
@@ -718,13 +682,6 @@
   }
   .pf-project-status {
     display: none;
-  }
-  .pf-steps {
-    margin-bottom: 24px;
-  }
-  .pf-steps button {
-    font-size: 14px;
-    padding: 10px 12px;
   }
   .pf-sources,
   .pf-assembly,
@@ -769,9 +726,6 @@
     position: static;
     margin: 32px 0;
   }
-  .pf-comparison .pf-candidates {
-    grid-template-columns: 1fr;
-  }
   .pf-candidate-heading {
     display: block;
   }
@@ -803,4 +757,176 @@
 }
 .pf-node-mapping select[multiple] {
   padding: 8px;
+}
+
+.pf-demo-heading {
+  margin: 42px 0 24px;
+}
+.pf-demo-heading p {
+  margin-bottom: 0;
+}
+.pf-continuous-flow {
+  display: grid;
+  gap: 28px;
+}
+.pf-flow-section {
+  min-width: 0;
+  scroll-margin-top: 108px;
+}
+.pf-flow-section:focus {
+  outline: none;
+}
+.pf-flow-section:focus-visible {
+  outline: 2px solid #9cbaff;
+  outline-offset: 8px;
+}
+.pf-flow-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-top: 1px solid #ffffff20;
+  border-radius: 0;
+  background: transparent;
+  color: #f2f4f8;
+  padding: 20px 0;
+}
+.pf-flow-summary:hover {
+  color: #ffffff;
+}
+.pf-flow-summary[aria-expanded="true"] {
+  margin-bottom: 20px;
+}
+.pf-flow-summary strong {
+  font-size: 17px;
+  font-weight: 550;
+}
+.pf-flow-summary small {
+  display: block;
+  margin-top: 5px;
+  color: #a8b0bf;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.pf-flow-check {
+  display: grid;
+  place-items: center;
+  color: #a4d8c0;
+  flex-shrink: 0;
+}
+.pf-flow-edit {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a8b0bf;
+  font-size: 12px;
+}
+.pf-flow-summary[aria-expanded="true"] .pf-flow-edit svg {
+  transform: rotate(180deg);
+}
+.pf-main .pf-next-hint {
+  padding: 24px 0 0;
+  margin: 0;
+  border-top: 1px solid #ffffff20;
+  font-size: 14px;
+}
+.pf-research-jobs .pf-candidates {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.pf-investigation .pf-section-heading p + p {
+  margin-top: 8px;
+}
+.pf-research-continue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  border-top: 1px solid #ffffff20;
+  margin-top: 28px;
+  padding-top: 28px;
+}
+.pf-research-continue p {
+  margin: 0;
+  font-size: 14px;
+}
+.pf-research-continue > .primary {
+  flex-shrink: 0;
+}
+.pf-candidate-evidence {
+  margin: 14px 0;
+}
+.pf-reviewed-package {
+  margin: 18px 0 24px;
+}
+.pf-reviewed-package > summary {
+  font-size: 14px;
+}
+.pf-simulation {
+  scroll-margin-top: 120px;
+}
+.pf-simulation:focus {
+  outline: none;
+}
+.pf-complete-next {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 32px;
+  margin-top: 36px;
+  border-top: 1px solid #ffffff20;
+}
+.pf-complete-next p {
+  margin: 0;
+}
+.pf-upload-choice {
+  margin-top: 0;
+  padding: 8px 0 30px;
+  border-bottom: 1px solid #ffffff20;
+}
+@media (max-width: 1180px) {
+  .pf-research-jobs .pf-candidates {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 760px) {
+  .pf-flow-section {
+    scroll-margin-top: 130px;
+  }
+  .pf-flow-summary {
+    gap: 12px;
+  }
+  .pf-flow-edit {
+    font-size: 0;
+    gap: 0;
+  }
+  .pf-flow-summary strong {
+    font-size: 14px;
+  }
+  .pf-research-continue,
+  .pf-complete-next {
+    display: block;
+  }
+  .pf-research-continue > .primary,
+  .pf-complete-next > .secondary {
+    margin-top: 20px;
+    width: 100%;
+  }
+  .pf-simulation {
+    scroll-margin-top: 130px;
+  }
+}
+
+.pf-review-fields {
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.pf-main .pf-editing-paused {
+  padding: 12px 0;
+  color: #dbe8ff;
 }

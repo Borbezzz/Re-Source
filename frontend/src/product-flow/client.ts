@@ -1,4 +1,9 @@
-import type { DemoProduct, ProductPart, ProductProject } from "./types.ts";
+import type {
+  DemoProduct,
+  ProductPart,
+  ProductProject,
+  ProductProjectSummary,
+} from "./types.ts";
 export function createProductApi(
   base = "/api/v1/products",
   transport: typeof fetch = fetch,
@@ -30,6 +35,8 @@ export function createProductApi(
     });
   const path = (id: string) => `/${encodeURIComponent(id)}`;
   return {
+    projects: (signal?: AbortSignal) =>
+      request<{ projects: ProductProjectSummary[] }>("", { signal }),
     demos: (signal?: AbortSignal) =>
       request<DemoProduct[]>("/demos", { signal }),
     create: (body: { demo_id?: string; name?: string }) =>

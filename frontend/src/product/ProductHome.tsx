@@ -25,7 +25,7 @@ export function ProductHome({
   const heroRef = useRef<HTMLElement>(null);
   const openEngineDemo = () => {
     setEngineDemo(true);
-    history.replaceState(null, "", "#engine");
+    history.replaceState(history.state, "", "#engine");
     window.scrollTo(0, 0);
   };
   if (engineDemo)
@@ -35,7 +35,7 @@ export function ProductHome({
           className="text-button"
           onClick={() => {
             setEngineDemo(false);
-            history.replaceState(null, "", location.pathname);
+            history.replaceState(history.state, "", location.pathname);
           }}
         >
           Back to product explorer
@@ -50,7 +50,7 @@ export function ProductHome({
       </div>
     );
   return (
-    <main className="product-home">
+    <main id="main-content" tabIndex={-1} className="product-home">
       <section
         ref={heroRef}
         className="product-entry"

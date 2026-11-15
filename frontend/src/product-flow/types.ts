@@ -154,3 +154,21 @@ export interface DemoProduct {
   model: ProductModel;
   data_origin: "synthetic_demo";
 }
+
+export interface ProductProjectSummary {
+  project_id: string;
+  name: string;
+  demo_id: string | null;
+  product_type: string;
+  status: ProductProject["status"];
+  created_at: string;
+  updated_at: string;
+  part_count: number;
+  confirmed_part_count: number;
+  research_count: number;
+  active_research_count: number;
+  completed_research_count: number;
+  failed_research_count: number;
+  selected_count: number;
+  package_status: ProductPackage["status"] | null;
+}
