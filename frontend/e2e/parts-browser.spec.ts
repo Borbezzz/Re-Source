@@ -72,7 +72,7 @@ test("group and individual preview, keyboard selection, new-stage sourcing and w
   expect(frames.at(-1)!.width).toBeGreaterThan(initialWidth * 2);
   await page.screenshot({ path: info.outputPath("supplier-map.png") });
   await info.attach("map-framing", { body: JSON.stringify(frames), contentType: "application/json" });
-  await expect(page.getByText("Demo sourcing agent", { exact: true })).toBeVisible();
+  await expect(page.getByText("Sourcing agent", { exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });
 

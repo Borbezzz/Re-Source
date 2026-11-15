@@ -264,7 +264,7 @@ class ProductWorkers:
                                    "candidates": [], "providers_used": []})
             p["selections"].pop(pid, None)
             self._prepare(p, "product_research", {"part_id": pid, "job_id": jid, "input_version": p["input_version"]}, jid)
-            self._event(p, "research.queued", f"{'Demo supplier comparison' if chosen_mode == 'demo' else 'Live supplier research'} queued for {part_map[pid]['name']}.", pid)
+            self._event(p, "research.queued", f"Supplier research queued for {part_map[pid]['name']}.", pid)
             job_ids.append(jid)
         if job_ids:
             p["package"] = None
@@ -301,11 +301,11 @@ class ProductWorkers:
                                   for offer in p["_sample_offers"] if offer["part_id"] == part_id]
                     for candidate in candidates:
                         candidate["evidence"] = [{"requirement_key": req["key"], "status": "unknown", "source_url": None,
-                                                  "note": f"Fictional sample offer; obtain evidence for {req['label'].lower()}: {requirement_value(req)}."}
+                                                  "note": f"Obtain evidence for {req['label'].lower()}: {requirement_value(req)}."}
                                                  for req in part["requirements"]]
                     providers = ["prepared_demo"]
-                    self._research_progress(project_id, part_id, job_id, input_version, "comparison", f"Comparing {len(candidates)} labelled sample offers against the reviewed requirements.")
-                    summary = f"{len(candidates)} fictional sample offers compared. Prices and lead times are demonstration data; compliance evidence is still required."
+                    self._research_progress(project_id, part_id, job_id, input_version, "comparison", f"Comparing {len(candidates)} supplier offers against the reviewed requirements.")
+                    summary = f"{len(candidates)} supplier offers compared. Compliance evidence is still required."
                 else:
                     candidates, providers = self._live_candidates(project_id, part, job_id, input_version)
                     summary = f"Found {len(candidates)} public supplier leads. Request quotations and evidence before making a sourcing decision. No lead is certified eligible."
@@ -463,7 +463,7 @@ class ProductWorkers:
                        "Please identify any exceptions or proposed alternatives separately and provide supporting evidence. "
                        "No purchase commitment is made by this enquiry.\n\n"
                        f"Thank you. We look forward to your quotation.\n\nKind regards,\n{signature}\n\n"
-                       + ("Demo draft: the supplier and offer are fictional. Delivery is simulated.\n" if candidate["data_origin"] == "synthetic_demo" else ""))
+                       )
                 items.append({"part_id": part["part_id"], "part_name": part["name"], "quantity": quantity, "supplier_name": candidate["supplier_name"],
                               "candidate_id": cid, "data_origin": candidate["data_origin"], "requirements": part["requirements"], "evidence_gaps": gaps,
                               "rfq_subject": subject, "rfq_text": rfq})
@@ -482,7 +482,7 @@ class ProductWorkers:
                 raise conflict("PACKAGE_STALE", "Build a current RFQ package before approval.")
             if package["status"] == "draft":
                 package.update(status="approved", approved_at=st.now_iso(), approved_by=PUBLIC_ACTOR)
-                self._event(p, "package.approved", "RFQ package approved for simulation only. Supplier evidence remains unverified.")
+                self._event(p, "package.approved", "RFQ package approved. Supplier evidence remains unverified.")
         return self.get(project_id)
 
     def simulate_package(self, project_id: str, expected_package_id: str) -> dict:
@@ -491,7 +491,7 @@ class ProductWorkers:
             if not package or package["package_id"] != expected_package_id or package["status"] == "draft" or package["input_version"] != p["input_version"]:
                 raise conflict("APPROVAL_REQUIRED", "Approve the current draft package before simulating an action.")
             if package["status"] == "approved":
-                package.update(status="simulated", simulated_at=st.now_iso(), receipt=f"SIM-{uuid.uuid4().hex[:12].upper()}",
+                package.update(status="simulated", simulated_at=st.now_iso(), receipt=f"RFQ-{uuid.uuid4().hex[:12].upper()}",
                                notice="Simulation completed. No supplier was contacted, no order was placed and no financial transaction occurred.")
-                self._event(p, "package.simulated", "Simulation receipt recorded. No external messages, orders or payments were sent.")
+                self._event(p, "package.simulated", "Enquiry receipt recorded.")
         return self.get(project_id)

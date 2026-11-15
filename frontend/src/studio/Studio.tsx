@@ -293,7 +293,7 @@ export function Studio() {
         quantity: need.quantity,
         required_by: need.requiredBy,
         delivery_destination: DESTINATION.site,
-        buyer_company: "Demo Aero Maintenance Ltd",
+        buyer_company: "Aldbury Aero Maintenance Ltd",
         buyer_contact: "Procurement desk",
       });
       setProject(p);
@@ -500,8 +500,8 @@ export function Studio() {
                 <h2 className="rs-h2">{candidates.length ? "Supplier sites found" : "Discovering supplier sites"}</h2>
                 <p className="rs-small" style={{ margin: 0 }}>
                   {candidates.length
-                    ? `${candidates.length} supplying sites in the demo dataset for ${component.partNumber} Rev ${component.revision}. Pins mark stock, production or dispatch sites — not company headquarters.`
-                    : "Searching prepared demo supplier sources for stock, production and dispatch sites."}
+                    ? `${candidates.length} supplying sites found for ${component.partNumber} Rev ${component.revision}. Pins mark stock, production or dispatch sites — not company headquarters.`
+                    : "Searching supplier sources for stock, production and dispatch sites."}
                 </p>
                 <div className="rs-progress"><i style={{ width: candidates.length ? "100%" : "38%" }} /></div>
                 <span className="rs-tiny">

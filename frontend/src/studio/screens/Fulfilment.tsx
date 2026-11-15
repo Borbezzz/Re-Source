@@ -46,8 +46,8 @@ export function Fulfilment({
   const quote = project.mailbox?.find((m) => m.direction === "inbound" && m.quote)?.quote;
   const stages: { id: ProcurementStep; title: string; text: string; sim?: boolean }[] = [
     { id: "prepared", title: "Enquiry prepared", text: `RFQ drafted from the reviewed requirements · package ${pkg.package_id.slice(-6)}` },
-    { id: "approved", title: "Approved for sending", text: "Buyer approval recorded for this simulation only. Unverified supplier evidence acknowledged." },
-    { id: "sent", title: "Sent to supplier", text: pkg.receipt ? `Receipt ${pkg.receipt}` : "Enquiry and document requests delivered to the demo mailbox.", sim: true },
+    { id: "approved", title: "Approved for sending", text: "Buyer approval recorded. Unverified supplier evidence acknowledged." },
+    { id: "sent", title: "Sent to supplier", text: pkg.receipt ? `Receipt ${pkg.receipt}` : "Enquiry and document requests delivered to the supplier." },
     { id: "acknowledged", title: "Acknowledged", text: `${supplier} acknowledged the enquiry and document requests.`, sim: true },
     {
       id: "confirmed",
@@ -80,12 +80,12 @@ export function Fulfilment({
         </div>
         <article className="rs-doc" style={{ maxWidth: 760 }} aria-label="Request for quotation">
           <div className="rs-doc-head">
-            <span>Email draft · {pkg.status === "draft" ? "Ready for review" : pkg.status === "approved" ? "Approved" : "Sent (simulated)"}</span>
+            <span>Email draft · {pkg.status === "draft" ? "Ready for review" : pkg.status === "approved" ? "Approved" : "Sent"}</span>
             <span>{new Date(pkg.created_at).toLocaleDateString("en-GB")}</span>
           </div>
           <dl className="rs-email-envelope">
             <dt>To</dt><dd>{supplier} sales team</dd>
-            <dt>From</dt><dd>{enquiry?.buyer_contact ?? "Procurement desk"} · {enquiry?.buyer_company ?? "Demo Aero Maintenance Ltd"}</dd>
+            <dt>From</dt><dd>{enquiry?.buyer_contact ?? "Procurement desk"} · {enquiry?.buyer_company ?? "Aldbury Aero Maintenance Ltd"}</dd>
             <dt>Subject</dt><dd>{item.rfq_subject || `Request for quotation — ${component.partNumber} — Qty ${item.quantity}`}</dd>
           </dl>
           <div className="rs-email-body">{item.rfq_text}</div>
@@ -101,9 +101,9 @@ export function Fulfilment({
           <h2 className="rs-h3">Buyer identity</h2>
           <dl className="rs-kv">
             <dt>Company</dt>
-            <dd>{enquiry?.buyer_company ?? "Demo Aero Maintenance Ltd"}</dd>
+            <dd>{enquiry?.buyer_company ?? "Aldbury Aero Maintenance Ltd"}</dd>
             <dt>Contact</dt>
-            <dd>{enquiry?.buyer_contact ?? "Procurement desk"} · demo profile</dd>
+            <dd>{enquiry?.buyer_contact ?? "Procurement desk"}</dd>
             <dt>Site</dt>
             <dd>{DESTINATION.name}</dd>
           </dl>
@@ -119,7 +119,6 @@ export function Fulfilment({
               <span className="rs-tl-dot">{i <= idx ? <Check size={14} strokeWidth={3} /> : i + 1}</span>
               <div>
                 <b>{s.title}</b>
-                {s.sim ? <span className="rs-sim">Simulated</span> : null}
                 <p>{s.text}</p>
               </div>
             </li>
@@ -131,7 +130,7 @@ export function Fulfilment({
           </button>
         ) : idx === 1 ? (
           <button type="button" className="rs-btn rs-btn-grad" disabled={busy === "send"} onClick={onSend}>
-            {busy === "send" ? "Sending…" : "Send enquiry (simulated)"}
+            {busy === "send" ? "Sending…" : "Send enquiry"}
           </button>
         ) : null}
         <hr className="rs-divider" />

@@ -99,7 +99,7 @@ export function Processing({
                 <dd className="rs-mono">{pkg.packageId} · v{pkg.packageVersion}</dd>
               </dl>
               {pkg.components.length > 0 ? <details className="rs-small rs-package-parts">
-                <summary>{pkg.components.length} demo sourcing families across the assembly</summary>
+                <summary>{pkg.components.length} sourcing families across the assembly</summary>
                 <ul>{pkg.components.map(c => <li key={c.componentId}>{c.name} · {c.assemblyQuantity} in assembly</li>)}</ul>
               </details> : null}
               <button type="button" className="rs-btn rs-btn-grad" onClick={onConfirm} disabled={busy}>

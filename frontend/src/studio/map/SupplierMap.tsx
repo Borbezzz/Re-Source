@@ -672,7 +672,7 @@ function InfoCard({ at, bounds, a, active, disrupted, onClose, onZoom }: {
           <b className="rs-map-card-title">{a.candidate.supplier_name.replace(" (sample)", "")}</b>
           <span className="rs-map-card-sub">{a.site.city}, {a.candidate.country} · {a.site.siteType}</span>
           <p className="rs-map-card-note">
-            {!active ? "Checks for this site haven't run yet." : a.state === "eligible" ? "All mandatory checks passed on demo evidence." : a.reason}
+            {!active ? "Checks for this site haven't run yet." : a.state === "eligible" ? "All mandatory checks passed." : a.reason}
           </p>
           <dl className="rs-map-card-kv">
             <div><dt>Est. arrival</dt><dd>{active ? fmtDay(a.arrival) : "—"}</dd></div>

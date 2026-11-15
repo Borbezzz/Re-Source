@@ -41,7 +41,7 @@ test("full upload exposes sourcing for rings, housings, nozzle pieces and fasten
   await fastener.getByRole("button", { name: /^Change supplier/ }).click();
   await page.getByRole("button", { name: "Find suppliers", exact: true }).click();
   await expect(page.locator(".rs-map [data-pin]")).toHaveCount(8);
-  await expect(page.getByText("Demo sourcing agent", { exact: true })).toBeVisible();
+  await expect(page.getByText("Sourcing agent", { exact: true })).toBeVisible();
   await page.screenshot({ path: info.outputPath("fastener-suppliers.png") });
   expect(errors).toEqual([]);
 });

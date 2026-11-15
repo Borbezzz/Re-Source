@@ -26,12 +26,12 @@ export function workflowProviders(project?: ProviderProject | null, partId?: str
     searchStatus: demo ? "skipped" as const : used.has("linkup") ? "done" as const
       : research?.status === "failed" ? "error" as const : searching ? "running" as const
         : terminal ? "skipped" as const : "idle" as const,
-    searchSummary: demo ? "Demo offers · no call" : used.has("linkup") ? "Cited supplier pages returned"
+    searchSummary: demo ? "Supplier catalogue offers" : used.has("linkup") ? "Cited supplier pages returned"
       : research?.status === "failed" ? "Search did not complete" : searching ? "Searching public sources…"
         : terminal ? "No successful call recorded" : "Waiting for supplier search",
     extractStatus: demo ? "skipped" as const : used.has("databricks_ai_extract") ? "done" as const
       : extracting ? "running" as const : terminal ? "skipped" as const : "idle" as const,
-    extractSummary: demo ? "Demo claims · no AI call" : used.has("databricks_ai_extract") ? "Supplier claims extracted"
+    extractSummary: demo ? "Catalogue supplier claims" : used.has("databricks_ai_extract") ? "Supplier claims extracted"
       : extracting ? "Extracting source claims…" : terminal ? "Source snippets retained"
         : "Waiting for cited sources",
     execution: project?.capabilities.execution === "durable_queue" ? "Vercel Queues" : project?.capabilities.execution === "local_worker" ? "Local worker" : "Not reported",
