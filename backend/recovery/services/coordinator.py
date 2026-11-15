@@ -91,7 +91,8 @@ class Coordinator:
         if len(pending["triggers"]) > 1:
             trig["coalesced_trigger_ids"] = [t.get("trigger_id") for t in pending["triggers"]]
             trig["impact_paths"] = [p for t in pending["triggers"] for p in t.get("impact_paths", [])]
-        self._launch(run_id, case_id, gen_id, kind="reassessment", mode=case["mode"], trigger=trig, affected=pending["affected"])
+        s.store.after_commit(lambda: self._launch(run_id, case_id, gen_id, kind="reassessment", mode=case["mode"],
+                                                trigger=trig, affected=pending["affected"]))
         return gen_id
 
     def _new_generation(self, c: Any, run_id: str, case_id: str, kind: str, target_rev: int, trigger_id: Optional[str], *, mode: str) -> str:

@@ -15,6 +15,7 @@ import copy
 from contextvars import copy_context
 import json
 import logging
+import math
 import os
 import re
 import threading
@@ -120,7 +121,7 @@ class IntakeService:
 
     def _scope_key(self, key: str) -> str:
         # Uploads, extraction drafts and active manifests belong to this run.
-        return f"run:{self._run_id()}:{key}" if settings.public_demo else key
+        return f"run:{self._run_id()}:{key}"
 
     def _kv(self, key: str) -> Optional[dict]:
         return self.s.store.kv_get(self._scope_key(key))
@@ -169,7 +170,10 @@ class IntakeService:
         self._emit("intake.uploaded", f"Upload received: {rec['filename']} ({kind}, {len(data):,} bytes)",
                    {"upload_id": upload_id, "kind": kind, "sha256": sha, "component_id": component_id})
         if databricks_sql.configured and not settings.serverless:
-            threading.Thread(target=self._mirror, args=(upload_id,), daemon=True, name=f"mirror-{upload_id}").start()
+            from ..runtime.context import job_run_id
+            ctx = copy_context()
+            ctx.run(job_run_id.set, self._run_id())
+            threading.Thread(target=ctx.run, args=(self._mirror, upload_id), daemon=True, name=f"mirror-{upload_id}").start()
         return self.public_upload(rec)
 
     def _mirror(self, upload_id: str) -> Optional[str]:
@@ -368,7 +372,8 @@ class IntakeService:
         if el is None and value not in (None, "", []):
             needle = str(value[0] if isinstance(value, list) else value).strip().lower()
             if len(needle) >= 2:
-                el = next((e for e in elements if needle in e["text"].lower()), None)
+                pattern = re.compile(r"(?<!\w)" + re.escape(needle) + r"(?!\w)", re.IGNORECASE)
+                el = next((e for e in elements if pattern.search(e["text"])), None)
         if el is None:
             return None
         return {"page": el["page"], "bbox": el["bbox"], "excerpt": el["text"][:200], "line": el["line"], "element_id": el["element_id"]}
@@ -420,6 +425,19 @@ class IntakeService:
                 vnote = "not found in the document" if text else (note or "no text could be read from this file")
             from_structured = bool(det) and det_state == "valid" and value is det_val
             loc = self._locate(value, elements, det[1] if from_structured or (det and state == "invalid") else None)
+            if state == "valid" and not from_structured:
+                supported = loc is not None
+                if supported and isinstance(value, list):
+                    source = next(e["text"] for e in elements if e["line"] == loc["line"])
+                    supported = all(str(item).strip().lower() in source.lower() for item in value)
+                if name == "part_number" and supported:
+                    # A drawing/sheet identifier is not evidence of an OEM part number.
+                    source = next(e["text"] for e in elements if e["line"] == loc["line"])
+                    supported = bool(re.search(r"\b(?:part\s*(?:number|no\.?|#)|p\s*/\s*n|pn)\b", source, re.IGNORECASE))
+                if not supported:
+                    vnote = ("An OEM part number is not explicitly identified in the source; review is required."
+                             if name == "part_number" else "AI suggestion has no complete supporting source passage; review is required.")
+                    value, state, conf, loc = None, "unknown", None, None
             unit = _dimensional_unit(value) if name in ("key_dimensions", "tolerances") and state == "valid" else None
             fields.append({"name": name, "label": label, "value": value, "unit": unit, "required": required,
                            "source_ref": {"upload_id": rec["upload_id"], **loc} if loc else None, "confidence": conf,
@@ -444,10 +462,22 @@ class IntakeService:
     def patch_draft(self, draft_id: str, req: dict) -> dict:
         types = {n: t for n, _, t, _, _ in REQUIREMENT_FIELDS}
         confirm_payload = None
+        command = {"expected_version": req["expected_version"], "field_edits": req.get("field_edits") or {},
+                   "action": req.get("action"), "actor": req.get("actor", "demo-operator")}
         with self.s.store.tx() as c:
             run_id = self._run_id()
             self.s.store.lock_run(c, run_id)  # serialise draft edits (row lock on Postgres, BEGIN IMMEDIATE on SQLite)
             d = self.get_draft(draft_id)
+            if d["status"] == "confirmed" and command["action"] == "confirm":
+                replay = self._kv(f"intake:confirmation:{draft_id}") == command
+                replay = replay or (not command["field_edits"] and command["expected_version"] == d["version"])
+                if replay:
+                    if not d.get("change_id") and d.get("overlay"):
+                        # Recover drafts closed by an older build before the gateway completed.
+                        res = self.s.changes.inject_requirement_change(d["scenario_run_id"], d["component_id"], d["overlay"], draft_id)
+                        d.update(change_id=res["change"]["change_id"], affected_case_ids=res["affected_case_ids"], updated_at=_now())
+                        self._put(f"intake:draft:{draft_id}", d)
+                    return d
             if d["status"] in ("confirmed", "rejected"):
                 raise conflict("DRAFT_CLOSED", f"draft is {d['status']}; upload a new document to change requirements")
             if d["status"] != "needs_review":
@@ -488,14 +518,16 @@ class IntakeService:
                 confirm_payload = (d["scenario_run_id"], d["component_id"], overlay)
             d["updated_at"] = _now()
             self._put(f"intake:draft:{draft_id}", d)
-        if confirm_payload:
-            run_id, component_id, overlay = confirm_payload
-            res = self.s.changes.inject_requirement_change(run_id, component_id, overlay, draft_id)
-            d = self.get_draft(draft_id)
-            d.update(change_id=res["change"]["change_id"], affected_case_ids=res["affected_case_ids"], updated_at=_now())
-            self._put(f"intake:draft:{draft_id}", d)
-            self._emit("intake.confirmed", f"Part requirements confirmed for {component_id} → {len(res['affected_case_ids'])} case(s) reassessing",
-                       {"draft_id": draft_id, "change_id": res["change"]["change_id"], "affected_case_ids": res["affected_case_ids"]})
+            if confirm_payload:
+                # The draft, overlay and invalidation commit together. Coordinator dispatch is
+                # deferred by Store.after_commit, so no worker can read an uncommitted overlay.
+                run_id, component_id, overlay = confirm_payload
+                res = self.s.changes.inject_requirement_change(run_id, component_id, overlay, draft_id)
+                d.update(change_id=res["change"]["change_id"], affected_case_ids=res["affected_case_ids"], updated_at=_now())
+                self._put(f"intake:draft:{draft_id}", d)
+                self._put(f"intake:confirmation:{draft_id}", command)
+                self._emit("intake.confirmed", f"Part requirements confirmed for {component_id} → {len(res['affected_case_ids'])} case(s) reassessing",
+                           {"draft_id": draft_id, "change_id": res["change"]["change_id"], "affected_case_ids": res["affected_case_ids"]})
         return d
 
     # ------------------------------------------------------------------ mesh jobs
@@ -507,6 +539,58 @@ class IntakeService:
     def default_expected(self) -> list[dict]:
         return [{"component_id": c["component_id"], "node_name": c["mesh_mapping"]["node_name"], "source_ref": None}
                 for c in self.s.catalog.manifest["components"]]
+
+    def _mesh_source_ref(self, ref: Any, component_id: str) -> tuple[Optional[dict], list[str]]:
+        """Resolve provenance in the current run; a nonempty citation is not proof of a source."""
+        if not isinstance(ref, dict):
+            return None, ["no source_ref back to the blueprint region"]
+        ref = {k: ref[k] for k in ("upload_id", "page", "bbox", "excerpt", "line", "element_id", "note") if k in ref}
+        upload_id = ref.get("upload_id")
+        if not isinstance(upload_id, str) or not upload_id.strip():
+            return ref, ["source_ref requires a document upload_id"]
+        try:
+            rec = self.get_upload(upload_id)
+            data, _, _ = self.content(upload_id)
+        except DomainError:
+            return ref, ["source_ref upload or its content is not accessible in this run"]
+        if rec["kind"] not in ("blueprint", "part_requirements"):
+            return ref, ["source_ref must cite a blueprint or part-requirements document"]
+        if rec["engine_id"] != self.s.catalog.engine["engine_id"] or rec.get("component_id") not in (None, component_id):
+            return ref, ["source_ref document belongs to a different product or component"]
+        problems = []
+        for key in ("page", "line"):
+            val = ref.get(key)
+            if val is not None and (type(val) is not int or val < 1):
+                problems.append(f"source_ref {key} must be a positive integer")
+        for key in ("excerpt", "element_id", "note"):
+            val = ref.get(key)
+            if val is not None and (not isinstance(val, str) or not val.strip()):
+                problems.append(f"source_ref {key} must be a nonempty string")
+        bbox = ref.get("bbox")
+        if bbox is not None:
+            sane = (isinstance(bbox, list) and len(bbox) == 4
+                    and all(type(v) in (int, float) and math.isfinite(v) for v in bbox))
+            if not sane or not (0 <= bbox[0] < bbox[2] and 0 <= bbox[1] < bbox[3]):
+                problems.append("source_ref bbox must contain finite, ordered page coordinates")
+            if ref.get("page") is None:
+                problems.append("source_ref bbox requires a page")
+        if problems:
+            return ref, problems
+        page, line, excerpt = ref.get("page"), ref.get("line"), ref.get("excerpt")
+        if rec["ext"] in TEXT_EXTS:
+            lines = data.decode("utf-8").splitlines()
+            if page not in (None, 1) or (line is not None and line > len(lines)):
+                problems.append("source_ref page or line is outside the document")
+            elif excerpt and excerpt.casefold() not in (lines[line - 1] if line else "\n".join(lines)).casefold():
+                problems.append("source_ref excerpt is not present at the cited location")
+            if not line and not excerpt:
+                problems.append("text source_ref requires a line or a matching excerpt")
+        else:
+            if rec["ext"] in (".png", ".jpg", ".jpeg") and page != 1:
+                problems.append("image source_ref page must be 1")
+            if not page or not (bbox or excerpt or ref.get("element_id")):
+                problems.append("source_ref requires a page and a region, excerpt or element locator")
+        return ref, problems
 
     def validate_glb(self, data: bytes, expected: list[dict], upload_id: Optional[str] = None) -> tuple[dict, dict]:
         bounds = self.engine_bounds()
@@ -552,14 +636,12 @@ class IntakeService:
                 else:
                     chk["problems"].append("POSITION accessor has no min/max bounds")
                 ref = nodes[idx[0]].extras.get("source_ref")
-                if isinstance(ref, dict):
-                    ref = {k: ref.get(k) for k in ("upload_id", "page", "bbox", "excerpt", "line", "element_id", "note") if k in ref}
-                else:
+                if ref is None:
                     ref = exp.get("source_ref")
+                ref, source_problems = self._mesh_source_ref(ref, exp["component_id"])
                 chk["source_ref"] = ref
-                chk["has_source_ref"] = bool(ref)
-                if not ref:
-                    chk["problems"].append("no source_ref back to the blueprint region (node.extras.source_ref or expected.source_ref)")
+                chk["has_source_ref"] = not source_problems
+                chk["problems"].extend(source_problems)
             chk["ok"] = not chk["problems"]
             checks.append(chk)
             if chk["ok"]:
@@ -627,6 +709,12 @@ class IntakeService:
             job = self.get_job(job_id)
             if job["status"] != "succeeded":
                 raise conflict("MESH_JOB_NOT_ACTIVATABLE", f"mesh job is {job['status']}; only a validated (succeeded) job can be activated")
+            data, _, _ = self.content(job["upload_id"])
+            validation, candidate = self.validate_glb(data, job["expected"], job["upload_id"])
+            if not validation["ok"]:
+                raise conflict("MESH_SOURCE_INVALID", "Mesh geometry or source provenance is no longer valid; validate a new job",
+                               validation=validation)
+            job.update(validation=validation, manifest_candidate=candidate)
             if job.get("activated_at") and self.provenance().get("job_id") == job_id:
                 return self.provenance()
             n = int(self._kv("manifest_override_counter") or 0) + 1

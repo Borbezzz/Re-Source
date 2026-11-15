@@ -40,12 +40,14 @@ def test_anonymous_visitors_have_separate_runs_uploads_and_replay_authority(publ
 
 
 def test_activated_manifest_and_reset_are_private_to_each_run(public_api):
-    from test_intake import GOOD, make_glb
+    from test_intake import BLUEPRINT_TEXT, make_glb, sourced_nodes
     with TestClient(public_api.app) as a, TestClient(public_api.app) as b:
         a.get('/api/v1/engines/engine-demo-001')
         b.get('/api/v1/engines/engine-demo-001')
+        source = a.post('/api/v1/intake/uploads', data={'kind':'blueprint'},
+                        files={'file':('blueprint.txt',BLUEPRINT_TEXT.encode(),'text/plain')}).json()
         upload = a.post('/api/v1/intake/uploads', data={'kind':'mesh_glb'},
-                        files={'file':('synthetic.glb',make_glb(GOOD),'model/gltf-binary')}).json()
+                        files={'file':('synthetic.glb',make_glb(sourced_nodes(source['upload_id'])),'model/gltf-binary')}).json()
         job = a.post('/api/v1/intake/mesh-jobs', json={'upload_id':upload['upload_id'], 'engine_id':'engine-demo-001'}).json()
         activated = a.post(f"/api/v1/intake/mesh-jobs/{job['job_id']}/activate").json()
         assert activated['kind'] == 'generated'
