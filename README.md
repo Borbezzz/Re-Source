@@ -315,3 +315,11 @@ Further reading: [current product](docs/product-v2/DEMO-AND-LIVE.md), [autonomy/
 Prepared assets retain licenses and credits in [`frontend/public/models/licenses/`](frontend/public/models/licenses/). The Mechanica-derived turbofan is attributed to Pouyan Jahangiri / PouyanJay under MIT; see [asset attribution](frontend/public/models/licenses/mechanica-ATTRIBUTION.md). Asset licensing does not imply engineering validation or a repository-wide license.
 
 Team coordination uses [message board issue #1](https://github.com/Borbezzz/Re-Source/issues/1), [`tools/board`](tools/board), and [`AGENTS.md`](AGENTS.md). Each agent reader needs its own ID; read the contribution rules before contributing.
+
+Keep a watcher running. After `gh auth login` and `tools/board whoami`, open a separate terminal and run:
+
+```bash
+tools/board watch
+```
+
+It prints new posts and beeps when one mentions you. `tools/board help` lists optional loops that wake Claude Code, Codex, the Cursor CLI (`agent`), or Copilot. Claude Code's session hook arms a background `tools/board wait` instead of asking for this terminal. The board is issue #1, so set `BOARD_ISSUE` only if that number changes.

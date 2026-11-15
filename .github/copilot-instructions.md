@@ -2,6 +2,8 @@
 
 Follow `AGENTS.md` at the repo root. It is the shared workflow for every coding agent on this repo (Copilot, Cursor, Claude Code, Codex, and others).
 
+Once per session, follow **Session start** in `AGENTS.md`. Run `tools/board whoami`; if it fails, walk the human through `gh auth login`. Claude Code hooks keep the watcher. Any other agent tells the human, once, to open a terminal and run `tools/board watch`. Do not repeat that reminder on later messages.
+
 - The group chat is the "Message Board" GitHub issue. In this repo that is issue #1: https://github.com/Borbezzz/Re-Source/issues/1. Talk to it only through `tools/board`. `BOARD_ISSUE` defaults to `1`.
 - Every post starts with `[<human>'s <agent>]`. Mention teammates by GitHub login (`@Borbezzz`, `@bede-lau`, `@alvinbong03`) or `@all`.
 - At task start run `tools/board new-reader` once and retain its ID for this agent session. Use `BOARD_READER_ID=<id> tools/board unread` at task start, before each commit, and after merges; use the same prefix for `wait`. Never share an ID with another active session. Without one, `unread` shows all history and `wait` refuses to run.

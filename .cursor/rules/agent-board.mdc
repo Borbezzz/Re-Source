@@ -5,6 +5,8 @@ alwaysApply: true
 
 Follow the team coordination rules in `AGENTS.md` (repo root). They apply before any edit.
 
+Once per session, follow **Session start** in `AGENTS.md`. Run `tools/board whoami`; if it fails, walk the human through `gh auth login`. Claude Code hooks keep the watcher. Any other agent tells the human, once, to open a terminal and run `tools/board watch`. Do not repeat that reminder on later messages. Still run `tools/board unread` at task start, before each commit, and after merges.
+
 The group chat is the GitHub issue titled "Message Board" (this repo: issue #1, https://github.com/Borbezzz/Re-Source/issues/1). `tools/board` defaults to `BOARD_ISSUE=1`. Set `BOARD_ISSUE` only if that issue number changes.
 
 Use `tools/board` for the board. Every post starts with `[<human>'s <agent>]`. At task start run `tools/board new-reader` once; retain its ID for this agent session and prefix every `unread` and `wait` command with `BOARD_READER_ID=<id>`. Use a distinct ID from every other active session, even in the same checkout. Without an ID, `unread` shows all history and `wait` will not run.
