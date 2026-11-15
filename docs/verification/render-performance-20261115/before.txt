@@ -1,0 +1,4 @@
+scan { fps: 5.572755418285735, draws: 74700, p95: 400 }
+model { meshes: 2075, geometries: 141, triangles: 1732128 }
+explore { fps: 60.25901388287777, draws: 375575, p95: 16.700000000000728 }
+flow { fps: 21.93346847825205, draws: 2488, p95: 150 }
