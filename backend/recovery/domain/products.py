@@ -38,6 +38,10 @@ class ProductPart(ProductContract):
     node_names: list[str] = Field(default_factory=list, max_length=100)
     explode: tuple[float, float, float] | None = None
     status: Literal["proposed", "confirmed"] = "proposed"
+    identity_source: ProductSource | None = None
+    quantity_source: ProductSource | None = None
+    part_number_source: ProductSource | None = None
+    confirmation_origin: Literal["user_review", "agent_grounded"] | None = None
 
 
 class ProductModel(ProductContract):
@@ -146,6 +150,66 @@ class ProductCapabilities(ProductContract):
     execution: Literal["durable_queue", "local_worker"]
 
 
+class ProductAgentMandate(ProductContract):
+    objective: Literal["source_and_request_quotes"] = "source_and_request_quotes"
+    outreach: Literal["demo_mailbox", "draft_only"]
+    purchase_authorized: Literal[False] = False
+
+
+class ProductAgentAttention(ProductContract):
+    code: str
+    message: str
+    part_ids: list[str] = Field(default_factory=list)
+
+
+class ProductAgentTarget(ProductContract):
+    part_id: str
+    candidate_id: str
+    reason: str
+    readiness: Literal["demo_ready", "contact_required"]
+
+
+class ProductAgentRun(ProductContract):
+    run_id: str
+    input_version: int
+    mode: Literal["demo", "live"]
+    status: Literal["queued", "running", "paused", "needs_attention", "recommendation_ready", "failed"]
+    stage: Literal["requirements", "research", "shortlist", "rfq", "outreach", "complete"]
+    summary: str
+    mandate: ProductAgentMandate
+    attention: list[ProductAgentAttention] = Field(default_factory=list)
+    targets: list[ProductAgentTarget] = Field(default_factory=list)
+    sent_count: int = 0
+    reply_count: int = 0
+    created_at: str
+    updated_at: str
+    completed_at: str | None = None
+
+
+class ProductMailboxQuote(ProductContract):
+    price: float | None = None
+    currency: str | None = None
+    lead_time_days: int | None = None
+
+
+class ProductMailboxMessage(ProductContract):
+    message_id: str
+    run_id: str
+    part_id: str
+    candidate_id: str
+    direction: Literal["outbound", "inbound"]
+    delivery: Literal["simulated"] = "simulated"
+    data_origin: Literal["synthetic_demo"] = "synthetic_demo"
+    intended_supplier: str
+    from_label: str
+    to_label: str
+    subject: str
+    body: str
+    in_reply_to: str | None = None
+    created_at: str
+    quote: ProductMailboxQuote | None = None
+
+
 class ProductProject(ProductContract):
     project_id: str
     name: str
@@ -164,6 +228,8 @@ class ProductProject(ProductContract):
     capabilities: ProductCapabilities
     created_at: str
     updated_at: str
+    agent: ProductAgentRun | None = None
+    mailbox: list[ProductMailboxMessage] = Field(default_factory=list)
 
 
 class ProductProjectSummary(ProductContract):
@@ -183,6 +249,8 @@ class ProductProjectSummary(ProductContract):
     failed_research_count: int = Field(ge=0)
     selected_count: int = Field(ge=0)
     package_status: Literal["draft", "approved", "simulated"] | None
+    agent_status: Literal["queued", "running", "paused", "needs_attention", "recommendation_ready", "failed"] | None = None
+    agent_stage: Literal["requirements", "research", "shortlist", "rfq", "outreach", "complete"] | None = None
 
 
 class ProductProjectList(ProductContract):
@@ -232,3 +300,13 @@ class ProductApprovalRequest(ProductContract):
 
 class ProductSimulationRequest(ProductContract):
     expected_package_id: str
+
+
+class ProductAgentStartRequest(ProductContract):
+    expected_version: int
+    mode: Literal["demo", "live"]
+
+
+class ProductAgentControlRequest(ProductContract):
+    expected_run_id: str
+    expected_version: int

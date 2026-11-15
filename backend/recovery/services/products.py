@@ -32,6 +32,7 @@ from ..domain.products import (
     ProductProjectSummary,
 )
 from ..runtime.context import visitor_id
+from .product_agent import ProductAgent
 from .product_workers import ProductWorkers, literal_mention, requirement_value
 
 log = logging.getLogger("recovery.products")
@@ -41,7 +42,7 @@ def _id(prefix: str) -> str:
     return f"{prefix}-{uuid.uuid4().hex[:16]}"
 
 
-class ProductService(ProductWorkers):
+class ProductService(ProductAgent, ProductWorkers):
     def __init__(self, services: Any):
         self.s = services
         self._executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="product")
@@ -130,6 +131,7 @@ class ProductService(ProductWorkers):
                                             f"WHERE json_extract(item.value, '$.status') IN ({states}))")
             selected_count = "(SELECT COUNT(*) FROM json_each(document, '$.selections'))"
             package_status = field("package.status")
+            agent_status, agent_stage = field("agent.status"), field("agent.stage")
         else:
             document = "CAST(value AS JSONB)"
             owner_value = f"{document} ->> '_owner'"
@@ -139,11 +141,13 @@ class ProductService(ProductWorkers):
                                             f"WHERE item.value ->> 'status' IN ({states}))")
             selected_count = "(SELECT COUNT(*) FROM jsonb_object_keys(document -> 'selections'))"
             package_status = "document -> 'package' ->> 'status'"
+            agent_status, agent_stage = "document -> 'agent' ->> 'status'", "document -> 'agent' ->> 'stage'"
         columns = [f"{field(key)} AS {key}" for key in ("project_id", "name", "demo_id", "product_type", "status", "created_at", "updated_at")]
         columns += [f"{array_count('parts')} AS part_count", f"{matching('parts', "'confirmed'")} AS confirmed_part_count",
                     f"{array_count('research')} AS research_count", f"{matching('research', "'queued', 'running'")} AS active_research_count",
                     f"{matching('research', "'complete'")} AS completed_research_count", f"{matching('research', "'failed'")} AS failed_research_count",
-                    f"{selected_count} AS selected_count", f"{package_status} AS package_status"]
+                    f"{selected_count} AS selected_count", f"{package_status} AS package_status",
+                    f"{agent_status} AS agent_status", f"{agent_stage} AS agent_stage"]
         # Expressions and field names above are code constants. Only owner/limit
         # are request-dependent, and both remain bound SQL parameters.
         query = text(f"WITH owned AS (SELECT {document} AS document FROM kv WHERE key LIKE 'product:%' AND {owner_value} = :owner) "
@@ -192,8 +196,8 @@ class ProductService(ProductWorkers):
         self.s.store.kv_set(f"product:{pid}", project)
         return self._public(project)
 
-    @staticmethod
-    def _invalidate(project: dict) -> None:
+    def _invalidate(self, project: dict) -> None:
+        self._pause_agent_for_change(project, "Specifications changed. Start a new sourcing run to use the current inputs.", inputs_changed=True)
         project["input_version"] += 1
         project["research"] = []
         project["selections"] = {}
@@ -252,6 +256,8 @@ class ProductService(ProductWorkers):
                                      "content_url": f"/api/v1/products/{project_id}/documents/{did}/content",
                                      "extraction_status": "complete" if text else "pending", "extraction_method": "text" if text else None,
                                      "excerpt": text[:900] or None})
+            if kind == "model":
+                self._pause_agent_for_change(p, "A new model was uploaded. Review the project before resuming the sourcing agent.")
             if kind != "model":
                 self._invalidate(p)
                 for part in p["parts"]:
@@ -298,6 +304,7 @@ class ProductService(ProductWorkers):
             self._validate_sources(p, parts)
             for part in parts:
                 part["status"] = "confirmed" if confirm else "proposed"
+                part["confirmation_origin"] = "user_review" if confirm else None
                 for req in part["requirements"]:
                     req["status"] = part["status"]
             self._invalidate(p)

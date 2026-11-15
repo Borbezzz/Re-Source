@@ -9,9 +9,12 @@ missing information, and interrupt the user when a decision needs their input.
 1. Start a sourcing agent for the project. Its mandate covers specification
    checks, research, shortlisting and non-binding quote requests, with no purchase
    authorization.
-2. Check prepared source-backed requirements, or use explicitly reviewed custom
-   requirements. Record whether a human or the agent checked the specification.
-   Missing or conflicting requirements become actionable clarification requests.
+2. Check prepared requirements or extract an uploaded parts list. Automatically
+   continue when the name, explicit quantity and asserted requirements have
+   matching source passages; explicitly reviewed custom values are also usable.
+   Record whether a human or the agent checked the specification. A default
+   quantity of one is not source evidence. Missing or conflicting requirements
+   become actionable clarification requests.
 3. Run the existing supplier workers. Live investigations retain OpenAI query
    planning, Linkup discovery and Databricks extraction. The globe and cards show
    actual completed results.

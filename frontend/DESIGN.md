@@ -153,6 +153,20 @@ components:
 
 # Design System: Re::Source
 
+## Sourcing agent and mailbox
+
+The agent begins with one visible mandate and a primary start action. While it
+works, its summary and pause control stay compact so supplier research retains
+the large globe and floating result cards. Source and assembly disclosures use
+neutral indicators until checked. Agent-checked facts say “source-checked” rather
+than implying a human reviewed them.
+
+The result uses plain decision rows and a two-column sent/inbox mailbox, stacked
+on small screens. Individual messages expand in place; their bodies use the
+14px body scale. Simulated delivery and sample replies are labelled beside the
+actual content. Missing information produces a specific correction path, while
+routine RFQ steps advance automatically.
+
 ## Overview
 
 The current direction is the user-requested dark Re::Source display brand. The two colons suggest parts :: sources. The opening uses React Bits PatternWaves `silk` with white on black, soft edge fades and pointer ripples. The title stays crisp and solid. There are no hover cubes, labels, connecting lines, optical lens or dotted hover mask; pointer interaction belongs to the ripple background.

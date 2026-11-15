@@ -4347,6 +4347,245 @@
         "title": "PlanStep",
         "type": "object"
       },
+      "ProductAgentAttention": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "part_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Part Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ProductAgentAttention",
+        "type": "object"
+      },
+      "ProductAgentControlRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_run_id": {
+            "title": "Expected Run Id",
+            "type": "string"
+          },
+          "expected_version": {
+            "title": "Expected Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expected_run_id",
+          "expected_version"
+        ],
+        "title": "ProductAgentControlRequest",
+        "type": "object"
+      },
+      "ProductAgentMandate": {
+        "additionalProperties": false,
+        "properties": {
+          "objective": {
+            "const": "source_and_request_quotes",
+            "default": "source_and_request_quotes",
+            "title": "Objective",
+            "type": "string"
+          },
+          "outreach": {
+            "enum": [
+              "demo_mailbox",
+              "draft_only"
+            ],
+            "title": "Outreach",
+            "type": "string"
+          },
+          "purchase_authorized": {
+            "const": false,
+            "default": false,
+            "title": "Purchase Authorized",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "outreach"
+        ],
+        "title": "ProductAgentMandate",
+        "type": "object"
+      },
+      "ProductAgentRun": {
+        "additionalProperties": false,
+        "properties": {
+          "attention": {
+            "items": {
+              "$ref": "#/components/schemas/ProductAgentAttention"
+            },
+            "title": "Attention",
+            "type": "array"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "input_version": {
+            "title": "Input Version",
+            "type": "integer"
+          },
+          "mandate": {
+            "$ref": "#/components/schemas/ProductAgentMandate"
+          },
+          "mode": {
+            "enum": [
+              "demo",
+              "live"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "reply_count": {
+            "default": 0,
+            "title": "Reply Count",
+            "type": "integer"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "sent_count": {
+            "default": 0,
+            "title": "Sent Count",
+            "type": "integer"
+          },
+          "stage": {
+            "enum": [
+              "requirements",
+              "research",
+              "shortlist",
+              "rfq",
+              "outreach",
+              "complete"
+            ],
+            "title": "Stage",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "queued",
+              "running",
+              "paused",
+              "needs_attention",
+              "recommendation_ready",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "targets": {
+            "items": {
+              "$ref": "#/components/schemas/ProductAgentTarget"
+            },
+            "title": "Targets",
+            "type": "array"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "input_version",
+          "mode",
+          "status",
+          "stage",
+          "summary",
+          "mandate",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ProductAgentRun",
+        "type": "object"
+      },
+      "ProductAgentStartRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_version": {
+            "title": "Expected Version",
+            "type": "integer"
+          },
+          "mode": {
+            "enum": [
+              "demo",
+              "live"
+            ],
+            "title": "Mode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "expected_version",
+          "mode"
+        ],
+        "title": "ProductAgentStartRequest",
+        "type": "object"
+      },
+      "ProductAgentTarget": {
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "part_id": {
+            "title": "Part Id",
+            "type": "string"
+          },
+          "readiness": {
+            "enum": [
+              "demo_ready",
+              "contact_required"
+            ],
+            "title": "Readiness",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "part_id",
+          "candidate_id",
+          "reason",
+          "readiness"
+        ],
+        "title": "ProductAgentTarget",
+        "type": "object"
+      },
       "ProductApprovalRequest": {
         "additionalProperties": false,
         "properties": {
@@ -4883,6 +5122,147 @@
         "title": "ProductInvestigation",
         "type": "object"
       },
+      "ProductMailboxMessage": {
+        "additionalProperties": false,
+        "properties": {
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "candidate_id": {
+            "title": "Candidate Id",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "data_origin": {
+            "const": "synthetic_demo",
+            "default": "synthetic_demo",
+            "title": "Data Origin",
+            "type": "string"
+          },
+          "delivery": {
+            "const": "simulated",
+            "default": "simulated",
+            "title": "Delivery",
+            "type": "string"
+          },
+          "direction": {
+            "enum": [
+              "outbound",
+              "inbound"
+            ],
+            "title": "Direction",
+            "type": "string"
+          },
+          "from_label": {
+            "title": "From Label",
+            "type": "string"
+          },
+          "in_reply_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "In Reply To"
+          },
+          "intended_supplier": {
+            "title": "Intended Supplier",
+            "type": "string"
+          },
+          "message_id": {
+            "title": "Message Id",
+            "type": "string"
+          },
+          "part_id": {
+            "title": "Part Id",
+            "type": "string"
+          },
+          "quote": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductMailboxQuote"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "subject": {
+            "title": "Subject",
+            "type": "string"
+          },
+          "to_label": {
+            "title": "To Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message_id",
+          "run_id",
+          "part_id",
+          "candidate_id",
+          "direction",
+          "intended_supplier",
+          "from_label",
+          "to_label",
+          "subject",
+          "body",
+          "created_at"
+        ],
+        "title": "ProductMailboxMessage",
+        "type": "object"
+      },
+      "ProductMailboxQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "lead_time_days": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lead Time Days"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          }
+        },
+        "title": "ProductMailboxQuote",
+        "type": "object"
+      },
       "ProductModel": {
         "additionalProperties": false,
         "properties": {
@@ -5176,6 +5556,21 @@
       "ProductPart": {
         "additionalProperties": false,
         "properties": {
+          "confirmation_origin": {
+            "anyOf": [
+              {
+                "enum": [
+                  "user_review",
+                  "agent_grounded"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confirmation Origin"
+          },
           "explode": {
             "anyOf": [
               {
@@ -5199,6 +5594,16 @@
               }
             ],
             "title": "Explode"
+          },
+          "identity_source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "name": {
             "maxLength": 160,
@@ -5233,12 +5638,32 @@
             ],
             "title": "Part Number"
           },
+          "part_number_source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "quantity": {
             "default": 1,
             "maximum": 1000000.0,
             "minimum": 1.0,
             "title": "Quantity",
             "type": "integer"
+          },
+          "quantity_source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "requirements": {
             "items": {
@@ -5303,6 +5728,16 @@
       "ProductProject": {
         "additionalProperties": false,
         "properties": {
+          "agent": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductAgentRun"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "capabilities": {
             "$ref": "#/components/schemas/ProductCapabilities"
           },
@@ -5338,6 +5773,13 @@
           "input_version": {
             "title": "Input Version",
             "type": "integer"
+          },
+          "mailbox": {
+            "items": {
+              "$ref": "#/components/schemas/ProductMailboxMessage"
+            },
+            "title": "Mailbox",
+            "type": "array"
           },
           "model": {
             "$ref": "#/components/schemas/ProductModel"
@@ -5453,6 +5895,44 @@
             "minimum": 0.0,
             "title": "Active Research Count",
             "type": "integer"
+          },
+          "agent_stage": {
+            "anyOf": [
+              {
+                "enum": [
+                  "requirements",
+                  "research",
+                  "shortlist",
+                  "rfq",
+                  "outreach",
+                  "complete"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Stage"
+          },
+          "agent_status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "queued",
+                  "running",
+                  "paused",
+                  "needs_attention",
+                  "recommendation_ready",
+                  "failed"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Status"
           },
           "completed_research_count": {
             "minimum": 0.0,
@@ -9915,6 +10395,210 @@
           }
         },
         "summary": "Project",
+        "tags": [
+          "Product projects"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/agent/pause": {
+      "post": {
+        "operationId": "agent_pause_api_v1_products__project_id__agent_pause_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "idempotency-key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductAgentControlRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductProject"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Agent Pause",
+        "tags": [
+          "Product projects"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/agent/resume": {
+      "post": {
+        "operationId": "agent_resume_api_v1_products__project_id__agent_resume_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "idempotency-key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductAgentControlRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductProject"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Agent Resume",
+        "tags": [
+          "Product projects"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/agent/start": {
+      "post": {
+        "operationId": "agent_start_api_v1_products__project_id__agent_start_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "idempotency-key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductAgentStartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductProject"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Agent Start",
         "tags": [
           "Product projects"
         ]

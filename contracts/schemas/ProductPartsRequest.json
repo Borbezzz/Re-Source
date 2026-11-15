@@ -3,6 +3,22 @@
     "ProductPart": {
       "additionalProperties": false,
       "properties": {
+        "confirmation_origin": {
+          "anyOf": [
+            {
+              "enum": [
+                "user_review",
+                "agent_grounded"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confirmation Origin"
+        },
         "explode": {
           "anyOf": [
             {
@@ -27,6 +43,17 @@
           ],
           "default": null,
           "title": "Explode"
+        },
+        "identity_source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProductSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "name": {
           "maxLength": 160,
@@ -62,12 +89,34 @@
           "default": null,
           "title": "Part Number"
         },
+        "part_number_source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProductSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "quantity": {
           "default": 1,
           "maximum": 1000000,
           "minimum": 1,
           "title": "Quantity",
           "type": "integer"
+        },
+        "quantity_source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProductSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "requirements": {
           "items": {

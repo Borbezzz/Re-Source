@@ -14,6 +14,7 @@ SUMMARY_FIELDS = {
     "project_id", "name", "demo_id", "product_type", "status", "created_at", "updated_at",
     "part_count", "confirmed_part_count", "research_count", "active_research_count",
     "completed_research_count", "failed_research_count", "selected_count", "package_status",
+    "agent_status", "agent_stage",
 }
 
 

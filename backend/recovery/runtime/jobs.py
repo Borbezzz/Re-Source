@@ -98,6 +98,13 @@ class DurableJobs:
             run = job_run_id.set(None if job["run_id"] == "__system__" else job["run_id"])
             try:
                 self._perform(job)
+                if job["kind"].startswith("product_"):
+                    from ..config import settings
+                    if settings.job_backend == "vercel":
+                        # A committed continuation must be published before the
+                        # parent delivery is acknowledged. If publication fails,
+                        # queue redelivery retries without requiring an open tab.
+                        self.recover_dispatches()
                 self.s.store.kv_set(key, {**job, "status": "done"})
             finally:
                 visitor_id.reset(owner)
@@ -125,6 +132,8 @@ class DurableJobs:
             self.s.products.extract_project(**p)
         elif job["kind"] == "product_research":
             self.s.products.research_part(**p)
+        elif job["kind"] == "product_agent":
+            self.s.products.run_agent(**p)
         elif job["kind"] == "outbox":
             self.s.process_outbox_once()
             if self.s.store.find(st.outbox, status="pending", op_type="generate_documents"):

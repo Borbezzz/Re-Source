@@ -610,6 +610,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/products/{project_id}/agent/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Agent Pause */
+        post: operations["agent_pause_api_v1_products__project_id__agent_pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/agent/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Agent Resume */
+        post: operations["agent_resume_api_v1_products__project_id__agent_resume_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/agent/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Agent Start */
+        post: operations["agent_start_api_v1_products__project_id__agent_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/products/{project_id}/documents": {
         parameters: {
             query?: never;
@@ -2679,6 +2730,111 @@ export interface components {
             /** Step Id */
             step_id: string;
         };
+        /** ProductAgentAttention */
+        ProductAgentAttention: {
+            /** Code */
+            code: string;
+            /** Message */
+            message: string;
+            /** Part Ids */
+            part_ids?: string[];
+        };
+        /** ProductAgentControlRequest */
+        ProductAgentControlRequest: {
+            /** Expected Run Id */
+            expected_run_id: string;
+            /** Expected Version */
+            expected_version: number;
+        };
+        /** ProductAgentMandate */
+        ProductAgentMandate: {
+            /**
+             * Objective
+             * @default source_and_request_quotes
+             * @constant
+             */
+            objective: "source_and_request_quotes";
+            /**
+             * Outreach
+             * @enum {string}
+             */
+            outreach: "demo_mailbox" | "draft_only";
+            /**
+             * Purchase Authorized
+             * @default false
+             * @constant
+             */
+            purchase_authorized: false;
+        };
+        /** ProductAgentRun */
+        ProductAgentRun: {
+            /** Attention */
+            attention?: components["schemas"]["ProductAgentAttention"][];
+            /** Completed At */
+            completed_at?: string | null;
+            /** Created At */
+            created_at: string;
+            /** Input Version */
+            input_version: number;
+            mandate: components["schemas"]["ProductAgentMandate"];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "demo" | "live";
+            /**
+             * Reply Count
+             * @default 0
+             */
+            reply_count: number;
+            /** Run Id */
+            run_id: string;
+            /**
+             * Sent Count
+             * @default 0
+             */
+            sent_count: number;
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "requirements" | "research" | "shortlist" | "rfq" | "outreach" | "complete";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "paused" | "needs_attention" | "recommendation_ready" | "failed";
+            /** Summary */
+            summary: string;
+            /** Targets */
+            targets?: components["schemas"]["ProductAgentTarget"][];
+            /** Updated At */
+            updated_at: string;
+        };
+        /** ProductAgentStartRequest */
+        ProductAgentStartRequest: {
+            /** Expected Version */
+            expected_version: number;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "demo" | "live";
+        };
+        /** ProductAgentTarget */
+        ProductAgentTarget: {
+            /** Candidate Id */
+            candidate_id: string;
+            /** Part Id */
+            part_id: string;
+            /**
+             * Readiness
+             * @enum {string}
+             */
+            readiness: "demo_ready" | "contact_required";
+            /** Reason */
+            reason: string;
+        };
         /** ProductApprovalRequest */
         ProductApprovalRequest: {
             /**
@@ -2870,6 +3026,58 @@ export interface components {
             /** Summary */
             summary?: string | null;
         };
+        /** ProductMailboxMessage */
+        ProductMailboxMessage: {
+            /** Body */
+            body: string;
+            /** Candidate Id */
+            candidate_id: string;
+            /** Created At */
+            created_at: string;
+            /**
+             * Data Origin
+             * @default synthetic_demo
+             * @constant
+             */
+            data_origin: "synthetic_demo";
+            /**
+             * Delivery
+             * @default simulated
+             * @constant
+             */
+            delivery: "simulated";
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "outbound" | "inbound";
+            /** From Label */
+            from_label: string;
+            /** In Reply To */
+            in_reply_to?: string | null;
+            /** Intended Supplier */
+            intended_supplier: string;
+            /** Message Id */
+            message_id: string;
+            /** Part Id */
+            part_id: string;
+            quote?: components["schemas"]["ProductMailboxQuote"] | null;
+            /** Run Id */
+            run_id: string;
+            /** Subject */
+            subject: string;
+            /** To Label */
+            to_label: string;
+        };
+        /** ProductMailboxQuote */
+        ProductMailboxQuote: {
+            /** Currency */
+            currency?: string | null;
+            /** Lead Time Days */
+            lead_time_days?: number | null;
+            /** Price */
+            price?: number | null;
+        };
         /** ProductModel */
         ProductModel: {
             /** Asset Url */
@@ -2975,12 +3183,15 @@ export interface components {
         };
         /** ProductPart */
         ProductPart: {
+            /** Confirmation Origin */
+            confirmation_origin?: ("user_review" | "agent_grounded") | null;
             /** Explode */
             explode?: [
                 number,
                 number,
                 number
             ] | null;
+            identity_source?: components["schemas"]["ProductSource"] | null;
             /** Name */
             name: string;
             /** Node Names */
@@ -2989,11 +3200,13 @@ export interface components {
             part_id: string;
             /** Part Number */
             part_number?: string | null;
+            part_number_source?: components["schemas"]["ProductSource"] | null;
             /**
              * Quantity
              * @default 1
              */
             quantity: number;
+            quantity_source?: components["schemas"]["ProductSource"] | null;
             /** Requirements */
             requirements?: components["schemas"]["ProductRequirement"][];
             /**
@@ -3017,6 +3230,7 @@ export interface components {
         };
         /** ProductProject */
         ProductProject: {
+            agent?: components["schemas"]["ProductAgentRun"] | null;
             capabilities: components["schemas"]["ProductCapabilities"];
             /** Created At */
             created_at: string;
@@ -3028,6 +3242,8 @@ export interface components {
             events: components["schemas"]["ProductEvent"][];
             /** Input Version */
             input_version: number;
+            /** Mailbox */
+            mailbox?: components["schemas"]["ProductMailboxMessage"][];
             model: components["schemas"]["ProductModel"];
             /** Name */
             name: string;
@@ -3072,6 +3288,10 @@ export interface components {
              * @description Investigations currently queued or running.
              */
             active_research_count: number;
+            /** Agent Stage */
+            agent_stage?: ("requirements" | "research" | "shortlist" | "rfq" | "outreach" | "complete") | null;
+            /** Agent Status */
+            agent_status?: ("queued" | "running" | "paused" | "needs_attention" | "recommendation_ready" | "failed") | null;
             /** Completed Research Count */
             completed_research_count: number;
             /** Confirmed Part Count */
@@ -5389,6 +5609,117 @@ export interface operations {
         responses: {
             /** @description Successful Response */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    agent_pause_api_v1_products__project_id__agent_pause_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductAgentControlRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    agent_resume_api_v1_products__project_id__agent_resume_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductAgentControlRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    agent_start_api_v1_products__project_id__agent_start_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductAgentStartRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
                 headers: {
                     [name: string]: unknown;
                 };

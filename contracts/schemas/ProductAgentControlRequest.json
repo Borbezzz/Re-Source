@@ -1,0 +1,19 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_run_id": {
+      "title": "Expected Run Id",
+      "type": "string"
+    },
+    "expected_version": {
+      "title": "Expected Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "expected_run_id",
+    "expected_version"
+  ],
+  "title": "ProductAgentControlRequest",
+  "type": "object"
+}

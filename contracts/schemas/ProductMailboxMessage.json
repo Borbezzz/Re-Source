@@ -1,0 +1,148 @@
+{
+  "$defs": {
+    "ProductMailboxQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Currency"
+        },
+        "lead_time_days": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lead Time Days"
+        },
+        "price": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price"
+        }
+      },
+      "title": "ProductMailboxQuote",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "body": {
+      "title": "Body",
+      "type": "string"
+    },
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "data_origin": {
+      "const": "synthetic_demo",
+      "default": "synthetic_demo",
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "delivery": {
+      "const": "simulated",
+      "default": "simulated",
+      "title": "Delivery",
+      "type": "string"
+    },
+    "direction": {
+      "enum": [
+        "outbound",
+        "inbound"
+      ],
+      "title": "Direction",
+      "type": "string"
+    },
+    "from_label": {
+      "title": "From Label",
+      "type": "string"
+    },
+    "in_reply_to": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "In Reply To"
+    },
+    "intended_supplier": {
+      "title": "Intended Supplier",
+      "type": "string"
+    },
+    "message_id": {
+      "title": "Message Id",
+      "type": "string"
+    },
+    "part_id": {
+      "title": "Part Id",
+      "type": "string"
+    },
+    "quote": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ProductMailboxQuote"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "subject": {
+      "title": "Subject",
+      "type": "string"
+    },
+    "to_label": {
+      "title": "To Label",
+      "type": "string"
+    }
+  },
+  "required": [
+    "message_id",
+    "run_id",
+    "part_id",
+    "candidate_id",
+    "direction",
+    "intended_supplier",
+    "from_label",
+    "to_label",
+    "subject",
+    "body",
+    "created_at"
+  ],
+  "title": "ProductMailboxMessage",
+  "type": "object"
+}

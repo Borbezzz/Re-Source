@@ -176,7 +176,8 @@ export function AgentRun({
         <div>
           <h2 id="agent-run-title">Sourcing agent</h2>
           <p className="pf-agent-status" aria-live="polite">
-            {statusLabels[agent.status]} · {stageLabels[agent.stage]}
+            {statusLabels[agent.status]}
+            {agent.stage !== "complete" ? ` · ${stageLabels[agent.stage]}` : ""}
           </p>
           <p>{agent.summary}</p>
         </div>
