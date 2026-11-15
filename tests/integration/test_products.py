@@ -141,6 +141,43 @@ def test_stale_package_cannot_be_approved_after_selection_changed(svc, monkeypat
         svc.products.simulate_package(pid, old_id)
 
 
+def test_email_preserves_reviewed_need_and_changes_require_fresh_approval(svc, monkeypatch):
+    project, _ = _run_research(svc, monkeypatch)
+    pid = project["project_id"]
+    for research in project["research"]:
+        svc.products.select_candidate(pid, research["part_id"], research["candidates"][0]["candidate_id"])
+    # Select a later part: earlier selections must not leak into this enquiry.
+    part = project["parts"][-1]
+    enquiry = {"part_id": part["part_id"], "selected_item": "Selected position 03", "quantity": 7,
+               "required_by": "2026-12-14", "delivery_destination": "Hangar 3, Filton, Bristol",
+               "buyer_company": "Demo Aero Maintenance Ltd", "buyer_contact": "Procurement desk"}
+    package = svc.products.build_package(pid, enquiry)["package"]
+    assert len(package["items"]) == 1
+    item = package["items"][0]
+    assert item["part_id"] == part["part_id"]
+    assert item["quantity"] == 7
+    assert "Qty 7" in item["rfq_subject"]
+    assert item["rfq_text"].startswith("Dear ")
+    for text in ("Quantity required: 7 units", "14 December 2026", enquiry["delivery_destination"],
+                 enquiry["selected_item"], "Kind regards,\nProcurement desk\nDemo Aero Maintenance Ltd", "fictional"):
+        assert text in item["rfq_text"]
+    for requirement in part["requirements"]:
+        assert requirement["value"] in item["rfq_text"]
+    original_id = package["package_id"]
+    assert svc.products.build_package(pid, enquiry)["package"]["package_id"] == original_id
+    svc.products.approve_package(pid, True, original_id)
+    revised = svc.products.build_package(pid, {**enquiry, "quantity": 2, "required_by": "2026-12-18"})["package"]
+    assert revised["package_id"] != original_id
+    assert revised["status"] == "draft"
+    assert "18 December 2026" in revised["items"][0]["rfq_text"]
+    with pytest.raises(DomainError):
+        svc.products.approve_package(pid, True, original_id)
+    with pytest.raises(DomainError):
+        svc.products.simulate_package(pid, original_id)
+    with pytest.raises(DomainError):
+        svc.products.build_package(pid, {**enquiry, "part_id": "unselected-part"})
+
+
 def test_live_unconfigured_fails_honestly_and_never_substitutes_sample_offers(svc, monkeypatch):
     project, _ = _run_research(svc, monkeypatch, mode="live")
     assert all(r["status"] == "failed" for r in project["research"])

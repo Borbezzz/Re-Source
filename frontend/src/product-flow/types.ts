@@ -84,6 +84,15 @@ export interface ProductInvestigation {
   error?: string | null;
   providers_used: string[];
 }
+export interface ProductEnquiry {
+  part_id: string;
+  selected_item: string;
+  quantity: number;
+  required_by: string;
+  delivery_destination: string;
+  buyer_company: string;
+  buyer_contact: string;
+}
 export interface ProductPackageItem {
   part_id: string;
   part_name: string;
@@ -94,6 +103,7 @@ export interface ProductPackageItem {
   requirements: ProductRequirement[];
   evidence_gaps: string[];
   rfq_text: string;
+  rfq_subject?: string;
 }
 export interface ProductPackage {
   package_id: string;
@@ -101,6 +111,7 @@ export interface ProductPackage {
   input_version: number;
   items: ProductPackageItem[];
   created_at: string;
+  enquiry?: ProductEnquiry | null;
   approved_at?: string | null;
   approved_by?: string | null;
   approval_scope: "simulation_only";

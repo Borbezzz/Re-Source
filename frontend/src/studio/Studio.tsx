@@ -10,7 +10,7 @@ const loadMap = () => import("./map/SupplierMap.tsx");
 const SupplierMap = lazy(() => loadMap().then((m) => ({ default: m.SupplierMap })));
 import { PROFILE_FOR_PACKAGE, SAMPLE_PACKAGE_URL, readDesignPackage, type DesignPackage, type StepId, type PackageComponent } from "./data/package.ts";
 import { CHECK_ORDER, assess, counts, defaultNeed, rankAll, type Assessed, type SourcingNeed } from "./data/checks.ts";
-import { DISRUPTION } from "./data/sites.ts";
+import { DESTINATION, DISRUPTION } from "./data/sites.ts";
 import { journeyApi } from "./api.ts";
 import type { ProductCandidate, ProductProject } from "../product-flow/types.ts";
 import { Intake } from "./screens/Intake.tsx";
@@ -282,11 +282,19 @@ export function Studio() {
 
   // ---------- 9: select supplier → reviewable RFQ ----------
   const selectSupplier = async (candidateId: string) => {
-    if (!project || !partId) return;
+    if (!project || !partId || !component) return;
     setBusy("select");
     try {
       await journeyApi.select(project.project_id, partId, candidateId);
-      const p = await journeyApi.package(project.project_id);
+      const p = await journeyApi.package(project.project_id, {
+        part_id: partId,
+        selected_item: component.name,
+        quantity: need.quantity,
+        required_by: need.requiredBy,
+        delivery_destination: DESTINATION.site,
+        buyer_company: "Demo Aero Maintenance Ltd",
+        buyer_contact: "Procurement desk",
+      });
       setProject(p);
       setProcure("prepared");
       setInvalidated(false);
