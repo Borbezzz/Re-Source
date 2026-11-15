@@ -1,13 +1,14 @@
 import { test, expect as baseExpect } from "@playwright/test";
+import { fileURLToPath } from "node:url";
 const expect = baseExpect.configure({ timeout: 20000 });
 
 test("confirmed parts scan, dated evidence, revision-safe alert, timeline and mobile", async ({ page }) => {
-  test.setTimeout(180000);
+  test.setTimeout(300000);
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/#home");
-  await page.getByRole("button", { name: /Explore a sample assembly/ }).click();
+  await page.locator('input[type="file"]').first().setInputFiles(fileURLToPath(new URL("../public/packages/mechanica-input-package.zip", import.meta.url)));
   const confirm = page.getByRole("button", { name: "Confirm parts and scan supply risk" });
   await expect(confirm).toBeVisible({ timeout: 90000 });
   const form = page.locator(".rs-risk-needs");
@@ -31,7 +32,7 @@ test("confirmed parts scan, dated evidence, revision-safe alert, timeline and mo
   const evidence = panel.locator(".rs-risk-evidence-form");
   await evidence.getByLabel("Document title").fill("Quote Q-17 · original");
   await evidence.getByLabel("Source date", { exact: true }).fill("2026-11-04");
-  await evidence.getByLabel("Source excerpt").fill("Supplier A confirms 2 units, revision B, to Bristol, UK, arriving on 22 November.");
+  await evidence.getByLabel("Source excerpt").fill(`Supplier A confirms 2 units, revision ${first.revision}, to Bristol, UK, arriving on 22 November.`);
   await evidence.getByLabel("Supplier", { exact: true }).fill("Supplier A");
   await evidence.getByLabel("Arrival / receipt date").fill("2026-11-22");
   await evidence.getByLabel("I checked these fields").check();
@@ -46,14 +47,16 @@ test("confirmed parts scan, dated evidence, revision-safe alert, timeline and mo
     scan = await response.json();
   };
   scan = await (await page.request.get(`/api/v1/products/${scan.project_id}/supply-risk`)).json();
-  const base = { part_id: first.part_id, kind: "quote", title: "Quote Q-17 · revised", source_version: "2", excerpt: "A backorder has shifted arrival to 30 November. Required revision B, 2 units to Bristol, UK.", issued_on: "2026-11-10", supplier: "Supplier A", part_number: first.part_number, revision: first.revision, quantity: 2, destination: "Bristol, UK", arrival_on: "2026-11-30", event: "Supplier confirmed a backorder", origin: "provided_document" };
+  const base = { part_id: first.part_id, kind: "quote", title: "Quote Q-17 · revised", source_version: "2", excerpt: `A backorder has shifted arrival to 30 November. Required revision ${first.revision}, 2 units to Bristol, UK.`, issued_on: "2026-11-10", supplier: "Supplier A", part_number: first.part_number, revision: first.revision, quantity: 2, destination: "Bristol, UK", arrival_on: "2026-11-30", event: "Supplier confirmed a backorder", origin: "provided_document" };
   await add({ ...base, evidence_id: "revised" });
   await add({ ...base, evidence_id: "alternative", title: "Supplier B · earlier quote", source_version: "1", supplier: "Supplier B", revision: null, issued_on: "2026-11-12", arrival_on: "2026-11-23", event: "Earlier alternative, revision not stated", excerpt: "2 units can arrive in Bristol, UK on 23 November; revision is not specified." });
   await page.evaluate(() => window.dispatchEvent(new Event("resource:quotes-updated")));
   await expect(panel.getByText("Delivery at risk", { exact: true })).toBeVisible();
   await expect(panel.getByText(/6 days after the need-by date/).first()).toBeVisible();
-  await expect(panel.getByText(/Revision compatibility still needs verification/).first()).toBeVisible();
+  await expect(panel.locator(".rs-risk-alternatives").getByText(/Revision compatibility still needs verification/)).toBeVisible();
   await expect(panel.getByRole("img", { name: "Quoted arrival vs. project deadline" })).toBeVisible();
+  await panel.getByRole("button", { name: "View quote and timeline" }).click();
+  await expect(page).toHaveURL(/#home$/);
   await panel.evaluate((el) => { el.scrollTop = 0; });
   await page.screenshot({ path: "artifacts/supply-risk-desktop.png", fullPage: true });
   await panel.getByRole("heading", { name: "Dated source documents" }).scrollIntoViewIfNeeded();

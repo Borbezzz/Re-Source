@@ -41,12 +41,14 @@ def _fingerprint(project: dict) -> str:
     return hashlib.sha256(json.dumps(project["parts"], sort_keys=True).encode()).hexdigest()
 
 
-def _scope(e: dict, part: dict, need: dict) -> tuple[bool, str]:
+def _scope(e: dict, part: dict, need: dict, *, check_validity: bool = True) -> tuple[bool, str]:
+    if e.get("origin") == "synthetic_demo":
+        return False, "Illustrative evidence cannot establish a project delivery commitment."
     if e.get("unverified_reason"):
         return False, e["unverified_reason"]
     if not e.get("issued_on"):
         return False, "The document issue date is missing. The import date cannot establish a dated supplier commitment."
-    if e.get("valid_until") and e["valid_until"] < date.today().isoformat():
+    if check_validity and e.get("valid_until") and e["valid_until"] < date.today().isoformat():
         return False, "This quote has expired. Request a current supplier commitment."
     if not part.get("part_number") or not revision(part):
         return False, "Part number or revision is missing; only broader exposure can be assessed."
@@ -66,13 +68,17 @@ def _scope(e: dict, part: dict, need: dict) -> tuple[bool, str]:
 def evaluate_part(part: dict, need: dict, evidence: list[dict]) -> dict:
     rows = sorted((e for e in evidence if e["part_id"] == part["part_id"]), key=lambda e: (e["issued_on"] or "", e.get("recorded_at", ""), e["evidence_id"]))
     scoped = {e["evidence_id"]: _scope(e, part, need) for e in rows}
-    # The latest scoped observation per supplier governs that supplier. Old
-    # estimates remain in the timeline, but cannot keep a resolved alert alive.
+    # Expiry must not revive an older estimate. A valid receipt covering the
+    # whole need remains authoritative over subsequent arrival estimates.
     latest: dict[str, dict] = {}
     for e in rows:
-        if scoped[e["evidence_id"]][0] and e["kind"] in {"quote", "backorder", "shipment", "delivery"}:
-            latest[_norm(e["supplier"])] = e
-    routes = {_norm(e.get("route")) for e in latest.values() if e["kind"] == "shipment" and e.get("route")}
+        if _scope(e, part, need, check_validity=False)[0] and e["kind"] in {"quote", "backorder", "shipment", "delivery"}:
+            supplier = _norm(e["supplier"])
+            current = latest.get(supplier)
+            if current and current["kind"] == "delivery" and scoped[current["evidence_id"]][0]:
+                continue
+            latest[supplier] = e
+    routes = {_norm(e.get("route")) for e in latest.values() if e["kind"] == "shipment" and e.get("route") and scoped[e["evidence_id"]][0]}
     observations = []
     for e in rows:
         match, why = scoped[e["evidence_id"]]
@@ -82,14 +88,20 @@ def evaluate_part(part: dict, need: dict, evidence: list[dict]) -> dict:
         if kind in {"material_trend", "freight_pressure"}:
             why = "Broader exposure only. No supplier commitment or shipment dependency has been established."
         elif kind == "route_disruption":
-            if e.get("issued_on") and e.get("route") and _norm(e["route"]) in routes:
+            if e.get("origin") == "synthetic_demo":
+                why = "Illustrative evidence cannot establish a project route disruption."
+            elif e.get("unverified_reason"):
+                why = e["unverified_reason"]
+            elif e.get("valid_until") and e["valid_until"] < date.today().isoformat():
+                why = "This disruption evidence has expired. Verify current route conditions."
+            elif e.get("issued_on") and e.get("route") and _norm(e["route"]) in routes:
                 level, why = "alert", "The disrupted route matches a current shipment with the required part, revision, quantity and destination. Delay length remains unknown."
             else:
                 why = "No current, matching shipment is documented on this route."
         elif match:
             current = latest.get(_norm(e["supplier"]))
             if current and current["evidence_id"] != e["evidence_id"]:
-                level, why = "superseded", "A newer dated observation from this supplier supersedes this estimate."
+                level, why = "superseded", "A governing dated observation or matching receipt from this supplier supersedes this estimate."
             elif kind == "delivery":
                 level, why = "matched", "Receipt covers the required part, revision, quantity and destination."
             elif kind == "backorder":
@@ -150,7 +162,7 @@ def imported_quote_evidence(project: dict) -> list[dict]:
         terms = quote.get("terms", {})
         value = lambda key: str(terms.get(key, {}).get("value") or "").strip()
         quantity = re.fullmatch(r"(\d{1,7})(?:\s+(?:units|pieces))?", value("quantity"), re.I)
-        critical = ["part_number", "revision", "quantity", "destination", "delivery_date", "quote_date"]
+        critical = ["part_number", "revision", "quantity", "destination", "delivery_date", "quote_date", "valid_until"]
         why = None
         if quote.get("input_version") != project.get("input_version"):
             why = "Project requirements changed since this quote was imported. Ask the supplier to reconfirm."
@@ -159,6 +171,9 @@ def imported_quote_evidence(project: dict) -> list[dict]:
         issued = _source_date(value("quote_date"))
         if issued and issued > date.today().isoformat():
             why = "The stated issue date is in the future and needs verification."
+        valid_until = _source_date(value("valid_until"))
+        if value("valid_until") and valid_until is None:
+            why = "The quote expiry date is ambiguous and needs supplier verification."
         evidence = RiskEvidence(
             evidence_id=f'import:{quote["quote_id"]}:v{quote["version"]}', part_id=quote["part_id"], kind="quote",
             title=f'{quote["supplier"]} · {quote["filename"]}'[:200], source_document_id=quote["quote_id"], source_version=str(quote["version"]),
@@ -166,7 +181,7 @@ def imported_quote_evidence(project: dict) -> list[dict]:
             supplier=quote["supplier"], part_number=value("part_number")[:150] or None, revision=value("revision")[:100] or None,
             quantity=int(quantity[1]) if quantity and 0 < int(quantity[1]) <= 1000000 else None,
             destination=value("destination")[:200] or None, arrival_on=_source_date(value("delivery_date")),
-            valid_until=_source_date(value("valid_until")), unverified_reason=why,
+            valid_until=valid_until, unverified_reason=why,
         ).model_dump(mode="json")
         result.append(evidence)
     return result
@@ -193,7 +208,8 @@ def search_public_context() -> tuple[list[dict], list[dict]]:
                 host = parsed.hostname or ""
                 if parsed.scheme not in {"https", "http"} or parsed.username or parsed.password or not any(host == d or host.endswith("." + d) for d in ("imf.org", "usgs.gov", "newyorkfed.org")):
                     continue
-                sources.append({"title": str(row.get("title") or row.get("name") or host)[:200], "url": link, "excerpt": str(row.get("content") or row.get("snippet") or "No excerpt supplied; open the source.")[:600], "publisher": host, "published_on": row.get("published_date") or None, "retrieved_at": retrieved, "provider": name})
+                preview = " ".join(str(row.get("content") or row.get("snippet") or "No excerpt supplied; open the source.").split()[:25])
+                sources.append({"title": str(row.get("title") or row.get("name") or host)[:200], "url": link, "excerpt": preview, "publisher": host, "published_on": row.get("published_date") or None, "retrieved_at": retrieved, "provider": name})
             return {"name": name, "status": "searched", "source_count": len(sources)}, sources
         except (httpx.HTTPError, ValueError, TypeError, AttributeError):
             # Never return provider response bodies or authorization details.

@@ -58,12 +58,13 @@
 .rs-risk-document blockquote { margin: 0; padding: 14px; border: 0; background: var(--rs-raise); color: var(--rs-text); font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
 .rs-risk-document.is-superseded { opacity: .75; }
 .rs-risk-document.is-alert p strong { color: var(--rs-bad); }
-.rs-risk-part-rows { margin: 18px 0 12px; }
+.rs-risk-part-rows { margin: 18px 0 12px; max-height: 320px; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--rs-muted) transparent; }
 .rs-risk-part-rows button { display: flex; width: 100%; gap: 16px; align-items: center; justify-content: space-between; text-align: left; padding: 16px 0; border: 0; border-bottom: 1px solid var(--rs-line); background: transparent; color: var(--rs-text); cursor: pointer; }
 .rs-risk-part-rows button:hover { background: var(--rs-raise); }
 .rs-risk-part-rows strong { display: block; font-size: 14px; font-weight: 500; }
 .rs-risk-part-rows small { display: block; color: var(--rs-text-2); font-size: 11px; margin-top: 6px; }
 .rs-risk-needs { margin-top: 20px; }
+.rs-risk-needs-parts { max-height: 320px; overflow: auto; padding: 0 6px 0 0; scrollbar-color: var(--rs-muted) transparent; scrollbar-width: thin; }
 .rs-risk-needs fieldset { border: 0; border-top: 1px solid var(--rs-line); padding: 14px 0 4px; margin: 14px 0; display: grid; grid-template-columns: 1.2fr .65fr .85fr; gap: 10px; min-width: 0; }
 .rs-risk-needs legend { font-size: 13px; padding: 0 8px 0 0; color: var(--rs-text); }
 .rs-risk-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -79,6 +80,15 @@
 .rs-risk-edit { z-index: 30; }
 .rs-risk-list-status { display: block; margin-top: 4px; font-size: 11px; }
 .rs-risk-example { font-size: 12px; color: var(--rs-text-2); }
+.rs-risk-page-header { position: absolute; inset: 0 0 auto; min-height: 100px; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; border-bottom: 1px solid var(--rs-line); }
+.rs-risk-page-header a { color: var(--rs-text-2); font-size: 13px; text-underline-offset: 3px; }
+.rs-risk-page-header h1 { font-size: 21px; font-weight: 550; margin: 10px 0 0; }
+.rs-risk-page-grid { position: absolute; inset: 115px 24px 24px; display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 680px); gap: 24px; justify-content: center; }
+.rs-risk-page-grid .rs-risk-overview, .rs-risk-page-grid .rs-risk-panel { position: static; width: auto; max-height: none; min-width: 0; }
+.rs-risk-page-empty { padding: 40px; color: var(--rs-text-2); line-height: 1.6; }
+.rs-risk-page-empty h2 { font-size: 24px; color: var(--rs-text); font-weight: 500; }
+.rs-risk-page-needs { position: absolute; inset: 120px max(24px, calc((100vw - 720px) / 2)) 24px; padding: 24px; overflow: auto; }
+.rs-risk-page-loading { margin: 140px 32px; }
 @media (max-width: 800px) {
   .rs-risk-panel, .rs-risk-overview, .rs-risk-edit { left: 12px; top: 88px; bottom: 16px; width: calc(100vw - 24px); padding: 20px; z-index: 30; }
   .rs-risk-panel h2, .rs-risk-overview h2 { font-size: 22px; }
@@ -87,4 +97,10 @@
   .rs-risk-needs fieldset label:first-of-type { grid-column: 1 / -1; }
   .rs-risk-form-row { grid-template-columns: 1fr; gap: 0; }
   .rs-risk-actions { flex-direction: column; }
+  .rs-risk-page-header { padding: 18px 16px; align-items: start; min-height: 112px; }
+  .rs-risk-page-header h1 { font-size: 17px; }
+  .rs-risk-page-header .rs-btn { font-size: 11px; white-space: nowrap; padding-inline: 8px; }
+  .rs-risk-page-grid { inset: 124px 12px 12px; grid-template-columns: 1fr; gap: 0; }
+  .rs-risk-page-grid.has-selection .rs-risk-overview, .rs-risk-page-empty { display: none; }
+  .rs-risk-page-needs { inset: 124px 12px 12px; padding: 18px; }
 }

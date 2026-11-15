@@ -23,8 +23,10 @@ test("opens supplier quotes from the Studio assembly and returns with Escape", a
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 1024, height: 768 });
   await page.goto("/");
-  await page.getByRole("button", { name: "Explore a sample assembly" }).click();
-  await page.getByRole("button", { name: "Confirm and open assembly" }).click();
+  await page.locator('input[type="file"]').first().setInputFiles(fileURLToPath(new URL("../public/packages/mechanica-input-package.zip", import.meta.url)));
+  await page.getByLabel("Delivery destination").fill("Bristol, UK");
+  await page.getByLabel("Need-by date").fill("2026-11-24");
+  await page.getByRole("button", { name: "Confirm parts and scan supply risk" }).click();
   const open = page.getByRole("button", { name: "Supplier quotes" });
   await open.click();
   const dialog = page.getByRole("dialog", { name: "Supplier quotes" });

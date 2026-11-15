@@ -1,0 +1,51 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "excerpt": {
+      "title": "Excerpt",
+      "type": "string"
+    },
+    "provider": {
+      "title": "Provider",
+      "type": "string"
+    },
+    "published_on": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Published On"
+    },
+    "publisher": {
+      "title": "Publisher",
+      "type": "string"
+    },
+    "retrieved_at": {
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "url": {
+      "title": "Url",
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "url",
+    "excerpt",
+    "publisher",
+    "retrieved_at",
+    "provider"
+  ],
+  "title": "RiskSource",
+  "type": "object"
+}

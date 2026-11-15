@@ -8,6 +8,10 @@ export const journeyApi = {
     return productApi.create({ demo_id: demoId });
   },
   async confirmParts(p: ProductProject, draft: NeedsDraft): Promise<ProductProject> {
+    if (p.parts.every((part) => {
+      const reviewed = draft.parts.find((r) => r.part_id === part.part_id);
+      return part.status === "confirmed" && reviewed && (part.part_number ?? "") === reviewed.part_number.trim() && part.quantity === reviewed.quantity && (part.requirements.find((r) => r.key === "revision")?.value ?? "") === reviewed.revision.trim();
+    })) return p;
     const parts = p.parts.map((part) => {
       const reviewed = draft.parts.find((r) => r.part_id === part.part_id)!;
       const requirements = part.requirements.filter((r) => !["revision", "part_number"].includes(r.key)).map((r) => ({ ...r, status: "confirmed" as const }));

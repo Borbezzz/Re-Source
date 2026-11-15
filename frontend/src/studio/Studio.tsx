@@ -72,19 +72,52 @@ export function Studio() {
   const [riskBusy, setRiskBusy] = useState(false);
   const [riskError, setRiskError] = useState<string | null>(null);
   const [riskOpen, setRiskOpen] = useState(true);
-  const [editingNeeds, setEditingNeeds] = useState(false);
+  const [needsProject, setNeedsProject] = useState<ProductProject | null>(null);
+  const needsRequest = useRef(0);
+  const needsLocked = useRef(false);
+  const projectEpoch = useRef(0);
   const riskProjectId = useRef<string | null>(null);
   const runRef = useRef(0);
   const sceneReady = useRef<() => void>(() => {});
   const sceneIsReady = useRef(false);
 
+  const closeNeeds = useCallback(() => {
+    needsRequest.current++;
+    needsLocked.current = false;
+    setNeedsProject(null);
+  }, []);
+  useEffect(() => () => {
+    projectEpoch.current++;
+    needsRequest.current++;
+  }, []);
+  const openNeeds = async () => {
+    if (!project || needsLocked.current) return;
+    needsLocked.current = true;
+    const request = ++needsRequest.current;
+    const epoch = projectEpoch.current;
+    const id = project.project_id;
+    const current = () => request === needsRequest.current && epoch === projectEpoch.current;
+    setRiskError(null);
+    try {
+      const fresh = await journeyApi.project(id);
+      if (!current()) return;
+      if (fresh.project_id !== id) throw new Error("Could not open this project's needs. Try again.");
+      setNeedsProject(fresh);
+    } catch (e) {
+      if (!current()) return;
+      needsLocked.current = false;
+      setRiskError(e instanceof Error ? e.message : "Could not load current project needs. Try again.");
+    }
+  };
+
   const assemblyIndex = useMemo(() => indexAssembly(pkg?.assemblyTree ?? []), [pkg]);
   const inspection = inspectedId ? assemblyIndex.get(inspectedId) ?? null : null;
   const sourceComponent = pkg?.components.find((c) => c.componentId === selected) ?? null;
   const component = useMemo(() => sourceComponent && inspection ? { ...sourceComponent, name: inspection.children.length ? sourceComponent.name : inspection.name, nodeIds: inspection.nodeIds } : sourceComponent, [sourceComponent, inspection]);
-  const clearSelection = () => { setSelected(null); setInspectedId(null); setHovered(null); setRiskOpen(true); };
+  const clearSelection = () => { closeNeeds(); setSelected(null); setInspectedId(null); setHovered(null); setRiskOpen(true); };
   const inspectPart = (item: AssemblyItem) => {
-    setInspectedId(item.id); setSelected(item.componentId); setHovered(null); setRiskOpen(!!item.componentId); setEditingNeeds(false);
+    closeNeeds();
+    setInspectedId(item.id); setSelected(item.componentId); setHovered(null); setRiskOpen(!!item.componentId);
     if (stage === "need") setStage("explore");
   };
   const selectComponent = (id: string | null) => {
@@ -94,34 +127,49 @@ export function Studio() {
   const partId = component?.componentId.toLowerCase() ?? null;
   const requirement = pkg?.requirements.find((r) => r.componentId === selected) ?? null;
   const riskPart = riskScan?.parts.find((p) => p.part_id === selected?.toLowerCase()) ?? null;
-  const selectPart = (id: string | null) => { selectComponent(id); setRiskOpen(true); setEditingNeeds(false); if (stage === "need") setStage("explore"); };
+  const selectPart = (id: string | null) => { selectComponent(id); setRiskOpen(true); if (stage === "need") setStage("explore"); };
   const acceptScan = (scan: RiskScan) => {
     if (riskProjectId.current !== scan.project_id) return;
-    setRiskScan(scan);
-    setProject((p) => p?.project_id === scan.project_id ? { ...p, version: Math.max(p.version, scan.project_version) } : p);
+    setRiskScan((previous) => previous?.project_id === scan.project_id && (
+      previous.project_version > scan.project_version ||
+      (previous.project_version === scan.project_version && previous.version > scan.version)
+    ) ? previous : scan);
   };
   const refreshRisk = async (id = project?.project_id) => {
     if (!id) return;
+    const epoch = projectEpoch.current;
+    const current = () => epoch === projectEpoch.current && riskProjectId.current === id;
     setRiskBusy(true); setRiskError(null);
-    try { acceptScan(await riskApi.refresh(id)); }
-    catch (e) { if (riskProjectId.current === id) setRiskError(e instanceof Error ? e.message : "Public research failed. Try again."); }
-    finally { if (riskProjectId.current === id) setRiskBusy(false); }
+    try {
+      const scan = await riskApi.refresh(id);
+      if (current()) acceptScan(scan);
+    }
+    catch (e) { if (current()) setRiskError(e instanceof Error ? e.message : "Public research failed. Try again."); }
+    finally { if (current()) setRiskBusy(false); }
   };
   const saveRiskEvidence = async (evidence: RiskEvidence) => {
     if (!project || !riskScan) return;
+    const epoch = projectEpoch.current;
+    const id = project.project_id;
+    const current = () => epoch === projectEpoch.current && riskProjectId.current === id;
     setRiskBusy(true); setRiskError(null);
-    try { acceptScan(await riskApi.evidence(project.project_id, riskScan.version, evidence)); }
-    finally { setRiskBusy(false); }
+    try {
+      const scan = await riskApi.evidence(id, riskScan.version, evidence);
+      if (current()) acceptScan(scan);
+    }
+    finally { if (current()) setRiskBusy(false); }
   };
   useEffect(() => {
     if (!project?.project_id || !riskScan) return;
     const id = project.project_id;
+    const epoch = projectEpoch.current;
     const controller = new AbortController();
+    const current = () => !controller.signal.aborted && epoch === projectEpoch.current && riskProjectId.current === id;
     const check = () => {
       if (document.visibilityState !== "visible") return;
       void riskApi.get(id, controller.signal).then((scan) => {
-        if (!controller.signal.aborted) acceptScan(scan);
-      }).catch((e) => { if (!controller.signal.aborted) setRiskError(e instanceof Error ? e.message : "Could not check new evidence."); });
+        if (current()) acceptScan(scan);
+      }).catch((e) => { if (current()) setRiskError(e instanceof Error ? e.message : "Could not check new evidence."); });
     };
     const timer = setInterval(check, 20000);
     window.addEventListener("focus", check);
@@ -144,6 +192,8 @@ export function Studio() {
   // ---------- 1 → 2: read the package ----------
   const startPackage = useCallback(async (input: File[] | "sample") => {
     const run = ++runRef.current;
+    projectEpoch.current++;
+    closeNeeds();
     setError(null);
     setStage("processing");
     setSteps(Object.fromEntries(STEP_IDS.map((s) => [s, { status: "pending" }])) as Record<StepId, StepState>);
@@ -166,6 +216,7 @@ export function Studio() {
           setSteps((s) => ({ ...s, [e.step]: { status: e.status, detail: e.detail, at: new Date() } }));
         },
         ({ packageId, glbUrl: url }) => {
+          if (run !== runRef.current) return;
           setGlbUrl(url);
           const profile = PROFILE_FOR_PACKAGE[packageId];
           if (profile) projectPromise = journeyApi.create(profile);
@@ -179,15 +230,18 @@ export function Studio() {
         else sceneReady.current = resolve;
       });
       await wait(400);
+      if (run !== runRef.current) return;
       setSteps((s) => ({ ...s, scene: { status: "done", detail: `${parsed.geometry.meshOccurrences.toLocaleString()} meshes ready`, at: new Date() } }));
       if (!projectPromise) throw new Error("This package verified, but no prepared model profile exists for it. Automatic CAD-to-model generation needs a configured provider.");
       try {
         const p = await (projectPromise as Promise<ProductProject>);
+        if (run !== runRef.current) return;
         const mismatch = parsed.components.find((c) => !p.parts.some((x) => x.part_number === c.partNumber));
         if (mismatch) throw new Error(`${mismatch.name} does not match the prepared profile.`);
         setProject(p);
         setBackendState("connected");
       } catch (e) {
+        if (run !== runRef.current) return;
         setBackendState("error");
         throw e instanceof Error ? e : new Error("The Re::Source API is unavailable.");
       }
@@ -196,7 +250,7 @@ export function Studio() {
       if (run !== runRef.current) return;
       setError(e instanceof Error ? e.message : "The package could not be read.");
     }
-  }, []);
+  }, [closeNeeds]);
 
   useEffect(() => {
     const clear = () => setHovered(null);
@@ -212,16 +266,22 @@ export function Studio() {
 
   // ---------- 2 → 3: confirm identity, reveal metal ----------
   const confirmIdentity = async (draft: NeedsDraft) => {
-    if (!project) return;
+    const snapshot = needsProject ?? project;
+    if (!snapshot) return;
+    const epoch = projectEpoch.current;
+    const request = needsRequest.current;
+    const current = () => epoch === projectEpoch.current && request === needsRequest.current;
     setBusy("confirm");
     setError(null); setRiskError(null);
     try {
-      const p = await journeyApi.confirmParts(project, draft);
+      const p = await journeyApi.confirmParts(snapshot, draft);
+      if (!current()) return;
       setProject(p);
       riskProjectId.current = p.project_id;
       const scan = await riskApi.confirm(p.project_id, p.version, draft.parts.map((part) => ({ part_id: part.part_id, quantity: part.quantity, destination: draft.destination, need_by: draft.need_by })));
+      if (!current()) return;
       acceptScan(scan);
-      setEditingNeeds(false); setRiskOpen(true);
+      setRiskOpen(true);
       // Keep the assembly identity and supplier request aligned with the review.
       setPkg((old) => old ? { ...old, components: old.components.map((c) => {
         const reviewed = draft.parts.find((part) => part.part_id === c.componentId.toLowerCase());
@@ -233,6 +293,11 @@ export function Studio() {
       await new Promise<void>((resolve) => {
         // Timer-driven so the reveal completes even when frames are throttled.
         const id = setInterval(() => {
+            if (!current()) {
+              clearInterval(id);
+              resolve();
+              return;
+            }
           const t = Math.min(1, (performance.now() - start) / dur);
           setSolid(t);
           if (t >= 1) {
@@ -241,11 +306,13 @@ export function Studio() {
           }
         }, 16);
       });
+      if (!current()) return;
+      closeNeeds();
       setStage("explore");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Confirmation failed.");
+      if (current()) setError(e instanceof Error ? e.message : "Confirmation failed.");
     } finally {
-      setBusy(null);
+      if (epoch === projectEpoch.current) setBusy(null);
     }
   };
 
@@ -409,6 +476,9 @@ export function Studio() {
 
   const resetAll = () => {
     runRef.current++;
+    projectEpoch.current++;
+    closeNeeds();
+    setBusy(null);
     setStage("intake");
     setPkg(null);
     setGlbUrl(null);
@@ -421,7 +491,7 @@ export function Studio() {
     setSolid(0);
     setPhase("idle");
     setNeed(defaultNeed());
-    riskProjectId.current = null; setRiskScan(null); setRiskOpen(true); setRiskBusy(false); setRiskError(null); setEditingNeeds(false);
+    riskProjectId.current = null; setRiskScan(null); setRiskOpen(true); setRiskBusy(false); setRiskError(null);
   };
 
   const sceneMode = stage === "processing" ? "scan" : stage === "explore" || stage === "need" || stage === "return" ? "explore" : "hidden";
@@ -538,7 +608,7 @@ export function Studio() {
                   need={need}
                   onNeed={setNeed}
                   onStart={(reason) => { setNeed((n) => ({ ...n, reason })); setStage("need"); }}
-                  onBack={() => setStage("explore")}
+                  onBack={() => { setRiskOpen(true); setStage("explore"); }}
                   onClose={() => { clearSelection(); setStage("explore"); }}
                   onSubmit={() => void findSuppliers()}
                   busy={busy === "research"}
@@ -549,13 +619,13 @@ export function Studio() {
         ) : null}
 
         {stage === "explore" && riskScan && riskOpen ? <div className="rs-ui-layer">
-          {editingNeeds && project && pkg ? <section className="rs-risk-edit rs-panel" aria-label="Edit project needs">
-            <button className="rs-btn rs-btn-ghost rs-btn-sm" onClick={() => setEditingNeeds(false)}>Back to supply risk</button>
-            <NeedsForm project={project} pkg={pkg} scan={riskScan} busy={busy === "confirm"} onConfirm={(draft) => void confirmIdentity(draft)} />
+          {needsProject ? <section className="rs-risk-edit rs-panel" aria-label="Edit project needs">
+            <button className="rs-btn rs-btn-ghost rs-btn-sm" disabled={busy === "confirm"} onClick={closeNeeds}>Back to supply risk</button>
+            <NeedsForm project={needsProject} scan={riskScan} busy={busy === "confirm"} onConfirm={(draft) => void confirmIdentity(draft)} />
           </section> : riskPart ? <RiskPanel key={riskPart.part_id} part={riskPart} scan={riskScan} busy={riskBusy} error={riskError}
-            onClose={clearSelection} onEdit={() => setEditingNeeds(true)} onRefresh={() => void refreshRisk()} onSave={saveRiskEvidence}
-            onFind={() => { setRiskOpen(false); setNeed((n) => ({ ...n, quantity: riskPart.need.quantity, requiredBy: riskPart.need.need_by, destination: riskPart.need.destination })); setStage("need"); }} />
-            : <RiskOverview scan={riskScan} busy={riskBusy} error={riskError} onSelect={(id) => selectPart(pkg?.components.find((c) => c.componentId.toLowerCase() === id)?.componentId ?? id)} onRefresh={() => void refreshRisk()} onEdit={() => setEditingNeeds(true)} />}
+            onClose={clearSelection} onEdit={() => void openNeeds()} onRefresh={() => void refreshRisk()} onSave={saveRiskEvidence}
+            onFind={() => { closeNeeds(); setRiskOpen(false); setNeed((n) => ({ ...n, quantity: riskPart.need.quantity, requiredBy: riskPart.need.need_by, destination: riskPart.need.destination })); setStage("need"); }} />
+            : <RiskOverview scan={riskScan} busy={riskBusy} error={riskError} onSelect={(id) => selectPart(pkg?.components.find((c) => c.componentId.toLowerCase() === id)?.componentId ?? id)} onRefresh={() => void refreshRisk()} onEdit={() => void openNeeds()} />}
         </div> : null}
 
         {onMap && component && glbUrl ? (
@@ -689,6 +759,7 @@ export function Studio() {
       </div>
       {quotesOpen && project ? <QuoteDialog projectId={project.project_id} partId={partId ?? undefined} onClose={() => {
         setQuotesOpen(false);
+        window.dispatchEvent(new Event("resource:quotes-updated"));
         quotesTrigger.current?.focus();
       }} /> : null}
     </div>

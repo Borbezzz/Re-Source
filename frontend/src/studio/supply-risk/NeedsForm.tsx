@@ -5,12 +5,12 @@ import type { NeedsDraft, RiskScan } from "./types.ts";
 import "./supply-risk.css";
 
 export function NeedsForm({ project, pkg, scan, busy, onConfirm }: {
-  project: ProductProject; pkg: DesignPackage; scan?: RiskScan | null; busy: boolean; onConfirm: (draft: NeedsDraft) => void;
+  project: ProductProject; pkg?: DesignPackage; scan?: RiskScan | null; busy: boolean; onConfirm: (draft: NeedsDraft) => void;
 }) {
   const [draft, setDraft] = useState<NeedsDraft>(() => ({
     destination: scan?.parts[0]?.need.destination ?? "", need_by: scan?.parts[0]?.need.need_by ?? "",
     parts: project.parts.map((p) => {
-      const c = pkg.components.find((c) => c.componentId.toLowerCase() === p.part_id);
+      const c = pkg?.components.find((c) => c.componentId.toLowerCase() === p.part_id);
       return { part_id: p.part_id, part_number: c?.partNumber ?? p.part_number ?? "", revision: c?.revision ?? p.requirements.find((r) => r.key === "revision")?.value ?? "", quantity: scan?.parts.find((s) => s.part_id === p.part_id)?.need.quantity ?? p.quantity };
     }),
   }));

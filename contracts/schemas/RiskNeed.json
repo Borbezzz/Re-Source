@@ -1,0 +1,36 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "destination": {
+      "maxLength": 200,
+      "minLength": 2,
+      "title": "Destination",
+      "type": "string"
+    },
+    "need_by": {
+      "format": "date",
+      "title": "Need By",
+      "type": "string"
+    },
+    "part_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Part Id",
+      "type": "string"
+    },
+    "quantity": {
+      "maximum": 1000000,
+      "minimum": 1,
+      "title": "Quantity",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "part_id",
+    "quantity",
+    "destination",
+    "need_by"
+  ],
+  "title": "RiskNeed",
+  "type": "object"
+}

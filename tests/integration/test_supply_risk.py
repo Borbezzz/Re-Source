@@ -1,4 +1,6 @@
 from copy import deepcopy
+from dataclasses import replace
+from datetime import date, timedelta
 
 import pytest
 
@@ -24,7 +26,7 @@ def evidence(p, **updates):
     return RiskEvidence.model_validate(dict(
         evidence_id="quote-v1", part_id=part["part_id"], kind="quote", title="Supplier quote Q-17",
         excerpt="Revision B, quantity 2, Bristol UK. Revised arrival 30 November 2026.",
-        issued_on="2026-11-10", supplier="Supplier A", part_number=part["part_number"], revision="B",
+        issued_on="2026-11-10", supplier="Supplier A", part_number=part["part_number"], revision=next(r["value"] for r in part["requirements"] if r["key"] == "revision"),
         quantity=2, destination="Bristol, UK", arrival_on="2026-11-30", **updates,
     ))
 
@@ -60,7 +62,7 @@ def test_late_quote_marks_exact_part_and_retains_source(risk):
     assert {k: v for k, v in reloaded.items() if k != "evaluated_at"} == {k: v for k, v in result.items() if k != "evaluated_at"}
 
 
-@pytest.mark.parametrize("field,value", [("revision", None), ("revision", "C"), ("part_number", "WRONG"), ("quantity", 1), ("quantity", None), ("destination", "Paris"), ("destination", None), ("supplier", None)])
+@pytest.mark.parametrize("field,value", [("revision", None), ("revision", "UNRELATED"), ("part_number", "WRONG"), ("quantity", 1), ("quantity", None), ("destination", "Paris"), ("destination", None), ("supplier", None)])
 def test_unmatched_quote_stays_watchlist(risk, field, value):
     service, p, _ = risk
     result = service.record_evidence(p["project_id"], changed(p, **{field: value}))
@@ -128,7 +130,7 @@ def test_requirement_edits_stale_scan_and_reconfirmation_reassesses(risk):
     service, p, _ = risk
     service.record_evidence(p["project_id"], evidence(p))
     parts = deepcopy(p["parts"])
-    parts[0]["requirements"] = [{**r, "value": "C", "source": None} if r["key"] == "revision" else r for r in parts[0]["requirements"]]
+    parts[0]["requirements"] = [{**r, "value": "ZZ", "source": None} if r["key"] == "revision" else r for r in parts[0]["requirements"]]
     current = service.products.review(p["project_id"], parts, True)
     scan = service.get(p["project_id"])
     assert scan["status"] == "needs_confirmation"
@@ -177,7 +179,7 @@ def test_receipt_requires_a_date_no_later_than_its_source(risk, arrival):
 
 
 def _quote(p, **term_updates):
-    values = dict(part_number=p["parts"][0]["part_number"], revision="B", quantity="2 units", destination="Bristol, UK", delivery_date="30 November 2026", quote_date="10 November 2026")
+    values = dict(part_number=p["parts"][0]["part_number"], revision=next(r["value"] for r in p["parts"][0]["requirements"] if r["key"] == "revision"), quantity="2 units", destination="Bristol, UK", delivery_date="30 November 2026", quote_date="10 November 2026")
     values.update(term_updates)
     return dict(quote_id="quote-imported", part_id=p["parts"][0]["part_id"], supplier="Imported Supplier", filename="reply.txt", source_kind="reply",
                 source_text="The supplier's original reply.", created_at="2026-11-15T10:00:00Z", version=1, input_version=p["input_version"], terms={key: dict(value=value, origin="extracted") for key, value in values.items()})
@@ -219,3 +221,142 @@ def test_ambiguous_quote_dates_and_quantities_stay_unknown(risk):
     source = result["parts"][0]["observations"][0]["evidence"]
     assert source["quantity"] is None and source["arrival_on"] is None
     assert result["parts"][0]["status"] == "watchlist"
+
+
+def test_actual_quote_importer_updates_saved_scan(risk):
+    from recovery.services.supplier_quotes import SupplierQuotes
+    service, p, _ = risk
+    part = p["parts"][0]
+    rev = next(r["value"] for r in part["requirements"] if r["key"] == "revision")
+    reply = f"Part number: {part['part_number']}\nRevision: {rev}\nQuantity: 2 units\nDestination: Bristol, UK\nQuote date: 2026-11-10\nDelivery date: 2026-11-30"
+    SupplierQuotes(service.products).import_quote(p["project_id"], part["part_id"], "Source Supplier", reply.encode(), "supplier.txt", "reply")
+    scan = service.get(p["project_id"])
+    assert scan["parts"][0]["status"] == "at_risk"
+    assert scan["parts"][0]["observations"][0]["days_late"] == 6
+
+
+def test_dual_search_keeps_only_primary_public_sources_and_sends_no_project_data(monkeypatch):
+    from recovery.services import supply_risk as risk_module
+    from recovery.services.supply_risk import search_public_context
+    monkeypatch.setenv("TAVILY_API_KEY", "test-only")
+    monkeypatch.setattr(risk_module, "settings", replace(risk_module.settings, linkup_api_key="test-only"))
+    calls = []
+
+    class Response:
+        def raise_for_status(self):
+            pass
+        def json(self):
+            return {"results": [
+                {"title": "Supply data", "url": "https://www.newyorkfed.org/research/policy/gscpi#/overview", "content": "Public index data"},
+                {"title": "Same data", "url": "https://www.newyorkfed.org/research/policy/gscpi.html", "content": "Public index data"},
+                {"title": "Not a primary source", "url": "https://imf.org.attacker.example/fake", "content": "Delay!"},
+                {"title": "Script", "url": "javascript:alert(1)", "content": "Delay!"},
+            ]}
+
+    def post(url, **kwargs):
+        calls.append((url, kwargs["json"]))
+        return Response()
+    monkeypatch.setattr("recovery.services.supply_risk.httpx.post", post)
+    providers, sources = search_public_context()
+    assert {p["name"] for p in providers} == {"Tavily", "Linkup"}
+    assert all(p["status"] == "searched" for p in providers)
+    assert len(sources) == 3
+    assert all("attacker" not in s["url"] and "javascript" not in s["url"] for s in sources)
+    assert all("RS-DEMO" not in str(body) and "Bristol" not in str(body) for _, body in calls)
+
+
+def _assessment_case():
+    today = date.today()
+    part = dict(
+        part_id="part", name="Bearing", part_number="B-17",
+        requirements=[dict(key="revision", value="C")],
+    )
+    need = dict(
+        part_id="part", quantity=2, destination="Bristol, UK",
+        need_by=(today + timedelta(days=10)).isoformat(),
+    )
+    source = RiskEvidence(
+        evidence_id="source", part_id="part", kind="quote",
+        title="Dated supplier document", excerpt="Supplier commitment.",
+        issued_on=today - timedelta(days=3),
+        supplier="Supplier A", part_number="B-17", revision="C",
+        quantity=2, destination="Bristol, UK",
+        arrival_on=today + timedelta(days=12),
+    ).model_dump(mode="json")
+    return today, part, need, source
+
+
+@pytest.mark.parametrize("kind", ["quote", "backorder", "shipment", "delivery"])
+def test_illustrative_evidence_cannot_establish_project_status(kind):
+    today, part, need, source = _assessment_case()
+    source.update(kind=kind, origin="synthetic_demo")
+    if kind == "delivery":
+        source["arrival_on"] = (today - timedelta(days=4)).isoformat()
+    result = evaluate_part(part, need, [source])
+    assert result["status"] == "watchlist"
+    assert result["observations"][0]["level"] == "watchlist"
+
+
+@pytest.mark.parametrize("invalidity", ["synthetic", "unverified", "expired"])
+def test_invalid_disruption_cannot_alert_on_a_matching_route(invalidity):
+    today, part, need, source = _assessment_case()
+    shipment = {
+        **source, "evidence_id": "shipment", "kind": "shipment",
+        "route": "Felixstowe", "arrival_on": need["need_by"],
+    }
+    disruption = {
+        **source, "evidence_id": "disruption", "kind": "route_disruption",
+        "route": "Felixstowe", "arrival_on": None,
+    }
+    if invalidity == "synthetic":
+        disruption["origin"] = "synthetic_demo"
+    elif invalidity == "unverified":
+        disruption["unverified_reason"] = "The report is not verified."
+    else:
+        disruption["valid_until"] = (today - timedelta(days=1)).isoformat()
+    result = evaluate_part(part, need, [shipment, disruption])
+    observation = next(o for o in result["observations"] if o["evidence"]["evidence_id"] == "disruption")
+    assert observation["level"] == "watchlist"
+    assert result["status"] == "on_time"
+
+
+def test_expired_newer_quote_does_not_revive_old_commitment():
+    today, part, need, source = _assessment_case()
+    old = {**source, "evidence_id": "old", "arrival_on": need["need_by"]}
+    newer = {
+        **source, "evidence_id": "newer",
+        "issued_on": (today - timedelta(days=2)).isoformat(),
+        "valid_until": (today - timedelta(days=1)).isoformat(),
+    }
+    result = evaluate_part(part, need, [old, newer])
+    assert result["status"] == "watchlist"
+    assert next(o for o in result["observations"] if o["evidence"]["evidence_id"] == "old")["level"] == "superseded"
+
+
+def test_later_estimate_does_not_undo_full_delivery_receipt():
+    today, part, need, source = _assessment_case()
+    receipt = {
+        **source, "evidence_id": "receipt", "kind": "delivery",
+        "arrival_on": (today - timedelta(days=4)).isoformat(),
+    }
+    later_quote = {
+        **source, "evidence_id": "later",
+        "issued_on": (today - timedelta(days=2)).isoformat(),
+    }
+    result = evaluate_part(part, need, [receipt, later_quote])
+    assert result["status"] == "received"
+    assert next(o for o in result["observations"] if o["evidence"]["evidence_id"] == "later")["level"] == "superseded"
+
+
+@pytest.mark.parametrize("buyer_edited", [False, True])
+def test_imported_expiry_requires_unambiguous_supplier_backing(risk, buyer_edited):
+    service, p, _ = risk
+    quote = _quote(p, valid_until="2099-12-31" if buyer_edited else "until further notice")
+    if buyer_edited:
+        quote["terms"]["valid_until"]["origin"] = "buyer_review"
+    with service.products._mutate(p["project_id"]) as project:
+        project["_supplier_quotes"] = [quote]
+    result = service.get(p["project_id"])
+    observation = result["parts"][0]["observations"][0]
+    assert observation["level"] == "watchlist"
+    assert observation["evidence"]["unverified_reason"]

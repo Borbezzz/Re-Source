@@ -49,7 +49,7 @@ export function RiskPanel({ part, scan, busy, error, onClose, onFind, onSave, on
     <p className="rs-risk-summary">{part.summary}</p>
     <dl className="rs-risk-deadline"><div><dt>Need by</dt><dd>{dateLabel(part.need.need_by)} {part.need.need_by.slice(0, 4)}</dd></div><div><dt>Destination</dt><dd>{part.need.destination}</dd></div></dl>
     {scan.status === "needs_confirmation" ? <p className="rs-risk-error" role="alert">Requirements changed. This assessment needs reconfirmation. <button onClick={onEdit}>Review needs</button></p> : null}
-    <div className="rs-risk-actions"><a className="rs-btn" href="#risk-timeline">View quote and timeline</a><button className="rs-btn rs-btn-grad" onClick={onFind}>Find alternative suppliers <ArrowRight size={15} /></button></div>
+    <div className="rs-risk-actions"><button className="rs-btn" onClick={(event) => event.currentTarget.closest("section")?.querySelector("#risk-timeline")?.scrollIntoView({ block: "start" })}>View quote and timeline</button><button className="rs-btn rs-btn-grad" onClick={onFind}>Find alternative suppliers <ArrowRight size={15} /></button></div>
     <div id="risk-timeline"><ArrivalTimeline observations={part.observations} deadline={part.need.need_by} /></div>
     {part.missing.length ? <div className="rs-risk-missing"><h3>Details still needed</h3><p>{part.missing.join(" · ")}</p><button className="rs-btn rs-btn-ghost rs-btn-sm" onClick={onEdit}>Review part identity and needs</button></div> : null}
     {part.exposure.length ? <section><h3>Broader exposure</h3><p>{part.exposure.join(" · ")}</p><p>Confirm the specific part and supplier to connect these exposures to delivery.</p></section> : null}
