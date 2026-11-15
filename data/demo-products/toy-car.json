@@ -1,0 +1,686 @@
+{
+  "demo_id": "toy-car",
+  "name": "Toy car",
+  "description": "Source a body, glazing, wheels and bumpers across an eight-part assembly.",
+  "product_type": "toy",
+  "model": {
+    "origin": "prepared_demo",
+    "status": "ready",
+    "asset_url": "/models/toy-car.glb",
+    "license": "CC0-1.0",
+    "source_url": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/ToyCar",
+    "notes": "Prepared by ReSource from the CC0 ToyCar model by Guido Odendahl and Eric Chadwick. Visual groups and sample specifications are illustrative; not generated from a blueprint."
+  },
+  "parts": [
+    {
+      "part_id": "toycar-body",
+      "name": "Body shell",
+      "node_names": [
+        "ToyCar_Body"
+      ],
+      "explode": [
+        0,
+        0.55,
+        0
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "Die-cast zinc alloy",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Body shell: Material = Die-cast zinc alloy"
+          }
+        },
+        {
+          "key": "finish",
+          "label": "Finish",
+          "value": "Painted red",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Body shell: Finish = Painted red"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "toycar-glazing",
+      "name": "Window glazing",
+      "node_names": [
+        "ToyCar_Glazing"
+      ],
+      "explode": [
+        0,
+        1.55,
+        0
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "Clear polycarbonate",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Window glazing: Material = Clear polycarbonate"
+          }
+        },
+        {
+          "key": "finish",
+          "label": "Finish",
+          "value": "Transparent, no visible scratches",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Window glazing: Finish = Transparent, no visible scratches"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "toycar-wheel-fl",
+      "name": "Front left wheel",
+      "node_names": [
+        "ToyCar_Wheel_FL"
+      ],
+      "explode": [
+        -1.15,
+        -0.15,
+        -0.1
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "TPE tyre with ABS hub",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Front left wheel: Material = TPE tyre with ABS hub"
+          }
+        },
+        {
+          "key": "diameter",
+          "label": "Outer diameter",
+          "value": "24",
+          "unit": "mm",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Front left wheel: Outer diameter = 24 mm"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "toycar-wheel-fr",
+      "name": "Front right wheel",
+      "node_names": [
+        "ToyCar_Wheel_FR"
+      ],
+      "explode": [
+        1.15,
+        -0.15,
+        -0.1
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "TPE tyre with ABS hub",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Front right wheel: Material = TPE tyre with ABS hub"
+          }
+        },
+        {
+          "key": "diameter",
+          "label": "Outer diameter",
+          "value": "24",
+          "unit": "mm",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Front right wheel: Outer diameter = 24 mm"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "toycar-wheel-rl",
+      "name": "Rear left wheel",
+      "node_names": [
+        "ToyCar_Wheel_RL"
+      ],
+      "explode": [
+        -1.15,
+        -0.15,
+        0.1
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "TPE tyre with ABS hub",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Rear left wheel: Material = TPE tyre with ABS hub"
+          }
+        },
+        {
+          "key": "diameter",
+          "label": "Outer diameter",
+          "value": "24",
+          "unit": "mm",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Rear left wheel: Outer diameter = 24 mm"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "toycar-wheel-rr",
+      "name": "Rear right wheel",
+      "node_names": [
+        "ToyCar_Wheel_RR"
+      ],
+      "explode": [
+        1.15,
+        -0.15,
+        0.1
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "TPE tyre with ABS hub",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Rear right wheel: Material = TPE tyre with ABS hub"
+          }
+        },
+        {
+          "key": "diameter",
+          "label": "Outer diameter",
+          "value": "24",
+          "unit": "mm",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Rear right wheel: Outer diameter = 24 mm"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "toycar-bumper-f",
+      "name": "Front bumper",
+      "node_names": [
+        "ToyCar_Bumper_F"
+      ],
+      "explode": [
+        0,
+        0,
+        -1.2
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "ABS",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Front bumper: Material = ABS"
+          }
+        },
+        {
+          "key": "finish",
+          "label": "Finish",
+          "value": "Satin black",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Front bumper: Finish = Satin black"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "toycar-bumper-r",
+      "name": "Rear bumper",
+      "node_names": [
+        "ToyCar_Bumper_R"
+      ],
+      "explode": [
+        0,
+        0,
+        1.2
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "ABS",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Rear bumper: Material = ABS"
+          }
+        },
+        {
+          "key": "finish",
+          "label": "Finish",
+          "value": "Satin black",
+          "status": "proposed",
+          "source": {
+            "document_id": "toy-car-sample-spec",
+            "quote": "Rear bumper: Finish = Satin black"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    }
+  ],
+  "documents": [
+    {
+      "document_id": "toy-car-sample-spec",
+      "name": "Toy car \u2014 sample specification",
+      "kind": "requirements",
+      "text": "SYNTHETIC DEMO SPECIFICATION \u2014 values below are authored examples, not measurements from the 3D model.\nBody shell: Material = Die-cast zinc alloy\nBody shell: Finish = Painted red\nWindow glazing: Material = Clear polycarbonate\nWindow glazing: Finish = Transparent, no visible scratches\nFront left wheel: Material = TPE tyre with ABS hub\nFront left wheel: Outer diameter = 24 mm\nFront right wheel: Material = TPE tyre with ABS hub\nFront right wheel: Outer diameter = 24 mm\nRear left wheel: Material = TPE tyre with ABS hub\nRear left wheel: Outer diameter = 24 mm\nRear right wheel: Material = TPE tyre with ABS hub\nRear right wheel: Outer diameter = 24 mm\nFront bumper: Material = ABS\nFront bumper: Finish = Satin black\nRear bumper: Material = ABS\nRear bumper: Finish = Satin black"
+    }
+  ],
+  "sample_offers": [
+    {
+      "candidate_id": "toycar-body-sample-1",
+      "part_id": "toycar-body",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 18,
+      "currency": "GBP",
+      "lead_time_days": 8,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-body-sample-2",
+      "part_id": "toycar-body",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 12,
+      "currency": "GBP",
+      "lead_time_days": 17,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-glazing-sample-1",
+      "part_id": "toycar-glazing",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 21,
+      "currency": "GBP",
+      "lead_time_days": 9,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-glazing-sample-2",
+      "part_id": "toycar-glazing",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 16,
+      "currency": "GBP",
+      "lead_time_days": 18,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-wheel-fl-sample-1",
+      "part_id": "toycar-wheel-fl",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 24,
+      "currency": "GBP",
+      "lead_time_days": 10,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-wheel-fl-sample-2",
+      "part_id": "toycar-wheel-fl",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 20,
+      "currency": "GBP",
+      "lead_time_days": 19,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-wheel-fr-sample-1",
+      "part_id": "toycar-wheel-fr",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 27,
+      "currency": "GBP",
+      "lead_time_days": 11,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-wheel-fr-sample-2",
+      "part_id": "toycar-wheel-fr",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 24,
+      "currency": "GBP",
+      "lead_time_days": 20,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-wheel-rl-sample-1",
+      "part_id": "toycar-wheel-rl",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 30,
+      "currency": "GBP",
+      "lead_time_days": 12,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-wheel-rl-sample-2",
+      "part_id": "toycar-wheel-rl",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 28,
+      "currency": "GBP",
+      "lead_time_days": 21,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-wheel-rr-sample-1",
+      "part_id": "toycar-wheel-rr",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 33,
+      "currency": "GBP",
+      "lead_time_days": 13,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-wheel-rr-sample-2",
+      "part_id": "toycar-wheel-rr",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 32,
+      "currency": "GBP",
+      "lead_time_days": 22,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-bumper-f-sample-1",
+      "part_id": "toycar-bumper-f",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 36,
+      "currency": "GBP",
+      "lead_time_days": 14,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-bumper-f-sample-2",
+      "part_id": "toycar-bumper-f",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 36,
+      "currency": "GBP",
+      "lead_time_days": 23,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-bumper-r-sample-1",
+      "part_id": "toycar-bumper-r",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 39,
+      "currency": "GBP",
+      "lead_time_days": 15,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "toycar-bumper-r-sample-2",
+      "part_id": "toycar-bumper-r",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 40,
+      "currency": "GBP",
+      "lead_time_days": 24,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "$defs": {
+    "ProductPart": {
+      "additionalProperties": false,
+      "properties": {
+        "explode": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Explode"
+        },
+        "name": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "node_names": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Node Names",
+          "type": "array"
+        },
+        "part_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "title": "Part Id",
+          "type": "string"
+        },
+        "part_number": {
+          "anyOf": [
+            {
+              "maxLength": 150,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Part Number"
+        },
+        "quantity": {
+          "default": 1,
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/ProductRequirement"
+          },
+          "maxItems": 40,
+          "title": "Requirements",
+          "type": "array"
+        },
+        "status": {
+          "default": "proposed",
+          "enum": [
+            "proposed",
+            "confirmed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id",
+        "name"
+      ],
+      "title": "ProductPart",
+      "type": "object"
+    },
+    "ProductRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "title": "Key",
+          "type": "string"
+        },
+        "label": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProductSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "default": "proposed",
+          "enum": [
+            "proposed",
+            "confirmed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "label",
+        "value"
+      ],
+      "title": "ProductRequirement",
+      "type": "object"
+    },
+    "ProductSource": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "title": "Document Id",
+          "type": "string"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "quote": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "quote"
+      ],
+      "title": "ProductSource",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "confirm": {
+      "default": false,
+      "title": "Confirm",
+      "type": "boolean"
+    },
+    "expected_version": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expected Version"
+    },
+    "parts": {
+      "items": {
+        "$ref": "#/$defs/ProductPart"
+      },
+      "maxItems": 50,
+      "minItems": 1,
+      "title": "Parts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "parts"
+  ],
+  "title": "ProductPartsRequest",
+  "type": "object"
+}

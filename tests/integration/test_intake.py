@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import struct
+import copy
 
 import pytest
 
@@ -56,6 +57,17 @@ GOOD = [
      "extras": {"source_ref": {**SRC, "excerpt": "Item 5 bleed duct"}}},
     {"name": "Module_Combustor", "translation": [0.1, 0, 0], "min": [-0.25, -0.5, -0.5], "max": [0.25, 0.5, 0.5]},
 ]
+BLUEPRINT_TEXT = "Item 30 fuel nozzle\nItem 10 NGV segment\nItem 5 bleed duct\n"
+
+
+def sourced_nodes(upload_id: str) -> list[dict]:
+    nodes = copy.deepcopy(GOOD)
+    for line, node in enumerate(nodes[:3], 1):
+        node["extras"]["source_ref"] = {"upload_id": upload_id, "page": 1, "line": line,
+                                       "excerpt": BLUEPRINT_TEXT.splitlines()[line - 1]}
+    return nodes
+
+
 BROKEN = [
     {"name": "Component_FuelNozzle_07", "translation": [0.05, 0.62, 0.18], "min": [-0.03, -0.03, -0.1], "max": [0.03, 0.03, 0.1]},  # no source_ref
     {"name": "Component_BleedDuct_HP", "translation": [-0.3, 0.7, 0.35], "min": [-0.15, 0.0, 0.0], "max": [0.15, 0.0, 0.0],
@@ -98,7 +110,8 @@ def test_upload_dedupe_allowlist_and_magic(svc, run):
 
 
 def test_valid_glb_validates_activates_and_resets(svc, run):
-    up = svc.intake.upload(make_glb(GOOD), "engine.glb", "mesh_glb")
+    source = svc.intake.upload(BLUEPRINT_TEXT.encode(), "blueprint.txt", "blueprint")
+    up = svc.intake.upload(make_glb(sourced_nodes(source["upload_id"])), "engine.glb", "mesh_glb")
     job = svc.intake.create_mesh_job({"upload_id": up["upload_id"], "engine_id": "engine-demo-001"})
     M.MeshJob.model_validate(job)
     assert job["status"] == "succeeded" and job["provider"] == "uploaded_glb", job["message"]
@@ -197,7 +210,8 @@ def test_intake_routes_over_http(svc, run):
     api.SERVICES = svc
     try:
         client = TestClient(api.app)  # no lifespan: uses the test container
-        glb = make_glb(GOOD)
+        source = svc.intake.upload(BLUEPRINT_TEXT.encode(), "blueprint.txt", "blueprint")
+        glb = make_glb(sourced_nodes(source["upload_id"]))
         r = client.post("/api/v1/intake/uploads", data={"kind": "mesh_glb", "engine_id": "engine-demo-001"},
                         files={"file": ("engine.glb", glb, "model/gltf-binary")})
         assert r.status_code == 201, r.text

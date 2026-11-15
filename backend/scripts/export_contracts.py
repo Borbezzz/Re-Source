@@ -29,6 +29,7 @@ sys.path.insert(0, str(BACKEND))
 from pydantic import BaseModel  # noqa: E402
 
 from recovery.domain import models  # noqa: E402
+from recovery.domain import products  # noqa: E402
 
 CONTRACTS = REPO / "contracts"
 SCHEMAS = CONTRACTS / "schemas"
@@ -41,11 +42,12 @@ JSON_SCHEMA_TS = "json-schema-to-typescript@15.0.2"
 
 def public_models() -> dict[str, type[BaseModel]]:
     out: dict[str, type[BaseModel]] = {}
-    for name, obj in inspect.getmembers(models, inspect.isclass):
-        if obj.__module__ != models.__name__ or name.startswith("_"):
-            continue
-        if issubclass(obj, BaseModel) and obj is not models.Contract:
-            out[name] = obj
+    for module in (models, products):
+        for name, obj in inspect.getmembers(module, inspect.isclass):
+            if obj.__module__ != module.__name__ or name.startswith("_") or name in ("Contract", "ProductContract"):
+                continue
+            if issubclass(obj, BaseModel):
+                out[name] = obj
     return dict(sorted(out.items()))
 
 

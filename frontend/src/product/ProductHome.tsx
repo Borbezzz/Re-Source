@@ -105,12 +105,11 @@ export function ProductHome({
             </button>
           </div>
           <p className="entry-scope">
-            Explore a prepared engine. Bring your own blueprint when you’re
-            ready.
+            Choose a prepared product, or bring your own blueprint.
           </p>
         </div>
         <a className="entry-explore" href="#prepared-assembly">
-          Explore the assembly playground <ArrowDown size={15} />
+          Explore a prepared assembly <ArrowDown size={15} />
         </a>
       </section>
       <PreparedAssembly onEngine={onStartDemo ?? openEngineDemo} />

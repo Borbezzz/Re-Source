@@ -596,6 +596,9 @@ async def intake_manifest_reset() -> dict:
 
 
 # ---------------------------------------------------------------------------------------------- frontend bundle
+from .products import product_router
+app.include_router(product_router(services, idempotent))
+
 if settings.frontend_dist.exists():
     app.mount("/", StaticFiles(directory=str(settings.frontend_dist), html=True), name="frontend")
 else:

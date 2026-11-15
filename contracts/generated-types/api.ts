@@ -555,6 +555,227 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create */
+        post: operations["create_api_v1_products_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/demos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Demos */
+        get: operations["demos_api_v1_products_demos_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Project */
+        get: operations["project_api_v1_products__project_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload */
+        post: operations["upload_api_v1_products__project_id__documents_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/documents/{document_id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Content */
+        get: operations["content_api_v1_products__project_id__documents__document_id__content_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/extract": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Extract */
+        post: operations["extract_api_v1_products__project_id__extract_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/investigations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Investigate */
+        post: operations["investigate_api_v1_products__project_id__investigations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Model */
+        post: operations["model_api_v1_products__project_id__model_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/package": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Package */
+        post: operations["package_api_v1_products__project_id__package_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/package/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve */
+        post: operations["approve_api_v1_products__project_id__package_approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/package/simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Simulate */
+        post: operations["simulate_api_v1_products__project_id__package_simulate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/parts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Review */
+        patch: operations["review_api_v1_products__project_id__parts_patch"];
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/selections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Select */
+        patch: operations["select_api_v1_products__project_id__selections_patch"];
+        trace?: never;
+    };
     "/api/v1/readiness": {
         parameters: {
             query?: never;
@@ -884,6 +1105,13 @@ export interface components {
              * @default engine-demo-001
              */
             engine_id: string;
+            /** File */
+            file: string;
+            /** Kind */
+            kind: string;
+        };
+        /** Body_upload_api_v1_products__project_id__documents_post */
+        Body_upload_api_v1_products__project_id__documents_post: {
             /** File */
             file: string;
             /** Kind */
@@ -1455,6 +1683,26 @@ export interface components {
             trace_id?: string | null;
             /** Trigger Id */
             trigger_id?: string | null;
+        };
+        /** DemoProduct */
+        DemoProduct: {
+            /**
+             * Data Origin
+             * @default synthetic_demo
+             * @constant
+             */
+            data_origin: "synthetic_demo";
+            /** Demo Id */
+            demo_id: string;
+            /** Description */
+            description: string;
+            model: components["schemas"]["ProductModel"];
+            /** Name */
+            name: string;
+            /** Part Count */
+            part_count: number;
+            /** Product Type */
+            product_type: string;
         };
         /** DiscoveryLocation */
         DiscoveryLocation: {
@@ -2426,6 +2674,423 @@ export interface components {
             start_day?: number | null;
             /** Step Id */
             step_id: string;
+        };
+        /** ProductApprovalRequest */
+        ProductApprovalRequest: {
+            /**
+             * Acknowledge Unverified
+             * @default false
+             */
+            acknowledge_unverified: boolean;
+            /** Expected Package Id */
+            expected_package_id: string;
+        };
+        /** ProductCandidate */
+        ProductCandidate: {
+            /** Candidate Id */
+            candidate_id: string;
+            /** Country */
+            country?: string | null;
+            /** Currency */
+            currency?: string | null;
+            /**
+             * Data Origin
+             * @default synthetic_demo
+             * @enum {string}
+             */
+            data_origin: "synthetic_demo" | "public_web";
+            /**
+             * Eligibility
+             * @default unverified
+             * @constant
+             */
+            eligibility: "unverified";
+            /** Evidence */
+            evidence?: components["schemas"]["ProductEvidence"][];
+            /** Lead Time Days */
+            lead_time_days?: number | null;
+            /** Part Id */
+            part_id: string;
+            /** Price */
+            price?: number | null;
+            /** Retrieved At */
+            retrieved_at?: string | null;
+            /**
+             * Route
+             * @default buy
+             * @enum {string}
+             */
+            route: "buy" | "make";
+            /** Source Url */
+            source_url?: string | null;
+            /** Summary */
+            summary: string;
+            /** Supplier Name */
+            supplier_name: string;
+        };
+        /** ProductCapabilities */
+        ProductCapabilities: {
+            /** Document Parsing */
+            document_parsing: string;
+            /**
+             * Execution
+             * @enum {string}
+             */
+            execution: "durable_queue" | "local_worker";
+            /**
+             * Model Generation
+             * @default provider_required
+             * @constant
+             */
+            model_generation: "provider_required";
+            /** Requirement Extraction */
+            requirement_extraction: string;
+            /**
+             * Storage
+             * @enum {string}
+             */
+            storage: "lakebase_postgres" | "local_sqlite";
+            /** Supplier Discovery */
+            supplier_discovery: string;
+        };
+        /** ProductCreateRequest */
+        ProductCreateRequest: {
+            /** Demo Id */
+            demo_id?: string | null;
+            /** Name */
+            name?: string | null;
+        };
+        /** ProductDocument */
+        ProductDocument: {
+            /** Content Url */
+            content_url?: string | null;
+            /**
+             * Data Origin
+             * @enum {string}
+             */
+            data_origin: "synthetic_demo" | "provided_document";
+            /** Document Id */
+            document_id: string;
+            /** Excerpt */
+            excerpt?: string | null;
+            /** Extraction Method */
+            extraction_method?: string | null;
+            /**
+             * Extraction Status
+             * @default pending
+             * @enum {string}
+             */
+            extraction_status: "pending" | "complete" | "unavailable";
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "blueprint" | "requirements" | "model";
+            /**
+             * Media Type
+             * @default text/plain
+             */
+            media_type: string;
+            /** Name */
+            name: string;
+            /**
+             * Size Bytes
+             * @default 0
+             */
+            size_bytes: number;
+        };
+        /** ProductEvent */
+        ProductEvent: {
+            /** Created At */
+            created_at: string;
+            /** Part Id */
+            part_id?: string | null;
+            /** Sequence */
+            sequence: number;
+            /** Summary */
+            summary: string;
+            /** Type */
+            type: string;
+        };
+        /** ProductEvidence */
+        ProductEvidence: {
+            /** Note */
+            note: string;
+            /** Requirement Key */
+            requirement_key: string;
+            /** Source Url */
+            source_url?: string | null;
+            /**
+             * Status
+             * @default unknown
+             * @enum {string}
+             */
+            status: "supported" | "unknown" | "conflict";
+        };
+        /** ProductInvestigateRequest */
+        ProductInvestigateRequest: {
+            /** Mode */
+            mode?: ("demo" | "live") | null;
+            /** Part Ids */
+            part_ids?: string[] | null;
+        };
+        /** ProductInvestigation */
+        ProductInvestigation: {
+            /** Candidates */
+            candidates?: components["schemas"]["ProductCandidate"][];
+            /** Completed At */
+            completed_at?: string | null;
+            /** Error */
+            error?: string | null;
+            /** Job Id */
+            job_id: string;
+            /**
+             * Mode
+             * @default demo
+             * @enum {string}
+             */
+            mode: "demo" | "live";
+            /** Part Id */
+            part_id: string;
+            /** Providers Used */
+            providers_used?: string[];
+            /** Stage */
+            stage: string;
+            /** Started At */
+            started_at?: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "complete" | "failed";
+            /** Summary */
+            summary?: string | null;
+        };
+        /** ProductModel */
+        ProductModel: {
+            /** Asset Url */
+            asset_url?: string | null;
+            /** Document Id */
+            document_id?: string | null;
+            /** License */
+            license?: string | null;
+            /**
+             * Mapping Status
+             * @default unmapped
+             * @enum {string}
+             */
+            mapping_status: "mapped" | "unmapped" | "partial";
+            /** Node Names */
+            node_names?: string[];
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Origin
+             * @default uploaded
+             * @enum {string}
+             */
+            origin: "prepared_demo" | "uploaded" | "generated";
+            /** Source Url */
+            source_url?: string | null;
+            /**
+             * Status
+             * @default missing
+             * @enum {string}
+             */
+            status: "missing" | "ready" | "provider_required";
+        };
+        /** ProductModelRequest */
+        ProductModelRequest: {
+            /** Document Id */
+            document_id?: string | null;
+            /**
+             * Origin
+             * @enum {string}
+             */
+            origin: "prepared_demo" | "uploaded" | "generated";
+        };
+        /** ProductPackage */
+        ProductPackage: {
+            /**
+             * Approval Scope
+             * @default simulation_only
+             * @constant
+             */
+            approval_scope: "simulation_only";
+            /** Approved At */
+            approved_at?: string | null;
+            /** Approved By */
+            approved_by?: string | null;
+            /** Created At */
+            created_at: string;
+            /** Input Version */
+            input_version: number;
+            /** Items */
+            items: components["schemas"]["ProductPackageItem"][];
+            /**
+             * Notice
+             * @default Draft RFQs only. No supplier has been contacted and no order has been placed.
+             */
+            notice: string;
+            /** Package Id */
+            package_id: string;
+            /** Receipt */
+            receipt?: string | null;
+            /** Simulated At */
+            simulated_at?: string | null;
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "approved" | "simulated";
+        };
+        /** ProductPackageItem */
+        ProductPackageItem: {
+            /** Candidate Id */
+            candidate_id: string;
+            /**
+             * Data Origin
+             * @enum {string}
+             */
+            data_origin: "synthetic_demo" | "public_web";
+            /** Evidence Gaps */
+            evidence_gaps: string[];
+            /** Part Id */
+            part_id: string;
+            /** Part Name */
+            part_name: string;
+            /** Quantity */
+            quantity: number;
+            /** Requirements */
+            requirements: components["schemas"]["ProductRequirement"][];
+            /** Rfq Text */
+            rfq_text: string;
+            /** Supplier Name */
+            supplier_name: string;
+        };
+        /** ProductPart */
+        ProductPart: {
+            /** Explode */
+            explode?: [
+                number,
+                number,
+                number
+            ] | null;
+            /** Name */
+            name: string;
+            /** Node Names */
+            node_names?: string[];
+            /** Part Id */
+            part_id: string;
+            /** Part Number */
+            part_number?: string | null;
+            /**
+             * Quantity
+             * @default 1
+             */
+            quantity: number;
+            /** Requirements */
+            requirements?: components["schemas"]["ProductRequirement"][];
+            /**
+             * Status
+             * @default proposed
+             * @enum {string}
+             */
+            status: "proposed" | "confirmed";
+        };
+        /** ProductPartsRequest */
+        ProductPartsRequest: {
+            /**
+             * Confirm
+             * @default false
+             */
+            confirm: boolean;
+            /** Expected Version */
+            expected_version?: number | null;
+            /** Parts */
+            parts: components["schemas"]["ProductPart"][];
+        };
+        /** ProductProject */
+        ProductProject: {
+            capabilities: components["schemas"]["ProductCapabilities"];
+            /** Created At */
+            created_at: string;
+            /** Demo Id */
+            demo_id?: string | null;
+            /** Documents */
+            documents: components["schemas"]["ProductDocument"][];
+            /** Events */
+            events: components["schemas"]["ProductEvent"][];
+            /** Input Version */
+            input_version: number;
+            model: components["schemas"]["ProductModel"];
+            /** Name */
+            name: string;
+            package?: components["schemas"]["ProductPackage"] | null;
+            /** Parts */
+            parts: components["schemas"]["ProductPart"][];
+            /**
+             * Product Type
+             * @default custom
+             */
+            product_type: string;
+            /** Project Id */
+            project_id: string;
+            /** Research */
+            research: components["schemas"]["ProductInvestigation"][];
+            /** Selections */
+            selections: {
+                [key: string]: string;
+            };
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "extracting" | "review" | "ready" | "investigating" | "results" | "packaged";
+            /** Updated At */
+            updated_at: string;
+            /** Version */
+            version: number;
+        };
+        /** ProductRequirement */
+        ProductRequirement: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            source?: components["schemas"]["ProductSource"] | null;
+            /**
+             * Status
+             * @default proposed
+             * @enum {string}
+             */
+            status: "proposed" | "confirmed";
+            /** Unit */
+            unit?: string | null;
+            /** Value */
+            value: string;
+        };
+        /** ProductSelectionRequest */
+        ProductSelectionRequest: {
+            /** Candidate Id */
+            candidate_id: string;
+            /** Part Id */
+            part_id: string;
+        };
+        /** ProductSimulationRequest */
+        ProductSimulationRequest: {
+            /** Expected Package Id */
+            expected_package_id: string;
+        };
+        /** ProductSource */
+        ProductSource: {
+            /** Document Id */
+            document_id: string;
+            /** Page */
+            page?: number | null;
+            /** Quote */
+            quote: string;
         };
         /** RankMove */
         RankMove: {
@@ -4560,6 +5225,445 @@ export interface operations {
                 };
                 content: {
                     "text/html": string;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_api_v1_products_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    demos_api_v1_products_demos_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DemoProduct"][];
+                };
+            };
+        };
+    };
+    project_api_v1_products__project_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_api_v1_products__project_id__documents_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_api_v1_products__project_id__documents_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    content_api_v1_products__project_id__documents__document_id__content_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+                document_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    extract_api_v1_products__project_id__extract_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    investigate_api_v1_products__project_id__investigations_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductInvestigateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    model_api_v1_products__project_id__model_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductModelRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    package_api_v1_products__project_id__package_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approve_api_v1_products__project_id__package_approve_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductApprovalRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    simulate_api_v1_products__project_id__package_simulate_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductSimulationRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    review_api_v1_products__project_id__parts_patch: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductPartsRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    select_api_v1_products__project_id__selections_patch: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductSelectionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductProject"];
                 };
             };
             /** @description Validation Error */

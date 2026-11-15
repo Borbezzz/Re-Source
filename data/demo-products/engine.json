@@ -1,0 +1,335 @@
+{
+  "demo_id": "engine",
+  "name": "Turbofan engine",
+  "description": "Investigate three replacement components in a prepared engine cutaway.",
+  "product_type": "engine",
+  "model": {
+    "origin": "prepared_demo",
+    "status": "ready",
+    "asset_url": "/models/engine-cutaway.glb",
+    "license": "CC0-1.0 + MIT",
+    "source_url": "https://www.innerscene.com/tools/library/3d-parts/turbofan-quarter-cutaway-e0184203",
+    "notes": "Prepared cutaway by ReSource from Innerscene CC0 geometry and Jet Engine Lab MIT component studies. Attribution: /models/licenses/engine-sources.txt. Mapped parts and requirements are synthetic demonstration data, not an engineering-approved assembly."
+  },
+  "parts": [
+    {
+      "part_id": "component-primary",
+      "name": "Combustor fuel nozzle (position 7)",
+      "part_number": "RS-FN-1001",
+      "node_names": [
+        "Component_FuelNozzle_07"
+      ],
+      "explode": [
+        0.0,
+        1.6500000000000001,
+        0.75
+      ],
+      "requirements": [
+        {
+          "key": "part_number",
+          "label": "Part number",
+          "value": "RS-FN-1001",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "Combustor fuel nozzle (position 7): Part number = RS-FN-1001"
+          }
+        },
+        {
+          "key": "revision",
+          "label": "Revision",
+          "value": "D",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "Combustor fuel nozzle (position 7): Revision = D"
+          }
+        },
+        {
+          "key": "traceability",
+          "label": "Traceability",
+          "value": "Documented origin and conformity evidence required",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "Combustor fuel nozzle (position 7): Traceability = Documented origin and conformity evidence required"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "component-secondary-a",
+      "name": "HP turbine stage-1 nozzle guide vane segment",
+      "part_number": "RS-NGV-2040",
+      "node_names": [
+        "Component_NGV_Segment_12"
+      ],
+      "explode": [
+        0.6000000000000001,
+        1.35,
+        -0.8999999999999999
+      ],
+      "requirements": [
+        {
+          "key": "part_number",
+          "label": "Part number",
+          "value": "RS-NGV-2040",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "HP turbine stage-1 nozzle guide vane segment: Part number = RS-NGV-2040"
+          }
+        },
+        {
+          "key": "revision",
+          "label": "Revision",
+          "value": "B",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "HP turbine stage-1 nozzle guide vane segment: Revision = B"
+          }
+        },
+        {
+          "key": "traceability",
+          "label": "Traceability",
+          "value": "Documented origin and conformity evidence required",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "HP turbine stage-1 nozzle guide vane segment: Traceability = Documented origin and conformity evidence required"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "component-secondary-b",
+      "name": "HP compressor bleed air duct",
+      "part_number": "RS-BD-3110",
+      "node_names": [
+        "Component_BleedDuct_HP"
+      ],
+      "explode": [
+        -0.75,
+        1.7999999999999998,
+        1.35
+      ],
+      "requirements": [
+        {
+          "key": "part_number",
+          "label": "Part number",
+          "value": "RS-BD-3110",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "HP compressor bleed air duct: Part number = RS-BD-3110"
+          }
+        },
+        {
+          "key": "revision",
+          "label": "Revision",
+          "value": "A",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "HP compressor bleed air duct: Revision = A"
+          }
+        },
+        {
+          "key": "traceability",
+          "label": "Traceability",
+          "value": "Documented origin and conformity evidence required",
+          "status": "proposed",
+          "source": {
+            "document_id": "engine-sample-spec",
+            "quote": "HP compressor bleed air duct: Traceability = Documented origin and conformity evidence required"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    }
+  ],
+  "documents": [
+    {
+      "document_id": "engine-sample-spec",
+      "name": "Turbofan engine \u2014 sample specification",
+      "kind": "requirements",
+      "text": "SYNTHETIC DEMO SPECIFICATION \u2014 values below are authored examples, not measurements from the 3D model.\nCombustor fuel nozzle (position 7): Part number = RS-FN-1001\nCombustor fuel nozzle (position 7): Revision = D\nCombustor fuel nozzle (position 7): Traceability = Documented origin and conformity evidence required\nHP turbine stage-1 nozzle guide vane segment: Part number = RS-NGV-2040\nHP turbine stage-1 nozzle guide vane segment: Revision = B\nHP turbine stage-1 nozzle guide vane segment: Traceability = Documented origin and conformity evidence required\nHP compressor bleed air duct: Part number = RS-BD-3110\nHP compressor bleed air duct: Revision = A\nHP compressor bleed air duct: Traceability = Documented origin and conformity evidence required"
+    }
+  ],
+  "sample_offers": [
+    {
+      "candidate_id": "component-primary-sample-1",
+      "part_id": "component-primary",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 1850,
+      "currency": "GBP",
+      "lead_time_days": 8,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "part_number",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "revision",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "traceability",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "component-primary-sample-2",
+      "part_id": "component-primary",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 1400,
+      "currency": "GBP",
+      "lead_time_days": 17,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "part_number",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "revision",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "traceability",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "component-secondary-a-sample-1",
+      "part_id": "component-secondary-a",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 2020,
+      "currency": "GBP",
+      "lead_time_days": 9,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "part_number",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "revision",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "traceability",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "component-secondary-a-sample-2",
+      "part_id": "component-secondary-a",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 1610,
+      "currency": "GBP",
+      "lead_time_days": 18,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "part_number",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "revision",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "traceability",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "component-secondary-b-sample-1",
+      "part_id": "component-secondary-b",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 2190,
+      "currency": "GBP",
+      "lead_time_days": 10,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "part_number",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "revision",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "traceability",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "component-secondary-b-sample-2",
+      "part_id": "component-secondary-b",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 1820,
+      "currency": "GBP",
+      "lead_time_days": 19,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "part_number",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "revision",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "traceability",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    }
+  ]
+}

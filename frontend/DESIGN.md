@@ -281,7 +281,7 @@ The eight prepared visual groups share stable component and node IDs. Clicking t
 
 Reversible Anime.js scroll progress drives prepared separation. Ordinary scene movement damps toward that progress; reduced motion applies direct values. Assemble, Explode, and a labelled range input from 0 to 1 with 0.01 steps are always available. Direct input disables scroll separation and switches the hint to direct controls without adding a reset button. Reduced motion uses a static wordmark and removes the extended scroll track. Model loading and failure text keep the part list usable when rendering is unavailable.
 
-The geometry label and source-required dimensions/material text stay beside the object. The toy-car source review and supplier research are explicitly unavailable; the working engine-demo action is separate. The future dotted-globe research concept is not a component in this record.
+The geometry label and source-required dimensions/material text stay beside the landing preview. Continue through Choose a demo product to review sample specifications and research any of the three prepared profiles. The shared product workspace provides a country-level dotted globe tied to actual investigation records; unknown locations remain unplotted. Engine operations remains a separate entry to the legacy recovery workflow.
 
 ### Wordmark
 
@@ -305,7 +305,7 @@ The working engine flow retains source-link buttons with inline document icons, 
 ### Don't:
 
 - **Don’t** treat curated geometry or a visual group as proof of an engineering requirement.
-- **Don’t** present the globe/research concept, toy-car source review, or toy-car supplier research as implemented.
+- **Don’t** present prepared assets as generated geometry, sample quotes as live offers, or public leads as verified suppliers.
 - **Don’t** use cobalt alone to convey selection, compatibility, or approval.
 - **Don’t** add decorative card shadows to the flat product workspace.
 - **Don’t** turn residual forest-tinted engine styles or 8–10px metadata into v2 defaults.
@@ -313,10 +313,24 @@ The working engine flow retains source-link buttons with inline document icons, 
 
 ## Guided demo and prepared engine
 
-Start demo opens a new isolated seeded run and guides the same Intake, assembly, batch investigation, evidence, comparison and approval screens used by the app. Sample documents are explicitly labelled; confirmation and approval remain user actions. The guide shows the real missing blueprint-to-mesh provider state and makes the separate prepared assembly choice explicit.
+Start demo opens the three-product gallery. Each prepared product uses a visitor-owned project with source review, assembly selection, parallel research, comparison and a reviewable RFQ package. Sample documents and quotes are explicitly labelled. Exact-package approval and simulated receipts remain user actions. Upload blueprint enters the same workflow with discovered or manually entered parts. The legacy engine guide remains under Engine operations.
 
 The engine viewport uses the licensed Blender-prepared cutaway for compatible engine cases, including existing runs; activated uploaded GLBs take precedence. Casing-first separation, module spread, reverse scrolling and focus follow actual mesh transforms. Source notices and an editable Blender project are supplied; visual counterparts do not establish engineering compatibility.
 
 ## Verification scope
 
 Desktop/mobile captures and a fresh independent Impeccable review found two material issues (header naming and mobile pill sizing); both were resolved and scored ship with no visible regressions. No QUALITY BAR card was supplied, so this is not a whole-surface ceiling certification. Build, frontend invariants and real-screen demo/browser regression checks pass locally. See frontend/design/dark-demo-verification.md for exact evidence and limitations.
+
+
+## Shared product workspace
+
+The gallery uses large named rows; source review uses editable parts and expandable
+quotes. Workflow tabs remain visible on desktop and horizontally scroll on mobile.
+Assembly controls use a direct separation slider without a reset control; local
+studio lighting preserves metal detail. The part list remains available after a
+model load failure. Model options disclose attribution and uploaded-node mappings.
+
+Research cards retain task status, sample/public labels, source links and unknown
+requirements. Country centroids are explicitly representative, never precise
+supplier addresses. The RFQ screen displays the actual package before approval;
+its acknowledgement resets when the package changes.

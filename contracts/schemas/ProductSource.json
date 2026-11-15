@@ -1,0 +1,34 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "document_id": {
+      "title": "Document Id",
+      "type": "string"
+    },
+    "page": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page"
+    },
+    "quote": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Quote",
+      "type": "string"
+    }
+  },
+  "required": [
+    "document_id",
+    "quote"
+  ],
+  "title": "ProductSource",
+  "type": "object"
+}

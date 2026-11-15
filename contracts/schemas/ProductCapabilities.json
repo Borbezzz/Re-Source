@@ -1,0 +1,48 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "document_parsing": {
+      "title": "Document Parsing",
+      "type": "string"
+    },
+    "execution": {
+      "enum": [
+        "durable_queue",
+        "local_worker"
+      ],
+      "title": "Execution",
+      "type": "string"
+    },
+    "model_generation": {
+      "const": "provider_required",
+      "default": "provider_required",
+      "title": "Model Generation",
+      "type": "string"
+    },
+    "requirement_extraction": {
+      "title": "Requirement Extraction",
+      "type": "string"
+    },
+    "storage": {
+      "enum": [
+        "lakebase_postgres",
+        "local_sqlite"
+      ],
+      "title": "Storage",
+      "type": "string"
+    },
+    "supplier_discovery": {
+      "title": "Supplier Discovery",
+      "type": "string"
+    }
+  },
+  "required": [
+    "document_parsing",
+    "requirement_extraction",
+    "supplier_discovery",
+    "storage",
+    "execution"
+  ],
+  "title": "ProductCapabilities",
+  "type": "object"
+}

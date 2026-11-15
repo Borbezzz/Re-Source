@@ -22,6 +22,7 @@ dependencies = [
   "langgraph-checkpoint-postgres>=3.2.1",
   "psycopg-pool>=3.3.3",
   "python-multipart>=0.0.33",
+  "pypdf>=6.0",
 ]
 
 [tool.uv]

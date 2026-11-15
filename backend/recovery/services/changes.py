@@ -161,21 +161,23 @@ class ChangeService:
             raise not_found(f"component {component_id}")
         ver = overlay.get("draft_version", 1)
         dedup = f"requirement:{component_id}:{draft_id}:v{ver}"
-        existing = self._existing(run_id, dedup)
-        if existing:
-            return {"change": existing, "duplicate": True, "affected_case_ids": existing.get("affected_case_ids", [])}
-        part = comp["part_identity"]
-        change = self._register(run_id, "requirement", draft_id, f"{comp['requirement_set_id']}+{draft_id}@v{ver}", dedup,
-                                {"component_id": component_id, "overlay": overlay},
-                                title=f"Confirmed part requirements for {comp['display_name']} ({overlay['part_identity']['part_number']} "
-                                      f"rev {overlay['part_identity']['revision']})",
-                                effective_at=iso(self.s.run_state.now(run_id)), scope={"component_id": component_id, "part_id": part})
-        impact = self.s.run_state.graph(run_id).impact([part], {part: "part"})
+        with self.s.store.tx() as c:
+            self.s.store.lock_run(c, run_id)
+            existing = self._existing(run_id, dedup)
+            if existing and existing.get("activation_state") == "active":
+                return {"change": existing, "duplicate": True, "affected_case_ids": existing.get("affected_case_ids", [])}
+            part = comp["part_identity"]
+            change = existing or self._register(run_id, "requirement", draft_id, f"{comp['requirement_set_id']}+{draft_id}@v{ver}", dedup,
+                                    {"component_id": component_id, "overlay": overlay},
+                                    title=f"Confirmed part requirements for {comp['display_name']} ({overlay['part_identity']['part_number']} "
+                                          f"rev {overlay['part_identity']['revision']})",
+                                    effective_at=iso(self.s.run_state.now(run_id)), scope={"component_id": component_id, "part_id": part})
+            impact = self.s.run_state.graph(run_id).impact([part], {part: "part"})
 
-        def activate() -> None:
-            self.s.store.kv_set(f"req_overlay:{run_id}:{component_id}", {**overlay, "change_id": change["change_id"], "activated_at": _now()})
+            def activate() -> None:
+                self.s.store.kv_set(f"req_overlay:{run_id}:{component_id}", {**overlay, "change_id": change["change_id"], "activated_at": _now()})
 
-        return self._propagate(run_id, change, impact, activate=activate)
+            return self._propagate(run_id, change, impact, activate=activate)
 
     def advance_clock(self, run_id: str, hours: float) -> dict:
         run = self.s.store.get_run(run_id)

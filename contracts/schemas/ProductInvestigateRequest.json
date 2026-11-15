@@ -1,0 +1,39 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "mode": {
+      "anyOf": [
+        {
+          "enum": [
+            "demo",
+            "live"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mode"
+    },
+    "part_ids": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Part Ids"
+    }
+  },
+  "title": "ProductInvestigateRequest",
+  "type": "object"
+}
