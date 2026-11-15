@@ -613,10 +613,6 @@ export function Studio() {
         focusId={focusId}
         onFocusCandidate={setFocusId}
       />
-
-      <div className="rs-footnote">
-        <span>Demo data · fictional parts and suppliers{stage === "fulfil" || stage === "return" ? " · external messages simulated" : ""}</span>
-      </div>
     </div>
   );
 }
