@@ -50,7 +50,9 @@ test("confirmed parts scan, dated evidence, revision-safe alert, timeline and mo
   const base = { part_id: first.part_id, kind: "quote", title: "Quote Q-17 · revised", source_version: "2", excerpt: `A backorder has shifted arrival to 30 November. Required revision ${first.revision}, 2 units to Bristol, UK.`, issued_on: "2026-11-10", supplier: "Supplier A", part_number: first.part_number, revision: first.revision, quantity: 2, destination: "Bristol, UK", arrival_on: "2026-11-30", event: "Supplier confirmed a backorder", origin: "provided_document" };
   await add({ ...base, evidence_id: "revised" });
   await add({ ...base, evidence_id: "alternative", title: "Supplier B · earlier quote", source_version: "1", supplier: "Supplier B", revision: null, issued_on: "2026-11-12", arrival_on: "2026-11-23", event: "Earlier alternative, revision not stated", excerpt: "2 units can arrive in Bristol, UK on 23 November; revision is not specified." });
+  const updated = page.waitForResponse((r) => r.url().endsWith(`/products/${scan.project_id}/supply-risk`) && r.request().method() === "GET");
   await page.evaluate(() => window.dispatchEvent(new Event("resource:quotes-updated")));
+  expect((await updated).ok()).toBeTruthy();
   await expect(panel.getByText("Delivery at risk", { exact: true })).toBeVisible();
   await expect(panel.getByText(/6 days after the need-by date/).first()).toBeVisible();
   await expect(panel.locator(".rs-risk-alternatives").getByText(/Revision compatibility still needs verification/)).toBeVisible();
@@ -65,8 +67,27 @@ test("confirmed parts scan, dated evidence, revision-safe alert, timeline and mo
   await panel.evaluate((el) => { el.scrollTop = 0; });
   await expect(panel).toBeVisible();
   await page.screenshot({ path: "artifacts/supply-risk-mobile.png", fullPage: true });
-  const overflow = await panel.evaluate((el) => el.scrollWidth > el.clientWidth + 1);
-  expect(overflow).toBeFalsy();
+  const timeline = panel.locator("#risk-timeline");
+  const plot = timeline.getByRole("img", { name: "Quoted arrival vs. project deadline" });
+  await expect(plot).toBeVisible();
+  // Capture the entire timeline container, including its legend, rather than
+  // only the SVG or the panel's initial, clipped mobile scroll position.
+  await timeline.evaluate((el) => el.scrollIntoView({ block: "start", behavior: "instant" }));
+  await timeline.screenshot({ path: "artifacts/supply-risk-mobile-timeline.png" });
+
+  const details = timeline.locator("details");
+  await expect(details).toHaveCount(1);
+  if (!(await details.evaluate((el) => (el as HTMLDetailsElement).open))) {
+    await details.locator("summary").click();
+  }
+  const table = details.getByRole("table");
+  await expect(table).toBeVisible();
+  await expect(table.getByRole("row")).toHaveCount(4);
+  await table.evaluate((el) => el.scrollIntoView({ block: "start", behavior: "instant" }));
+  await table.screenshot({ path: "artifacts/supply-risk-mobile-timeline-table.png" });
+  for (const surface of [panel, timeline, table, page.locator("html")]) {
+    expect(await surface.evaluate((el) => el.scrollWidth > el.clientWidth + 1)).toBeFalsy();
+  }
   await panel.getByRole("button", { name: /Find alternative suppliers/ }).click();
   await expect(page.getByLabel("Required on site by")).toHaveValue("2026-11-24");
   expect(errors).toEqual([]);

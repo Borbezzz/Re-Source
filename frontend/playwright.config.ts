@@ -7,6 +7,8 @@ export default defineConfig({
   expect: { timeout: process.env.RESOURCE_BASE_URL ? 180_000 : 60_000 },
   workers: 1,
   use: {
+    channel: process.env.RESOURCE_BROWSER_CHANNEL || undefined,
+    headless: !process.env.RESOURCE_HEADED,
     baseURL: process.env.RESOURCE_BASE_URL || "http://127.0.0.1:5173",
     viewport: { width: 1440, height: 900 },
     trace: "retain-on-failure",
