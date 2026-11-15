@@ -1,0 +1,15 @@
+ReSource prepared table lamp
+
+Lamp with Punctual Lights by Teresa Gonzalez Viegas / DGG, 2021.
+Source: https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/LightsPunctualLamp
+License: Creative Commons Attribution 4.0 International (CC-BY-4.0)
+https://creativecommons.org/licenses/by/4.0/
+Source GLB SHA-256: b9a95cd0e17dea5284117e54807b49b746960038457a31a0011b9344acc11104
+
+ReSource modifications: renamed three existing meshes as selectable visual groups,
+doubled presentation scale, removed scene lights and resized textures to 1024px.
+Prepared with frontend/models/prepare_desk_lamp.py. No endorsement is implied.
+
+The frame, shade and base-insert groups are visual aids, not a complete engineering
+BOM. Demo requirements and supplier offers are synthetic examples and were not
+inferred from this model. This asset was not generated from an uploaded blueprint.

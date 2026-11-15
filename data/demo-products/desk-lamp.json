@@ -1,0 +1,274 @@
+{
+  "demo_id": "desk-lamp",
+  "name": "Table lamp",
+  "description": "Compare options for a frame, shade and base insert in a three-part visual study.",
+  "product_type": "lighting",
+  "model": {
+    "origin": "prepared_demo",
+    "status": "ready",
+    "asset_url": "/models/desk-lamp.glb",
+    "license": "CC-BY-4.0",
+    "source_url": "https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/LightsPunctualLamp",
+    "notes": "Lamp with Punctual Lights by Teresa Gonz\u00e1lez Viegas / DGG (2021), CC BY 4.0. ReSource renamed the three visual groups, resized textures, changed presentation scale and removed lights. Attribution: /models/licenses/desk-lamp-sources.txt. Requirements are authored examples, not inferred from the model."
+  },
+  "parts": [
+    {
+      "part_id": "lamp-frame",
+      "name": "Frame assembly",
+      "node_names": [
+        "Lamp_Frame"
+      ],
+      "explode": [
+        0.7,
+        0,
+        0
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "Brass-finish steel",
+          "status": "proposed",
+          "source": {
+            "document_id": "desk-lamp-sample-spec",
+            "quote": "Frame assembly: Material = Brass-finish steel"
+          }
+        },
+        {
+          "key": "finish",
+          "label": "Finish",
+          "value": "Brushed brass",
+          "status": "proposed",
+          "source": {
+            "document_id": "desk-lamp-sample-spec",
+            "quote": "Frame assembly: Finish = Brushed brass"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "lamp-shade",
+      "name": "Shade",
+      "node_names": [
+        "Lamp_Shade"
+      ],
+      "explode": [
+        0,
+        1.3,
+        0
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "Translucent paper composite",
+          "status": "proposed",
+          "source": {
+            "document_id": "desk-lamp-sample-spec",
+            "quote": "Shade: Material = Translucent paper composite"
+          }
+        },
+        {
+          "key": "diameter",
+          "label": "Outer diameter",
+          "value": "360",
+          "unit": "mm",
+          "status": "proposed",
+          "source": {
+            "document_id": "desk-lamp-sample-spec",
+            "quote": "Shade: Outer diameter = 360 mm"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    },
+    {
+      "part_id": "lamp-base-insert",
+      "name": "Base insert",
+      "node_names": [
+        "Lamp_BaseInsert"
+      ],
+      "explode": [
+        -0.8,
+        0.25,
+        0
+      ],
+      "requirements": [
+        {
+          "key": "material",
+          "label": "Material",
+          "value": "Felt-backed polymer",
+          "status": "proposed",
+          "source": {
+            "document_id": "desk-lamp-sample-spec",
+            "quote": "Base insert: Material = Felt-backed polymer"
+          }
+        },
+        {
+          "key": "diameter",
+          "label": "Outer diameter",
+          "value": "110",
+          "unit": "mm",
+          "status": "proposed",
+          "source": {
+            "document_id": "desk-lamp-sample-spec",
+            "quote": "Base insert: Outer diameter = 110 mm"
+          }
+        }
+      ],
+      "quantity": 1,
+      "status": "proposed"
+    }
+  ],
+  "documents": [
+    {
+      "document_id": "desk-lamp-sample-spec",
+      "name": "Table lamp \u2014 sample specification",
+      "kind": "requirements",
+      "text": "SYNTHETIC DEMO SPECIFICATION \u2014 values below are authored examples, not measurements from the 3D model.\nFrame assembly: Material = Brass-finish steel\nFrame assembly: Finish = Brushed brass\nShade: Material = Translucent paper composite\nShade: Outer diameter = 360 mm\nBase insert: Material = Felt-backed polymer\nBase insert: Outer diameter = 110 mm"
+    }
+  ],
+  "sample_offers": [
+    {
+      "candidate_id": "lamp-frame-sample-1",
+      "part_id": "lamp-frame",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 18,
+      "currency": "GBP",
+      "lead_time_days": 8,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "lamp-frame-sample-2",
+      "part_id": "lamp-frame",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 12,
+      "currency": "GBP",
+      "lead_time_days": 17,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "finish",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "lamp-shade-sample-1",
+      "part_id": "lamp-shade",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 21,
+      "currency": "GBP",
+      "lead_time_days": 9,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "lamp-shade-sample-2",
+      "part_id": "lamp-shade",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 16,
+      "currency": "GBP",
+      "lead_time_days": 18,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "lamp-base-insert-sample-1",
+      "part_id": "lamp-base-insert",
+      "supplier_name": "Northline Components (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 24,
+      "currency": "GBP",
+      "lead_time_days": 10,
+      "summary": "Illustrative stocked replacement. Availability and conformity need supplier confirmation.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    },
+    {
+      "candidate_id": "lamp-base-insert-sample-2",
+      "part_id": "lamp-base-insert",
+      "supplier_name": "Alpine Works (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 20,
+      "currency": "GBP",
+      "lead_time_days": 19,
+      "summary": "Illustrative build-to-print route. Drawing review and a formal quote are required.",
+      "evidence": [
+        {
+          "requirement_key": "material",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        },
+        {
+          "requirement_key": "diameter",
+          "status": "unknown",
+          "note": "Sample offer only; supplier evidence is required to verify this requirement."
+        }
+      ]
+    }
+  ]
+}
