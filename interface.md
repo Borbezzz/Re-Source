@@ -242,3 +242,23 @@ Run-stream events (`GET /scenario-runs/{run_id}/events`): `intake.uploaded`, `in
 The browser uses same-origin `/api/v1` on Vercel; it never calls the private Databricks App. Public anonymous visitors receive a secure HttpOnly `resource_visitor` cookie. Current runs, intake records/active manifests and idempotency keys are visitor-scoped; cross-visitor run/replay access returns 404. Cross-origin mutations return 403. Forwarded user headers do not establish reviewer identity; actors are unverified demo visitors.
 
 No generated payload shapes changed for this hosting migration. The fallback HTML root is excluded from OpenAPI so the contract does not vary with frontend build presence. SSE responses reconnect after a bounded 50-second window and replay committed Lakebase events using the existing sequence cursor. Long operations are durable queue jobs, not resident API threads. On Vercel, multipart uploads are limited to 4 MB and must mirror to the UC volume before acknowledgement. Local backend upload limits remain 50 MB. See `deploy/vercel/README.md` for configuration and verification status.
+
+
+## Supply-risk scan (additive)
+
+All routes below use `/api/v1/products/{project_id}/supply-risk`. The existing visitor boundary, operational store and idempotency header apply. Source evidence and project needs persist in the private project envelope; no new database migration is required.
+
+| Method and suffix | Request | Response / behavior |
+|---|---|---|
+| GET (no suffix) | — | `RiskScan`, including project/scan versions, part assessments, dated observations and public source previews. Reassesses saved supplier quotes on every read. Private, no-store. |
+| POST `/confirm` | `RiskConfirm {expected_project_version, needs[{part_id,quantity,destination,need_by}]}` | Requires confirmed parts and one need for every part. Starts/reconfirms the scan. Part identity edits use the existing reviewed-parts API first. |
+| POST `/refresh` | `{}` | Bounded Tavily + Linkup searches for public context. Only a generic query is sent; no project or source-document contents leave the server. Provider failure/not-configured states are returned explicitly. |
+| POST `/evidence` | `RiskEvidenceRequest {expected_scan_version,evidence}` | Immutable evidence ID/source version. Repeated identical evidence is a no-op; changed reuse or a stale scan version returns 409. Reassesses immediately. |
+
+`RiskEvidence` carries the part ID, kind, title, excerpt, source issue date (unknown is allowed), source/version references, supplier, part number/revision, quantity, destination, route and arrival/receipt date. Valid receipts require an actual date on or before their issue date. Manual source links allow only HTTP(S). Imported quote links are generated from the project-owned quote ID. Imported quote issue dates come only from the source's `quote_date`, never its import timestamp. Ambiguous dates/quantities remain unknown. Buyer-edited critical terms, expired quotes and imports made before a requirements change remain unverified.
+
+A quote/backorder/receipt must match part number, revision, sufficient purchase quantity and destination. A route disruption alerts only when it matches a current scoped shipment. Mineral/manufacturing exposure and global freight pressure stay on the watchlist. The latest dated observation per supplier supersedes earlier estimates without deleting the historical points; its expiry cannot revive an older commitment. A valid receipt covering the whole need remains authoritative over later estimates. Illustrative evidence cannot establish project alerts. Earlier alternatives remain conditional on compatibility and scope verification. No risk assessment establishes engineering approval or places an order.
+
+Studio collects project needs with parts confirmation, then renders the scan in sequence. Selecting a mapped assembly part opens its evidence panel and an arrival-versus-deadline chart once two dated observations exist. Source events are marked on the chart and detailed in an accessible table. Evidence changes trigger local reassessment; the UI also checks for new evidence every 20 seconds while visible and when focused. Quote-dialog dismissal triggers an immediate check. Saved work links to `#risk/{project_id}` so the scan can be reopened after reload, including material/process-only projects without prepared geometry.
+
+Server configuration: `TAVILY_API_KEY` and `LINKUP_API_KEY`, never frontend variables. The scan is deterministic and does not require a model call. Public searches are explicit after confirmation or refresh; no standing/background web-search schedule is created. Missing publication dates and unavailable provider data stay visible rather than being substituted.

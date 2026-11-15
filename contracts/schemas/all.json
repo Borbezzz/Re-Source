@@ -5176,6 +5176,63 @@
       "title": "ProductDocument",
       "type": "object"
     },
+    "ProductEnquiry": {
+      "additionalProperties": false,
+      "properties": {
+        "buyer_company": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Buyer Company",
+          "type": "string"
+        },
+        "buyer_contact": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Buyer Contact",
+          "type": "string"
+        },
+        "delivery_destination": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Delivery Destination",
+          "type": "string"
+        },
+        "part_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Part Id",
+          "type": "string"
+        },
+        "quantity": {
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "required_by": {
+          "format": "date",
+          "title": "Required By",
+          "type": "string"
+        },
+        "selected_item": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Selected Item",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id",
+        "selected_item",
+        "quantity",
+        "required_by",
+        "delivery_destination",
+        "buyer_company",
+        "buyer_contact"
+      ],
+      "title": "ProductEnquiry",
+      "type": "object"
+    },
     "ProductEvent": {
       "additionalProperties": false,
       "properties": {
@@ -5721,6 +5778,17 @@
           "title": "Created At",
           "type": "string"
         },
+        "enquiry": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProductEnquiry"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "input_version": {
           "title": "Input Version",
           "type": "integer"
@@ -5826,6 +5894,11 @@
           "title": "Requirements",
           "type": "array"
         },
+        "rfq_subject": {
+          "default": "",
+          "title": "Rfq Subject",
+          "type": "string"
+        },
         "rfq_text": {
           "title": "Rfq Text",
           "type": "string"
@@ -5847,6 +5920,24 @@
         "rfq_text"
       ],
       "title": "ProductPackageItem",
+      "type": "object"
+    },
+    "ProductPackageRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "enquiry": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProductEnquiry"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ProductPackageRequest",
       "type": "object"
     },
     "ProductPart": {
@@ -6016,7 +6107,7 @@
           "items": {
             "$ref": "#/$defs/ProductPart"
           },
-          "maxItems": 50,
+          "maxItems": 200,
           "minItems": 1,
           "title": "Parts",
           "type": "array"
@@ -6482,6 +6573,127 @@
         "quote"
       ],
       "title": "ProductSource",
+      "type": "object"
+    },
+    "QuoteCollection": {
+      "additionalProperties": false,
+      "properties": {
+        "parts": {
+          "items": {
+            "$ref": "#/$defs/ProductPart"
+          },
+          "title": "Parts",
+          "type": "array"
+        },
+        "project_name": {
+          "title": "Project Name",
+          "type": "string"
+        },
+        "quotes": {
+          "items": {
+            "$ref": "#/$defs/SupplierQuote"
+          },
+          "title": "Quotes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "project_name",
+        "parts",
+        "quotes"
+      ],
+      "title": "QuoteCollection",
+      "type": "object"
+    },
+    "QuoteReview": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_version": {
+          "minimum": 1,
+          "title": "Expected Version",
+          "type": "integer"
+        },
+        "terms": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "maxProperties": 15,
+          "propertyNames": {
+            "enum": [
+              "part_number",
+              "revision",
+              "material",
+              "quantity",
+              "unit_price",
+              "currency",
+              "minimum_order",
+              "lead_time",
+              "delivery_date",
+              "quote_date",
+              "valid_until",
+              "shipping",
+              "destination",
+              "certificates",
+              "exceptions"
+            ]
+          },
+          "title": "Terms",
+          "type": "object"
+        }
+      },
+      "required": [
+        "expected_version",
+        "terms"
+      ],
+      "title": "QuoteReview",
+      "type": "object"
+    },
+    "QuoteTerm": {
+      "additionalProperties": false,
+      "properties": {
+        "excerpt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Excerpt"
+        },
+        "origin": {
+          "default": "extracted",
+          "enum": [
+            "extracted",
+            "buyer_review"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "value": {
+          "maxLength": 1000,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "QuoteTerm",
       "type": "object"
     },
     "RankMove": {
@@ -7217,6 +7429,561 @@
       "title": "RequirementField",
       "type": "object"
     },
+    "RiskConfirm": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_project_version": {
+          "minimum": 1,
+          "title": "Expected Project Version",
+          "type": "integer"
+        },
+        "needs": {
+          "items": {
+            "$ref": "#/$defs/RiskNeed"
+          },
+          "maxItems": 200,
+          "minItems": 1,
+          "title": "Needs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "expected_project_version",
+        "needs"
+      ],
+      "title": "RiskConfirm",
+      "type": "object"
+    },
+    "RiskEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "arrival_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Arrival On"
+        },
+        "destination": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Destination"
+        },
+        "event": {
+          "anyOf": [
+            {
+              "maxLength": 300,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Event"
+        },
+        "evidence_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "excerpt": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Excerpt",
+          "type": "string"
+        },
+        "issued_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issued On"
+        },
+        "kind": {
+          "enum": [
+            "quote",
+            "backorder",
+            "shipment",
+            "delivery",
+            "route_disruption",
+            "material_trend",
+            "freight_pressure"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "origin": {
+          "default": "provided_document",
+          "enum": [
+            "provided_document",
+            "synthetic_demo"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "part_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Part Id",
+          "type": "string"
+        },
+        "part_number": {
+          "anyOf": [
+            {
+              "maxLength": 150,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Part Number"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quantity"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision"
+        },
+        "route": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Route"
+        },
+        "source_document_id": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Document Id"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "maxLength": 2000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        },
+        "source_version": {
+          "default": "1",
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Source Version",
+          "type": "string"
+        },
+        "supplier": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supplier"
+        },
+        "title": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "unverified_reason": {
+          "anyOf": [
+            {
+              "maxLength": 400,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unverified Reason"
+        },
+        "valid_until": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid Until"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "part_id",
+        "kind",
+        "title",
+        "excerpt"
+      ],
+      "title": "RiskEvidence",
+      "type": "object"
+    },
+    "RiskEvidenceRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "$ref": "#/$defs/RiskEvidence"
+        },
+        "expected_scan_version": {
+          "minimum": 1,
+          "title": "Expected Scan Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "expected_scan_version",
+        "evidence"
+      ],
+      "title": "RiskEvidenceRequest",
+      "type": "object"
+    },
+    "RiskNeed": {
+      "additionalProperties": false,
+      "properties": {
+        "destination": {
+          "maxLength": 200,
+          "minLength": 2,
+          "title": "Destination",
+          "type": "string"
+        },
+        "need_by": {
+          "format": "date",
+          "title": "Need By",
+          "type": "string"
+        },
+        "part_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Part Id",
+          "type": "string"
+        },
+        "quantity": {
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "part_id",
+        "quantity",
+        "destination",
+        "need_by"
+      ],
+      "title": "RiskNeed",
+      "type": "object"
+    },
+    "RiskObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_because": {
+          "title": "Applies Because",
+          "type": "string"
+        },
+        "days_late": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Days Late"
+        },
+        "evidence": {
+          "$ref": "#/$defs/RiskEvidence"
+        },
+        "level": {
+          "enum": [
+            "alert",
+            "watchlist",
+            "matched",
+            "superseded"
+          ],
+          "title": "Level",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence",
+        "level",
+        "applies_because"
+      ],
+      "title": "RiskObservation",
+      "type": "object"
+    },
+    "RiskPart": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "exposure": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Exposure",
+          "type": "array"
+        },
+        "missing": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing",
+          "type": "array"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "need": {
+          "$ref": "#/$defs/RiskNeed"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/RiskObservation"
+          },
+          "title": "Observations",
+          "type": "array"
+        },
+        "part_id": {
+          "title": "Part Id",
+          "type": "string"
+        },
+        "part_number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Part Number"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Revision"
+        },
+        "status": {
+          "enum": [
+            "at_risk",
+            "watchlist",
+            "unknown",
+            "on_time",
+            "received"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id",
+        "name",
+        "part_number",
+        "revision",
+        "need",
+        "status",
+        "summary",
+        "missing",
+        "exposure",
+        "observations",
+        "actions"
+      ],
+      "title": "RiskPart",
+      "type": "object"
+    },
+    "RiskProvider": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "source_count": {
+          "title": "Source Count",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "searched",
+            "unavailable",
+            "not_configured"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "status",
+        "source_count"
+      ],
+      "title": "RiskProvider",
+      "type": "object"
+    },
+    "RiskScan": {
+      "additionalProperties": false,
+      "properties": {
+        "evaluated_at": {
+          "title": "Evaluated At",
+          "type": "string"
+        },
+        "parts": {
+          "items": {
+            "$ref": "#/$defs/RiskPart"
+          },
+          "title": "Parts",
+          "type": "array"
+        },
+        "project_id": {
+          "title": "Project Id",
+          "type": "string"
+        },
+        "project_version": {
+          "title": "Project Version",
+          "type": "integer"
+        },
+        "providers": {
+          "items": {
+            "$ref": "#/$defs/RiskProvider"
+          },
+          "title": "Providers",
+          "type": "array"
+        },
+        "searched_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Searched At"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/RiskSource"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "not_started",
+            "current",
+            "needs_confirmation"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "project_id",
+        "project_version",
+        "version",
+        "status",
+        "evaluated_at"
+      ],
+      "title": "RiskScan",
+      "type": "object"
+    },
     "RiskSignal": {
       "additionalProperties": false,
       "properties": {
@@ -7337,6 +8104,57 @@
         "effective_from"
       ],
       "title": "RiskSignal",
+      "type": "object"
+    },
+    "RiskSource": {
+      "additionalProperties": false,
+      "properties": {
+        "excerpt": {
+          "title": "Excerpt",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "published_on": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Published On"
+        },
+        "publisher": {
+          "title": "Publisher",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "url",
+        "excerpt",
+        "publisher",
+        "retrieved_at",
+        "provider"
+      ],
+      "title": "RiskSource",
       "type": "object"
     },
     "Route": {
@@ -8373,6 +9191,113 @@
       "title": "SupplierDiscoveryEvent",
       "type": "object"
     },
+    "SupplierQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "follow_up": {
+          "default": "",
+          "title": "Follow Up",
+          "type": "string"
+        },
+        "input_version": {
+          "title": "Input Version",
+          "type": "integer"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "part_id": {
+          "title": "Part Id",
+          "type": "string"
+        },
+        "quote_id": {
+          "title": "Quote Id",
+          "type": "string"
+        },
+        "reviewed": {
+          "default": false,
+          "title": "Reviewed",
+          "type": "boolean"
+        },
+        "source_kind": {
+          "enum": [
+            "pdf",
+            "reply"
+          ],
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "source_text": {
+          "title": "Source Text",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "supplier": {
+          "title": "Supplier",
+          "type": "string"
+        },
+        "terms": {
+          "additionalProperties": {
+            "$ref": "#/$defs/QuoteTerm"
+          },
+          "propertyNames": {
+            "enum": [
+              "part_number",
+              "revision",
+              "material",
+              "quantity",
+              "unit_price",
+              "currency",
+              "minimum_order",
+              "lead_time",
+              "delivery_date",
+              "quote_date",
+              "valid_until",
+              "shipping",
+              "destination",
+              "certificates",
+              "exceptions"
+            ]
+          },
+          "title": "Terms",
+          "type": "object"
+        },
+        "version": {
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "quote_id",
+        "part_id",
+        "supplier",
+        "filename",
+        "source_kind",
+        "source_url",
+        "source_text",
+        "created_at",
+        "input_version",
+        "version",
+        "terms"
+      ],
+      "title": "SupplierQuote",
+      "type": "object"
+    },
     "TaskStatus": {
       "additionalProperties": false,
       "properties": {
@@ -8839,6 +9764,9 @@
     "ProductDocument": {
       "$ref": "#/$defs/ProductDocument"
     },
+    "ProductEnquiry": {
+      "$ref": "#/$defs/ProductEnquiry"
+    },
     "ProductEvent": {
       "$ref": "#/$defs/ProductEvent"
     },
@@ -8869,6 +9797,9 @@
     "ProductPackageItem": {
       "$ref": "#/$defs/ProductPackageItem"
     },
+    "ProductPackageRequest": {
+      "$ref": "#/$defs/ProductPackageRequest"
+    },
     "ProductPart": {
       "$ref": "#/$defs/ProductPart"
     },
@@ -8896,6 +9827,15 @@
     "ProductSource": {
       "$ref": "#/$defs/ProductSource"
     },
+    "QuoteCollection": {
+      "$ref": "#/$defs/QuoteCollection"
+    },
+    "QuoteReview": {
+      "$ref": "#/$defs/QuoteReview"
+    },
+    "QuoteTerm": {
+      "$ref": "#/$defs/QuoteTerm"
+    },
     "RankMove": {
       "$ref": "#/$defs/RankMove"
     },
@@ -8920,8 +9860,35 @@
     "RequirementField": {
       "$ref": "#/$defs/RequirementField"
     },
+    "RiskConfirm": {
+      "$ref": "#/$defs/RiskConfirm"
+    },
+    "RiskEvidence": {
+      "$ref": "#/$defs/RiskEvidence"
+    },
+    "RiskEvidenceRequest": {
+      "$ref": "#/$defs/RiskEvidenceRequest"
+    },
+    "RiskNeed": {
+      "$ref": "#/$defs/RiskNeed"
+    },
+    "RiskObservation": {
+      "$ref": "#/$defs/RiskObservation"
+    },
+    "RiskPart": {
+      "$ref": "#/$defs/RiskPart"
+    },
+    "RiskProvider": {
+      "$ref": "#/$defs/RiskProvider"
+    },
+    "RiskScan": {
+      "$ref": "#/$defs/RiskScan"
+    },
     "RiskSignal": {
       "$ref": "#/$defs/RiskSignal"
+    },
+    "RiskSource": {
+      "$ref": "#/$defs/RiskSource"
     },
     "ScenarioRunRequest": {
       "$ref": "#/$defs/ScenarioRunRequest"
@@ -8970,6 +9937,9 @@
     },
     "SupplierDiscoveryEvent": {
       "$ref": "#/$defs/SupplierDiscoveryEvent"
+    },
+    "SupplierQuote": {
+      "$ref": "#/$defs/SupplierQuote"
     },
     "TaskStatus": {
       "$ref": "#/$defs/TaskStatus"

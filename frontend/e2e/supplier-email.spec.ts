@@ -11,11 +11,13 @@ test("reviewed email matches the stored enquiry and approval, on desktop and mob
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.locator('input[type="file"]').first().setInputFiles(archive);
-  await page.getByRole("button", { name: "Confirm and open assembly", exact: true }).click();
+  await page.locator(".rs-risk-needs").getByLabel("Delivery destination").fill("Bristol, UK");
+  await page.locator(".rs-risk-needs").getByLabel("Need-by date").fill("2027-01-05");
+  await page.getByRole("button", { name: "Confirm parts and scan supply risk", exact: true }).click();
   await expect(page.locator(".rs-part-source")).toHaveCount(0);
   await page.getByRole("button", { name: "Expand Fan blades", exact: true }).click();
-  await page.getByRole("button", { name: "Fan blade 03", exact: true }).click();
-  await page.getByRole("button", { name: /^Change supplier/ }).click();
+  await page.getByRole("button", { name: /^Fan blade 03\s*Arrival unknown$/ }).click();
+  await page.locator(".rs-risk-panel").getByRole("button", { name: "Find alternative suppliers", exact: true }).click();
   await page.getByLabel("Quantity", { exact: true }).fill("3");
   await page.getByLabel("Required on site by", { exact: true }).fill("2027-01-05");
   await page.getByRole("button", { name: "Find suppliers", exact: true }).click();
@@ -26,6 +28,8 @@ test("reviewed email matches the stored enquiry and approval, on desktop and mob
   const item = stored.package.items[0];
   expect(item.quantity).toBe(3);
   expect(stored.package.enquiry.required_by).toBe("2027-01-05");
+  expect(stored.package.enquiry.delivery_destination).toBe("Bristol, UK");
+  expect(item.rfq_text).toContain("Bristol, UK");
   expect(item.rfq_text).toContain("Selected assembly item: Fan blade 03");
   expect(item.rfq_text).toContain("5 January 2027");
   const email = page.getByRole("article", { name: "Request for quotation" });

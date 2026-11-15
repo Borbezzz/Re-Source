@@ -814,6 +814,58 @@ export interface paths {
         patch: operations["review_api_v1_products__project_id__parts_patch"];
         trace?: never;
     };
+    "/api/v1/products/{project_id}/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Quotes */
+        get: operations["quotes_api_v1_products__project_id__quotes_get"];
+        put?: never;
+        /** Upload */
+        post: operations["upload_api_v1_products__project_id__quotes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/quotes/{quote_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Review */
+        patch: operations["review_api_v1_products__project_id__quotes__quote_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/quotes/{quote_id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Content */
+        get: operations["content_api_v1_products__project_id__quotes__quote_id__content_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/products/{project_id}/selections": {
         parameters: {
             query?: never;
@@ -829,6 +881,74 @@ export interface paths {
         head?: never;
         /** Select */
         patch: operations["select_api_v1_products__project_id__selections_patch"];
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/supply-risk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get */
+        get: operations["get_api_v1_products__project_id__supply_risk_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/supply-risk/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm */
+        post: operations["confirm_api_v1_products__project_id__supply_risk_confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/supply-risk/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Evidence */
+        post: operations["evidence_api_v1_products__project_id__supply_risk_evidence_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/supply-risk/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh */
+        post: operations["refresh_api_v1_products__project_id__supply_risk_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/readiness": {
@@ -1171,6 +1291,17 @@ export interface components {
             file: string;
             /** Kind */
             kind: string;
+        };
+        /** Body_upload_api_v1_products__project_id__quotes_post */
+        Body_upload_api_v1_products__project_id__quotes_post: {
+            /** File */
+            file?: string | null;
+            /** Part Id */
+            part_id: string;
+            /** Reply */
+            reply?: string | null;
+            /** Supplier */
+            supplier: string;
         };
         /** CandidateOffer */
         CandidateOffer: {
@@ -2959,6 +3090,26 @@ export interface components {
              */
             size_bytes: number;
         };
+        /** ProductEnquiry */
+        ProductEnquiry: {
+            /** Buyer Company */
+            buyer_company: string;
+            /** Buyer Contact */
+            buyer_contact: string;
+            /** Delivery Destination */
+            delivery_destination: string;
+            /** Part Id */
+            part_id: string;
+            /** Quantity */
+            quantity: number;
+            /**
+             * Required By
+             * Format: date
+             */
+            required_by: string;
+            /** Selected Item */
+            selected_item: string;
+        };
         /** ProductEvent */
         ProductEvent: {
             /** Created At */
@@ -3135,6 +3286,7 @@ export interface components {
             approved_by?: string | null;
             /** Created At */
             created_at: string;
+            enquiry?: components["schemas"]["ProductEnquiry"] | null;
             /** Input Version */
             input_version: number;
             /** Items */
@@ -3176,10 +3328,19 @@ export interface components {
             quantity: number;
             /** Requirements */
             requirements: components["schemas"]["ProductRequirement"][];
+            /**
+             * Rfq Subject
+             * @default
+             */
+            rfq_subject: string;
             /** Rfq Text */
             rfq_text: string;
             /** Supplier Name */
             supplier_name: string;
+        };
+        /** ProductPackageRequest */
+        ProductPackageRequest: {
+            enquiry?: components["schemas"]["ProductEnquiry"] | null;
         };
         /** ProductPart */
         ProductPart: {
@@ -3362,6 +3523,39 @@ export interface components {
             page?: number | null;
             /** Quote */
             quote: string;
+        };
+        /** QuoteCollection */
+        QuoteCollection: {
+            /** Parts */
+            parts: components["schemas"]["ProductPart"][];
+            /** Project Name */
+            project_name: string;
+            /** Quotes */
+            quotes: components["schemas"]["SupplierQuote"][];
+        };
+        /** QuoteReview */
+        QuoteReview: {
+            /** Expected Version */
+            expected_version: number;
+            /** Terms */
+            terms: {
+                [key: string]: string;
+            };
+        };
+        /** QuoteTerm */
+        QuoteTerm: {
+            /** Excerpt */
+            excerpt?: string | null;
+            /**
+             * Origin
+             * @default extracted
+             * @enum {string}
+             */
+            origin: "extracted" | "buyer_review";
+            /** Page */
+            page?: number | null;
+            /** Value */
+            value: string;
         };
         /** RankMove */
         RankMove: {
@@ -3551,6 +3745,162 @@ export interface components {
             /** Value */
             value?: unknown;
         };
+        /** RiskConfirm */
+        RiskConfirm: {
+            /** Expected Project Version */
+            expected_project_version: number;
+            /** Needs */
+            needs: components["schemas"]["RiskNeed"][];
+        };
+        /** RiskEvidence */
+        RiskEvidence: {
+            /** Arrival On */
+            arrival_on?: string | null;
+            /** Destination */
+            destination?: string | null;
+            /** Event */
+            event?: string | null;
+            /** Evidence Id */
+            evidence_id: string;
+            /** Excerpt */
+            excerpt: string;
+            /** Issued On */
+            issued_on?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "quote" | "backorder" | "shipment" | "delivery" | "route_disruption" | "material_trend" | "freight_pressure";
+            /**
+             * Origin
+             * @default provided_document
+             * @enum {string}
+             */
+            origin: "provided_document" | "synthetic_demo";
+            /** Part Id */
+            part_id: string;
+            /** Part Number */
+            part_number?: string | null;
+            /** Quantity */
+            quantity?: number | null;
+            /** Revision */
+            revision?: string | null;
+            /** Route */
+            route?: string | null;
+            /** Source Document Id */
+            source_document_id?: string | null;
+            /** Source Url */
+            source_url?: string | null;
+            /**
+             * Source Version
+             * @default 1
+             */
+            source_version: string;
+            /** Supplier */
+            supplier?: string | null;
+            /** Title */
+            title: string;
+            /** Unverified Reason */
+            unverified_reason?: string | null;
+            /** Valid Until */
+            valid_until?: string | null;
+        };
+        /** RiskEvidenceRequest */
+        RiskEvidenceRequest: {
+            evidence: components["schemas"]["RiskEvidence"];
+            /** Expected Scan Version */
+            expected_scan_version: number;
+        };
+        /** RiskNeed */
+        RiskNeed: {
+            /** Destination */
+            destination: string;
+            /**
+             * Need By
+             * Format: date
+             */
+            need_by: string;
+            /** Part Id */
+            part_id: string;
+            /** Quantity */
+            quantity: number;
+        };
+        /** RiskObservation */
+        RiskObservation: {
+            /** Applies Because */
+            applies_because: string;
+            /** Days Late */
+            days_late?: number | null;
+            evidence: components["schemas"]["RiskEvidence"];
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "alert" | "watchlist" | "matched" | "superseded";
+        };
+        /** RiskPart */
+        RiskPart: {
+            /** Actions */
+            actions: string[];
+            /** Exposure */
+            exposure: string[];
+            /** Missing */
+            missing: string[];
+            /** Name */
+            name: string;
+            need: components["schemas"]["RiskNeed"];
+            /** Observations */
+            observations: components["schemas"]["RiskObservation"][];
+            /** Part Id */
+            part_id: string;
+            /** Part Number */
+            part_number: string | null;
+            /** Revision */
+            revision: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "at_risk" | "watchlist" | "unknown" | "on_time" | "received";
+            /** Summary */
+            summary: string;
+        };
+        /** RiskProvider */
+        RiskProvider: {
+            /** Name */
+            name: string;
+            /** Source Count */
+            source_count: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "searched" | "unavailable" | "not_configured";
+        };
+        /** RiskScan */
+        RiskScan: {
+            /** Evaluated At */
+            evaluated_at: string;
+            /** Parts */
+            parts?: components["schemas"]["RiskPart"][];
+            /** Project Id */
+            project_id: string;
+            /** Project Version */
+            project_version: number;
+            /** Providers */
+            providers?: components["schemas"]["RiskProvider"][];
+            /** Searched At */
+            searched_at?: string | null;
+            /** Sources */
+            sources?: components["schemas"]["RiskSource"][];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "not_started" | "current" | "needs_confirmation";
+            /** Version */
+            version: number;
+        };
         /** RiskSignal */
         RiskSignal: {
             /** Assertion */
@@ -3617,6 +3967,23 @@ export interface components {
              * @default 1
              */
             version: number;
+        };
+        /** RiskSource */
+        RiskSource: {
+            /** Excerpt */
+            excerpt: string;
+            /** Provider */
+            provider: string;
+            /** Published On */
+            published_on?: string | null;
+            /** Publisher */
+            publisher: string;
+            /** Retrieved At */
+            retrieved_at: string;
+            /** Title */
+            title: string;
+            /** Url */
+            url: string;
         };
         /**
          * Route
@@ -3996,6 +4363,48 @@ export interface components {
              * @constant
              */
             type: "supplier.discovered";
+        };
+        /** SupplierQuote */
+        SupplierQuote: {
+            /** Created At */
+            created_at: string;
+            /** Filename */
+            filename: string;
+            /**
+             * Follow Up
+             * @default
+             */
+            follow_up: string;
+            /** Input Version */
+            input_version: number;
+            /** Issues */
+            issues?: string[];
+            /** Part Id */
+            part_id: string;
+            /** Quote Id */
+            quote_id: string;
+            /**
+             * Reviewed
+             * @default false
+             */
+            reviewed: boolean;
+            /**
+             * Source Kind
+             * @enum {string}
+             */
+            source_kind: "pdf" | "reply";
+            /** Source Text */
+            source_text: string;
+            /** Source Url */
+            source_url: string;
+            /** Supplier */
+            supplier: string;
+            /** Terms */
+            terms: {
+                [key: string]: components["schemas"]["QuoteTerm"];
+            };
+            /** Version */
+            version: number;
         };
         /** TaskStatus */
         TaskStatus: {
@@ -5921,7 +6330,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ProductPackageRequest"] | null;
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -6054,6 +6467,138 @@ export interface operations {
             };
         };
     };
+    quotes_api_v1_products__project_id__quotes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteCollection"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_api_v1_products__project_id__quotes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_api_v1_products__project_id__quotes_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteCollection"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    review_api_v1_products__project_id__quotes__quote_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+                quote_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuoteReview"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteCollection"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    content_api_v1_products__project_id__quotes__quote_id__content_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+                quote_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     select_api_v1_products__project_id__selections_patch: {
         parameters: {
             query?: never;
@@ -6078,6 +6623,144 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductProject"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_api_v1_products__project_id__supply_risk_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskScan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirm_api_v1_products__project_id__supply_risk_confirm_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RiskConfirm"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskScan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    evidence_api_v1_products__project_id__supply_risk_evidence_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RiskEvidenceRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskScan"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_api_v1_products__project_id__supply_risk_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "idempotency-key"?: string | null;
+            };
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RiskScan"];
                 };
             };
             /** @description Validation Error */

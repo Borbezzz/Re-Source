@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { Check, X } from "lucide-react";
 import type { DesignPackage, StepId } from "../data/package.ts";
 import type { ProductProject } from "../../product-flow/types.ts";
+import { NeedsForm } from "../supply-risk/NeedsForm.tsx";
+import type { NeedsDraft } from "../supply-risk/types.ts";
 
 export interface StepState {
   status: "pending" | "running" | "done" | "error";
@@ -32,7 +34,7 @@ export function Processing({
   project: ProductProject | null;
   error: string | null;
   busy: boolean;
-  onConfirm: () => void;
+  onConfirm: (draft: NeedsDraft) => void;
   onRetry: () => void;
   solid: number;
 }) {
@@ -113,9 +115,7 @@ export function Processing({
                 <summary>{pkg.components.length} demo sourcing families across the assembly</summary>
                 <ul>{pkg.components.slice(3).map(c => <li key={c.componentId}>{c.name} · {c.assemblyQuantity} in assembly</li>)}</ul>
               </details> : null}
-              <button type="button" className="rs-btn rs-btn-grad" onClick={onConfirm} disabled={busy}>
-                {busy ? "Confirming…" : "Confirm and open assembly"}
-              </button>
+              <NeedsForm project={project} pkg={pkg} busy={busy} onConfirm={onConfirm} />
             </motion.div>
           ) : null}
         </AnimatePresence>

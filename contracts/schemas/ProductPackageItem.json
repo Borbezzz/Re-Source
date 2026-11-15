@@ -139,6 +139,11 @@
       "title": "Requirements",
       "type": "array"
     },
+    "rfq_subject": {
+      "default": "",
+      "title": "Rfq Subject",
+      "type": "string"
+    },
     "rfq_text": {
       "title": "Rfq Text",
       "type": "string"

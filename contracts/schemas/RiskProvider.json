@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "source_count": {
+      "title": "Source Count",
+      "type": "integer"
+    },
+    "status": {
+      "enum": [
+        "searched",
+        "unavailable",
+        "not_configured"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "status",
+    "source_count"
+  ],
+  "title": "RiskProvider",
+  "type": "object"
+}

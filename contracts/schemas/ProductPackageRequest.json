@@ -1,0 +1,77 @@
+{
+  "$defs": {
+    "ProductEnquiry": {
+      "additionalProperties": false,
+      "properties": {
+        "buyer_company": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Buyer Company",
+          "type": "string"
+        },
+        "buyer_contact": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Buyer Contact",
+          "type": "string"
+        },
+        "delivery_destination": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Delivery Destination",
+          "type": "string"
+        },
+        "part_id": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Part Id",
+          "type": "string"
+        },
+        "quantity": {
+          "maximum": 1000000,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "required_by": {
+          "format": "date",
+          "title": "Required By",
+          "type": "string"
+        },
+        "selected_item": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Selected Item",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id",
+        "selected_item",
+        "quantity",
+        "required_by",
+        "delivery_destination",
+        "buyer_company",
+        "buyer_contact"
+      ],
+      "title": "ProductEnquiry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "enquiry": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ProductEnquiry"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "title": "ProductPackageRequest",
+  "type": "object"
+}

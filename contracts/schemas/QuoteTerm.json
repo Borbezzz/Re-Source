@@ -1,0 +1,48 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "excerpt": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Excerpt"
+    },
+    "origin": {
+      "default": "extracted",
+      "enum": [
+        "extracted",
+        "buyer_review"
+      ],
+      "title": "Origin",
+      "type": "string"
+    },
+    "page": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page"
+    },
+    "value": {
+      "maxLength": 1000,
+      "title": "Value",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value"
+  ],
+  "title": "QuoteTerm",
+  "type": "object"
+}

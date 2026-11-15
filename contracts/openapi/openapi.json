@@ -320,6 +320,47 @@
         "title": "Body_upload_api_v1_products__project_id__documents_post",
         "type": "object"
       },
+      "Body_upload_api_v1_products__project_id__quotes_post": {
+        "properties": {
+          "file": {
+            "anyOf": [
+              {
+                "contentMediaType": "application/octet-stream",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File"
+          },
+          "part_id": {
+            "title": "Part Id",
+            "type": "string"
+          },
+          "reply": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply"
+          },
+          "supplier": {
+            "title": "Supplier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "part_id",
+          "supplier"
+        ],
+        "title": "Body_upload_api_v1_products__project_id__quotes_post",
+        "type": "object"
+      },
       "CandidateOffer": {
         "additionalProperties": false,
         "properties": {
@@ -4903,6 +4944,63 @@
         "title": "ProductDocument",
         "type": "object"
       },
+      "ProductEnquiry": {
+        "additionalProperties": false,
+        "properties": {
+          "buyer_company": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Buyer Company",
+            "type": "string"
+          },
+          "buyer_contact": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Buyer Contact",
+            "type": "string"
+          },
+          "delivery_destination": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Delivery Destination",
+            "type": "string"
+          },
+          "part_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Part Id",
+            "type": "string"
+          },
+          "quantity": {
+            "maximum": 1000000.0,
+            "minimum": 1.0,
+            "title": "Quantity",
+            "type": "integer"
+          },
+          "required_by": {
+            "format": "date",
+            "title": "Required By",
+            "type": "string"
+          },
+          "selected_item": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Selected Item",
+            "type": "string"
+          }
+        },
+        "required": [
+          "part_id",
+          "selected_item",
+          "quantity",
+          "required_by",
+          "delivery_destination",
+          "buyer_company",
+          "buyer_contact"
+        ],
+        "title": "ProductEnquiry",
+        "type": "object"
+      },
       "ProductEvent": {
         "additionalProperties": false,
         "properties": {
@@ -5427,6 +5525,16 @@
             "title": "Created At",
             "type": "string"
           },
+          "enquiry": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductEnquiry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "input_version": {
             "title": "Input Version",
             "type": "integer"
@@ -5530,6 +5638,11 @@
             "title": "Requirements",
             "type": "array"
           },
+          "rfq_subject": {
+            "default": "",
+            "title": "Rfq Subject",
+            "type": "string"
+          },
           "rfq_text": {
             "title": "Rfq Text",
             "type": "string"
@@ -5551,6 +5664,23 @@
           "rfq_text"
         ],
         "title": "ProductPackageItem",
+        "type": "object"
+      },
+      "ProductPackageRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "enquiry": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProductEnquiry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "ProductPackageRequest",
         "type": "object"
       },
       "ProductPart": {
@@ -5713,7 +5843,7 @@
             "items": {
               "$ref": "#/components/schemas/ProductPart"
             },
-            "maxItems": 50,
+            "maxItems": 200,
             "minItems": 1,
             "title": "Parts",
             "type": "array"
@@ -6171,6 +6301,125 @@
           "quote"
         ],
         "title": "ProductSource",
+        "type": "object"
+      },
+      "QuoteCollection": {
+        "additionalProperties": false,
+        "properties": {
+          "parts": {
+            "items": {
+              "$ref": "#/components/schemas/ProductPart"
+            },
+            "title": "Parts",
+            "type": "array"
+          },
+          "project_name": {
+            "title": "Project Name",
+            "type": "string"
+          },
+          "quotes": {
+            "items": {
+              "$ref": "#/components/schemas/SupplierQuote"
+            },
+            "title": "Quotes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "project_name",
+          "parts",
+          "quotes"
+        ],
+        "title": "QuoteCollection",
+        "type": "object"
+      },
+      "QuoteReview": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_version": {
+            "minimum": 1.0,
+            "title": "Expected Version",
+            "type": "integer"
+          },
+          "terms": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "maxProperties": 15,
+            "propertyNames": {
+              "enum": [
+                "part_number",
+                "revision",
+                "material",
+                "quantity",
+                "unit_price",
+                "currency",
+                "minimum_order",
+                "lead_time",
+                "delivery_date",
+                "quote_date",
+                "valid_until",
+                "shipping",
+                "destination",
+                "certificates",
+                "exceptions"
+              ]
+            },
+            "title": "Terms",
+            "type": "object"
+          }
+        },
+        "required": [
+          "expected_version",
+          "terms"
+        ],
+        "title": "QuoteReview",
+        "type": "object"
+      },
+      "QuoteTerm": {
+        "additionalProperties": false,
+        "properties": {
+          "excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Excerpt"
+          },
+          "origin": {
+            "default": "extracted",
+            "enum": [
+              "extracted",
+              "buyer_review"
+            ],
+            "title": "Origin",
+            "type": "string"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "value": {
+            "maxLength": 1000,
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "title": "QuoteTerm",
         "type": "object"
       },
       "RankMove": {
@@ -6707,6 +6956,546 @@
         "title": "RequirementField",
         "type": "object"
       },
+      "RiskConfirm": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_project_version": {
+            "minimum": 1.0,
+            "title": "Expected Project Version",
+            "type": "integer"
+          },
+          "needs": {
+            "items": {
+              "$ref": "#/components/schemas/RiskNeed"
+            },
+            "maxItems": 200,
+            "minItems": 1,
+            "title": "Needs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "expected_project_version",
+          "needs"
+        ],
+        "title": "RiskConfirm",
+        "type": "object"
+      },
+      "RiskEvidence": {
+        "additionalProperties": false,
+        "properties": {
+          "arrival_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrival On"
+          },
+          "destination": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Destination"
+          },
+          "event": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event"
+          },
+          "evidence_id": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Evidence Id",
+            "type": "string"
+          },
+          "excerpt": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "issued_on": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Issued On"
+          },
+          "kind": {
+            "enum": [
+              "quote",
+              "backorder",
+              "shipment",
+              "delivery",
+              "route_disruption",
+              "material_trend",
+              "freight_pressure"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "origin": {
+            "default": "provided_document",
+            "enum": [
+              "provided_document",
+              "synthetic_demo"
+            ],
+            "title": "Origin",
+            "type": "string"
+          },
+          "part_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Part Id",
+            "type": "string"
+          },
+          "part_number": {
+            "anyOf": [
+              {
+                "maxLength": 150,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part Number"
+          },
+          "quantity": {
+            "anyOf": [
+              {
+                "maximum": 1000000.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quantity"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision"
+          },
+          "route": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Route"
+          },
+          "source_document_id": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Document Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "source_version": {
+            "default": "1",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Source Version",
+            "type": "string"
+          },
+          "supplier": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supplier"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          },
+          "unverified_reason": {
+            "anyOf": [
+              {
+                "maxLength": 400,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unverified Reason"
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until"
+          }
+        },
+        "required": [
+          "evidence_id",
+          "part_id",
+          "kind",
+          "title",
+          "excerpt"
+        ],
+        "title": "RiskEvidence",
+        "type": "object"
+      },
+      "RiskEvidenceRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence": {
+            "$ref": "#/components/schemas/RiskEvidence"
+          },
+          "expected_scan_version": {
+            "minimum": 1.0,
+            "title": "Expected Scan Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expected_scan_version",
+          "evidence"
+        ],
+        "title": "RiskEvidenceRequest",
+        "type": "object"
+      },
+      "RiskNeed": {
+        "additionalProperties": false,
+        "properties": {
+          "destination": {
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Destination",
+            "type": "string"
+          },
+          "need_by": {
+            "format": "date",
+            "title": "Need By",
+            "type": "string"
+          },
+          "part_id": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Part Id",
+            "type": "string"
+          },
+          "quantity": {
+            "maximum": 1000000.0,
+            "minimum": 1.0,
+            "title": "Quantity",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "part_id",
+          "quantity",
+          "destination",
+          "need_by"
+        ],
+        "title": "RiskNeed",
+        "type": "object"
+      },
+      "RiskObservation": {
+        "additionalProperties": false,
+        "properties": {
+          "applies_because": {
+            "title": "Applies Because",
+            "type": "string"
+          },
+          "days_late": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Days Late"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/RiskEvidence"
+          },
+          "level": {
+            "enum": [
+              "alert",
+              "watchlist",
+              "matched",
+              "superseded"
+            ],
+            "title": "Level",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evidence",
+          "level",
+          "applies_because"
+        ],
+        "title": "RiskObservation",
+        "type": "object"
+      },
+      "RiskPart": {
+        "additionalProperties": false,
+        "properties": {
+          "actions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Actions",
+            "type": "array"
+          },
+          "exposure": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Exposure",
+            "type": "array"
+          },
+          "missing": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "need": {
+            "$ref": "#/components/schemas/RiskNeed"
+          },
+          "observations": {
+            "items": {
+              "$ref": "#/components/schemas/RiskObservation"
+            },
+            "title": "Observations",
+            "type": "array"
+          },
+          "part_id": {
+            "title": "Part Id",
+            "type": "string"
+          },
+          "part_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part Number"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision"
+          },
+          "status": {
+            "enum": [
+              "at_risk",
+              "watchlist",
+              "unknown",
+              "on_time",
+              "received"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "part_id",
+          "name",
+          "part_number",
+          "revision",
+          "need",
+          "status",
+          "summary",
+          "missing",
+          "exposure",
+          "observations",
+          "actions"
+        ],
+        "title": "RiskPart",
+        "type": "object"
+      },
+      "RiskProvider": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "source_count": {
+            "title": "Source Count",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "searched",
+              "unavailable",
+              "not_configured"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "status",
+          "source_count"
+        ],
+        "title": "RiskProvider",
+        "type": "object"
+      },
+      "RiskScan": {
+        "additionalProperties": false,
+        "properties": {
+          "evaluated_at": {
+            "title": "Evaluated At",
+            "type": "string"
+          },
+          "parts": {
+            "items": {
+              "$ref": "#/components/schemas/RiskPart"
+            },
+            "title": "Parts",
+            "type": "array"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "string"
+          },
+          "project_version": {
+            "title": "Project Version",
+            "type": "integer"
+          },
+          "providers": {
+            "items": {
+              "$ref": "#/components/schemas/RiskProvider"
+            },
+            "title": "Providers",
+            "type": "array"
+          },
+          "searched_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Searched At"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/RiskSource"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "not_started",
+              "current",
+              "needs_confirmation"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "project_id",
+          "project_version",
+          "version",
+          "status",
+          "evaluated_at"
+        ],
+        "title": "RiskScan",
+        "type": "object"
+      },
       "RiskSignal": {
         "additionalProperties": false,
         "properties": {
@@ -6825,6 +7614,56 @@
           "effective_from"
         ],
         "title": "RiskSignal",
+        "type": "object"
+      },
+      "RiskSource": {
+        "additionalProperties": false,
+        "properties": {
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "published_on": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published On"
+          },
+          "publisher": {
+            "title": "Publisher",
+            "type": "string"
+          },
+          "retrieved_at": {
+            "title": "Retrieved At",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "url",
+          "excerpt",
+          "publisher",
+          "retrieved_at",
+          "provider"
+        ],
+        "title": "RiskSource",
         "type": "object"
       },
       "Route": {
@@ -7828,6 +8667,113 @@
           "data"
         ],
         "title": "SupplierDiscoveryEvent",
+        "type": "object"
+      },
+      "SupplierQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "follow_up": {
+            "default": "",
+            "title": "Follow Up",
+            "type": "string"
+          },
+          "input_version": {
+            "title": "Input Version",
+            "type": "integer"
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "part_id": {
+            "title": "Part Id",
+            "type": "string"
+          },
+          "quote_id": {
+            "title": "Quote Id",
+            "type": "string"
+          },
+          "reviewed": {
+            "default": false,
+            "title": "Reviewed",
+            "type": "boolean"
+          },
+          "source_kind": {
+            "enum": [
+              "pdf",
+              "reply"
+            ],
+            "title": "Source Kind",
+            "type": "string"
+          },
+          "source_text": {
+            "title": "Source Text",
+            "type": "string"
+          },
+          "source_url": {
+            "title": "Source Url",
+            "type": "string"
+          },
+          "supplier": {
+            "title": "Supplier",
+            "type": "string"
+          },
+          "terms": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/QuoteTerm"
+            },
+            "propertyNames": {
+              "enum": [
+                "part_number",
+                "revision",
+                "material",
+                "quantity",
+                "unit_price",
+                "currency",
+                "minimum_order",
+                "lead_time",
+                "delivery_date",
+                "quote_date",
+                "valid_until",
+                "shipping",
+                "destination",
+                "certificates",
+                "exceptions"
+              ]
+            },
+            "title": "Terms",
+            "type": "object"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "quote_id",
+          "part_id",
+          "supplier",
+          "filename",
+          "source_kind",
+          "source_url",
+          "source_text",
+          "created_at",
+          "input_version",
+          "version",
+          "terms"
+        ],
+        "title": "SupplierQuote",
         "type": "object"
       },
       "TaskStatus": {
@@ -10924,6 +11870,23 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/ProductPackageRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {
@@ -11156,6 +12119,203 @@
         ]
       }
     },
+    "/api/v1/products/{project_id}/quotes": {
+      "get": {
+        "operationId": "quotes_api_v1_products__project_id__quotes_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCollection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Quotes",
+        "tags": [
+          "Supplier quotes"
+        ]
+      },
+      "post": {
+        "operationId": "upload_api_v1_products__project_id__quotes_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_api_v1_products__project_id__quotes_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCollection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload",
+        "tags": [
+          "Supplier quotes"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/quotes/{quote_id}": {
+      "patch": {
+        "operationId": "review_api_v1_products__project_id__quotes__quote_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "quote_id",
+            "required": true,
+            "schema": {
+              "title": "Quote Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteReview"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCollection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Review",
+        "tags": [
+          "Supplier quotes"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/quotes/{quote_id}/content": {
+      "get": {
+        "operationId": "content_api_v1_products__project_id__quotes__quote_id__content_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "quote_id",
+            "required": true,
+            "schema": {
+              "title": "Quote Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Content",
+        "tags": [
+          "Supplier quotes"
+        ]
+      }
+    },
     "/api/v1/products/{project_id}/selections": {
       "patch": {
         "operationId": "select_api_v1_products__project_id__selections_patch",
@@ -11221,6 +12381,242 @@
         "summary": "Select",
         "tags": [
           "Product projects"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/supply-risk": {
+      "get": {
+        "operationId": "get_api_v1_products__project_id__supply_risk_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskScan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get",
+        "tags": [
+          "Supply risk"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/supply-risk/confirm": {
+      "post": {
+        "operationId": "confirm_api_v1_products__project_id__supply_risk_confirm_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "idempotency-key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RiskConfirm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskScan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Confirm",
+        "tags": [
+          "Supply risk"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/supply-risk/evidence": {
+      "post": {
+        "operationId": "evidence_api_v1_products__project_id__supply_risk_evidence_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "idempotency-key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RiskEvidenceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskScan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Evidence",
+        "tags": [
+          "Supply risk"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/supply-risk/refresh": {
+      "post": {
+        "operationId": "refresh_api_v1_products__project_id__supply_risk_refresh_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "idempotency-key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskScan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Refresh",
+        "tags": [
+          "Supply risk"
         ]
       }
     },
