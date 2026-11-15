@@ -66,4 +66,4 @@ Issue #1 is pinned and has the `board` label.
 
 ## Frontend
 
-Run `npm ci && npm run dev` in `frontend/` with the backend on port 8000. See [`frontend/README.md`](frontend/README.md) for build, tests, Figma and current contract limits. Public hosting is Vercel for both frontend and API (D-019); the retained Databricks App is not the public target.
+Run `npm ci && npm run dev` in `frontend/` with the backend on port 8000. The default `#home` route is the new **Re::Source Studio** (`frontend/src/studio/`): the approved 10-screen journey on the prepared Mechanica turbofan package (see `status.md` → Local UI revamp). If port 8000 is taken, run the API on another port and set `RS_API_TARGET=http://127.0.0.1:<port>` for `npm run dev`. See [`frontend/README.md`](frontend/README.md) for build, tests, Figma and current contract limits. Public hosting is Vercel for both frontend and API (D-019); the retained Databricks App is not the public target.

@@ -2,11 +2,27 @@
 
 Living handoff document. **Update it at every milestone.** Any coding agent should be able to resume from this file plus [`decisions.md`](decisions.md), [`architecture.md`](architecture.md) and [`interface.md`](interface.md).
 
-- Last updated: 2026-11-14, by Yixin’s Astra and Bede’s Codex.
+- Last updated: 2026-11-15, by Bede’s Claude (local UI revamp; see below). Previously 2026-11-14, by Yixin’s Astra and Bede’s Codex.
 - Active frontend/migration branch: `codex/jet-engine-frontend`, based on PR #6. Issue #7.
 - Spec: [`PRD.md`](PRD.md) v1.2
 - Branch: `5-backend-recovery`, PR https://github.com/Borbezzz/Re-Source/pull/6 (closes #5). Base `main@ddceb8e`.
 - Frontend delegation posted to the board: https://github.com/Borbezzz/Re-Source/issues/1#issuecomment-6880396173
+
+## Local UI revamp — Re::Source Studio (2026-11-15, Bede's Claude) — LOCAL ONLY, not deployed
+
+Branch `bede/ui-revamp` (from `main@ad32217`), uncommitted. Implements the approved `frontend improve/` flow (screens 01–10) on the Mechanica package from `blueprint input/`, with a new gradient brand.
+
+- **Run locally:** `.claude/launch.json` → backend `uvicorn … --port 8010` (port 8000 is used by another local project) and frontend `RS_API_TARGET=http://127.0.0.1:8010 npm run dev` (vite proxy target is now env-configurable). Open http://localhost:5173 → "Explore a sample assembly".
+- **New app shell:** `#home` renders `frontend/src/studio/Studio.tsx` (one persistent spatial workspace). Old pages stay reachable via "Saved work" (`#investigations`, `#new`, `#project/…`) and now use the new logo.
+- **Real processing:** `studio/data/package.ts` unzips the package in-browser (fflate), verifies every SHA-256 against `manifest.json`, resolves component node IDs inside the GLB JSON chunk and links requirement sets. The backend profile is chosen by verified `packageId`, never filename.
+- **Backend profile:** new `data/demo-products/turbofan.json` (demo_id `turbofan`): 3 parts mapped to GLB stable IDs, requirements quoted from a generated spec document, 21 fictional sample offers. The journey uses the real `/api/v1/products` contract: create → confirm parts → investigate (demo) → select → package (RFQ) → approve → simulate (receipt).
+- **Checks:** `studio/data/checks.ts` + `sites.ts` evaluate six per-candidate checks (identity/revision/condition, site, documents, availability, arrival vs required date, commercial) from fictional site-evidence fixtures joined to backend offers. Pins, counts (12 / 5 excluded / 4 awaiting / 3 eligible) and ranking derive from one state. The disruption is a labelled simulated signal (Derby dispatch hold) that reruns arrival and availability only, shows before/after and invalidates approval.
+- **3D:** `studio/scene/EngineCanvas.tsx` renders `public/models/mechanica-turbofan.glb`: a thermal wireframe scan during processing, a solid sweep on confirmation, an intake-preserving cutaway, explode, per-part framing, opaque context isolation, a thermal Fresnel rim on the selection, and remove/insert reassembly. Art direction applied from an Astra (`gpt-6-astra`) review: `frontend/design/astra-review/astra-3d-review.md`.
+- **Brand:** new rotor logo (8 crescent blades around a `::` hub), generated with `gpt-image-2.5-flare` then rebuilt as exact SVG geometry (`studio/brand/Logo.tsx`, `public/favicon.svg`, concepts in `frontend/design/logo-concepts/`). Thermal gradient `#38BDF8 → #8B5CF6 → #EC4899 → #FB923C` (cool intake to hot exhaust) on charcoal; tokens in `studio/studio.css`.
+- **Parallel work:** another local agent added `studio/flow/` (an n8n-style "Sourcing agent" workflow panel) and wired it into `Studio.tsx`.
+- **Workflow split is now side by side (at the user's request, 2026-11-15):** on screens ≥1100px wide, "Split" puts the scene on the left and a resizable workflow column on the right. That column has a step rail, a node canvas whose camera glides to the live step, a "Stage output" pane (the focused step's fields, in/out item counts, and that step's own events) and the execution log. Clicking a step or node pins it ("Back to live" or Esc returns). Any new live step unpins. Below 1100px it stays docked at the bottom. The scene's panels compact through `@container rs-studio` rules in `studio.css`. Step logic is in `flow/model.ts` (`STEPS`, `liveStep`, `stepGroup`).
+- **Verified in browser (1440×900 + 375×812):** the full sample journey from intake to reassembly against the local backend, all three component cases, disruption and rerank, approve/send/receipt. `tsc` and `vite build` pass. Not run: Playwright e2e, accessibility audit, a real non-sample package upload.
+- **Gaps:** the site-evidence fixtures are frontend-side; checks are deterministic over demo evidence, not live research. The Mechanica injector is a simplified shape. In dev, scene preparation is slow when the browser tab is hidden (timer throttling). Supplier messages and orders are simulated.
 
 ## V2 backend progress (2026-11-14)
 

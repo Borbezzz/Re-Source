@@ -161,3 +161,11 @@ Status values: **Accepted** (in force) · **Proposed** (needs team lead / human 
 - Date: 2026-11-14 · Status: Implemented; local regression tests cover visitor boundaries.
 - Public visitors get an opaque random HttpOnly cookie, with per-visitor current runs and per-run intake/manifest state. Explicit run and replay access is ownership-checked. Idempotency is namespaced by visitor. Cross-origin mutations are rejected. Databricks forwarded user headers are never trusted on Vercel.
 - Review actions are attributed to an unverified demo visitor. They approve a versioned draft only; simulation does not order parts, file regulatory documents or provide engineering approval. Persistent authenticated identities are future work.
+
+### D-021 — Studio presentation: approved flow, Mechanica geometry, thermal-gradient brand (local, pending team review)
+- Date: 2026-11-15 · Status: Implemented locally on `bede/ui-revamp`; not merged or deployed. Bede requested it.
+- Follows `frontend improve/` (approved by Alvin) and `blueprint input/HANDOVER.md`. One spatial workspace: intake → processing → explore → need → map discovery/checks → shortlist (+ disruption) → fulfilment → reassembly. No dashboard tabs.
+- Bede asked for gradient colour. The approved charcoal/off-white restraint is kept. A single thermal gradient (cyan → violet → magenta → amber) is used only for brand, selection, progress, primary actions and routes. Status colours stay semantic (mint eligible, amber awaiting, slashed grey excluded, coral disruption).
+- A package is matched to a prepared profile by its verified `packageId` after checksum validation, never by filename. No arbitrary CAD-to-model generation is claimed.
+- Supplier site evidence for the fictional `RS-DEMO-*` parts lives in frontend fixtures joined to backend sample offers. All exact-match claims are labelled demo data, and no stock or quote is attached to a real company.
+- 3D art direction follows the Astra review: AgX, satin metals, cutaway, isolation and a Fresnel rim. Dependencies added: `motion@14.8.0`, `fflate@0.8.3`, `@fontsource-variable/geist-mono@5.3.0`.

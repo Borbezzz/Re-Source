@@ -4,7 +4,12 @@ export default defineConfig({
   plugins: [react()],
   // The proxy keeps development same-origin without exposing any runtime key.
   server: {
-    proxy: { "/api": { target: "http://127.0.0.1:8000", changeOrigin: false } },
+    proxy: {
+      "/api": {
+        target: process.env.RS_API_TARGET ?? "http://127.0.0.1:8000",
+        changeOrigin: false,
+      },
+    },
   },
   build: {
     rolldownOptions: {

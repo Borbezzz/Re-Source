@@ -1,0 +1,15 @@
+.rs-logo { display: inline-flex; align-items: center; gap: 10px; color: #f4f1ea; text-decoration: none; }
+.rs-logo-word { font-size: 21px; font-weight: 500; letter-spacing: -0.02em; font-family: "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif; }
+.rs-logo-colon {
+  background: linear-gradient(100deg, #38bdf8 0%, #8b5cf6 38%, #ec4899 70%, #fb923c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 650;
+  padding: 0 0.04em;
+}
+.rs-logo-mark .rs-logo-rotor { transform-origin: 50px 50px; transform-box: view-box; }
+.rs-logo-mark.is-spinning .rs-logo-rotor { animation: rs-logo-spin 2.4s linear infinite; }
+.rs-logo:hover .rs-logo-rotor { animation: rs-logo-spin 3.2s cubic-bezier(0.22, 1, 0.36, 1) 1; }
+@keyframes rs-logo-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .rs-logo-mark .rs-logo-rotor { animation: none !important; } }

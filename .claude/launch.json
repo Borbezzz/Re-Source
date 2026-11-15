@@ -1,0 +1,34 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd backend && uv sync -q && uv run uvicorn recovery.api.app:app --port 8010"
+      ],
+      "port": 8010,
+      "autoPort": false
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd frontend && (test -d node_modules || npm ci --no-audit --no-fund) && RS_API_TARGET=http://127.0.0.1:8010 npm run dev -- --port 5173"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "frontend-flow",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd frontend && RS_API_TARGET=http://127.0.0.1:8010 npx vite --port 5180 --strictPort"
+      ],
+      "port": 5180,
+      "autoPort": false
+    }
+  ]
+}

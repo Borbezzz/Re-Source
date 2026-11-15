@@ -1,0 +1,563 @@
+{
+  "demo_id": "turbofan",
+  "name": "Mechanica turbofan",
+  "description": "Prepared Mechanica turbofan package: fan blade, fuel injector and core nozzle sourcing cases.",
+  "product_type": "engine",
+  "model": {
+    "origin": "prepared_demo",
+    "status": "ready",
+    "asset_url": "/models/mechanica-turbofan.glb",
+    "license": "MIT",
+    "source_url": "https://github.com/PouyanJay/mechanica/tree/a1d52be81b5e9ea125df337a3b30039ff996edc8",
+    "notes": "Prepared visualization assembly derived from Mechanica's MIT procedural turbofan (rs-mechanica-turbofan-v1). Part numbers, revisions, requirements and supplier offers are fictional demo fixtures; not manufacturing CAD or engineering approval."
+  },
+  "parts": [
+    {
+      "part_id": "rs-tf-fan-blade",
+      "name": "Front fan blade 01",
+      "part_number": "RS-DEMO-FB-001",
+      "node_names": [
+        "rs-mech-tf-v1.fan.m000.i000"
+      ],
+      "explode": [
+        -1.2,
+        1.4,
+        0.0
+      ],
+      "quantity": 1,
+      "status": "proposed",
+      "requirements": [
+        {
+          "key": "part_number",
+          "label": "Part number",
+          "value": "RS-DEMO-FB-001",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Front fan blade 01: Part number = RS-DEMO-FB-001"
+          }
+        },
+        {
+          "key": "revision",
+          "label": "Revision",
+          "value": "B",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Front fan blade 01: Revision = B"
+          }
+        },
+        {
+          "key": "condition",
+          "label": "Condition",
+          "value": "New",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Front fan blade 01: Condition = New"
+          }
+        },
+        {
+          "key": "applicability",
+          "label": "Applicability evidence",
+          "value": "Document linking the offered part/revision to this demo assembly configuration",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Front fan blade 01: Applicability evidence = Document linking the offered part/revision to this demo assembly configuration"
+          }
+        },
+        {
+          "key": "traceability",
+          "label": "Traceability records",
+          "value": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Front fan blade 01: Traceability records = Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction"
+          }
+        },
+        {
+          "key": "site",
+          "label": "Supplying-site evidence",
+          "value": "Evidence relevant to the supplying site and the offered activity",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Front fan blade 01: Supplying-site evidence = Evidence relevant to the supplying site and the offered activity"
+          }
+        },
+        {
+          "key": "availability",
+          "label": "Availability confirmation",
+          "value": "Quantity and dispatch commitment for the requested part/revision",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Front fan blade 01: Availability confirmation = Quantity and dispatch commitment for the requested part/revision"
+          }
+        }
+      ],
+      "identity_source": {
+        "document_id": "turbofan-requirements",
+        "quote": "Front fan blade 01: Part number = RS-DEMO-FB-001"
+      },
+      "part_number_source": {
+        "document_id": "turbofan-requirements",
+        "quote": "Front fan blade 01: Part number = RS-DEMO-FB-001"
+      }
+    },
+    {
+      "part_id": "rs-tf-fuel-injector",
+      "name": "Fuel injector 01",
+      "part_number": "RS-DEMO-FI-001",
+      "node_names": [
+        "rs-mech-tf-v1.combustor.m044.i000"
+      ],
+      "explode": [
+        0.0,
+        1.2,
+        0.9
+      ],
+      "quantity": 1,
+      "status": "proposed",
+      "requirements": [
+        {
+          "key": "part_number",
+          "label": "Part number",
+          "value": "RS-DEMO-FI-001",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Fuel injector 01: Part number = RS-DEMO-FI-001"
+          }
+        },
+        {
+          "key": "revision",
+          "label": "Revision",
+          "value": "C",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Fuel injector 01: Revision = C"
+          }
+        },
+        {
+          "key": "condition",
+          "label": "Condition",
+          "value": "New",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Fuel injector 01: Condition = New"
+          }
+        },
+        {
+          "key": "applicability",
+          "label": "Applicability evidence",
+          "value": "Document linking the offered part/revision to this demo assembly configuration",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Fuel injector 01: Applicability evidence = Document linking the offered part/revision to this demo assembly configuration"
+          }
+        },
+        {
+          "key": "traceability",
+          "label": "Traceability records",
+          "value": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Fuel injector 01: Traceability records = Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction"
+          }
+        },
+        {
+          "key": "site",
+          "label": "Supplying-site evidence",
+          "value": "Evidence relevant to the supplying site and the offered activity",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Fuel injector 01: Supplying-site evidence = Evidence relevant to the supplying site and the offered activity"
+          }
+        },
+        {
+          "key": "availability",
+          "label": "Availability confirmation",
+          "value": "Quantity and dispatch commitment for the requested part/revision",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Fuel injector 01: Availability confirmation = Quantity and dispatch commitment for the requested part/revision"
+          }
+        }
+      ],
+      "identity_source": {
+        "document_id": "turbofan-requirements",
+        "quote": "Fuel injector 01: Part number = RS-DEMO-FI-001"
+      },
+      "part_number_source": {
+        "document_id": "turbofan-requirements",
+        "quote": "Fuel injector 01: Part number = RS-DEMO-FI-001"
+      }
+    },
+    {
+      "part_id": "rs-tf-core-nozzle",
+      "name": "Core exhaust nozzle assembly",
+      "part_number": "RS-DEMO-NZ-001",
+      "node_names": [
+        "rs-mech-tf-v1.group.nozzle"
+      ],
+      "explode": [
+        1.6,
+        0.0,
+        0.0
+      ],
+      "quantity": 1,
+      "status": "proposed",
+      "requirements": [
+        {
+          "key": "part_number",
+          "label": "Part number",
+          "value": "RS-DEMO-NZ-001",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Core exhaust nozzle assembly: Part number = RS-DEMO-NZ-001"
+          }
+        },
+        {
+          "key": "revision",
+          "label": "Revision",
+          "value": "A",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Core exhaust nozzle assembly: Revision = A"
+          }
+        },
+        {
+          "key": "condition",
+          "label": "Condition",
+          "value": "New",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Core exhaust nozzle assembly: Condition = New"
+          }
+        },
+        {
+          "key": "applicability",
+          "label": "Applicability evidence",
+          "value": "Document linking the offered part/revision to this demo assembly configuration",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Core exhaust nozzle assembly: Applicability evidence = Document linking the offered part/revision to this demo assembly configuration"
+          }
+        },
+        {
+          "key": "traceability",
+          "label": "Traceability records",
+          "value": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Core exhaust nozzle assembly: Traceability records = Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction"
+          }
+        },
+        {
+          "key": "site",
+          "label": "Supplying-site evidence",
+          "value": "Evidence relevant to the supplying site and the offered activity",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Core exhaust nozzle assembly: Supplying-site evidence = Evidence relevant to the supplying site and the offered activity"
+          }
+        },
+        {
+          "key": "availability",
+          "label": "Availability confirmation",
+          "value": "Quantity and dispatch commitment for the requested part/revision",
+          "status": "proposed",
+          "source": {
+            "document_id": "turbofan-requirements",
+            "quote": "Core exhaust nozzle assembly: Availability confirmation = Quantity and dispatch commitment for the requested part/revision"
+          }
+        }
+      ],
+      "identity_source": {
+        "document_id": "turbofan-requirements",
+        "quote": "Core exhaust nozzle assembly: Part number = RS-DEMO-NZ-001"
+      },
+      "part_number_source": {
+        "document_id": "turbofan-requirements",
+        "quote": "Core exhaust nozzle assembly: Part number = RS-DEMO-NZ-001"
+      }
+    }
+  ],
+  "documents": [
+    {
+      "document_id": "turbofan-requirements",
+      "name": "Mechanica turbofan — demo requirements",
+      "kind": "requirements",
+      "text": "SYNTHETIC DEMO REQUIREMENTS — buyer-defined fixtures from the Mechanica input package (rs-mechanica-turbofan-v1). Not engineering approval.\nFront fan blade 01: Part number = RS-DEMO-FB-001\nFront fan blade 01: Revision = B\nFront fan blade 01: Condition = New\nFront fan blade 01: Applicability evidence = Document linking the offered part/revision to this demo assembly configuration\nFront fan blade 01: Traceability records = Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction\nFront fan blade 01: Supplying-site evidence = Evidence relevant to the supplying site and the offered activity\nFront fan blade 01: Availability confirmation = Quantity and dispatch commitment for the requested part/revision\nFuel injector 01: Part number = RS-DEMO-FI-001\nFuel injector 01: Revision = C\nFuel injector 01: Condition = New\nFuel injector 01: Applicability evidence = Document linking the offered part/revision to this demo assembly configuration\nFuel injector 01: Traceability records = Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction\nFuel injector 01: Supplying-site evidence = Evidence relevant to the supplying site and the offered activity\nFuel injector 01: Availability confirmation = Quantity and dispatch commitment for the requested part/revision\nCore exhaust nozzle assembly: Part number = RS-DEMO-NZ-001\nCore exhaust nozzle assembly: Revision = A\nCore exhaust nozzle assembly: Condition = New\nCore exhaust nozzle assembly: Applicability evidence = Document linking the offered part/revision to this demo assembly configuration\nCore exhaust nozzle assembly: Traceability records = Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction\nCore exhaust nozzle assembly: Supplying-site evidence = Evidence relevant to the supplying site and the offered activity\nCore exhaust nozzle assembly: Availability confirmation = Quantity and dispatch commitment for the requested part/revision"
+    }
+  ],
+  "sample_offers": [
+    {
+      "candidate_id": "rs-tf-fan-blade-site-01",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Northline Aero (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 6850,
+      "currency": "GBP",
+      "lead_time_days": 2,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-02",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Atelier Turbine (sample)",
+      "route": "buy",
+      "country": "France",
+      "price": 6420,
+      "currency": "GBP",
+      "lead_time_days": 4,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-03",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Hanse Komponenten (sample)",
+      "route": "buy",
+      "country": "Germany",
+      "price": 7100,
+      "currency": "GBP",
+      "lead_time_days": 5,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-04",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Clyde Precision (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 6200,
+      "currency": "GBP",
+      "lead_time_days": 3,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-05",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Fjord Aeroteknikk (sample)",
+      "route": "buy",
+      "country": "Norway",
+      "price": 7400,
+      "currency": "GBP",
+      "lead_time_days": 4,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-06",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Rhône Usinage (sample)",
+      "route": "buy",
+      "country": "France",
+      "price": 5900,
+      "currency": "GBP",
+      "lead_time_days": 3,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-07",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Bavaria Rotorteile (sample)",
+      "route": "make",
+      "country": "Germany",
+      "price": 5600,
+      "currency": "GBP",
+      "lead_time_days": 21,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-08",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Iberia Aeroparts (sample)",
+      "route": "buy",
+      "country": "Spain",
+      "price": 6650,
+      "currency": "GBP",
+      "lead_time_days": 4,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-09",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Torino Avio (sample)",
+      "route": "buy",
+      "country": "Italy",
+      "price": 6980,
+      "currency": "GBP",
+      "lead_time_days": 5,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-10",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Shannon Aero Spares (sample)",
+      "route": "buy",
+      "country": "Ireland",
+      "price": 4300,
+      "currency": "GBP",
+      "lead_time_days": 2,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-11",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Baltic Turbo (sample)",
+      "route": "buy",
+      "country": "Poland",
+      "price": 5200,
+      "currency": "GBP",
+      "lead_time_days": 4,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fan-blade-site-12",
+      "part_id": "rs-tf-fan-blade",
+      "supplier_name": "Brno Aerotech (sample)",
+      "route": "make",
+      "country": "Czechia",
+      "price": 5100,
+      "currency": "GBP",
+      "lead_time_days": 17,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fuel-injector-site-01",
+      "part_id": "rs-tf-fuel-injector",
+      "supplier_name": "Northline Aero (sample)",
+      "route": "buy",
+      "country": "United Kingdom",
+      "price": 1380,
+      "currency": "GBP",
+      "lead_time_days": 2,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fuel-injector-site-02",
+      "part_id": "rs-tf-fuel-injector",
+      "supplier_name": "Atelier Turbine (sample)",
+      "route": "buy",
+      "country": "France",
+      "price": 1290,
+      "currency": "GBP",
+      "lead_time_days": 5,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fuel-injector-site-03",
+      "part_id": "rs-tf-fuel-injector",
+      "supplier_name": "Hanse Komponenten (sample)",
+      "route": "buy",
+      "country": "Germany",
+      "price": 1420,
+      "currency": "GBP",
+      "lead_time_days": 4,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fuel-injector-site-04",
+      "part_id": "rs-tf-fuel-injector",
+      "supplier_name": "Torino Avio (sample)",
+      "route": "make",
+      "country": "Italy",
+      "price": 990,
+      "currency": "GBP",
+      "lead_time_days": 18,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-fuel-injector-site-05",
+      "part_id": "rs-tf-fuel-injector",
+      "supplier_name": "Iberia Aeroparts (sample)",
+      "route": "buy",
+      "country": "Spain",
+      "price": 1150,
+      "currency": "GBP",
+      "lead_time_days": 3,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-core-nozzle-site-01",
+      "part_id": "rs-tf-core-nozzle",
+      "supplier_name": "Atelier Turbine (sample)",
+      "route": "buy",
+      "country": "France",
+      "price": 24800,
+      "currency": "GBP",
+      "lead_time_days": 9,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-core-nozzle-site-02",
+      "part_id": "rs-tf-core-nozzle",
+      "supplier_name": "Hanse Komponenten (sample)",
+      "route": "buy",
+      "country": "Germany",
+      "price": 26500,
+      "currency": "GBP",
+      "lead_time_days": 6,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-core-nozzle-site-03",
+      "part_id": "rs-tf-core-nozzle",
+      "supplier_name": "Clyde Precision (sample)",
+      "route": "make",
+      "country": "United Kingdom",
+      "price": 21900,
+      "currency": "GBP",
+      "lead_time_days": 24,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    },
+    {
+      "candidate_id": "rs-tf-core-nozzle-site-04",
+      "part_id": "rs-tf-core-nozzle",
+      "supplier_name": "Baltic Turbo (sample)",
+      "route": "buy",
+      "country": "Poland",
+      "price": 19800,
+      "currency": "GBP",
+      "lead_time_days": 5,
+      "summary": "Fictional sample site for the prepared demo. Stock, price and evidence require supplier confirmation.",
+      "evidence": []
+    }
+  ]
+}

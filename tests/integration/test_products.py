@@ -7,9 +7,9 @@ from recovery.domain.errors import DomainError
 from recovery.runtime.context import visitor_id
 
 
-def test_three_demo_profiles_create_reviewable_independent_projects(svc):
+def test_demo_profiles_create_reviewable_independent_projects(svc):
     demos = svc.products.demos()
-    assert {d["demo_id"] for d in demos} == {"engine", "toy-car", "desk-lamp"}
+    assert {d["demo_id"] for d in demos} == {"engine", "toy-car", "desk-lamp", "turbofan"}
     for demo in demos:
         project = svc.products.create(demo["demo_id"])
         assert project["status"] == "review"

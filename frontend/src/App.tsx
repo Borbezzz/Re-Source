@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { Layers3 } from "lucide-react";
-import { ProductHome } from "./product/ProductHome.tsx";
+import { Logo } from "./studio/brand/Logo.tsx";
 import { Investigations } from "./product-flow/Investigations.tsx";
 import { readRoute, routeHash, type AppRoute } from "./navigation.ts";
 import "./workspace.css";
@@ -11,6 +10,9 @@ const ProductFlow = lazy(() =>
   })),
 );
 const LegacyEngineApp = lazy(() => import("./LegacyEngineApp.tsx"));
+const Studio = lazy(() =>
+  import("./studio/Studio.tsx").then((m) => ({ default: m.Studio })),
+);
 
 export default function App() {
   const [route, setRoute] = useState(() => readRoute(location.hash));
@@ -79,6 +81,13 @@ export default function App() {
     setRoute({ page: "project", id });
   };
 
+  if (route.page === "home")
+    return (
+      <Suspense fallback={<div className="rs-boot" role="status" />}>
+        <Studio />
+      </Suspense>
+    );
+
   return (
     <>
       <a
@@ -92,18 +101,14 @@ export default function App() {
         Skip to content
       </a>
       <header className="global-header app-header">
-        <a className="wordmark" href="#home" aria-label="Re::Source home">
-          <span className="brand-mark">
-            <Layers3 size={23} aria-hidden="true" />
-          </span>
-          <span>Re::Source</span>
+        <a className="wordmark" href="#home" aria-label="Re::Source home" style={{ textDecoration: "none" }}>
+          <Logo size={26} />
         </a>
         <nav aria-label="Main navigation">
           <a
             href="#home"
-            aria-current={route.page === "home" ? "page" : undefined}
           >
-            Home
+            Studio
           </a>
           <a
             href="#investigations"
@@ -125,16 +130,7 @@ export default function App() {
           </a>
         </nav>
       </header>
-      {route.page === "home" ? (
-        <ProductHome
-          engine={null}
-          onSources={() => navigate({ page: "new", upload: true })}
-          onPart={() => navigate({ page: "new" })}
-          connectionFailed={false}
-          onRetry={() => navigate({ page: "new" })}
-          onStartDemo={() => navigate({ page: "new" })}
-        />
-      ) : (
+      {(
         <main id="main-content" tabIndex={-1} className="workspace-main">
           {route.page === "investigations" ? (
             <Investigations />
