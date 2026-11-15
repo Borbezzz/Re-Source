@@ -68,9 +68,10 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
   const [pinned, setPinned] = useState<string | null>(null);
   const setMode = useCallback((m: Mode) => { setModeState(m); store.set(MODE_KEY, m); }, []);
 
-  const { nodes, edges } = useMemo(() => buildGraph(props), [props]);
-  const status = runStatus(nodes);
-  const live = liveStep(nodes);
+  const { nodes, edges } = useMemo(() => buildGraph(props), [props.stage, props.part?.name, props.part?.partNumber, props.part?.revision, props.need, props.assessed, props.checked, props.progress, props.disrupted, props.recheck, props.procure, props.chosenId, props.phase, props.busy, props.error, props.project, props.partId]);
+  const loadingOffers = props.stage === "discovery" && props.busy === "research" && !props.assessed.length && !props.error;
+  const status = loadingOffers ? { label: "Loading offers", tone: "run" as const } : runStatus(nodes);
+  const live = loadingOffers ? "discover" : liveStep(nodes);
   const focus = pinned && (pinned === "qualify" || nodes.some((n) => n.id === pinned)) ? pinned : live;
   const group = useMemo(() => stepGroup(focus, nodes), [focus, nodes]);
 
@@ -117,10 +118,13 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const seen = useRef(new Map<string, string>());
   const seq = useRef(0);
-  const discover = nodes.find((n) => n.id === "discover")?.status;
+  const discovering = props.stage === "discovery";
+  const wasDiscovering = useRef(false);
   useEffect(() => {
+    const newRun = discovering && !wasDiscovering.current;
+    wasDiscovering.current = discovering;
     if (!visible) return;
-    if (discover === "running" && seen.current.get("discover") !== "running|Searching prepared supplier sources") {
+    if (newRun) {
       // New run: start a fresh execution.
       seen.current.clear();
       setLog([]);
@@ -138,7 +142,7 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
       setStartedAt((s) => s ?? Date.now());
       setLog((l) => [...l, ...fresh].slice(-80));
     }
-  }, [nodes, visible, discover]);
+  }, [nodes, visible, discovering]);
 
   const done = status.tone === "ok";
   const [now, setNow] = useState(() => Date.now());
@@ -694,6 +698,7 @@ function StageRail({ nodes, focus, live, onPick }: { nodes: FlowNode[]; focus: s
       <ol ref={ref}>
         {STEPS.map((s, i) => {
           const st = s.id === "monitor" && stepStatus("recheck", nodes) === "running" ? "running" : stepStatus(s.id, nodes);
+          const label = nodes.find((n) => n.id === s.id)?.railLabel ?? s.label;
           return (
             <li key={s.id} data-step={s.id}>
               <button
@@ -702,10 +707,10 @@ function StageRail({ nodes, focus, live, onPick }: { nodes: FlowNode[]; focus: s
                 aria-current={railFocus === s.id ? "step" : undefined}
                 onClick={() => onPick(s.id)}
                 style={{ "--accent": thermalAt(i / (STEPS.length - 1)) } as CSSProperties}
-                title={`${s.label} · ${STATUS_LABEL[st]}`}
+                title={`${label} · ${STATUS_LABEL[st]}`}
               >
                 <i>{st === "done" ? <Check size={9} strokeWidth={3.5} /> : null}</i>
-                <span>{s.label}</span>
+                <span>{label}</span>
                 {railLive === s.id && railFocus !== s.id ? <b className="fl-rail-live" aria-label="live" /> : null}
               </button>
             </li>
@@ -734,7 +739,7 @@ function OutputPanel({
   const stIdx = STEPS.findIndex((s) => s.id === (focus.startsWith("cand:") ? "qualify" : focus === "recheck" ? "monitor" : focus));
   const status: NodeStatus = isQualify ? qualifyStatus(nodes) : node?.status ?? "idle";
   const Icon = isQualify ? ListChecks : node ? ICONS[node.icon] : Box;
-  const title = isQualify ? "Qualify sites" : node?.kind === "candidate" ? `${node.candidate!.name}` : node?.title ?? focus;
+  const title = isQualify ? "Re::Source · Supplier checks" : node?.kind === "candidate" ? `${node.candidate!.name}` : node?.title ?? focus;
   const doneCount = cands.filter((c) => c.status === "done" || c.status === "alert").length;
   const sub = isQualify ? (cands.length ? `${doneCount}/${cands.length} sites checked · 6 checks each` : "Waiting for discovered sites") : node?.sub ?? "";
   const events = log.filter((l) => (isQualify ? l.node.startsWith("cand:") : l.node === focus)).slice(-6);

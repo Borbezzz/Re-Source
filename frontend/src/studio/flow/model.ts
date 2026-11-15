@@ -10,6 +10,7 @@ import { CHECK_ORDER, type Assessed, type CheckStatus, type SourcingNeed } from 
 import { DISRUPTION } from "../data/sites.ts";
 import type { ProcurementStep } from "../screens/Fulfilment.tsx";
 import type { ReassemblyPhase } from "../scene/EngineCanvas.tsx";
+import { workflowProviders, type ProviderProject } from "./providers.ts";
 
 export type FlowStage = "intake" | "processing" | "explore" | "need" | "discovery" | "checking" | "shortlist" | "fulfil" | "return";
 export const FLOW_STAGES: FlowStage[] = ["discovery", "checking", "shortlist", "fulfil", "return"];
@@ -28,6 +29,8 @@ export interface FlowSnapshot {
   phase: ReassemblyPhase;
   busy: string | null;
   error: string | null;
+  project?: ProviderProject | null;
+  partId?: string | null;
 }
 
 export type NodeStatus = "idle" | "running" | "waiting" | "done" | "alert" | "skipped" | "error";
@@ -42,6 +45,7 @@ export interface FlowNode {
   x: number;
   y: number;
   title: string;
+  railLabel?: string;
   icon: IconName;
   status: NodeStatus;
   /** One-line live status under the title. */
@@ -100,6 +104,7 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
   const pIdx = PROCURE_ORDER.indexOf(s.procure);
   const inFulfil = after(s.stage, "fulfil", "return");
   const part = s.part;
+  const provider = workflowProviders(s.project, s.partId);
 
   // ---- 0 · trigger ----
   nodes.push({
@@ -107,20 +112,26 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     kind: "trigger",
     x: 0,
     y: 0,
-    title: "Sourcing request",
+    title: provider.lakebase ? "Lakebase · Save case" : "Save sourcing case",
+    railLabel: provider.lakebase ? "Databricks Lakebase" : "Save case",
     icon: "zap",
     status: "done",
-    sub: part ? `${part.partNumber} · Rev ${part.revision}` : "Request received",
-    detail: part
-      ? [
+    sub: provider.storage,
+    detail: [
+      { k: "Case store", v: provider.storage },
+      { k: "Saved", v: "Confirmed parts, supplier results, selections and approval history" },
+      { k: "Job runner", v: provider.execution },
+      { k: "Document AI", v: "Databricks ai_parse_document · document text and layout extraction" },
+      { k: "This intake", v: provider.parsing },
+      ...(part ? [
           { k: "Part", v: part.name },
           { k: "Number", v: `${part.partNumber} · Rev ${part.revision}` },
           { k: "Quantity", v: String(s.need.quantity) },
           { k: "Required by", v: s.need.requiredBy },
           { k: "Deliver to", v: s.need.destination },
           { k: "Reason", v: s.need.reason === "faulty" ? "Replace faulty part" : "Change supplier" },
-        ]
-      : [],
+        ] : []),
+    ],
     log: part ? `Triggered for ${part.partNumber} Rev ${part.revision} · qty ${s.need.quantity}` : "Triggered",
   });
 
@@ -131,21 +142,41 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     kind: "action",
     x: COL,
     y: 0,
-    title: "Discover sites",
+    title: "Linkup · Web Search",
     icon: "radar",
-    status: s.error && s.stage === "discovery" ? "error" : discovering ? "running" : "done",
-    sub: discovering ? "Searching UK & EU sources…" : `${n} supplying sites`,
+    status: provider.searchStatus,
+    sub: provider.searchSummary,
     detail: [
+      { k: "Feature", v: "Linkup Search · standard search with source URLs" },
+      { k: "This run", v: provider.demo ? "Prepared demo offers; Linkup was not called" : provider.searchSummary },
+      { k: "Input", v: "Confirmed part number, revision and requirements" },
+      { k: "Output", v: provider.demo ? "Prepared supplier names, offers and site locations" : "Supplier page titles, snippets and citations" },
       { k: "Coverage", v: "UK & EU stockists, distributors, build-to-print" },
       { k: "Sites found", v: discovering ? "—" : String(n) },
       { k: "Pins", v: "Stock, production or dispatch sites" },
     ],
-    log: discovering ? "Searching prepared supplier sources" : `${n} supplying sites returned`,
+    log: provider.demo ? "Linkup Search skipped · using prepared supplier offers" : provider.searchSummary,
   });
   edges.push({ id: "e-trigger-discover", from: "trigger", to: "discover", state: discovering ? "active" : "done", items: 1 });
 
+  nodes.push({
+    id: "extract", kind: "action", x: COL * 2, y: 0,
+    title: "Databricks · ai_extract", icon: "evidence",
+    status: provider.extractStatus, sub: provider.extractSummary,
+    detail: [
+      { k: "Feature", v: "Databricks AI Functions · ai_extract on a SQL warehouse" },
+      { k: "This run", v: provider.demo ? "Prepared demo claims; ai_extract was not called" : provider.extractSummary },
+      { k: "Input", v: "Cited supplier snippets returned by Linkup" },
+      { k: "Fields", v: "Supplier name, country, materials and certification claims" },
+      { k: "Evidence", v: provider.demo ? "Fixture evidence drives this demo's checks" : "Extracted claims remain unverified; source citations are retained" },
+      { k: "Fallback", v: "If extraction is unavailable, keep the original source snippets" },
+    ],
+    log: provider.demo ? "Databricks ai_extract skipped · using prepared claims" : provider.extractSummary,
+  });
+  edges.push({ id: "e-discover-extract", from: "discover", to: "extract", state: provider.extractStatus === "running" ? "active" : discovering ? "idle" : "done" });
+
   // ---- 2 · per-candidate qualification column ----
-  const colX = COL * 2 + 60;
+  const colX = COL * 3 + 60;
   s.assessed.forEach((a, i) => {
     const id = a.candidate.candidate_id;
     const done = s.checked.has(id) || pastChecks;
@@ -171,6 +202,7 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
       status,
       sub: done ? a.reason : running ? `Check ${prog}/${CHECK_ORDER.length}` : "Queued",
       detail: [
+        { k: "Checks", v: "Re::Source rules · prepared site evidence" },
         { k: "Site", v: `${a.site.siteType} · ${a.site.city}` },
         { k: "Source", v: a.site.sourceLabel },
         ...a.checks.map((c) => ({
@@ -190,7 +222,7 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
         pips,
       },
     });
-    edges.push({ id: `e-discover-${id}`, from: "discover", to: `cand:${id}`, state: running ? "active" : done ? "done" : discovering ? "idle" : "done" });
+    edges.push({ id: `e-extract-${id}`, from: "extract", to: `cand:${id}`, state: running ? "active" : done ? "done" : discovering ? "idle" : "done" });
     edges.push({ id: `e-${id}-router`, from: `cand:${id}`, to: "router", state: done ? (classified ? "done" : "active") : "idle" });
   });
 
@@ -207,6 +239,7 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     status: classified ? "done" : s.stage === "checking" ? "running" : "idle",
     sub: classified ? `${eligible.length} · ${awaiting.length} · ${excluded.length}` : s.stage === "checking" ? `${checkedCount}/${n} qualified` : "Waiting for checks",
     detail: [
+      { k: "Engine", v: "Re::Source eligibility rules" },
       { k: "Hard failure", v: "Excluded with reason" },
       { k: "Missing mandatory evidence", v: "Awaiting verification" },
       { k: "Eligible", v: String(eligible.length), tone: "ok" },
@@ -229,6 +262,7 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     status: !classified ? "idle" : rankRunning ? "running" : "done",
     sub: !classified ? "—" : rankRunning ? "Re-ranking…" : ranked[0] ? `#1 ${ranked[0].candidate.supplier_name}` : "No eligible sites",
     detail: [
+      { k: "Engine", v: "Re::Source weighted scoring" },
       { k: "Weights", v: "Delivery 50% · cost 35% · evidence 15%" },
       ...ranked.map((a) => ({ k: `#${a.rank} ${a.candidate.supplier_name}`, v: `${a.site.city} · score ${a.score}`, tone: "ok" as const })),
     ],
@@ -276,16 +310,17 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     title: "Disruption watch",
     icon: "activity",
     status: !monitoring ? "idle" : s.disrupted && s.recheck !== "done" ? "alert" : s.disrupted ? "done" : "running",
-    sub: !monitoring ? "—" : s.disrupted ? (s.recheck === "done" ? "Signal handled" : DISRUPTION.title) : "Listening for signals",
+    sub: !monitoring ? "Demo signal replay" : s.disrupted ? (s.recheck === "done" ? "Signal handled" : DISRUPTION.title) : "Ready for demo signal",
     detail: s.disrupted
       ? [
+          { k: "Mode", v: "Prepared disruption replay · no live web monitoring" },
           { k: "Signal", v: DISRUPTION.id },
           { k: "Source", v: DISRUPTION.source },
           { k: "Event", v: DISRUPTION.detail, tone: "bad" },
           { k: "Affected", v: affected ? `${affected.candidate.supplier_name} · ${affected.site.city}` : "None in shortlist" },
         ]
-      : [{ k: "Watching", v: "Supplier notices, route and stock signals" }],
-    log: s.disrupted ? `Signal ${DISRUPTION.id}: ${DISRUPTION.title}` : monitoring ? "Monitoring shortlisted sites" : undefined,
+      : [{ k: "Mode", v: "Prepared disruption replay · no live web monitoring" }, { k: "Signals", v: "Supplier notices, route and stock changes" }],
+    log: s.disrupted ? `Demo signal ${DISRUPTION.id}: ${DISRUPTION.title}` : monitoring ? "Ready to replay a demo disruption" : undefined,
   });
   nodes.push({
     id: "recheck",
@@ -339,7 +374,7 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     icon: "doc",
     status: inFulfil ? "done" : s.busy === "select" ? "running" : "idle",
     sub: inFulfil ? "Enquiry prepared" : "—",
-    detail: part ? [{ k: "Item", v: `${part.partNumber} Rev ${part.revision} × ${s.need.quantity}` }, { k: "Required by", v: s.need.requiredBy }, { k: "Deliver to", v: s.need.destination }] : [],
+    detail: [{ k: "Drafting", v: "Re::Source RFQ template · reviewed requirements" }, { k: "Case store", v: provider.storage }, ...(part ? [{ k: "Item", v: `${part.partNumber} Rev ${part.revision} × ${s.need.quantity}` }, { k: "Required by", v: s.need.requiredBy }, { k: "Deliver to", v: s.need.destination }] : [])],
     log: inFulfil ? "RFQ drafted for review" : undefined,
   });
   edges.push({ id: "e-choose-rfq", from: "choose", to: "rfq", items: inFulfil ? 1 : undefined, state: s.busy === "select" ? "active" : inFulfil ? "done" : "idle" });
@@ -356,7 +391,7 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
     icon: "stamp",
     status: approve,
     sub: approve === "waiting" ? "Waiting for you" : approved ? "Approved by buyer" : "Human approval",
-    detail: [{ k: "Gate", v: "Nothing leaves without buyer approval" }],
+    detail: [{ k: "Gate", v: "Nothing leaves without buyer approval" }, { k: "Approval store", v: provider.storage }, { k: "Record", v: "Approval is tied to this exact RFQ package" }],
     log: approve === "waiting" ? "Waiting for buyer approval" : approved ? "RFQ approved" : undefined,
   });
   edges.push({ id: "e-rfq-approve", from: "rfq", to: "approve", state: approve === "waiting" || approve === "running" ? "active" : approved ? "done" : "idle" });
@@ -423,9 +458,10 @@ export function buildGraph(s: FlowSnapshot): { nodes: FlowNode[]; edges: FlowEdg
 // is a virtual step: the per-candidate column taken as one stage.
 
 export const STEPS: { id: string; label: string }[] = [
-  { id: "trigger", label: "Request" },
-  { id: "discover", label: "Discover" },
-  { id: "qualify", label: "Qualify" },
+  { id: "trigger", label: "Save case" },
+  { id: "discover", label: "Linkup Search" },
+  { id: "extract", label: "Databricks ai_extract" },
+  { id: "qualify", label: "Re::Source checks" },
   { id: "router", label: "Classify" },
   { id: "rank", label: "Rank" },
   { id: "monitor", label: "Watch" },
@@ -472,8 +508,8 @@ export function stepGroup(id: string, nodes: FlowNode[]): string[] {
   const mid = [...cands].sort((a, b) => Math.abs(a.y) - Math.abs(b.y)).slice(0, 2).map((n) => n.id);
   const has = new Set(nodes.map((n) => n.id));
   const keep = (ids: string[]) => ids.filter((x) => has.has(x));
-  if (id === "qualify") return keep(["discover", ...cands.map((n) => n.id), "router"]);
-  if (id.startsWith("cand:")) return keep([id, "discover", "router"]);
+  if (id === "qualify") return keep(["extract", ...cands.map((n) => n.id), "router"]);
+  if (id.startsWith("cand:")) return keep([id, "extract", "router"]);
   if (id === "recheck") return keep(["rank", "monitor", "recheck"]);
   if (id === "evidence" || id === "excluded") return keep(["router", "rank", "evidence", "excluded"]);
   if (id === "router") return keep([...mid, "router", "rank", "evidence", "excluded"]);
