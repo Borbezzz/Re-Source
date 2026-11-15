@@ -155,7 +155,7 @@ components:
 
 ## Overview
 
-The current direction is the user-requested dark Re::Source display brand. The two colons suggest parts :: sources. The opening uses React Bits PatternWaves `silk` with white on black, soft edge fades and pointer ripples. The title stays crisp and solid. A compact white sourcing cluster follows the pointer, chooses a new arrangement on re-entry and clears on exit; there is no optical lens or dotted hover mask.
+The current direction is the user-requested dark Re::Source display brand. The two colons suggest parts :: sources. The opening uses React Bits PatternWaves `silk` with white on black, soft edge fades and pointer ripples. The title stays crisp and solid. There are no hover cubes, labels, connecting lines, optical lens or dotted hover mask; pointer interaction belongs to the ripple background.
 
 `src/theme/dark-glass.css` is the final theme stylesheet. [Theme details](src/theme/DESIGN.md) document the material, tokens and fallback behavior. Native buttons, links, selects and ranges keep their semantics and keyboard focus. Glass is concentrated on navigation/controls; evidence and working panels remain readable. Mobile navigation items cannot shrink below their text.
 
@@ -245,7 +245,7 @@ Controls and fields use 8px corners, panels 12px, and selection chips 4px. The s
 
 This follows the size and nesting principles in the [REI Cedar radius guide](https://cedar.rei.com/guidelines/radius) and [Apple's concentric-shape guidance](https://developer.apple.com/videos/play/wwdc2025/356/).
 
-The wordmark remains crisp and solid during hover. Nine small white wireframe cubes, short connections and three neutral sourcing labels form a local cluster around the pointer. Keep the cluster bounded near the pointer rather than distributing it across the hero; soft masks preserve edge treatment. Existing engine mesh pins remain circular and numbered.
+The wordmark remains crisp and solid during hover. Hover cubes, sourcing labels and connecting lines are removed. Existing engine mesh pins remain circular and numbered.
 
 ## Components
 
@@ -285,7 +285,7 @@ The geometry label and source-required dimensions/material text stay beside the 
 
 ### Wordmark
 
-The Re::Source title retains the supplied vector identity with crisp, solid lettering that does not blur or turn into a dotted outline on hover. Nine small white cubes follow the pointer with short connections and three neutral process labels. Re-entering the hero reshuffles the arrangement; moving within one hover preserves it. Copy collisions suppress local elements rather than pushing them across the screen. Decorative effects are hidden from assistive technology while the page carries a real Re::Source heading. Reduced motion and unsupported WebGL use the static title. Rendering pauses offscreen and in hidden tabs; pointer exit clears the rig.
+The Re::Source title retains the supplied vector identity with crisp, solid lettering that does not blur or turn into a dotted outline on hover. The hover graph, its labels and its connections are removed. Decorative effects are hidden from assistive technology while the page carries a real Re::Source heading. Reduced motion and unsupported WebGL use the static title. Rendering pauses offscreen and in hidden tabs. The background retains its interactive ripples.
 
 ### Citations and evidence
 
