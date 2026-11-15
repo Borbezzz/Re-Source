@@ -1,0 +1,19 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "part_id": {
+      "title": "Part Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "part_id",
+    "candidate_id"
+  ],
+  "title": "ProductSelectionRequest",
+  "type": "object"
+}

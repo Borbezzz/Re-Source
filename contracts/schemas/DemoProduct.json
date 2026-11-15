@@ -1,0 +1,150 @@
+{
+  "$defs": {
+    "ProductModel": {
+      "additionalProperties": false,
+      "properties": {
+        "asset_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Asset Url"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Id"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "mapping_status": {
+          "default": "unmapped",
+          "enum": [
+            "mapped",
+            "unmapped",
+            "partial"
+          ],
+          "title": "Mapping Status",
+          "type": "string"
+        },
+        "node_names": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Node Names",
+          "type": "array"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "origin": {
+          "default": "uploaded",
+          "enum": [
+            "prepared_demo",
+            "uploaded",
+            "generated"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        },
+        "status": {
+          "default": "missing",
+          "enum": [
+            "missing",
+            "ready",
+            "provider_required"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "title": "ProductModel",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "data_origin": {
+      "const": "synthetic_demo",
+      "default": "synthetic_demo",
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "demo_id": {
+      "title": "Demo Id",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "model": {
+      "$ref": "#/$defs/ProductModel"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "part_count": {
+      "title": "Part Count",
+      "type": "integer"
+    },
+    "product_type": {
+      "title": "Product Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "demo_id",
+    "name",
+    "description",
+    "product_type",
+    "model",
+    "part_count"
+  ],
+  "title": "DemoProduct",
+  "type": "object"
+}

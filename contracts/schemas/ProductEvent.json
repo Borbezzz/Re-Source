@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "part_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Part Id"
+    },
+    "sequence": {
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "type": {
+      "title": "Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "sequence",
+    "type",
+    "summary",
+    "created_at"
+  ],
+  "title": "ProductEvent",
+  "type": "object"
+}

@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "note": {
+      "title": "Note",
+      "type": "string"
+    },
+    "requirement_key": {
+      "title": "Requirement Key",
+      "type": "string"
+    },
+    "source_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Url"
+    },
+    "status": {
+      "default": "unknown",
+      "enum": [
+        "supported",
+        "unknown",
+        "conflict"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "requirement_key",
+    "note"
+  ],
+  "title": "ProductEvidence",
+  "type": "object"
+}

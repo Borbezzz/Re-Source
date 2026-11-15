@@ -1,0 +1,283 @@
+{
+  "$defs": {
+    "ProductCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "country": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Country"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Currency"
+        },
+        "data_origin": {
+          "default": "synthetic_demo",
+          "enum": [
+            "synthetic_demo",
+            "public_web"
+          ],
+          "title": "Data Origin",
+          "type": "string"
+        },
+        "eligibility": {
+          "const": "unverified",
+          "default": "unverified",
+          "title": "Eligibility",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/ProductEvidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "lead_time_days": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lead Time Days"
+        },
+        "part_id": {
+          "title": "Part Id",
+          "type": "string"
+        },
+        "price": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price"
+        },
+        "retrieved_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retrieved At"
+        },
+        "route": {
+          "default": "buy",
+          "enum": [
+            "buy",
+            "make"
+          ],
+          "title": "Route",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "supplier_name": {
+          "title": "Supplier Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "part_id",
+        "supplier_name",
+        "summary"
+      ],
+      "title": "ProductCandidate",
+      "type": "object"
+    },
+    "ProductEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "note": {
+          "title": "Note",
+          "type": "string"
+        },
+        "requirement_key": {
+          "title": "Requirement Key",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        },
+        "status": {
+          "default": "unknown",
+          "enum": [
+            "supported",
+            "unknown",
+            "conflict"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirement_key",
+        "note"
+      ],
+      "title": "ProductEvidence",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/ProductCandidate"
+      },
+      "title": "Candidates",
+      "type": "array"
+    },
+    "completed_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Completed At"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    },
+    "job_id": {
+      "title": "Job Id",
+      "type": "string"
+    },
+    "mode": {
+      "default": "demo",
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "part_id": {
+      "title": "Part Id",
+      "type": "string"
+    },
+    "providers_used": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Providers Used",
+      "type": "array"
+    },
+    "stage": {
+      "title": "Stage",
+      "type": "string"
+    },
+    "started_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Started At"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "complete",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "summary": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Summary"
+    }
+  },
+  "required": [
+    "part_id",
+    "job_id",
+    "status",
+    "stage"
+  ],
+  "title": "ProductInvestigation",
+  "type": "object"
+}

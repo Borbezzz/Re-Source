@@ -75,6 +75,8 @@ class Services:
         self.coordinator = Coordinator(self, self.graph)
         from ..runtime.jobs import DurableJobs
         self.jobs = DurableJobs(self)
+        from .products import ProductService
+        self.products = ProductService(self)
         self._kick = threading.Event()
         self._stop = threading.Event()
         self._worker: Optional[threading.Thread] = None
@@ -119,6 +121,7 @@ class Services:
     def stop(self) -> None:
         self._stop.set()
         self._kick.set()
+        self.products._executor.shutdown(wait=True)
 
     def _worker_loop(self) -> None:
         while not self._stop.is_set():

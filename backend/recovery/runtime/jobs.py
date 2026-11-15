@@ -121,6 +121,10 @@ class DurableJobs:
             draft = self.s.intake.get_draft(p["draft_id"])
             if draft["status"] == "extracting":
                 self.s.intake._extract_safe(p["draft_id"])
+        elif job["kind"] == "product_extract":
+            self.s.products.extract_project(**p)
+        elif job["kind"] == "product_research":
+            self.s.products.research_part(**p)
         elif job["kind"] == "outbox":
             self.s.process_outbox_once()
             if self.s.store.find(st.outbox, status="pending", op_type="generate_documents"):

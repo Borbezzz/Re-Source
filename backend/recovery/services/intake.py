@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import copy
 from contextvars import copy_context
+import io
 import json
 import logging
 import math
@@ -588,6 +589,15 @@ class IntakeService:
         else:
             if rec["ext"] in (".png", ".jpg", ".jpeg") and page != 1:
                 problems.append("image source_ref page must be 1")
+            if rec["ext"] == ".pdf":
+                try:
+                    from pypdf import PdfReader
+                    page_count = len(PdfReader(io.BytesIO(data)).pages)
+                except Exception:  # unreadable/encrypted files cannot establish a source page
+                    problems.append("source_ref PDF page cannot be verified because the document is unreadable")
+                else:
+                    if page is not None and page > page_count:
+                        problems.append("source_ref page is outside the PDF document")
             if not page or not (bbox or excerpt or ref.get("element_id")):
                 problems.append("source_ref requires a page and a region, excerpt or element locator")
         return ref, problems

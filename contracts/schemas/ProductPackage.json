@@ -1,0 +1,265 @@
+{
+  "$defs": {
+    "ProductPackageItem": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "data_origin": {
+          "enum": [
+            "synthetic_demo",
+            "public_web"
+          ],
+          "title": "Data Origin",
+          "type": "string"
+        },
+        "evidence_gaps": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Gaps",
+          "type": "array"
+        },
+        "part_id": {
+          "title": "Part Id",
+          "type": "string"
+        },
+        "part_name": {
+          "title": "Part Name",
+          "type": "string"
+        },
+        "quantity": {
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "requirements": {
+          "items": {
+            "$ref": "#/$defs/ProductRequirement"
+          },
+          "title": "Requirements",
+          "type": "array"
+        },
+        "rfq_text": {
+          "title": "Rfq Text",
+          "type": "string"
+        },
+        "supplier_name": {
+          "title": "Supplier Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id",
+        "part_name",
+        "quantity",
+        "supplier_name",
+        "candidate_id",
+        "data_origin",
+        "requirements",
+        "evidence_gaps",
+        "rfq_text"
+      ],
+      "title": "ProductPackageItem",
+      "type": "object"
+    },
+    "ProductRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "maxLength": 100,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "title": "Key",
+          "type": "string"
+        },
+        "label": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProductSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status": {
+          "default": "proposed",
+          "enum": [
+            "proposed",
+            "confirmed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "maxLength": 50,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "label",
+        "value"
+      ],
+      "title": "ProductRequirement",
+      "type": "object"
+    },
+    "ProductSource": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "title": "Document Id",
+          "type": "string"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "quote": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "quote"
+      ],
+      "title": "ProductSource",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "approval_scope": {
+      "const": "simulation_only",
+      "default": "simulation_only",
+      "title": "Approval Scope",
+      "type": "string"
+    },
+    "approved_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved At"
+    },
+    "approved_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved By"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "input_version": {
+      "title": "Input Version",
+      "type": "integer"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ProductPackageItem"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "notice": {
+      "default": "Draft RFQs only. No supplier has been contacted and no order has been placed.",
+      "title": "Notice",
+      "type": "string"
+    },
+    "package_id": {
+      "title": "Package Id",
+      "type": "string"
+    },
+    "receipt": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Receipt"
+    },
+    "simulated_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Simulated At"
+    },
+    "status": {
+      "default": "draft",
+      "enum": [
+        "draft",
+        "approved",
+        "simulated"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "package_id",
+    "input_version",
+    "items",
+    "created_at"
+  ],
+  "title": "ProductPackage",
+  "type": "object"
+}

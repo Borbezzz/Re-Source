@@ -1,0 +1,14 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_package_id": {
+      "title": "Expected Package Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "expected_package_id"
+  ],
+  "title": "ProductSimulationRequest",
+  "type": "object"
+}

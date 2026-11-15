@@ -1,0 +1,94 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "content_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Content Url"
+    },
+    "data_origin": {
+      "enum": [
+        "synthetic_demo",
+        "provided_document"
+      ],
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "document_id": {
+      "title": "Document Id",
+      "type": "string"
+    },
+    "excerpt": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Excerpt"
+    },
+    "extraction_method": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Extraction Method"
+    },
+    "extraction_status": {
+      "default": "pending",
+      "enum": [
+        "pending",
+        "complete",
+        "unavailable"
+      ],
+      "title": "Extraction Status",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "blueprint",
+        "requirements",
+        "model"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "media_type": {
+      "default": "text/plain",
+      "title": "Media Type",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "size_bytes": {
+      "default": 0,
+      "title": "Size Bytes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "document_id",
+    "name",
+    "kind",
+    "data_origin"
+  ],
+  "title": "ProductDocument",
+  "type": "object"
+}

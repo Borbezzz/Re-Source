@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import importlib
+import io
 from types import SimpleNamespace
 
 import pytest
@@ -100,6 +101,45 @@ def test_activation_requires_source_bytes_and_rebuilds_manifest_provenance(svc, 
     blob_store.local_path(rec["sha256"], rec["ext"]).unlink()
     with pytest.raises(DomainError):
         svc.intake.activate_job(job["job_id"])
+
+
+@pytest.mark.parametrize("page, valid", [(1, True), (2, False), (999, False)])
+def test_mesh_pdf_citation_page_must_exist(svc, run, page, valid):
+    from pypdf import PdfWriter
+
+    writer, content = PdfWriter(), io.BytesIO()
+    writer.add_blank_page(width=200, height=200)
+    writer.write(content)
+    source = svc.intake.upload(content.getvalue(), "drawing.pdf", "blueprint")
+    nodes = copy.deepcopy(GOOD)
+    for node in nodes[:3]:
+        node["extras"]["source_ref"] = {"upload_id": source["upload_id"], "page": page, "bbox": [10, 20, 110, 80]}
+    job = _job(svc, nodes)
+    assert (job["status"] == "succeeded") is valid
+    if valid:
+        assert svc.intake.activate_job(job["job_id"])["kind"] == "generated"
+    else:
+        assert all("outside the PDF" in " ".join(c["problems"]) for c in job["validation"]["checks"])
+
+
+@pytest.mark.parametrize("encrypted", [False, True])
+def test_unreadable_pdf_citation_fails_validation_without_an_unhandled_error(svc, run, encrypted):
+    from pypdf import PdfWriter
+
+    data = b"%PDF-1.7\nnot a readable PDF"
+    if encrypted:
+        writer, content = PdfWriter(), io.BytesIO()
+        writer.add_blank_page(width=200, height=200)
+        writer.encrypt("private-password")
+        writer.write(content)
+        data = content.getvalue()
+    source = svc.intake.upload(data, "unreadable.pdf", "blueprint")
+    nodes = copy.deepcopy(GOOD)
+    for node in nodes[:3]:
+        node["extras"]["source_ref"] = {"upload_id": source["upload_id"], "page": 1, "bbox": [10, 20, 110, 80]}
+    job = _job(svc, nodes)
+    assert job["status"] == "failed"
+    assert all("unreadable" in " ".join(c["problems"]) for c in job["validation"]["checks"])
 
 
 def test_ai_drawing_identifier_and_unsupported_engineering_claims_remain_unknown(svc, run, monkeypatch):
