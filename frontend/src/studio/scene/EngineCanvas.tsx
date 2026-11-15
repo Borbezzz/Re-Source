@@ -588,7 +588,7 @@ export function EngineCanvas(props: EngineCanvasProps) {
       ref={canvas}
       className="rs-engine-canvas"
       style={props.mode === "hidden" ? frozenSize : undefined}
-      dpr={[1, 1.75]}
+      dpr={[1, 1.5]}
       frameloop={props.mode === "hidden" ? "never" : "demand"}
       camera={{ position: [-8, 3.2, 14.5], fov: 30, near: 0.05, far: 100 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
