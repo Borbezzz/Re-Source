@@ -7,7 +7,7 @@
     "GLTFLoader parse round trip",
     "Unique persistent IDs",
     "CSV/manifest component identity, role, counts and requirement consistency",
-    "Three component-to-node and requirement mappings",
+    "35 sourcing-family node and requirement mappings",
     "Round-trip bounds within 1e-4 visualization units",
     "Upstream injector/blade occurrence counts",
     "1835 independent pieces; attached decorations distinguished"
