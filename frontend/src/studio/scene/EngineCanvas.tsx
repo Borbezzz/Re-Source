@@ -376,37 +376,50 @@ function projectWithViewOffset(el: THREE.Object3D, camera: THREE.Camera, size: {
   return [(_v.x * 0.5 + 0.5) * size.width, (-_v.y * 0.5 + 0.5) * size.height];
 }
 
-function Hotspots({ prepared, components, selected, onSelect }: { prepared: Prepared; components: PackageComponent[]; selected: string | null; onSelect?: (id: string) => void }) {
-  const refs = useRef<Record<string, THREE.Group | null>>({});
+function SelectedCallout({ prepared, nodes, name, id, rightInset = 0, leftInset = 0 }: { prepared: Prepared; nodes: THREE.Object3D[]; name: string; id: string; rightInset?: number; leftInset?: number }) {
+  const anchor = useRef<THREE.Group>(null);
+  const callout = useRef<HTMLDivElement>(null);
   const frame = useRef(0);
+  const bounds = useMemo(() => new THREE.Box3(), []);
+  const layout = useRef("");
+  const updateAnchor = () => {
+    if (!anchor.current) return;
+    prepared.root.updateMatrixWorld(true);
+    bounds.makeEmpty();
+    nodes.forEach(node => bounds.expandByObject(node));
+    if (!bounds.isEmpty()) bounds.getCenter(anchor.current.position);
+  };
+  useLayoutEffect(updateAnchor, [prepared, nodes]);
   useFrame(() => {
-    if (frame.current++ % 6) return; // bounds only need occasional refresh
-    for (const c of components) {
-      const g = refs.current[c.componentId];
-      const nodes = prepared.compNodes.get(c.componentId);
-      if (g && nodes?.length) boundsOf(nodes).getCenter(g.position);
-    }
+    if (frame.current++ % 6 === 0) updateAnchor(); // follow assembly motion without traversing every mesh each frame
   });
+  const position = (el: THREE.Object3D, camera: THREE.Camera, size: { width: number; height: number }) => {
+    const point = projectWithViewOffset(el, camera, size);
+    const narrow = size.width < 700;
+    const left = point[0] - (narrow ? 0 : leftInset) - 16;
+    const right = size.width - (narrow ? 0 : rightInset) - point[0] - 16;
+    const side = left > right ? "left" : "right";
+    const width = Math.round(Math.max(80, Math.min(230, Math.max(left, right) - 64)));
+    const key = `${side}:${width}`;
+    if (callout.current && key !== layout.current) {
+      callout.current.dataset.side = side;
+      callout.current.style.setProperty("--rs-callout-width", `${width}px`);
+      layout.current = key;
+    }
+    return point;
+  };
   return (
-    <>
-      {components.filter((c) => !selected || c.componentId === selected).map((c) => (
-        <group key={c.componentId} ref={(r) => void (refs.current[c.componentId] = r)}>
-          <Html center zIndexRange={[20, 10]} style={{ pointerEvents: "auto" }} calculatePosition={projectWithViewOffset}>
-            <button
-              type="button"
-              className={`rs-hotspot${selected === c.componentId ? " is-selected" : ""}`}
-              onClick={() => onSelect?.(c.componentId)}
-              aria-pressed={selected === c.componentId}
-              aria-label={`Select ${c.name}`}
-            >
-              <span className="rs-hotspot-dot" />
-              <span className="rs-hotspot-leader" aria-hidden="true" />
-              <span className="rs-hotspot-label">{c.name}</span>
-            </button>
-          </Html>
-        </group>
-      ))}
-    </>
+    <group ref={anchor}>
+      <Html zIndexRange={[20, 10]} style={{ pointerEvents: "none" }} calculatePosition={position}>
+        <div ref={callout} className="rs-part-callout" role="note" aria-label={`Selected part: ${name}`} data-part-id={id}>
+          <span className="rs-part-callout-dot" aria-hidden="true" />
+          <svg className="rs-part-callout-leader" width="64" height="40" viewBox="0 0 64 40" aria-hidden="true">
+            <path d="M0 40 L28 4 H64" />
+          </svg>
+          <span className="rs-part-callout-label">{name}</span>
+        </div>
+      </Html>
+    </group>
   );
 }
 
@@ -463,6 +476,9 @@ function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, l
 
 function SceneContents(props: EngineCanvasProps) {
   const prepared = usePrepared(props.url, props.components);
+  const nodes = useMemo(() => inspectionNodes(prepared, props.inspection, props.selected), [prepared, props.inspection, props.selected]);
+  const component = props.components.find(c => c.componentId === props.selected);
+  const label = props.inspection?.children.length ? (component?.name ?? props.inspection.name) : (props.inspection?.name ?? component?.name);
   const { onReady } = props;
   useEffect(() => {
     const id = setTimeout(() => onReady?.(), 0);
@@ -471,8 +487,8 @@ function SceneContents(props: EngineCanvasProps) {
   return (
     <>
       <Engine {...props} prepared={prepared} />
-      {props.showHotspots && props.mode === "explore" && props.phase === "idle" ? (
-        <Hotspots prepared={prepared} components={props.components.filter(c => props.selected ? c.componentId === props.selected : ["RS-TF-FAN-BLADE", "RS-TF-FUEL-INJECTOR", "RS-TF-CORE-NOZZLE"].includes(c.componentId))} selected={props.selected} onSelect={props.onSelect} />
+      {props.showHotspots && props.mode === "explore" && props.phase === "idle" && label && nodes.length > 0 ? (
+        <SelectedCallout key={props.inspection?.id ?? props.selected} prepared={prepared} nodes={nodes} name={label} id={props.inspection?.id ?? props.selected!} rightInset={props.rightInset} leftInset={props.leftInset} />
       ) : null}
       <Rig prepared={prepared} selected={props.selected} inspection={props.inspection} mode={props.mode} resetKey={props.resetKey} rightInset={props.rightInset} leftInset={props.leftInset} turntable={props.spin && props.phase === "idle"} wide={!!props.wide} />
     </>

@@ -403,7 +403,7 @@ export function Studio() {
             isolate={stage !== "return" || phase !== "done"}
             spin={spin}
             phase={phase}
-            showHotspots={stage === "explore" && (!inspection || !!component)}
+            showHotspots={stage === "explore" && !!inspection}
             resetKey={resetKey}
             onSelect={(id) => {
               if (stage !== "explore") return;
