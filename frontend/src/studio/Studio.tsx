@@ -439,7 +439,7 @@ export function Studio() {
       <LayoutGroup>
         <AnimatePresence mode="wait">
           {stage === "intake" ? (
-            <Intake key="intake" onFiles={(f) => void startPackage(f)} onSample={() => void startPackage("sample")} error={error} />
+            <Intake key="intake" onFiles={(f) => void startPackage(f)} error={error} />
           ) : null}
         </AnimatePresence>
 

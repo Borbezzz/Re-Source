@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, FilePlus2 } from "lucide-react";
+import { FilePlus2 } from "lucide-react";
 
-export function Intake({ onFiles, onSample, error }: { onFiles: (files: File[]) => void; onSample: () => void; error: string | null }) {
+export function Intake({ onFiles, error }: { onFiles: (files: File[]) => void; error: string | null }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const folderRef = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
@@ -83,13 +83,6 @@ export function Intake({ onFiles, onSample, error }: { onFiles: (files: File[]) 
             {error}
           </p>
         ) : null}
-
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.6 }} style={{ marginTop: 18 }}>
-          <button type="button" className="rs-link" onClick={onSample}>
-            Explore a sample assembly <ArrowRight size={18} strokeWidth={1.6} />
-          </button>
-          <div className="rs-tiny" style={{ marginTop: 6 }}>Prepared Mechanica turbofan package · fictional demo data</div>
-        </motion.div>
       </div>
     </motion.main>
   );
