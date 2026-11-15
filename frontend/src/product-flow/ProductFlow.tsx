@@ -268,9 +268,9 @@ export function ProductFlow({
     !!project?.parts.length &&
     project.parts.every((part) => part.status === "confirmed");
   const researched = !!project?.research.length;
-  const complete =
-    project?.agent?.status === "recommendation_ready" ||
-    project?.package?.status === "simulated";
+  const complete = project?.agent
+    ? project.agent.status === "recommendation_ready"
+    : project?.package?.status === "simulated";
   const agentActive = !!project && agentWorking(project);
   const agentManaged = !!project?.agent && !manualMode;
   const editorBusy = busy || (agentActive ? "Sourcing agent is working" : "");

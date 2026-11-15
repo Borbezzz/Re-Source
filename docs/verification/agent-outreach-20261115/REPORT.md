@@ -31,3 +31,26 @@ mailbox. Actual email sending and purchasing are not connected.
 The demo mailbox is durable application data, not a connected email account.
 Live mode drafts RFQs and requests verified contact/mailbox details. All supplier
 eligibility remains unverified; sample replies cannot establish compliance.
+
+## Connected staging
+
+Verified the existing Production environment without assigning public domains:
+`https://resource-ri1jnhqhj-borbez2s-projects.vercel.app` (backend commit `a80a96c`).
+Vercel inspection reported the API and queue subscriber ready.
+
+- Demo: three investigations, three simulated requests and three sample replies
+  persisted in Lakebase Postgres through the durable queue. The project summary
+  reported recommendation-ready and another anonymous visitor received 404.
+- Background execution: after a fresh start, the verifier made no reads for 60
+  seconds. Its first read found the entire demo complete. This checks that a
+  browser polling loop is not needed to advance the task. An earlier 30-second
+  observation found it still running, then it completed normally.
+- Custom BOM: an explicit M8 hex-nut specification with quantity 20 was extracted
+  and checked automatically, then produced six public leads using **OpenAI,
+  Linkup and Databricks AI Extract**. It drafted the RFQ and stopped with
+  `contact_required`; no messages were sent and no purchasing was authorized.
+- The deployed browser loaded the prepared gallery through its real API.
+
+Sanitized observations are in `staged-demo.json`, `staged-unattended.json` and
+`staged-live.json`. A final UI-only correction keeps a prior manual simulation
+receipt from making a newly started agent look complete; its build also passes.

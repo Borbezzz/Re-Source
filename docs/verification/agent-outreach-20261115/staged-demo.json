@@ -1,0 +1,17 @@
+{
+  "base_url": "https://resource-ri1jnhqhj-borbez2s-projects.vercel.app",
+  "project_id": "product-6e7380cb8b16487b",
+  "run_id": "agent-run-a55871fbfb7340b1",
+  "status": "recommendation_ready",
+  "parts": 3,
+  "research_completed": 3,
+  "sent": 3,
+  "replies": 3,
+  "delivery": "simulated",
+  "purchase_authorized": false,
+  "storage": "lakebase_postgres",
+  "execution": "durable_queue",
+  "visitor_isolation": true,
+  "initial_no_reads_seconds": 30,
+  "finished_on_first_read": false
+}

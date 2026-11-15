@@ -1,0 +1,19 @@
+{
+  "base_url": "https://resource-ri1jnhqhj-borbez2s-projects.vercel.app",
+  "project_id": "product-a6e1d195222c4126",
+  "status": "needs_attention",
+  "grounded_parts": 1,
+  "quantity": 20,
+  "research_providers": [
+    "openai",
+    "linkup",
+    "databricks_ai_extract"
+  ],
+  "public_leads": 6,
+  "attention_codes": [
+    "contact_required"
+  ],
+  "actual_messages_sent": 0,
+  "storage": "lakebase_postgres",
+  "execution": "durable_queue"
+}
