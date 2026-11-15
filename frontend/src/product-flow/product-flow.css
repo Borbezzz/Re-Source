@@ -435,32 +435,6 @@
 .pf-research-start .primary {
   width: 100%;
 }
-.pf-research-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
-  gap: 32px;
-}
-.pf-research-map {
-  align-self: start;
-  position: sticky;
-  top: 95px;
-}
-.pf-research-map .research-globe {
-  border: 0;
-  background: transparent;
-}
-.pf-research-map .globe-heading {
-  padding: 0;
-}
-.pf-research-map .globe-canvas {
-  height: 350px;
-}
-.pf-research-map .research-globe p {
-  font-size: 11px;
-}
-.pf-research-map .globe-heading h2 {
-  font-size: 17px;
-}
 .pf-job-heading {
   display: flex;
   justify-content: space-between;
@@ -486,13 +460,6 @@
 }
 .pf-job-failed {
   color: #f4aaa7;
-}
-.pf-research-job {
-  padding: 24px 0;
-  border-top: 1px solid #ffffff24;
-}
-.pf-research-job > p {
-  font-size: 14px;
 }
 .pf-candidates {
   display: grid;
@@ -637,9 +604,6 @@
   .pf-main {
     padding: 30px 24px 60px;
   }
-  .pf-research-layout {
-    grid-template-columns: minmax(0, 1fr) 320px;
-  }
   .pf-sources {
     gap: 28px;
     grid-template-columns: 235px minmax(0, 1fr);
@@ -684,8 +648,7 @@
     display: none;
   }
   .pf-sources,
-  .pf-assembly,
-  .pf-research-layout {
+  .pf-assembly {
     display: block;
   }
   .pf-source-files {
@@ -721,10 +684,6 @@
   .pf-model-origin {
     max-width: 90px;
     text-align: right;
-  }
-  .pf-research-map {
-    position: static;
-    margin: 32px 0;
   }
   .pf-candidate-heading {
     display: block;
@@ -833,9 +792,6 @@
   border-top: 1px solid #ffffff20;
   font-size: 14px;
 }
-.pf-research-jobs .pf-candidates {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
 .pf-investigation .pf-section-heading p + p {
   margin-top: 8px;
 }
@@ -887,11 +843,6 @@
   padding: 8px 0 30px;
   border-bottom: 1px solid #ffffff20;
 }
-@media (max-width: 1180px) {
-  .pf-research-jobs .pf-candidates {
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 760px) {
   .pf-flow-section {
     scroll-margin-top: 130px;
@@ -925,6 +876,248 @@
   border: 0;
   margin: 0;
   padding: 0;
+}
+
+/* The globe is the shared spatial canvas; results float over its right edge. */
+.pf-spatial-stage {
+  --research-globe-height: clamp(460px, calc(100svh - 220px), 720px);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  align-items: start;
+  margin-top: 24px;
+}
+.pf-spatial-globe {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  min-width: 0;
+}
+.pf-globe-loading {
+  min-height: var(--research-globe-height);
+  display: grid;
+  place-content: center;
+  color: var(--muted);
+}
+.pf-supplier-rail {
+  grid-column: 2;
+  grid-row: 1;
+  z-index: 2;
+  max-height: calc(var(--research-globe-height) + 40px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 8px 16px 28px;
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff38 transparent;
+  scrollbar-gutter: stable;
+  border-radius: 12px;
+}
+.pf-supplier-rail:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+.pf-supplier-rail-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.pf-supplier-rail-heading h3 {
+  margin: 0;
+}
+.pf-supplier-rail-heading > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.pf-supplier-group + .pf-supplier-group {
+  margin-top: 30px;
+}
+.pf-supplier-group .pf-job-heading {
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+.pf-supplier-group .pf-job-heading h3 {
+  font-size: 14px;
+  margin: 0;
+}
+.pf-supplier-group .pf-job-heading p {
+  margin: 5px 0 0;
+}
+.pf-supplier-group .pf-job-status {
+  padding: 0;
+  border: 0;
+  white-space: nowrap;
+}
+.pf-supplier-group .pf-job-progress,
+.pf-supplier-group .pf-awaiting-suppliers {
+  font-size: 12px;
+}
+.pf-supplier-group .pf-awaiting-suppliers {
+  padding: 24px 0;
+  margin: 0;
+  border-top: 1px solid var(--border);
+}
+.pf-supplier-group .pf-candidates {
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+.pf-floating-candidate {
+  background: rgba(19, 24, 33, 0.78);
+  border: 0;
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 14px 32px #00000048,
+    inset 0 1px 0 #ffffff1c;
+  animation: pf-supplier-arrive 420ms cubic-bezier(0.16, 1, 0.3, 1)
+    var(--arrival-delay, 0ms) backwards;
+  transition:
+    background 180ms,
+    outline-color 180ms;
+}
+.pf-floating-candidate:hover,
+.pf-floating-candidate.pf-candidate-active {
+  background: rgba(28, 35, 48, 0.87);
+}
+.pf-floating-candidate .pf-candidate-heading {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.pf-floating-candidate .pf-candidate-heading h4 {
+  font-size: 17px;
+  overflow-wrap: anywhere;
+}
+.pf-floating-candidate .pf-candidate-heading > span {
+  font-size: 12px;
+}
+.pf-floating-candidate .pf-candidate-preview {
+  font-size: 12px;
+  color: #bac3d2;
+  line-height: 1.6;
+}
+.pf-floating-candidate .pf-location-action {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: #dbe8ff;
+  text-align: left;
+  font-size: 12px;
+}
+.pf-location-action > span {
+  color: #a8b0bf;
+  margin-left: 4px;
+}
+.pf-floating-candidate .pf-offer-facts {
+  gap: 28px;
+  margin: 12px 0 16px;
+}
+.pf-floating-candidate .pf-offer-facts dd {
+  font-size: 14px;
+}
+.pf-floating-candidate .pf-candidate-evidence {
+  margin: 12px 0 0;
+}
+.pf-floating-candidate .pf-candidate-evidence > summary {
+  font-size: 12px;
+  color: #c2d4ff;
+}
+.pf-floating-candidate .pf-candidate-evidence p {
+  font-size: 12px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+.pf-floating-candidate .pf-evidence-checks li {
+  display: grid;
+  gap: 4px;
+}
+.pf-floating-candidate .pf-evidence-checks span {
+  text-align: left;
+}
+.pf-floating-candidate > button:last-child {
+  margin-top: 16px;
+  padding: 8px 0;
+  min-height: 36px;
+  font-size: 12px;
+}
+.pf-floating-candidate > button.secondary:last-child {
+  padding: 8px 12px;
+}
+.pf-spatial-globe .pf-unmapped-note {
+  max-width: 55ch;
+  font-size: 12px;
+  padding: 0 24px;
+  margin: 0;
+}
+.pf-spatial-activity {
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+@keyframes pf-supplier-arrive {
+  from {
+    opacity: 0;
+    transform: translateX(22px);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .pf-floating-candidate {
+    background: #131821;
+  }
+}
+@media (max-width: 1050px) {
+  .pf-spatial-stage {
+    --research-globe-height: 520px;
+    display: block;
+  }
+  .pf-supplier-rail {
+    max-height: none;
+    overflow: visible;
+    padding: 24px 4px 4px;
+  }
+  .pf-supplier-group .pf-candidates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pf-supplier-rail-heading {
+    margin-bottom: 24px;
+  }
+}
+@media (max-width: 600px) {
+  .pf-spatial-stage {
+    --research-globe-height: 370px;
+    margin-top: 8px;
+  }
+  .pf-supplier-group .pf-candidates {
+    grid-template-columns: 1fr;
+  }
+  .pf-floating-candidate {
+    padding: 20px;
+  }
+  .pf-spatial-globe .pf-unmapped-note {
+    padding: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-floating-candidate {
+    animation: none;
+    transition: outline-color 120ms;
+  }
 }
 .pf-main .pf-editing-paused {
   padding: 12px 0;
