@@ -333,3 +333,29 @@ Research cards retain task status, sample/public labels, source links and unknow
 requirements. Country centroids are explicitly representative, never precise
 supplier addresses. The RFQ screen displays the actual package before approval;
 its acknowledgement resets when the package changes. Source edits are protected during navigation and remain mounted when a section collapses. Extraction and pending saves temporarily disable editing so later responses cannot erase a newer draft.
+
+## Spatial supplier research
+
+Product investigations use a large, centered dotted globe as the research canvas.
+On desktop the globe spans the workspace and translucent supplier cards float at
+its right edge in a bounded scroll area. Its canvas grows with the viewport from
+460 to 720px; at 1050px and below, the globe sits above normal-flow result cards.
+Cards retain sample/public provenance, prices when present, country labels and
+expandable source evidence. Every candidate stays available even without a mapped
+location. Card and marker focus stay synchronized; marker selection reveals its
+card on both desktop and mobile.
+
+The globe turns at two degrees per second, with explicit pause/resume and manual
+rotation. Demand rendering pauses when hidden or offscreen. Reduced motion stops
+automatic rotation and card entrance movement. New cards use a 420ms lateral
+arrival with a bounded 0–140ms sibling stagger only when actual results mount.
+No timers create results or locations. Known countries receive soft luminous
+points; the selected point brightens. The translucent sphere keeps far-side dots
+faintly visible. This variant omits the older abstract investigation hub and arcs;
+legacy panel globes preserve their earlier presentation.
+
+Local scene materials use a #132034 sphere at 0.58 opacity, #b3c3da land dots at
+0.64 opacity, and #9cbaff/#f2f6ff location light. Floating cards use
+rgba(19,24,33,0.78), a restrained 18px backdrop blur, an opaque #131821 fallback,
+and #bac3d2 supporting text. These tints extend the existing dark neutral palette
+for spatial depth; source qualification states remain written and unchanged.

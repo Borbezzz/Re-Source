@@ -1,0 +1,103 @@
+.research-globe.research-globe-immersive {
+  width: 100%;
+  position: relative;
+  background: transparent;
+  isolation: isolate;
+}
+.research-globe-immersive .globe-heading {
+  position: absolute;
+  z-index: 1;
+  top: 20px;
+  left: 24px;
+  display: block;
+  padding: 0;
+  pointer-events: none;
+}
+.research-globe-immersive .globe-heading h2 {
+  margin: 0 0 6px;
+  color: #f2f4f8;
+  font-size: 17px;
+  font-weight: 500;
+}
+.research-globe-immersive .globe-heading span {
+  display: block;
+  padding: 0;
+  color: #a8b0bf;
+  font-size: 12px;
+}
+.research-globe.research-globe-immersive .globe-canvas {
+  height: var(--research-globe-height, 660px);
+  min-height: 340px;
+  overflow: hidden;
+}
+.research-globe-immersive .globe-controls {
+  align-self: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 20px;
+}
+.research-globe-immersive .globe-controls > span {
+  margin: 0 12px 0 0;
+  color: #a8b0bf;
+  font-size: 12px;
+}
+.research-globe-immersive .globe-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 36px;
+  min-height: 36px;
+  border: 1px solid #ffffff20;
+  border-radius: 8px;
+  background: #12141980;
+  color: #f2f4f8;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+.research-globe-immersive .globe-controls button:hover:not(:disabled) {
+  background: #ffffff12;
+}
+.research-globe-immersive .globe-controls button:focus-visible {
+  outline: 2px solid #9cbaff;
+  outline-offset: 3px;
+}
+.research-globe-immersive .globe-controls button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.research-globe-immersive .globe-motion-toggle span {
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.research-globe-immersive > p {
+  align-self: center;
+  max-width: 74ch;
+  padding: 14px 24px 20px;
+  color: #a8b0bf;
+  font-size: 12px;
+  text-align: center;
+}
+@media (max-width: 760px) {
+  .research-globe.research-globe-immersive .globe-canvas {
+    height: var(--research-globe-height, 390px);
+    min-height: 330px;
+  }
+  .research-globe-immersive .globe-heading {
+    top: 12px;
+    left: 12px;
+  }
+  .research-globe-immersive .globe-heading h2 {
+    font-size: 14px;
+  }
+  .research-globe-immersive .globe-controls > span {
+    flex-basis: 100%;
+    margin: 0 0 2px;
+    text-align: center;
+  }
+  .research-globe-immersive > p {
+    padding-inline: 12px;
+  }
+}
