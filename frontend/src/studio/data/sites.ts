@@ -5,7 +5,7 @@
  * real city locations of the *supplying site* (not a headquarters); company
  * names, stock, documents and quotes are invented demo data.
  */
-import extraSites from "./extra-sites.json";
+import extraSites from "./extra-sites.json" with { type: "json" };
 
 export type Evidence = "provided" | "missing";
 export interface SiteFixture {
