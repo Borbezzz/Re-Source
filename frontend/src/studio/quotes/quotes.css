@@ -78,34 +78,82 @@
   color: var(--rs-text-2);
 }
 .rs-quote-source-picker {
-  display: flex;
-  gap: 14px;
+  display: block;
   margin: 0;
   padding: 0;
   border: 0;
+  min-inline-size: 0;
 }
 .rs-quote-source-picker legend {
-  margin-bottom: 5px;
+  margin: 0 0 6px;
+  padding: 0;
   font-size: 14px;
 }
-.rs-quote-source-picker label {
-  display: flex;
-  align-items: center;
-  min-height: 32px;
-}
-.rs-quote-source-picker input {
-  width: auto;
-  min-height: auto;
-  accent-color: var(--rs-violet);
-}
-.rs-quote-file::file-selector-button {
+.rs-quote-segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  background: var(--rs-raise);
   border: 1px solid var(--rs-line-2);
   border-radius: var(--rs-radius-s);
+}
+.rs-quote-intake .rs-quote-source-picker label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-height: 34px;
+  border-radius: 6px;
+  color: var(--rs-text-2);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+.rs-quote-intake .rs-quote-source-picker label:hover {
+  color: var(--rs-text);
+}
+.rs-quote-intake .rs-quote-source-picker label:has(input:checked) {
+  color: var(--rs-text);
+  background: var(--rs-raise-2);
+  box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.45);
+}
+.rs-quote-intake .rs-quote-source-picker label:has(input:focus-visible) {
+  outline: 2px solid var(--rs-cyan);
+  outline-offset: 2px;
+}
+.rs-quote-source-picker input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.rs-quote-workspace .rs-quote-file {
+  padding: 5px;
+  color: var(--rs-text-2);
+  font-size: 13px;
+  cursor: pointer;
+}
+.rs-quote-file::file-selector-button {
+  height: 30px;
+  margin-right: 10px;
+  padding: 0 12px;
+  border: 1px solid var(--rs-line-2);
+  border-radius: 6px;
   background: var(--rs-raise-2);
   color: var(--rs-text);
-  padding: 4px 7px;
-  margin-right: 8px;
   font: inherit;
+  font-weight: 560;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+.rs-quote-file:hover::file-selector-button {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(244, 241, 234, 0.28);
 }
 .rs-quote-comparison {
   display: grid;
@@ -133,6 +181,24 @@
   vertical-align: top;
   text-align: left;
 }
+.rs-quote-table tbody th {
+  color: var(--rs-text-2);
+  font-weight: 450;
+}
+.rs-quote-table td {
+  color: var(--rs-text);
+}
+.rs-quote-table tbody tr {
+  transition: background 120ms ease;
+}
+.rs-quote-table tbody tr:hover {
+  background: var(--rs-raise);
+}
+.rs-quote-table td.rs-quote-flagged {
+  background: rgba(251, 191, 36, 0.07);
+  box-shadow: inset 2px 0 0 var(--rs-wait);
+  color: var(--rs-wait);
+}
 .rs-quote-table :is(th, td):first-child {
   width: 25%;
 }
@@ -144,11 +210,23 @@
   color: var(--rs-text);
   font-weight: 620;
 }
+.rs-quote-supplier-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin-top: 6px;
+}
 .rs-quote-supplier-note {
   display: block;
 }
 .rs-quote-missing {
-  color: var(--rs-text-2);
+  color: var(--rs-text-3);
+  font-style: italic;
+}
+.rs-quote-clear {
+  color: var(--rs-ok);
+  font-size: 13px;
 }
 .rs-quote-issues {
   padding-left: 16px;
@@ -163,16 +241,52 @@
   border-top: 1px solid var(--rs-line-2);
 }
 .rs-quote-workspace summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
-  min-height: 42px;
-  padding: 11px 0;
+  min-height: 44px;
+  padding: 11px 4px;
+  list-style: none;
   overflow-wrap: anywhere;
+  border-radius: 6px;
+  transition: color 140ms ease, background 140ms ease;
+}
+.rs-quote-workspace summary::-webkit-details-marker {
+  display: none;
+}
+.rs-quote-workspace summary::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-left: 2px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  opacity: 0.7;
+  transition: transform 180ms ease;
+}
+.rs-quote-workspace details[open] > summary::before {
+  transform: rotate(45deg);
+}
+.rs-quote-workspace summary:hover {
+  background: var(--rs-raise);
+}
+.rs-quote-evidence > details > summary {
+  font-weight: 560;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rs-quote-workspace *,
+  .rs-quote-workspace *::before {
+    transition: none !important;
+  }
 }
 .rs-quote-evidence-body {
   display: grid;
   gap: 12px;
   justify-items: start;
-  padding-bottom: 16px;
+  padding: 2px 0 18px 21px;
 }
 .rs-quote-excerpts {
   display: grid;

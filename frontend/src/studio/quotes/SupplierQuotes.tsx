@@ -21,6 +21,25 @@ const FIELDS = [
   ["exceptions", "Supplier exceptions"],
 ] as const;
 type Field = (typeof FIELDS)[number][0];
+
+// Map server-written issues back to the table cells they concern, so the
+// comparison itself shows where a quote falls short, not just the list below.
+function flaggedFields(issues: string[]): Set<Field> {
+  const flagged = new Set<Field>();
+  for (const raw of issues) {
+    const issue = raw.toLowerCase();
+    for (const key of ["part_number", "revision", "material"] as const) {
+      const name = key.replace("_", " ");
+      if (issue.startsWith(`${name} differs`)) flagged.add(key);
+    }
+    if (issue.startsWith("minimum order")) {
+      flagged.add("minimum_order");
+      flagged.add("quantity");
+    }
+    if (issue.startsWith("supplier exceptions")) flagged.add("exceptions");
+  }
+  return flagged;
+}
 type Term = {
   value: string;
   excerpt: string | null;
@@ -264,24 +283,26 @@ export function SupplierQuotes({
               </label>
               <fieldset className="rs-quote-source-picker">
                 <legend>Source</legend>
-                <label>
-                  <input
-                    type="radio"
-                    name="quote-source"
-                    checked={source === "pdf"}
-                    onChange={() => setSource("pdf")}
-                  />{" "}
-                  Quote PDF
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="quote-source"
-                    checked={source === "reply"}
-                    onChange={() => setSource("reply")}
-                  />{" "}
-                  Paste reply
-                </label>
+                <div className="rs-quote-segment">
+                  <label>
+                    <input
+                      type="radio"
+                      name="quote-source"
+                      checked={source === "pdf"}
+                      onChange={() => setSource("pdf")}
+                    />{" "}
+                    Quote PDF
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="quote-source"
+                      checked={source === "reply"}
+                      onChange={() => setSource("reply")}
+                    />{" "}
+                    Paste reply
+                  </label>
+                </div>
               </fieldset>
               {source === "pdf" ? (
                 <label>
@@ -384,9 +405,15 @@ export function SupplierQuotes({
                           <span className="rs-quote-supplier">
                             {quote.supplier}
                           </span>
-                          <span className="rs-small">
-                            {quote.reviewed ? "Reviewed" : "Needs review"} ·{" "}
-                            {quote.source_kind === "pdf" ? "PDF" : "Reply"}
+                          <span className="rs-quote-supplier-meta">
+                            <span
+                              className={`rs-badge ${quote.reviewed ? "ok" : "wait"}`}
+                            >
+                              {quote.reviewed ? "Reviewed" : "Needs review"}
+                            </span>
+                            <span className="rs-small">
+                              {quote.source_kind === "pdf" ? "PDF" : "Reply"}
+                            </span>
                           </span>
                         </th>
                       ))}
@@ -397,7 +424,14 @@ export function SupplierQuotes({
                       <tr key={field}>
                         <th scope="row">{label}</th>
                         {compared.map((quote) => (
-                          <td key={quote.quote_id}>
+                          <td
+                            key={quote.quote_id}
+                            className={
+                              flaggedFields(quote.issues).has(field)
+                                ? "rs-quote-flagged"
+                                : undefined
+                            }
+                          >
                             {quote.terms[field]?.value || (
                               <span className="rs-quote-missing">
                                 Not supplied
@@ -423,7 +457,9 @@ export function SupplierQuotes({
                               ))}
                             </ul>
                           ) : (
-                            "No gaps flagged"
+                            <span className="rs-quote-clear">
+                              No gaps flagged
+                            </span>
                           )}
                         </td>
                       ))}

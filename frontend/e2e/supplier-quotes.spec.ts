@@ -9,6 +9,9 @@ test.use({
 const pdf = fileURLToPath(
   new URL("../../tests/fixtures/quotes/sample-quote.pdf", import.meta.url),
 );
+const archive = fileURLToPath(
+  new URL("../../blueprint input/mechanica-input-package.zip", import.meta.url),
+);
 const reply = [
   "Hello, we can supply 4 units at EUR 142 each and dispatch in 12 working days.",
   "Part number: RS-DEMO-FB-001",
@@ -23,8 +26,10 @@ test("opens supplier quotes from the Studio assembly and returns with Escape", a
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 1024, height: 768 });
   await page.goto("/");
-  await page.getByRole("button", { name: "Explore a sample assembly" }).click();
-  await page.getByRole("button", { name: "Confirm and open assembly" }).click();
+  await page.locator('input[type="file"]').first().setInputFiles(archive);
+  await page
+    .getByRole("button", { name: "Confirm and open assembly", exact: true })
+    .click();
   const open = page.getByRole("button", { name: "Supplier quotes" });
   await open.click();
   const dialog = page.getByRole("dialog", { name: "Supplier quotes" });
