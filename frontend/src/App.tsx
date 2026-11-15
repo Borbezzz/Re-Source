@@ -13,6 +13,9 @@ const LegacyEngineApp = lazy(() => import("./LegacyEngineApp.tsx"));
 const Studio = lazy(() =>
   import("./studio/Studio.tsx").then((m) => ({ default: m.Studio })),
 );
+const QuotePage = lazy(() =>
+  import("./studio/quotes/QuotePage.tsx").then((m) => ({ default: m.QuotePage })),
+);
 
 export default function App() {
   const [route, setRoute] = useState(() => readRoute(location.hash));
@@ -85,6 +88,12 @@ export default function App() {
     return (
       <Suspense fallback={<div className="rs-boot" role="status" />}>
         <Studio />
+      </Suspense>
+    );
+  if (route.page === "quotes")
+    return (
+      <Suspense fallback={<div className="workspace-loading" role="status">Opening supplier quotes…</div>}>
+        <QuotePage key={route.id} projectId={route.id} />
       </Suspense>
     );
 
