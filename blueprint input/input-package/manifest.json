@@ -2,8 +2,8 @@
   "schemaVersion": "1.0",
   "packageId": "rs-mechanica-turbofan-v1",
   "displayName": "ReSource prepared turbofan demo",
-  "packageVersion": "1.1.0",
-  "buildFingerprint": "a52d3c311d23c67e462ee6f6e92d4ec15772294d6bc3d1c9de52a06745c4395f",
+  "packageVersion": "1.2.0",
+  "buildFingerprint": "8f8217a70a571916d807f8cda85f48b666412ab36526764ed4061149489c1102",
   "toolchain": {
     "node": "26.12.1",
     "three": "0.180.0"
@@ -42,15 +42,15 @@
   "files": [
     {
       "path": "assembly.glb",
-      "sha256": "c2d918b9a58d91db3e2dbfca4948a171a588eb1c10419e884b094ff5c25d8312"
+      "sha256": "df1f4e3ccf800d75907b332e729b7fe57fafc2bc844273b8e1d9fc83f9ef7d02"
     },
     {
       "path": "components.csv",
-      "sha256": "716edf84bbcbd06383c34cfdb8e1c7448d3c9cef20f1aa6b9e63c9c03ae11e47"
+      "sha256": "8494bfabc2439b526062dd6e8350ab5cab29e4207255da771dd77b13c5aa69f2"
     },
     {
       "path": "requirements.json",
-      "sha256": "27f3c1326dbab03cfadacd60f5047f6448f6d6b1eac4474a885169a3f035fb1e"
+      "sha256": "53996097095eeec59bcd1b5bc86e62d225e6a0bcce8cf3cdb10040274a236ce4"
     },
     {
       "path": "LICENSE-Mechanica.txt",
@@ -2539,6 +2539,2791 @@
           7.099999904632568,
           0.4099999964237213,
           0.4099999964237213
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-FAN-RING-M002",
+      "role": "secondary",
+      "name": "Fan retaining ring",
+      "partNumber": "RS-DEMO-FAN-RING-M002",
+      "revision": "A",
+      "parentAssemblyId": "fan",
+      "nodeIds": [
+        "rs-mech-tf-v1.fan.m002.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-FAN-RING-M002-A",
+      "bounds": {
+        "min": [
+          -3.138042262196541,
+          -0.5699999928474426,
+          -0.5699999928474426
+        ],
+        "max": [
+          -3.0619577378034593,
+          0.5699999928474426,
+          0.5699999928474426
+        ],
+        "size": [
+          0.07608452439308167,
+          1.1399999856948853,
+          1.1399999856948853
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-HOUSING-M004",
+      "role": "secondary",
+      "name": "Compressor housing",
+      "partNumber": "RS-DEMO-CP-HOUSING-M004",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m004.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-HOUSING-M004-A",
+      "bounds": {
+        "min": [
+          -2.700000047683716,
+          -0.8299999833106995,
+          -0.8299999833106995
+        ],
+        "max": [
+          0.75,
+          0.8299999833106995,
+          0.8299999833106995
+        ],
+        "size": [
+          3.450000047683716,
+          1.659999966621399,
+          1.659999966621399
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M006",
+      "role": "secondary",
+      "name": "Compressor retaining ring 01",
+      "partNumber": "RS-DEMO-CP-RING-M006",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m006.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M006-A",
+      "bounds": {
+        "min": [
+          -2.391846487671137,
+          -0.6039999723434448,
+          -0.6039999723434448
+        ],
+        "max": [
+          -2.3081535123288632,
+          0.6039999723434448,
+          0.6039999723434448
+        ],
+        "size": [
+          0.08369297534227371,
+          1.2079999446868896,
+          1.2079999446868896
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M008",
+      "role": "secondary",
+      "name": "Compressor retaining ring 02",
+      "partNumber": "RS-DEMO-CP-RING-M008",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m008.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M008-A",
+      "bounds": {
+        "min": [
+          -2.383286977559328,
+          -1.3200000524520874,
+          -1.3200000524520874
+        ],
+        "max": [
+          -2.316713022440672,
+          1.3200000524520874,
+          1.3200000524520874
+        ],
+        "size": [
+          0.06657395511865616,
+          2.640000104904175,
+          2.640000104904175
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M010",
+      "role": "secondary",
+      "name": "Compressor retaining ring 03",
+      "partNumber": "RS-DEMO-CP-RING-M010",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m010.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M010-A",
+      "bounds": {
+        "min": [
+          -2.056846487671137,
+          -0.6370000243186951,
+          -0.6370000243186951
+        ],
+        "max": [
+          -1.9731535123288633,
+          0.6370000243186951,
+          0.6370000243186951
+        ],
+        "size": [
+          0.08369297534227371,
+          1.2740000486373901,
+          1.2740000486373901
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M012",
+      "role": "secondary",
+      "name": "Compressor retaining ring 04",
+      "partNumber": "RS-DEMO-CP-RING-M012",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m012.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M012-A",
+      "bounds": {
+        "min": [
+          -2.048286977559328,
+          -1.284000039100647,
+          -1.284000039100647
+        ],
+        "max": [
+          -1.981713022440672,
+          1.284000039100647,
+          1.284000039100647
+        ],
+        "size": [
+          0.06657395511865616,
+          2.568000078201294,
+          2.568000078201294
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M014",
+      "role": "secondary",
+      "name": "Compressor retaining ring 05",
+      "partNumber": "RS-DEMO-CP-RING-M014",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m014.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M014-A",
+      "bounds": {
+        "min": [
+          -1.721846487671137,
+          -0.6700000166893005,
+          -0.6700000166893005
+        ],
+        "max": [
+          -1.6381535123288633,
+          0.6700000166893005,
+          0.6700000166893005
+        ],
+        "size": [
+          0.08369297534227371,
+          1.340000033378601,
+          1.340000033378601
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M016",
+      "role": "secondary",
+      "name": "Compressor retaining ring 06",
+      "partNumber": "RS-DEMO-CP-RING-M016",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m016.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M016-A",
+      "bounds": {
+        "min": [
+          -1.7132869775593282,
+          -1.2480000257492065,
+          -1.2480000257492065
+        ],
+        "max": [
+          -1.646713022440672,
+          1.2480000257492065,
+          1.2480000257492065
+        ],
+        "size": [
+          0.06657395511865616,
+          2.496000051498413,
+          2.496000051498413
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M018",
+      "role": "secondary",
+      "name": "Compressor retaining ring 07",
+      "partNumber": "RS-DEMO-CP-RING-M018",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m018.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M018-A",
+      "bounds": {
+        "min": [
+          -1.3868464876711368,
+          -0.703000009059906,
+          -0.703000009059906
+        ],
+        "max": [
+          -1.3031535123288631,
+          0.703000009059906,
+          0.703000009059906
+        ],
+        "size": [
+          0.08369297534227371,
+          1.406000018119812,
+          1.406000018119812
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M020",
+      "role": "secondary",
+      "name": "Compressor retaining ring 08",
+      "partNumber": "RS-DEMO-CP-RING-M020",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m020.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M020-A",
+      "bounds": {
+        "min": [
+          -1.378286977559328,
+          -1.2120000123977661,
+          -1.2120000123977661
+        ],
+        "max": [
+          -1.311713022440672,
+          1.2120000123977661,
+          1.2120000123977661
+        ],
+        "size": [
+          0.06657395511865616,
+          2.4240000247955322,
+          2.4240000247955322
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M022",
+      "role": "secondary",
+      "name": "Compressor retaining ring 09",
+      "partNumber": "RS-DEMO-CP-RING-M022",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m022.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M022-A",
+      "bounds": {
+        "min": [
+          -1.0518464876711369,
+          -0.7360000014305115,
+          -0.7360000014305115
+        ],
+        "max": [
+          -0.9681535123288632,
+          0.7360000014305115,
+          0.7360000014305115
+        ],
+        "size": [
+          0.08369297534227371,
+          1.472000002861023,
+          1.472000002861023
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M024",
+      "role": "secondary",
+      "name": "Compressor retaining ring 10",
+      "partNumber": "RS-DEMO-CP-RING-M024",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m024.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M024-A",
+      "bounds": {
+        "min": [
+          -1.043286977559328,
+          -1.1759999990463257,
+          -1.1759999990463257
+        ],
+        "max": [
+          -0.9767130224406719,
+          1.1759999990463257,
+          1.1759999990463257
+        ],
+        "size": [
+          0.06657395511865616,
+          2.3519999980926514,
+          2.3519999980926514
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M026",
+      "role": "secondary",
+      "name": "Compressor retaining ring 11",
+      "partNumber": "RS-DEMO-CP-RING-M026",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m026.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M026-A",
+      "bounds": {
+        "min": [
+          -0.7168464876711369,
+          -0.7689999938011169,
+          -0.7689999938011169
+        ],
+        "max": [
+          -0.6331535123288632,
+          0.7689999938011169,
+          0.7689999938011169
+        ],
+        "size": [
+          0.08369297534227371,
+          1.5379999876022339,
+          1.5379999876022339
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M028",
+      "role": "secondary",
+      "name": "Compressor retaining ring 12",
+      "partNumber": "RS-DEMO-CP-RING-M028",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m028.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M028-A",
+      "bounds": {
+        "min": [
+          -0.7082869775593281,
+          -1.1399999856948853,
+          -1.1399999856948853
+        ],
+        "max": [
+          -0.641713022440672,
+          1.1399999856948853,
+          1.1399999856948853
+        ],
+        "size": [
+          0.06657395511865616,
+          2.2799999713897705,
+          2.2799999713897705
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M030",
+      "role": "secondary",
+      "name": "Compressor retaining ring 13",
+      "partNumber": "RS-DEMO-CP-RING-M030",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m030.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M030-A",
+      "bounds": {
+        "min": [
+          -0.3818464876711367,
+          -0.8019999861717224,
+          -0.8019999861717224
+        ],
+        "max": [
+          -0.298153512328863,
+          0.8019999861717224,
+          0.8019999861717224
+        ],
+        "size": [
+          0.08369297534227371,
+          1.6039999723434448,
+          1.6039999723434448
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M032",
+      "role": "secondary",
+      "name": "Compressor retaining ring 14",
+      "partNumber": "RS-DEMO-CP-RING-M032",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m032.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M032-A",
+      "bounds": {
+        "min": [
+          -0.37328697755932794,
+          -1.1039999723434448,
+          -1.1039999723434448
+        ],
+        "max": [
+          -0.3067130224406718,
+          1.1039999723434448,
+          1.1039999723434448
+        ],
+        "size": [
+          0.06657395511865616,
+          2.2079999446868896,
+          2.2079999446868896
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M034",
+      "role": "secondary",
+      "name": "Compressor retaining ring 15",
+      "partNumber": "RS-DEMO-CP-RING-M034",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m034.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M034-A",
+      "bounds": {
+        "min": [
+          -0.04684648767113675,
+          -0.8349999785423279,
+          -0.8349999785423279
+        ],
+        "max": [
+          0.03684648767113696,
+          0.8349999785423279,
+          0.8349999785423279
+        ],
+        "size": [
+          0.08369297534227371,
+          1.6699999570846558,
+          1.6699999570846558
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M036",
+      "role": "secondary",
+      "name": "Compressor retaining ring 16",
+      "partNumber": "RS-DEMO-CP-RING-M036",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m036.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M036-A",
+      "bounds": {
+        "min": [
+          -0.03828697755932797,
+          -1.0679999589920044,
+          -1.0679999589920044
+        ],
+        "max": [
+          0.028286977559328186,
+          1.0679999589920044,
+          1.0679999589920044
+        ],
+        "size": [
+          0.06657395511865616,
+          2.135999917984009,
+          2.135999917984009
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M038",
+      "role": "secondary",
+      "name": "Compressor retaining ring 17",
+      "partNumber": "RS-DEMO-CP-RING-M038",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m038.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M038-A",
+      "bounds": {
+        "min": [
+          0.2881535123288632,
+          -0.8679999709129333,
+          -0.8679999709129333
+        ],
+        "max": [
+          0.3718464876711369,
+          0.8679999709129333,
+          0.8679999709129333
+        ],
+        "size": [
+          0.08369297534227371,
+          1.7359999418258667,
+          1.7359999418258667
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CP-RING-M039",
+      "role": "secondary",
+      "name": "Compressor retaining ring 18",
+      "partNumber": "RS-DEMO-CP-RING-M039",
+      "revision": "A",
+      "parentAssemblyId": "compressor",
+      "nodeIds": [
+        "rs-mech-tf-v1.compressor.m039.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CP-RING-M039-A",
+      "bounds": {
+        "min": [
+          0.296713022440672,
+          -1.031999945640564,
+          -1.031999945640564
+        ],
+        "max": [
+          0.36328697755932815,
+          1.031999945640564,
+          1.031999945640564
+        ],
+        "size": [
+          0.06657395511865616,
+          2.063999891281128,
+          2.063999891281128
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CB-RING-M042",
+      "role": "secondary",
+      "name": "Combustor retaining ring 01",
+      "partNumber": "RS-DEMO-CB-RING-M042",
+      "revision": "A",
+      "parentAssemblyId": "combustor",
+      "nodeIds": [
+        "rs-mech-tf-v1.combustor.m042.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CB-RING-M042-A",
+      "bounds": {
+        "min": [
+          0.8429366104304791,
+          -1.149999976158142,
+          -1.149999976158142
+        ],
+        "max": [
+          0.957063389569521,
+          1.149999976158142,
+          1.149999976158142
+        ],
+        "size": [
+          0.1141267791390419,
+          2.299999952316284,
+          2.299999952316284
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CB-RING-M043",
+      "role": "secondary",
+      "name": "Combustor retaining ring 02",
+      "partNumber": "RS-DEMO-CB-RING-M043",
+      "revision": "A",
+      "parentAssemblyId": "combustor",
+      "nodeIds": [
+        "rs-mech-tf-v1.combustor.m043.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CB-RING-M043-A",
+      "bounds": {
+        "min": [
+          2.1676918913424017,
+          -1.024999976158142,
+          -1.024999976158142
+        ],
+        "max": [
+          2.2723081086575987,
+          1.024999976158142,
+          1.024999976158142
+        ],
+        "size": [
+          0.10461621731519699,
+          2.049999952316284,
+          2.049999952316284
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-HOUSING-M081",
+      "role": "secondary",
+      "name": "Turbine housing",
+      "partNumber": "RS-DEMO-TB-HOUSING-M081",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m081.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-HOUSING-M081-A",
+      "bounds": {
+        "min": [
+          2.3499999046325684,
+          -0.6399999856948853,
+          -0.6399999856948853
+        ],
+        "max": [
+          3.75,
+          0.6399999856948853,
+          0.6399999856948853
+        ],
+        "size": [
+          1.4000000953674316,
+          1.2799999713897705,
+          1.2799999713897705
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M083",
+      "role": "secondary",
+      "name": "Turbine retaining ring 01",
+      "partNumber": "RS-DEMO-TB-RING-M083",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m083.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M083-A",
+      "bounds": {
+        "min": [
+          2.318181325793266,
+          -0.6449999809265137,
+          -0.6449999809265137
+        ],
+        "max": [
+          2.4418186742067336,
+          0.6449999809265137,
+          0.6449999809265137
+        ],
+        "size": [
+          0.12363734841346741,
+          1.2899999618530273,
+          1.2899999618530273
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M085",
+      "role": "secondary",
+      "name": "Turbine retaining ring 02",
+      "partNumber": "RS-DEMO-TB-RING-M085",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m085.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M085-A",
+      "bounds": {
+        "min": [
+          2.346713022440672,
+          -1.0850000381469727,
+          -1.0850000381469727
+        ],
+        "max": [
+          2.413286977559328,
+          1.0850000381469727,
+          1.0850000381469727
+        ],
+        "size": [
+          0.06657395511865616,
+          2.1700000762939453,
+          2.1700000762939453
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M087",
+      "role": "secondary",
+      "name": "Turbine retaining ring 03",
+      "partNumber": "RS-DEMO-TB-RING-M087",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m087.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M087-A",
+      "bounds": {
+        "min": [
+          2.6081813257932662,
+          -0.6449999809265137,
+          -0.6449999809265137
+        ],
+        "max": [
+          2.7318186742067336,
+          0.6449999809265137,
+          0.6449999809265137
+        ],
+        "size": [
+          0.12363734841346741,
+          1.2899999618530273,
+          1.2899999618530273
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M089",
+      "role": "secondary",
+      "name": "Turbine retaining ring 04",
+      "partNumber": "RS-DEMO-TB-RING-M089",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m089.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M089-A",
+      "bounds": {
+        "min": [
+          2.636713022440672,
+          -1.0700000524520874,
+          -1.0700000524520874
+        ],
+        "max": [
+          2.703286977559328,
+          1.0700000524520874,
+          1.0700000524520874
+        ],
+        "size": [
+          0.06657395511865616,
+          2.140000104904175,
+          2.140000104904175
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M091",
+      "role": "secondary",
+      "name": "Turbine retaining ring 05",
+      "partNumber": "RS-DEMO-TB-RING-M091",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m091.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M091-A",
+      "bounds": {
+        "min": [
+          2.8981813257932663,
+          -0.6449999809265137,
+          -0.6449999809265137
+        ],
+        "max": [
+          3.0218186742067337,
+          0.6449999809265137,
+          0.6449999809265137
+        ],
+        "size": [
+          0.12363734841346741,
+          1.2899999618530273,
+          1.2899999618530273
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M093",
+      "role": "secondary",
+      "name": "Turbine retaining ring 06",
+      "partNumber": "RS-DEMO-TB-RING-M093",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m093.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M093-A",
+      "bounds": {
+        "min": [
+          2.926713022440672,
+          -1.0549999475479126,
+          -1.0549999475479126
+        ],
+        "max": [
+          2.993286977559328,
+          1.0549999475479126,
+          1.0549999475479126
+        ],
+        "size": [
+          0.06657395511865616,
+          2.109999895095825,
+          2.109999895095825
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M095",
+      "role": "secondary",
+      "name": "Turbine retaining ring 07",
+      "partNumber": "RS-DEMO-TB-RING-M095",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m095.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M095-A",
+      "bounds": {
+        "min": [
+          3.1881813257932663,
+          -0.6449999809265137,
+          -0.6449999809265137
+        ],
+        "max": [
+          3.3118186742067337,
+          0.6449999809265137,
+          0.6449999809265137
+        ],
+        "size": [
+          0.12363734841346741,
+          1.2899999618530273,
+          1.2899999618530273
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M097",
+      "role": "secondary",
+      "name": "Turbine retaining ring 08",
+      "partNumber": "RS-DEMO-TB-RING-M097",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m097.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M097-A",
+      "bounds": {
+        "min": [
+          3.216713022440672,
+          -1.0399999618530273,
+          -1.0399999618530273
+        ],
+        "max": [
+          3.283286977559328,
+          1.0399999618530273,
+          1.0399999618530273
+        ],
+        "size": [
+          0.06657395511865616,
+          2.0799999237060547,
+          2.0799999237060547
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M099",
+      "role": "secondary",
+      "name": "Turbine retaining ring 09",
+      "partNumber": "RS-DEMO-TB-RING-M099",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m099.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M099-A",
+      "bounds": {
+        "min": [
+          3.4781813257932663,
+          -0.6449999809265137,
+          -0.6449999809265137
+        ],
+        "max": [
+          3.6018186742067337,
+          0.6449999809265137,
+          0.6449999809265137
+        ],
+        "size": [
+          0.12363734841346741,
+          1.2899999618530273,
+          1.2899999618530273
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-TB-RING-M100",
+      "role": "secondary",
+      "name": "Turbine retaining ring 10",
+      "partNumber": "RS-DEMO-TB-RING-M100",
+      "revision": "A",
+      "parentAssemblyId": "turbine",
+      "nodeIds": [
+        "rs-mech-tf-v1.turbine.m100.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-TB-RING-M100-A",
+      "bounds": {
+        "min": [
+          3.506713022440672,
+          -1.024999976158142,
+          -1.024999976158142
+        ],
+        "max": [
+          3.573286977559328,
+          1.024999976158142,
+          1.024999976158142
+        ],
+        "size": [
+          0.06657395511865616,
+          2.049999952316284,
+          2.049999952316284
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-NZ-HOUSING-M101",
+      "role": "secondary",
+      "name": "Nozzle housing 01",
+      "partNumber": "RS-DEMO-NZ-HOUSING-M101",
+      "revision": "A",
+      "parentAssemblyId": "nozzle",
+      "nodeIds": [
+        "rs-mech-tf-v1.nozzle.m101.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-NZ-HOUSING-M101-A",
+      "bounds": {
+        "min": [
+          3.7799999713897705,
+          -1.0299999713897705,
+          -1.0299999713897705
+        ],
+        "max": [
+          5.099999904632568,
+          1.0299999713897705,
+          1.0299999713897705
+        ],
+        "size": [
+          1.3199999332427979,
+          2.059999942779541,
+          2.059999942779541
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-NZ-HOUSING-M102",
+      "role": "secondary",
+      "name": "Nozzle housing 02",
+      "partNumber": "RS-DEMO-NZ-HOUSING-M102",
+      "revision": "A",
+      "parentAssemblyId": "nozzle",
+      "nodeIds": [
+        "rs-mech-tf-v1.nozzle.m102.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-NZ-HOUSING-M102-A",
+      "bounds": {
+        "min": [
+          3.6500000953674316,
+          -0.47999998927116394,
+          -0.47999998927116394
+        ],
+        "max": [
+          4.900000095367432,
+          0.47999998927116394,
+          0.47999998927116394
+        ],
+        "size": [
+          1.25,
+          0.9599999785423279,
+          0.9599999785423279
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-NZ-RING-M103",
+      "role": "secondary",
+      "name": "Nozzle retaining ring",
+      "partNumber": "RS-DEMO-NZ-RING-M103",
+      "revision": "A",
+      "parentAssemblyId": "nozzle",
+      "nodeIds": [
+        "rs-mech-tf-v1.nozzle.m103.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-NZ-RING-M103-A",
+      "bounds": {
+        "min": [
+          3.792447175979614,
+          -1.0700000524520874,
+          -1.0700000524520874
+        ],
+        "max": [
+          3.8875528240203856,
+          1.0700000524520874,
+          1.0700000524520874
+        ],
+        "size": [
+          0.09510564804077148,
+          2.140000104904175,
+          2.140000104904175
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-NZ-FASTENER-M104",
+      "role": "secondary",
+      "name": "Nozzle fasteners",
+      "partNumber": "RS-DEMO-NZ-FASTENER-M104",
+      "revision": "A",
+      "parentAssemblyId": "nozzle",
+      "nodeIds": [
+        "rs-mech-tf-v1.nozzle.m104.i000",
+        "rs-mech-tf-v1.nozzle.m104.i001",
+        "rs-mech-tf-v1.nozzle.m104.i002",
+        "rs-mech-tf-v1.nozzle.m104.i003",
+        "rs-mech-tf-v1.nozzle.m104.i004",
+        "rs-mech-tf-v1.nozzle.m104.i005",
+        "rs-mech-tf-v1.nozzle.m104.i006",
+        "rs-mech-tf-v1.nozzle.m104.i007",
+        "rs-mech-tf-v1.nozzle.m104.i008",
+        "rs-mech-tf-v1.nozzle.m104.i009",
+        "rs-mech-tf-v1.nozzle.m104.i010",
+        "rs-mech-tf-v1.nozzle.m104.i011",
+        "rs-mech-tf-v1.nozzle.m104.i012",
+        "rs-mech-tf-v1.nozzle.m104.i013",
+        "rs-mech-tf-v1.nozzle.m104.i014",
+        "rs-mech-tf-v1.nozzle.m104.i015",
+        "rs-mech-tf-v1.nozzle.m104.i016",
+        "rs-mech-tf-v1.nozzle.m104.i017",
+        "rs-mech-tf-v1.nozzle.m104.i018",
+        "rs-mech-tf-v1.nozzle.m104.i019",
+        "rs-mech-tf-v1.nozzle.m104.i020",
+        "rs-mech-tf-v1.nozzle.m104.i021",
+        "rs-mech-tf-v1.nozzle.m104.i022",
+        "rs-mech-tf-v1.nozzle.m104.i023",
+        "rs-mech-tf-v1.nozzle.m104.i024",
+        "rs-mech-tf-v1.nozzle.m104.i025",
+        "rs-mech-tf-v1.nozzle.m104.i026",
+        "rs-mech-tf-v1.nozzle.m104.i027",
+        "rs-mech-tf-v1.nozzle.m104.i028",
+        "rs-mech-tf-v1.nozzle.m104.i029",
+        "rs-mech-tf-v1.nozzle.m104.i030",
+        "rs-mech-tf-v1.nozzle.m104.i031",
+        "rs-mech-tf-v1.nozzle.m104.i032",
+        "rs-mech-tf-v1.nozzle.m104.i033",
+        "rs-mech-tf-v1.nozzle.m104.i034",
+        "rs-mech-tf-v1.nozzle.m104.i035"
+      ],
+      "assemblyQuantity": 36,
+      "condition": "new",
+      "requirementSet": "REQ-NZ-FASTENER-M104-A",
+      "bounds": {
+        "min": [
+          3.8074999153614044,
+          -1.076373029500246,
+          -1.0819999612867832
+        ],
+        "max": [
+          3.8724999129772186,
+          1.076373029500246,
+          1.0819999612867832
+        ],
+        "size": [
+          0.06499999761581421,
+          2.152746059000492,
+          2.1639999225735664
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M106",
+      "role": "secondary",
+      "name": "Casing retaining ring 01",
+      "partNumber": "RS-DEMO-CA-RING-M106",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m106.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M106-A",
+      "bounds": {
+        "min": [
+          -3.283286977559328,
+          -2.384999990463257,
+          -2.384999990463257
+        ],
+        "max": [
+          -3.216713022440672,
+          2.384999990463257,
+          2.384999990463257
+        ],
+        "size": [
+          0.06657395511865616,
+          4.769999980926514,
+          4.769999980926514
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M107",
+      "role": "secondary",
+      "name": "Casing fasteners 01",
+      "partNumber": "RS-DEMO-CA-FASTENER-M107",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m107.i000",
+        "rs-mech-tf-v1.casing.m107.i001",
+        "rs-mech-tf-v1.casing.m107.i002",
+        "rs-mech-tf-v1.casing.m107.i003",
+        "rs-mech-tf-v1.casing.m107.i004",
+        "rs-mech-tf-v1.casing.m107.i005",
+        "rs-mech-tf-v1.casing.m107.i006",
+        "rs-mech-tf-v1.casing.m107.i007",
+        "rs-mech-tf-v1.casing.m107.i008",
+        "rs-mech-tf-v1.casing.m107.i009",
+        "rs-mech-tf-v1.casing.m107.i010",
+        "rs-mech-tf-v1.casing.m107.i011",
+        "rs-mech-tf-v1.casing.m107.i012",
+        "rs-mech-tf-v1.casing.m107.i013",
+        "rs-mech-tf-v1.casing.m107.i014",
+        "rs-mech-tf-v1.casing.m107.i015",
+        "rs-mech-tf-v1.casing.m107.i016",
+        "rs-mech-tf-v1.casing.m107.i017",
+        "rs-mech-tf-v1.casing.m107.i018",
+        "rs-mech-tf-v1.casing.m107.i019",
+        "rs-mech-tf-v1.casing.m107.i020",
+        "rs-mech-tf-v1.casing.m107.i021",
+        "rs-mech-tf-v1.casing.m107.i022",
+        "rs-mech-tf-v1.casing.m107.i023",
+        "rs-mech-tf-v1.casing.m107.i024",
+        "rs-mech-tf-v1.casing.m107.i025",
+        "rs-mech-tf-v1.casing.m107.i026",
+        "rs-mech-tf-v1.casing.m107.i027",
+        "rs-mech-tf-v1.casing.m107.i028",
+        "rs-mech-tf-v1.casing.m107.i029",
+        "rs-mech-tf-v1.casing.m107.i030",
+        "rs-mech-tf-v1.casing.m107.i031",
+        "rs-mech-tf-v1.casing.m107.i032",
+        "rs-mech-tf-v1.casing.m107.i033",
+        "rs-mech-tf-v1.casing.m107.i034",
+        "rs-mech-tf-v1.casing.m107.i035",
+        "rs-mech-tf-v1.casing.m107.i036",
+        "rs-mech-tf-v1.casing.m107.i037",
+        "rs-mech-tf-v1.casing.m107.i038",
+        "rs-mech-tf-v1.casing.m107.i039",
+        "rs-mech-tf-v1.casing.m107.i040",
+        "rs-mech-tf-v1.casing.m107.i041",
+        "rs-mech-tf-v1.casing.m107.i042",
+        "rs-mech-tf-v1.casing.m107.i043",
+        "rs-mech-tf-v1.casing.m107.i044",
+        "rs-mech-tf-v1.casing.m107.i045",
+        "rs-mech-tf-v1.casing.m107.i046",
+        "rs-mech-tf-v1.casing.m107.i047"
+      ],
+      "assemblyQuantity": 48,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M107-A",
+      "bounds": {
+        "min": [
+          -3.282499998807907,
+          -2.386372972279787,
+          -2.3919999040663242
+        ],
+        "max": [
+          -3.217500001192093,
+          2.386372972279787,
+          2.3919999040663242
+        ],
+        "size": [
+          0.06499999761581421,
+          4.772745944559574,
+          4.7839998081326485
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M108",
+      "role": "secondary",
+      "name": "Casing retaining ring 02",
+      "partNumber": "RS-DEMO-CA-RING-M108",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m108.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M108-A",
+      "bounds": {
+        "min": [
+          -2.533286977559328,
+          -2.3550000190734863,
+          -2.3550000190734863
+        ],
+        "max": [
+          -2.466713022440672,
+          2.3550000190734863,
+          2.3550000190734863
+        ],
+        "size": [
+          0.06657395511865616,
+          4.710000038146973,
+          4.710000038146973
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M109",
+      "role": "secondary",
+      "name": "Casing fasteners 02",
+      "partNumber": "RS-DEMO-CA-FASTENER-M109",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m109.i000",
+        "rs-mech-tf-v1.casing.m109.i001",
+        "rs-mech-tf-v1.casing.m109.i002",
+        "rs-mech-tf-v1.casing.m109.i003",
+        "rs-mech-tf-v1.casing.m109.i004",
+        "rs-mech-tf-v1.casing.m109.i005",
+        "rs-mech-tf-v1.casing.m109.i006",
+        "rs-mech-tf-v1.casing.m109.i007",
+        "rs-mech-tf-v1.casing.m109.i008",
+        "rs-mech-tf-v1.casing.m109.i009",
+        "rs-mech-tf-v1.casing.m109.i010",
+        "rs-mech-tf-v1.casing.m109.i011",
+        "rs-mech-tf-v1.casing.m109.i012",
+        "rs-mech-tf-v1.casing.m109.i013",
+        "rs-mech-tf-v1.casing.m109.i014",
+        "rs-mech-tf-v1.casing.m109.i015",
+        "rs-mech-tf-v1.casing.m109.i016",
+        "rs-mech-tf-v1.casing.m109.i017",
+        "rs-mech-tf-v1.casing.m109.i018",
+        "rs-mech-tf-v1.casing.m109.i019",
+        "rs-mech-tf-v1.casing.m109.i020",
+        "rs-mech-tf-v1.casing.m109.i021",
+        "rs-mech-tf-v1.casing.m109.i022",
+        "rs-mech-tf-v1.casing.m109.i023",
+        "rs-mech-tf-v1.casing.m109.i024",
+        "rs-mech-tf-v1.casing.m109.i025",
+        "rs-mech-tf-v1.casing.m109.i026",
+        "rs-mech-tf-v1.casing.m109.i027",
+        "rs-mech-tf-v1.casing.m109.i028",
+        "rs-mech-tf-v1.casing.m109.i029",
+        "rs-mech-tf-v1.casing.m109.i030",
+        "rs-mech-tf-v1.casing.m109.i031",
+        "rs-mech-tf-v1.casing.m109.i032",
+        "rs-mech-tf-v1.casing.m109.i033",
+        "rs-mech-tf-v1.casing.m109.i034",
+        "rs-mech-tf-v1.casing.m109.i035",
+        "rs-mech-tf-v1.casing.m109.i036",
+        "rs-mech-tf-v1.casing.m109.i037",
+        "rs-mech-tf-v1.casing.m109.i038",
+        "rs-mech-tf-v1.casing.m109.i039",
+        "rs-mech-tf-v1.casing.m109.i040",
+        "rs-mech-tf-v1.casing.m109.i041",
+        "rs-mech-tf-v1.casing.m109.i042",
+        "rs-mech-tf-v1.casing.m109.i043",
+        "rs-mech-tf-v1.casing.m109.i044",
+        "rs-mech-tf-v1.casing.m109.i045",
+        "rs-mech-tf-v1.casing.m109.i046",
+        "rs-mech-tf-v1.casing.m109.i047"
+      ],
+      "assemblyQuantity": 48,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M109-A",
+      "bounds": {
+        "min": [
+          -2.532499998807907,
+          -2.3563730008900166,
+          -2.3619999326765537
+        ],
+        "max": [
+          -2.467500001192093,
+          2.3563730008900166,
+          2.3619999326765537
+        ],
+        "size": [
+          0.06499999761581421,
+          4.712746001780033,
+          4.7239998653531075
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M110",
+      "role": "secondary",
+      "name": "Casing retaining ring 03",
+      "partNumber": "RS-DEMO-CA-RING-M110",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m110.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M110-A",
+      "bounds": {
+        "min": [
+          -1.233286977559328,
+          -2.174999952316284,
+          -2.174999952316284
+        ],
+        "max": [
+          -1.1667130224406719,
+          2.174999952316284,
+          2.174999952316284
+        ],
+        "size": [
+          0.06657395511865616,
+          4.349999904632568,
+          4.349999904632568
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M111",
+      "role": "secondary",
+      "name": "Casing fasteners 03",
+      "partNumber": "RS-DEMO-CA-FASTENER-M111",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m111.i000",
+        "rs-mech-tf-v1.casing.m111.i001",
+        "rs-mech-tf-v1.casing.m111.i002",
+        "rs-mech-tf-v1.casing.m111.i003",
+        "rs-mech-tf-v1.casing.m111.i004",
+        "rs-mech-tf-v1.casing.m111.i005",
+        "rs-mech-tf-v1.casing.m111.i006",
+        "rs-mech-tf-v1.casing.m111.i007",
+        "rs-mech-tf-v1.casing.m111.i008",
+        "rs-mech-tf-v1.casing.m111.i009",
+        "rs-mech-tf-v1.casing.m111.i010",
+        "rs-mech-tf-v1.casing.m111.i011",
+        "rs-mech-tf-v1.casing.m111.i012",
+        "rs-mech-tf-v1.casing.m111.i013",
+        "rs-mech-tf-v1.casing.m111.i014",
+        "rs-mech-tf-v1.casing.m111.i015",
+        "rs-mech-tf-v1.casing.m111.i016",
+        "rs-mech-tf-v1.casing.m111.i017",
+        "rs-mech-tf-v1.casing.m111.i018",
+        "rs-mech-tf-v1.casing.m111.i019",
+        "rs-mech-tf-v1.casing.m111.i020",
+        "rs-mech-tf-v1.casing.m111.i021",
+        "rs-mech-tf-v1.casing.m111.i022",
+        "rs-mech-tf-v1.casing.m111.i023",
+        "rs-mech-tf-v1.casing.m111.i024",
+        "rs-mech-tf-v1.casing.m111.i025",
+        "rs-mech-tf-v1.casing.m111.i026",
+        "rs-mech-tf-v1.casing.m111.i027",
+        "rs-mech-tf-v1.casing.m111.i028",
+        "rs-mech-tf-v1.casing.m111.i029",
+        "rs-mech-tf-v1.casing.m111.i030",
+        "rs-mech-tf-v1.casing.m111.i031",
+        "rs-mech-tf-v1.casing.m111.i032",
+        "rs-mech-tf-v1.casing.m111.i033",
+        "rs-mech-tf-v1.casing.m111.i034",
+        "rs-mech-tf-v1.casing.m111.i035",
+        "rs-mech-tf-v1.casing.m111.i036",
+        "rs-mech-tf-v1.casing.m111.i037",
+        "rs-mech-tf-v1.casing.m111.i038",
+        "rs-mech-tf-v1.casing.m111.i039",
+        "rs-mech-tf-v1.casing.m111.i040",
+        "rs-mech-tf-v1.casing.m111.i041",
+        "rs-mech-tf-v1.casing.m111.i042",
+        "rs-mech-tf-v1.casing.m111.i043",
+        "rs-mech-tf-v1.casing.m111.i044",
+        "rs-mech-tf-v1.casing.m111.i045",
+        "rs-mech-tf-v1.casing.m111.i046",
+        "rs-mech-tf-v1.casing.m111.i047"
+      ],
+      "assemblyQuantity": 48,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M111-A",
+      "bounds": {
+        "min": [
+          -1.232500046491623,
+          -2.1763731725513935,
+          -2.1820001043379307
+        ],
+        "max": [
+          -1.1675000488758087,
+          2.1763731725513935,
+          2.1820001043379307
+        ],
+        "size": [
+          0.06499999761581421,
+          4.352746345102787,
+          4.364000208675861
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M112",
+      "role": "secondary",
+      "name": "Casing retaining ring 04",
+      "partNumber": "RS-DEMO-CA-RING-M112",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m112.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M112-A",
+      "bounds": {
+        "min": [
+          0.4667130224406719,
+          -1.8849999904632568,
+          -1.8849999904632568
+        ],
+        "max": [
+          0.5332869775593281,
+          1.8849999904632568,
+          1.8849999904632568
+        ],
+        "size": [
+          0.06657395511865616,
+          3.7699999809265137,
+          3.7699999809265137
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M113",
+      "role": "secondary",
+      "name": "Casing fasteners 04",
+      "partNumber": "RS-DEMO-CA-FASTENER-M113",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m113.i000",
+        "rs-mech-tf-v1.casing.m113.i001",
+        "rs-mech-tf-v1.casing.m113.i002",
+        "rs-mech-tf-v1.casing.m113.i003",
+        "rs-mech-tf-v1.casing.m113.i004",
+        "rs-mech-tf-v1.casing.m113.i005",
+        "rs-mech-tf-v1.casing.m113.i006",
+        "rs-mech-tf-v1.casing.m113.i007",
+        "rs-mech-tf-v1.casing.m113.i008",
+        "rs-mech-tf-v1.casing.m113.i009",
+        "rs-mech-tf-v1.casing.m113.i010",
+        "rs-mech-tf-v1.casing.m113.i011",
+        "rs-mech-tf-v1.casing.m113.i012",
+        "rs-mech-tf-v1.casing.m113.i013",
+        "rs-mech-tf-v1.casing.m113.i014",
+        "rs-mech-tf-v1.casing.m113.i015",
+        "rs-mech-tf-v1.casing.m113.i016",
+        "rs-mech-tf-v1.casing.m113.i017",
+        "rs-mech-tf-v1.casing.m113.i018",
+        "rs-mech-tf-v1.casing.m113.i019",
+        "rs-mech-tf-v1.casing.m113.i020",
+        "rs-mech-tf-v1.casing.m113.i021",
+        "rs-mech-tf-v1.casing.m113.i022",
+        "rs-mech-tf-v1.casing.m113.i023",
+        "rs-mech-tf-v1.casing.m113.i024",
+        "rs-mech-tf-v1.casing.m113.i025",
+        "rs-mech-tf-v1.casing.m113.i026",
+        "rs-mech-tf-v1.casing.m113.i027",
+        "rs-mech-tf-v1.casing.m113.i028",
+        "rs-mech-tf-v1.casing.m113.i029",
+        "rs-mech-tf-v1.casing.m113.i030",
+        "rs-mech-tf-v1.casing.m113.i031",
+        "rs-mech-tf-v1.casing.m113.i032",
+        "rs-mech-tf-v1.casing.m113.i033",
+        "rs-mech-tf-v1.casing.m113.i034",
+        "rs-mech-tf-v1.casing.m113.i035",
+        "rs-mech-tf-v1.casing.m113.i036",
+        "rs-mech-tf-v1.casing.m113.i037",
+        "rs-mech-tf-v1.casing.m113.i038",
+        "rs-mech-tf-v1.casing.m113.i039",
+        "rs-mech-tf-v1.casing.m113.i040",
+        "rs-mech-tf-v1.casing.m113.i041",
+        "rs-mech-tf-v1.casing.m113.i042",
+        "rs-mech-tf-v1.casing.m113.i043",
+        "rs-mech-tf-v1.casing.m113.i044",
+        "rs-mech-tf-v1.casing.m113.i045",
+        "rs-mech-tf-v1.casing.m113.i046",
+        "rs-mech-tf-v1.casing.m113.i047"
+      ],
+      "assemblyQuantity": 48,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M113-A",
+      "bounds": {
+        "min": [
+          0.4675000011920929,
+          -1.8863730914890766,
+          -1.8920000232756138
+        ],
+        "max": [
+          0.5324999988079071,
+          1.8863730914890766,
+          1.8920000232756138
+        ],
+        "size": [
+          0.06499999761581421,
+          3.7727461829781532,
+          3.7840000465512276
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M115",
+      "role": "secondary",
+      "name": "Casing retaining ring 05",
+      "partNumber": "RS-DEMO-CA-RING-M115",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m115.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M115-A",
+      "bounds": {
+        "min": [
+          -2.457063389569521,
+          -1.3600000143051147,
+          -1.3600000143051147
+        ],
+        "max": [
+          -2.342936610430479,
+          1.3600000143051147,
+          1.3600000143051147
+        ],
+        "size": [
+          0.1141267791390419,
+          2.7200000286102295,
+          2.7200000286102295
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M116",
+      "role": "secondary",
+      "name": "Casing fasteners 05",
+      "partNumber": "RS-DEMO-CA-FASTENER-M116",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m116.i000",
+        "rs-mech-tf-v1.casing.m116.i001",
+        "rs-mech-tf-v1.casing.m116.i002",
+        "rs-mech-tf-v1.casing.m116.i003",
+        "rs-mech-tf-v1.casing.m116.i004",
+        "rs-mech-tf-v1.casing.m116.i005",
+        "rs-mech-tf-v1.casing.m116.i006",
+        "rs-mech-tf-v1.casing.m116.i007",
+        "rs-mech-tf-v1.casing.m116.i008",
+        "rs-mech-tf-v1.casing.m116.i009",
+        "rs-mech-tf-v1.casing.m116.i010",
+        "rs-mech-tf-v1.casing.m116.i011",
+        "rs-mech-tf-v1.casing.m116.i012",
+        "rs-mech-tf-v1.casing.m116.i013",
+        "rs-mech-tf-v1.casing.m116.i014",
+        "rs-mech-tf-v1.casing.m116.i015",
+        "rs-mech-tf-v1.casing.m116.i016",
+        "rs-mech-tf-v1.casing.m116.i017",
+        "rs-mech-tf-v1.casing.m116.i018",
+        "rs-mech-tf-v1.casing.m116.i019",
+        "rs-mech-tf-v1.casing.m116.i020",
+        "rs-mech-tf-v1.casing.m116.i021",
+        "rs-mech-tf-v1.casing.m116.i022",
+        "rs-mech-tf-v1.casing.m116.i023",
+        "rs-mech-tf-v1.casing.m116.i024",
+        "rs-mech-tf-v1.casing.m116.i025",
+        "rs-mech-tf-v1.casing.m116.i026",
+        "rs-mech-tf-v1.casing.m116.i027",
+        "rs-mech-tf-v1.casing.m116.i028",
+        "rs-mech-tf-v1.casing.m116.i029",
+        "rs-mech-tf-v1.casing.m116.i030",
+        "rs-mech-tf-v1.casing.m116.i031",
+        "rs-mech-tf-v1.casing.m116.i032",
+        "rs-mech-tf-v1.casing.m116.i033",
+        "rs-mech-tf-v1.casing.m116.i034",
+        "rs-mech-tf-v1.casing.m116.i035",
+        "rs-mech-tf-v1.casing.m116.i036",
+        "rs-mech-tf-v1.casing.m116.i037",
+        "rs-mech-tf-v1.casing.m116.i038",
+        "rs-mech-tf-v1.casing.m116.i039"
+      ],
+      "assemblyQuantity": 40,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M116-A",
+      "bounds": {
+        "min": [
+          -2.4325000941753387,
+          -1.3363730199635029,
+          -1.34199995175004
+        ],
+        "max": [
+          -2.3675000965595245,
+          1.3363730199635029,
+          1.34199995175004
+        ],
+        "size": [
+          0.06499999761581421,
+          2.6727460399270058,
+          2.68399990350008
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M117",
+      "role": "secondary",
+      "name": "Casing retaining ring 06",
+      "partNumber": "RS-DEMO-CA-RING-M117",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m117.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M117-A",
+      "bounds": {
+        "min": [
+          -0.25706338956952096,
+          -1.2300000190734863,
+          -1.2300000190734863
+        ],
+        "max": [
+          -0.14293661043047906,
+          1.2300000190734863,
+          1.2300000190734863
+        ],
+        "size": [
+          0.1141267791390419,
+          2.4600000381469727,
+          2.4600000381469727
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M118",
+      "role": "secondary",
+      "name": "Casing fasteners 06",
+      "partNumber": "RS-DEMO-CA-FASTENER-M118",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m118.i000",
+        "rs-mech-tf-v1.casing.m118.i001",
+        "rs-mech-tf-v1.casing.m118.i002",
+        "rs-mech-tf-v1.casing.m118.i003",
+        "rs-mech-tf-v1.casing.m118.i004",
+        "rs-mech-tf-v1.casing.m118.i005",
+        "rs-mech-tf-v1.casing.m118.i006",
+        "rs-mech-tf-v1.casing.m118.i007",
+        "rs-mech-tf-v1.casing.m118.i008",
+        "rs-mech-tf-v1.casing.m118.i009",
+        "rs-mech-tf-v1.casing.m118.i010",
+        "rs-mech-tf-v1.casing.m118.i011",
+        "rs-mech-tf-v1.casing.m118.i012",
+        "rs-mech-tf-v1.casing.m118.i013",
+        "rs-mech-tf-v1.casing.m118.i014",
+        "rs-mech-tf-v1.casing.m118.i015",
+        "rs-mech-tf-v1.casing.m118.i016",
+        "rs-mech-tf-v1.casing.m118.i017",
+        "rs-mech-tf-v1.casing.m118.i018",
+        "rs-mech-tf-v1.casing.m118.i019",
+        "rs-mech-tf-v1.casing.m118.i020",
+        "rs-mech-tf-v1.casing.m118.i021",
+        "rs-mech-tf-v1.casing.m118.i022",
+        "rs-mech-tf-v1.casing.m118.i023",
+        "rs-mech-tf-v1.casing.m118.i024",
+        "rs-mech-tf-v1.casing.m118.i025",
+        "rs-mech-tf-v1.casing.m118.i026",
+        "rs-mech-tf-v1.casing.m118.i027",
+        "rs-mech-tf-v1.casing.m118.i028",
+        "rs-mech-tf-v1.casing.m118.i029",
+        "rs-mech-tf-v1.casing.m118.i030",
+        "rs-mech-tf-v1.casing.m118.i031",
+        "rs-mech-tf-v1.casing.m118.i032",
+        "rs-mech-tf-v1.casing.m118.i033",
+        "rs-mech-tf-v1.casing.m118.i034",
+        "rs-mech-tf-v1.casing.m118.i035",
+        "rs-mech-tf-v1.casing.m118.i036",
+        "rs-mech-tf-v1.casing.m118.i037",
+        "rs-mech-tf-v1.casing.m118.i038",
+        "rs-mech-tf-v1.casing.m118.i039"
+      ],
+      "assemblyQuantity": 40,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M118-A",
+      "bounds": {
+        "min": [
+          -0.23250000178813934,
+          -1.2063730247318745,
+          -1.2119999565184116
+        ],
+        "max": [
+          -0.16750000417232513,
+          1.2063730247318745,
+          1.2119999565184116
+        ],
+        "size": [
+          0.06499999761581421,
+          2.412746049463749,
+          2.4239999130368233
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M119",
+      "role": "secondary",
+      "name": "Casing retaining ring 07",
+      "partNumber": "RS-DEMO-CA-RING-M119",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m119.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M119-A",
+      "bounds": {
+        "min": [
+          0.642936610430479,
+          -1.2100000381469727,
+          -1.2100000381469727
+        ],
+        "max": [
+          0.7570633895695209,
+          1.2100000381469727,
+          1.2100000381469727
+        ],
+        "size": [
+          0.1141267791390419,
+          2.4200000762939453,
+          2.4200000762939453
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M120",
+      "role": "secondary",
+      "name": "Casing fasteners 07",
+      "partNumber": "RS-DEMO-CA-FASTENER-M120",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m120.i000",
+        "rs-mech-tf-v1.casing.m120.i001",
+        "rs-mech-tf-v1.casing.m120.i002",
+        "rs-mech-tf-v1.casing.m120.i003",
+        "rs-mech-tf-v1.casing.m120.i004",
+        "rs-mech-tf-v1.casing.m120.i005",
+        "rs-mech-tf-v1.casing.m120.i006",
+        "rs-mech-tf-v1.casing.m120.i007",
+        "rs-mech-tf-v1.casing.m120.i008",
+        "rs-mech-tf-v1.casing.m120.i009",
+        "rs-mech-tf-v1.casing.m120.i010",
+        "rs-mech-tf-v1.casing.m120.i011",
+        "rs-mech-tf-v1.casing.m120.i012",
+        "rs-mech-tf-v1.casing.m120.i013",
+        "rs-mech-tf-v1.casing.m120.i014",
+        "rs-mech-tf-v1.casing.m120.i015",
+        "rs-mech-tf-v1.casing.m120.i016",
+        "rs-mech-tf-v1.casing.m120.i017",
+        "rs-mech-tf-v1.casing.m120.i018",
+        "rs-mech-tf-v1.casing.m120.i019",
+        "rs-mech-tf-v1.casing.m120.i020",
+        "rs-mech-tf-v1.casing.m120.i021",
+        "rs-mech-tf-v1.casing.m120.i022",
+        "rs-mech-tf-v1.casing.m120.i023",
+        "rs-mech-tf-v1.casing.m120.i024",
+        "rs-mech-tf-v1.casing.m120.i025",
+        "rs-mech-tf-v1.casing.m120.i026",
+        "rs-mech-tf-v1.casing.m120.i027",
+        "rs-mech-tf-v1.casing.m120.i028",
+        "rs-mech-tf-v1.casing.m120.i029",
+        "rs-mech-tf-v1.casing.m120.i030",
+        "rs-mech-tf-v1.casing.m120.i031",
+        "rs-mech-tf-v1.casing.m120.i032",
+        "rs-mech-tf-v1.casing.m120.i033",
+        "rs-mech-tf-v1.casing.m120.i034",
+        "rs-mech-tf-v1.casing.m120.i035",
+        "rs-mech-tf-v1.casing.m120.i036",
+        "rs-mech-tf-v1.casing.m120.i037",
+        "rs-mech-tf-v1.casing.m120.i038",
+        "rs-mech-tf-v1.casing.m120.i039"
+      ],
+      "assemblyQuantity": 40,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M120-A",
+      "bounds": {
+        "min": [
+          0.6674999892711639,
+          -1.1863730438053608,
+          -1.191999975591898
+        ],
+        "max": [
+          0.7324999868869781,
+          1.1863730438053608,
+          1.191999975591898
+        ],
+        "size": [
+          0.06499999761581421,
+          2.3727460876107216,
+          2.383999951183796
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M121",
+      "role": "secondary",
+      "name": "Casing retaining ring 08",
+      "partNumber": "RS-DEMO-CA-RING-M121",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m121.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M121-A",
+      "bounds": {
+        "min": [
+          2.1429366104304792,
+          -1.2000000476837158,
+          -1.2000000476837158
+        ],
+        "max": [
+          2.257063389569521,
+          1.2000000476837158,
+          1.2000000476837158
+        ],
+        "size": [
+          0.1141267791390419,
+          2.4000000953674316,
+          2.4000000953674316
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M122",
+      "role": "secondary",
+      "name": "Casing fasteners 08",
+      "partNumber": "RS-DEMO-CA-FASTENER-M122",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m122.i000",
+        "rs-mech-tf-v1.casing.m122.i001",
+        "rs-mech-tf-v1.casing.m122.i002",
+        "rs-mech-tf-v1.casing.m122.i003",
+        "rs-mech-tf-v1.casing.m122.i004",
+        "rs-mech-tf-v1.casing.m122.i005",
+        "rs-mech-tf-v1.casing.m122.i006",
+        "rs-mech-tf-v1.casing.m122.i007",
+        "rs-mech-tf-v1.casing.m122.i008",
+        "rs-mech-tf-v1.casing.m122.i009",
+        "rs-mech-tf-v1.casing.m122.i010",
+        "rs-mech-tf-v1.casing.m122.i011",
+        "rs-mech-tf-v1.casing.m122.i012",
+        "rs-mech-tf-v1.casing.m122.i013",
+        "rs-mech-tf-v1.casing.m122.i014",
+        "rs-mech-tf-v1.casing.m122.i015",
+        "rs-mech-tf-v1.casing.m122.i016",
+        "rs-mech-tf-v1.casing.m122.i017",
+        "rs-mech-tf-v1.casing.m122.i018",
+        "rs-mech-tf-v1.casing.m122.i019",
+        "rs-mech-tf-v1.casing.m122.i020",
+        "rs-mech-tf-v1.casing.m122.i021",
+        "rs-mech-tf-v1.casing.m122.i022",
+        "rs-mech-tf-v1.casing.m122.i023",
+        "rs-mech-tf-v1.casing.m122.i024",
+        "rs-mech-tf-v1.casing.m122.i025",
+        "rs-mech-tf-v1.casing.m122.i026",
+        "rs-mech-tf-v1.casing.m122.i027",
+        "rs-mech-tf-v1.casing.m122.i028",
+        "rs-mech-tf-v1.casing.m122.i029",
+        "rs-mech-tf-v1.casing.m122.i030",
+        "rs-mech-tf-v1.casing.m122.i031",
+        "rs-mech-tf-v1.casing.m122.i032",
+        "rs-mech-tf-v1.casing.m122.i033",
+        "rs-mech-tf-v1.casing.m122.i034",
+        "rs-mech-tf-v1.casing.m122.i035",
+        "rs-mech-tf-v1.casing.m122.i036",
+        "rs-mech-tf-v1.casing.m122.i037",
+        "rs-mech-tf-v1.casing.m122.i038",
+        "rs-mech-tf-v1.casing.m122.i039"
+      ],
+      "assemblyQuantity": 40,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M122-A",
+      "bounds": {
+        "min": [
+          2.1675000488758087,
+          -1.176373053342104,
+          -1.1819999851286411
+        ],
+        "max": [
+          2.232500046491623,
+          1.176373053342104,
+          1.1819999851286411
+        ],
+        "size": [
+          0.06499999761581421,
+          2.352746106684208,
+          2.3639999702572823
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-RING-M123",
+      "role": "secondary",
+      "name": "Casing retaining ring 09",
+      "partNumber": "RS-DEMO-CA-RING-M123",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m123.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-RING-M123-A",
+      "bounds": {
+        "min": [
+          3.692936610430479,
+          -1.149999976158142,
+          -1.149999976158142
+        ],
+        "max": [
+          3.807063389569521,
+          1.149999976158142,
+          1.149999976158142
+        ],
+        "size": [
+          0.1141267791390419,
+          2.299999952316284,
+          2.299999952316284
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-FASTENER-M124",
+      "role": "secondary",
+      "name": "Casing fasteners 09",
+      "partNumber": "RS-DEMO-CA-FASTENER-M124",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m124.i000",
+        "rs-mech-tf-v1.casing.m124.i001",
+        "rs-mech-tf-v1.casing.m124.i002",
+        "rs-mech-tf-v1.casing.m124.i003",
+        "rs-mech-tf-v1.casing.m124.i004",
+        "rs-mech-tf-v1.casing.m124.i005",
+        "rs-mech-tf-v1.casing.m124.i006",
+        "rs-mech-tf-v1.casing.m124.i007",
+        "rs-mech-tf-v1.casing.m124.i008",
+        "rs-mech-tf-v1.casing.m124.i009",
+        "rs-mech-tf-v1.casing.m124.i010",
+        "rs-mech-tf-v1.casing.m124.i011",
+        "rs-mech-tf-v1.casing.m124.i012",
+        "rs-mech-tf-v1.casing.m124.i013",
+        "rs-mech-tf-v1.casing.m124.i014",
+        "rs-mech-tf-v1.casing.m124.i015",
+        "rs-mech-tf-v1.casing.m124.i016",
+        "rs-mech-tf-v1.casing.m124.i017",
+        "rs-mech-tf-v1.casing.m124.i018",
+        "rs-mech-tf-v1.casing.m124.i019",
+        "rs-mech-tf-v1.casing.m124.i020",
+        "rs-mech-tf-v1.casing.m124.i021",
+        "rs-mech-tf-v1.casing.m124.i022",
+        "rs-mech-tf-v1.casing.m124.i023",
+        "rs-mech-tf-v1.casing.m124.i024",
+        "rs-mech-tf-v1.casing.m124.i025",
+        "rs-mech-tf-v1.casing.m124.i026",
+        "rs-mech-tf-v1.casing.m124.i027",
+        "rs-mech-tf-v1.casing.m124.i028",
+        "rs-mech-tf-v1.casing.m124.i029",
+        "rs-mech-tf-v1.casing.m124.i030",
+        "rs-mech-tf-v1.casing.m124.i031",
+        "rs-mech-tf-v1.casing.m124.i032",
+        "rs-mech-tf-v1.casing.m124.i033",
+        "rs-mech-tf-v1.casing.m124.i034",
+        "rs-mech-tf-v1.casing.m124.i035",
+        "rs-mech-tf-v1.casing.m124.i036",
+        "rs-mech-tf-v1.casing.m124.i037",
+        "rs-mech-tf-v1.casing.m124.i038",
+        "rs-mech-tf-v1.casing.m124.i039"
+      ],
+      "assemblyQuantity": 40,
+      "condition": "new",
+      "requirementSet": "REQ-CA-FASTENER-M124-A",
+      "bounds": {
+        "min": [
+          3.717500001192093,
+          -1.1263731010258198,
+          -1.132000032812357
+        ],
+        "max": [
+          3.782499998807907,
+          1.1263731010258198,
+          1.132000032812357
+        ],
+        "size": [
+          0.06499999761581421,
+          2.2527462020516396,
+          2.264000065624714
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-TUBE-M125",
+      "role": "secondary",
+      "name": "Casing tube 01",
+      "partNumber": "RS-DEMO-CA-TUBE-M125",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m125.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-TUBE-M125-A",
+      "bounds": {
+        "min": [
+          -0.4005119800567627,
+          0.09880682826042175,
+          1.146327018737793
+        ],
+        "max": [
+          2.502483606338501,
+          0.14594045281410217,
+          1.2931369543075562
+        ],
+        "size": [
+          2.9029955863952637,
+          0.04713362455368042,
+          0.14680993556976318
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-TUBE-M126",
+      "role": "secondary",
+      "name": "Casing tube 02",
+      "partNumber": "RS-DEMO-CA-TUBE-M126",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m126.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-TUBE-M126-A",
+      "bounds": {
+        "min": [
+          -0.4005119800567627,
+          0.8878797292709351,
+          0.7226577997207642
+        ],
+        "max": [
+          2.502483606338501,
+          1.0101255178451538,
+          0.8291904330253601
+        ],
+        "size": [
+          2.9029955863952637,
+          0.12224578857421875,
+          0.10653263330459595
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-TUBE-M127",
+      "role": "secondary",
+      "name": "Casing tube 03",
+      "partNumber": "RS-DEMO-CA-TUBE-M127",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m127.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-TUBE-M127-A",
+      "bounds": {
+        "min": [
+          -0.4005119800567627,
+          1.146327018737793,
+          -0.14594045281410217
+        ],
+        "max": [
+          2.502483606338501,
+          1.2931369543075562,
+          -0.09880682826042175
+        ],
+        "size": [
+          2.9029955863952637,
+          0.14680993556976318,
+          0.04713362455368042
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-TUBE-M128",
+      "role": "secondary",
+      "name": "Casing tube 04",
+      "partNumber": "RS-DEMO-CA-TUBE-M128",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m128.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-TUBE-M128-A",
+      "bounds": {
+        "min": [
+          -0.4005119800567627,
+          0.7226577997207642,
+          -1.0101255178451538
+        ],
+        "max": [
+          2.502483606338501,
+          0.8291904330253601,
+          -0.8878797292709351
+        ],
+        "size": [
+          2.9029955863952637,
+          0.10653263330459595,
+          0.12224578857421875
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-TUBE-M129",
+      "role": "secondary",
+      "name": "Casing tube 05",
+      "partNumber": "RS-DEMO-CA-TUBE-M129",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m129.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-TUBE-M129-A",
+      "bounds": {
+        "min": [
+          -0.4005119800567627,
+          -0.14594045281410217,
+          -1.2931369543075562
+        ],
+        "max": [
+          2.502483606338501,
+          -0.09880682826042175,
+          -1.146327018737793
+        ],
+        "size": [
+          2.9029955863952637,
+          0.04713362455368042,
+          0.14680993556976318
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-TUBE-M130",
+      "role": "secondary",
+      "name": "Casing tube 06",
+      "partNumber": "RS-DEMO-CA-TUBE-M130",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m130.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-TUBE-M130-A",
+      "bounds": {
+        "min": [
+          -0.4005119800567627,
+          -1.0101255178451538,
+          -0.8291904330253601
+        ],
+        "max": [
+          2.502483606338501,
+          -0.8878797292709351,
+          -0.7226577997207642
+        ],
+        "size": [
+          2.9029955863952637,
+          0.12224578857421875,
+          0.10653263330459595
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-TUBE-M131",
+      "role": "secondary",
+      "name": "Casing tube 07",
+      "partNumber": "RS-DEMO-CA-TUBE-M131",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m131.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-TUBE-M131-A",
+      "bounds": {
+        "min": [
+          -0.4005119800567627,
+          -1.2931369543075562,
+          0.09880682826042175
+        ],
+        "max": [
+          2.502483606338501,
+          -1.146327018737793,
+          0.14594045281410217
+        ],
+        "size": [
+          2.9029955863952637,
+          0.14680993556976318,
+          0.04713362455368042
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CA-TUBE-M132",
+      "role": "secondary",
+      "name": "Casing tube 08",
+      "partNumber": "RS-DEMO-CA-TUBE-M132",
+      "revision": "A",
+      "parentAssemblyId": "casing",
+      "nodeIds": [
+        "rs-mech-tf-v1.casing.m132.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-CA-TUBE-M132-A",
+      "bounds": {
+        "min": [
+          -0.4005119800567627,
+          -0.8291904330253601,
+          0.8878797292709351
+        ],
+        "max": [
+          2.502483606338501,
+          -0.7226577997207642,
+          1.0101255178451538
+        ],
+        "size": [
+          2.9029955863952637,
+          0.10653263330459595,
+          0.12224578857421875
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-SH-RING-M135",
+      "role": "secondary",
+      "name": "Shaft retaining ring 01",
+      "partNumber": "RS-DEMO-SH-RING-M135",
+      "revision": "A",
+      "parentAssemblyId": "shaft",
+      "nodeIds": [
+        "rs-mech-tf-v1.shaft.m135.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-SH-RING-M135-A",
+      "bounds": {
+        "min": [
+          -2.701818674206734,
+          -0.3149999976158142,
+          -0.3149999976158142
+        ],
+        "max": [
+          -2.5781813257932664,
+          0.3149999976158142,
+          0.3149999976158142
+        ],
+        "size": [
+          0.12363734841346741,
+          0.6299999952316284,
+          0.6299999952316284
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-SH-VANE-M136",
+      "role": "secondary",
+      "name": "Shaft stator vanes 01",
+      "partNumber": "RS-DEMO-SH-VANE-M136",
+      "revision": "A",
+      "parentAssemblyId": "shaft",
+      "nodeIds": [
+        "rs-mech-tf-v1.shaft.m136.i000",
+        "rs-mech-tf-v1.shaft.m136.i001",
+        "rs-mech-tf-v1.shaft.m136.i002",
+        "rs-mech-tf-v1.shaft.m136.i003",
+        "rs-mech-tf-v1.shaft.m136.i004",
+        "rs-mech-tf-v1.shaft.m136.i005",
+        "rs-mech-tf-v1.shaft.m136.i006",
+        "rs-mech-tf-v1.shaft.m136.i007"
+      ],
+      "assemblyQuantity": 8,
+      "condition": "new",
+      "requirementSet": "REQ-SH-VANE-M136-A",
+      "bounds": {
+        "min": [
+          -2.7184053280949594,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          -2.561594671905041,
+          0.5,
+          0.5
+        ],
+        "size": [
+          0.15681065618991852,
+          1,
+          1
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-SH-RING-M137",
+      "role": "secondary",
+      "name": "Shaft retaining ring 02",
+      "partNumber": "RS-DEMO-SH-RING-M137",
+      "revision": "A",
+      "parentAssemblyId": "shaft",
+      "nodeIds": [
+        "rs-mech-tf-v1.shaft.m137.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-SH-RING-M137-A",
+      "bounds": {
+        "min": [
+          0.5181813257932663,
+          -0.3149999976158142,
+          -0.3149999976158142
+        ],
+        "max": [
+          0.6418186742067337,
+          0.3149999976158142,
+          0.3149999976158142
+        ],
+        "size": [
+          0.12363734841346741,
+          0.6299999952316284,
+          0.6299999952316284
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-SH-VANE-M138",
+      "role": "secondary",
+      "name": "Shaft stator vanes 02",
+      "partNumber": "RS-DEMO-SH-VANE-M138",
+      "revision": "A",
+      "parentAssemblyId": "shaft",
+      "nodeIds": [
+        "rs-mech-tf-v1.shaft.m138.i000",
+        "rs-mech-tf-v1.shaft.m138.i001",
+        "rs-mech-tf-v1.shaft.m138.i002",
+        "rs-mech-tf-v1.shaft.m138.i003",
+        "rs-mech-tf-v1.shaft.m138.i004",
+        "rs-mech-tf-v1.shaft.m138.i005",
+        "rs-mech-tf-v1.shaft.m138.i006",
+        "rs-mech-tf-v1.shaft.m138.i007"
+      ],
+      "assemblyQuantity": 8,
+      "condition": "new",
+      "requirementSet": "REQ-SH-VANE-M138-A",
+      "bounds": {
+        "min": [
+          0.5015946719050407,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          0.6584053280949592,
+          0.5,
+          0.5
+        ],
+        "size": [
+          0.15681065618991852,
+          1,
+          1
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-SH-RING-M139",
+      "role": "secondary",
+      "name": "Shaft retaining ring 03",
+      "partNumber": "RS-DEMO-SH-RING-M139",
+      "revision": "A",
+      "parentAssemblyId": "shaft",
+      "nodeIds": [
+        "rs-mech-tf-v1.shaft.m139.i000"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-SH-RING-M139-A",
+      "bounds": {
+        "min": [
+          3.6481813257932663,
+          -0.3149999976158142,
+          -0.3149999976158142
+        ],
+        "max": [
+          3.7718186742067337,
+          0.3149999976158142,
+          0.3149999976158142
+        ],
+        "size": [
+          0.12363734841346741,
+          0.6299999952316284,
+          0.6299999952316284
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-SH-VANE-M140",
+      "role": "secondary",
+      "name": "Shaft stator vanes 03",
+      "partNumber": "RS-DEMO-SH-VANE-M140",
+      "revision": "A",
+      "parentAssemblyId": "shaft",
+      "nodeIds": [
+        "rs-mech-tf-v1.shaft.m140.i000",
+        "rs-mech-tf-v1.shaft.m140.i001",
+        "rs-mech-tf-v1.shaft.m140.i002",
+        "rs-mech-tf-v1.shaft.m140.i003",
+        "rs-mech-tf-v1.shaft.m140.i004",
+        "rs-mech-tf-v1.shaft.m140.i005",
+        "rs-mech-tf-v1.shaft.m140.i006",
+        "rs-mech-tf-v1.shaft.m140.i007"
+      ],
+      "assemblyQuantity": 8,
+      "condition": "new",
+      "requirementSet": "REQ-SH-VANE-M140-A",
+      "bounds": {
+        "min": [
+          3.6315946719050407,
+          -0.5,
+          -0.5
+        ],
+        "max": [
+          3.7884053280949592,
+          0.5,
+          0.5
+        ],
+        "size": [
+          0.15681065618991852,
+          1,
+          1
         ],
         "unit": "visualization_unit",
         "provenance": "derived_from_prepared_geometry_not_physical_measurement"

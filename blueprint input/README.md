@@ -1,6 +1,6 @@
 # Re::Source — prepared Mechanica demo package
 
-This is the approved Mechanica direction made concrete: a real exported GLB, 35 mapped demo sourcing families, buyer-defined demo requirements and an implementation handover. Package 1.1 adds individual occurrence browsing and compressor/turbine stages. Start with **[HANDOVER.md](HANDOVER.md)**.
+This is the approved Mechanica direction made concrete: a real exported GLB, 104 mapped demo sourcing families, buyer-defined demo requirements and an implementation handover. Package 1.2 adds sourcing for every independent piece, including fasteners, rings, housings and tubes. Start with **[HANDOVER.md](HANDOVER.md)**.
 
 ## Folder map
 
@@ -23,7 +23,7 @@ This is the approved Mechanica direction made concrete: a real exported GLB, 35 
 | Secondary: fuel injector 01 | `RS-TF-FUEL-INJECTOR` | `RS-DEMO-FI-001` / C | 18 |
 | Secondary: core exhaust nozzle assembly | `RS-TF-CORE-NOZZLE` | `RS-DEMO-NZ-001` / A | 1 |
 
-The injector is deliberately a simplified original Mechanica shape; the blade has the stronger close-up geometry. Assembly quantity is not purchase quantity. The 24 blades and 18 injectors now have explicit shared family specifications; the browser can inspect and highlight each occurrence separately. Additional demo families cover fan guide vanes/spinner, nine compressor rotor and eight stator stages, five turbine rotor and four stator stages, liners, fuel tubes, casing sections, and shafts. Details without a fixture specification remain inspection-only.
+The injector is deliberately a simplified original Mechanica shape; the blade has the stronger close-up geometry. Assembly quantity is not purchase quantity. The 24 blades and 18 injectors now have explicit shared family specifications; the browser can inspect and highlight each occurrence separately. Additional demo families cover fan guide vanes/spinner, nine compressor rotor and eight stator stages, five turbine rotor and four stator stages, liners, fuel tubes, casing sections, and shafts. All 1,835 independent pieces now have explicit specifications, including the remaining fasteners, rings, housings, tubes and shaft vanes. Repeated instances share their exported source-mesh family; attached decorative details stay with their parent.
 
 ## Inspect locally
 
