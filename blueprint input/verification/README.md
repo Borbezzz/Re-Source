@@ -1,5 +1,7 @@
 # Verification — 15 November 2026
 
+Package 1.1 update: current machine-readable reports cover 35 sourcing families and regenerated package hashes. See `../../docs/verification/parts-browser-20261115/REPORT.md` for browser, backend and stage-sourcing checks. The original three-case asset review below is historical evidence from package 1.0.
+
 ## Observed results
 
 - Exported actual Mechanica-derived geometry to GLB v2: **5,601,448 bytes**.

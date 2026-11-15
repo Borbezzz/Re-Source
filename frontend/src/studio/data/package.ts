@@ -1,4 +1,5 @@
 import { unzipSync, strFromU8 } from "fflate";
+import { buildAssemblyTree, type AssemblyItem, type AssemblyNode } from "./assembly.ts";
 
 /** Parsed Mechanica-style design package (see blueprint input/PACKAGE-CONTRACT.md). */
 export interface PackageComponent {
@@ -42,6 +43,7 @@ export interface DesignPackage {
   glbUrl: string;
   /** GLB node stable IDs, read from the binary's JSON chunk. */
   nodeIds: Set<string>;
+  assemblyTree: AssemblyItem[];
   files: { path: string; bytes: number; verified: boolean }[];
 }
 
@@ -53,17 +55,12 @@ async function sha256(bytes: Uint8Array): Promise<string> {
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-function glbNodeIds(glb: Uint8Array): Set<string> {
+function glbNodes(glb: Uint8Array): AssemblyNode[] {
   const view = new DataView(glb.buffer, glb.byteOffset, glb.byteLength);
   if (view.getUint32(0, true) !== 0x46546c67) throw new Error("assembly.glb is not a binary glTF file.");
   const jsonLength = view.getUint32(12, true);
   const json = JSON.parse(new TextDecoder().decode(glb.subarray(20, 20 + jsonLength)));
-  const ids = new Set<string>();
-  for (const node of json.nodes ?? []) {
-    const id = node.extras?.stableId;
-    if (typeof id === "string") ids.add(id);
-  }
-  return ids;
+  return json.nodes ?? [];
 }
 
 function parseCsv(text: string): Record<string, string>[] {
@@ -166,10 +163,12 @@ export async function readDesignPackage(
     "identify",
     () => {
       if (!files[glbName]) throw new Error(`The assembly model ${glbName} is missing.`);
+      const nodes = glbNodes(files[glbName]);
       return {
         packageId: String(manifest.packageId),
         displayName: String(manifest.displayName ?? manifest.packageId),
-        nodeIds: glbNodeIds(files[glbName]),
+        nodes,
+        nodeIds: new Set(nodes.flatMap(n => n.extras?.stableId ? [n.extras.stableId] : [])),
       };
     },
     (v) => `${v.displayName} · ${manifest.geometry?.independentPieces ?? v.nodeIds.size} pieces`,
@@ -227,6 +226,7 @@ export async function readDesignPackage(
     glb,
     glbUrl,
     nodeIds: identity.nodeIds,
+    assemblyTree: buildAssemblyTree(identity.nodes, components),
     files: verified,
   };
 }

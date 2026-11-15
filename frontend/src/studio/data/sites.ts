@@ -5,6 +5,8 @@
  * real city locations of the *supplying site* (not a headquarters); company
  * names, stock, documents and quotes are invented demo data.
  */
+import extraSites from "./extra-sites.json";
+
 export type Evidence = "provided" | "missing";
 export interface SiteFixture {
   city: string;
@@ -48,6 +50,7 @@ const brno = { city: "Brno", countryCode: "CZ", lat: 49.1951, lon: 16.6068 };
 const ok = { applicability: "provided", traceability: "provided", siteEvidence: "provided" } as const;
 
 export const SITES: Record<string, SiteFixture> = {
+  ...(extraSites as Record<string, SiteFixture>),
   // Front fan blade 01 · RS-DEMO-FB-001 Rev B
   "rs-tf-fan-blade-site-01": S({ ...derby, ...ok, siteType: "Stockist warehouse", stock: 2, transitDays: 1, sourceLabel: "Supplier stock list (demo)" }),
   "rs-tf-fan-blade-site-02": S({ ...toulouse, ...ok, siteType: "Production & dispatch", stock: 1, transitDays: 3, sourceLabel: "Capability statement (demo)" }),

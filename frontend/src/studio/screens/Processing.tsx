@@ -97,7 +97,7 @@ export function Processing({
                 <dd>{pkg.displayName}</dd>
                 <dt>Package</dt>
                 <dd className="rs-mono">{pkg.packageId} · v{pkg.packageVersion}</dd>
-                {pkg.components.map((c) => (
+                {pkg.components.slice(0, 3).map((c) => (
                   <FragmentRow key={c.componentId} label={c.role === "primary" ? "Primary part" : "Part"} value={`${c.name} · ${c.partNumber} Rev ${c.revision}`} />
                 ))}
                 <dt>Data</dt>
@@ -109,6 +109,10 @@ export function Processing({
                   </>
                 ) : null}
               </dl>
+              {pkg.components.length > 3 ? <details className="rs-small rs-package-parts">
+                <summary>{pkg.components.length} demo sourcing families across the assembly</summary>
+                <ul>{pkg.components.slice(3).map(c => <li key={c.componentId}>{c.name} · {c.assemblyQuantity} in assembly</li>)}</ul>
+              </details> : null}
               <button type="button" className="rs-btn rs-btn-grad" onClick={onConfirm} disabled={busy}>
                 {busy ? "Confirming…" : "Confirm and open assembly"}
               </button>

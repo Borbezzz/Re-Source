@@ -8,14 +8,16 @@ import type { MapMode } from "./map/SupplierMap.tsx";
 
 const loadMap = () => import("./map/SupplierMap.tsx");
 const SupplierMap = lazy(() => loadMap().then((m) => ({ default: m.SupplierMap })));
-import { PROFILE_FOR_PACKAGE, SAMPLE_PACKAGE_URL, readDesignPackage, type DesignPackage, type StepId } from "./data/package.ts";
+import { PROFILE_FOR_PACKAGE, SAMPLE_PACKAGE_URL, readDesignPackage, type DesignPackage, type StepId, type PackageComponent } from "./data/package.ts";
 import { CHECK_ORDER, assess, counts, defaultNeed, rankAll, type Assessed, type SourcingNeed } from "./data/checks.ts";
 import { DISRUPTION } from "./data/sites.ts";
 import { journeyApi } from "./api.ts";
 import type { ProductCandidate, ProductProject } from "../product-flow/types.ts";
 import { Intake } from "./screens/Intake.tsx";
 import { Processing, type StepState } from "./screens/Processing.tsx";
-import { ComponentsPanel, ContextCard, SceneControls } from "./screens/Explore.tsx";
+import { ContextCard, SceneControls } from "./screens/Explore.tsx";
+import { AssemblyBrowser, InspectionCard } from "./screens/AssemblyBrowser.tsx";
+import { indexAssembly, type AssemblyItem } from "./data/assembly.ts";
 import { AnchorCard } from "./screens/Anchor.tsx";
 import { CheckPanel } from "./screens/Checks.tsx";
 import { ShortlistDrawer, DisruptionAlert } from "./screens/Shortlist.tsx";
@@ -26,6 +28,7 @@ import { AgentFlow } from "./flow/AgentFlow.tsx";
 export type Stage = "intake" | "processing" | "explore" | "need" | "discovery" | "checking" | "shortlist" | "fulfil" | "return";
 
 const STEP_IDS: StepId[] = ["read", "verify", "identify", "map", "link", "scene"];
+const EMPTY_COMPONENTS: PackageComponent[] = [];
 const reduceMotion = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const wait = (ms: number) => new Promise((r) => setTimeout(r, reduceMotion() ? 0 : ms));
 
@@ -39,6 +42,8 @@ export function Studio() {
   const [backendState, setBackendState] = useState<"idle" | "connected" | "error">("idle");
   const [solid, setSolid] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
+  const [inspectedId, setInspectedId] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<AssemblyItem | null>(null);
   const [exploded, setExploded] = useState(false);
   const [spin, setSpin] = useState(false);
   const [resetKey, setResetKey] = useState(0);
@@ -60,7 +65,19 @@ export function Studio() {
   const sceneReady = useRef<() => void>(() => {});
   const sceneIsReady = useRef(false);
 
-  const component = pkg?.components.find((c) => c.componentId === selected) ?? null;
+  const assemblyIndex = useMemo(() => indexAssembly(pkg?.assemblyTree ?? []), [pkg]);
+  const inspection = inspectedId ? assemblyIndex.get(inspectedId) ?? null : null;
+  const sourceComponent = pkg?.components.find((c) => c.componentId === selected) ?? null;
+  const component = useMemo(() => sourceComponent && inspection ? { ...sourceComponent, name: inspection.children.length ? sourceComponent.name : inspection.name, nodeIds: inspection.nodeIds } : sourceComponent, [sourceComponent, inspection]);
+  const clearSelection = () => { setSelected(null); setInspectedId(null); setHovered(null); };
+  const inspectPart = (item: AssemblyItem) => {
+    setInspectedId(item.id); setSelected(item.componentId); setHovered(null);
+    if (stage === "need") setStage("explore");
+  };
+  const selectComponent = (id: string | null) => {
+    const item = [...assemblyIndex.values()].find(item => item.componentId === id);
+    if (id && item) inspectPart(item); else clearSelection();
+  };
   const partId = component?.componentId.toLowerCase() ?? null;
   const requirement = pkg?.requirements.find((r) => r.componentId === selected) ?? null;
 
@@ -86,6 +103,8 @@ export function Studio() {
     setProject(null);
     setSolid(0);
     setSelected(null);
+    setInspectedId(null);
+    setHovered(null);
     sceneIsReady.current = false;
     sceneReady.current = () => {};
     try {
@@ -128,6 +147,13 @@ export function Studio() {
       if (run !== runRef.current) return;
       setError(e instanceof Error ? e.message : "The package could not be read.");
     }
+  }, []);
+
+  useEffect(() => {
+    const clear = () => setHovered(null);
+    window.addEventListener("blur", clear);
+    document.addEventListener("visibilitychange", clear);
+    return () => { window.removeEventListener("blur", clear); document.removeEventListener("visibilitychange", clear); };
   }, []);
 
   const onSceneReady = useCallback(() => {
@@ -320,6 +346,8 @@ export function Studio() {
     setGlbUrl(null);
     setProject(null);
     setSelected(null);
+    setInspectedId(null);
+    setHovered(null);
     setCandidates([]);
     setError(null);
     setSolid(0);
@@ -366,21 +394,24 @@ export function Studio() {
             mode={sceneMode}
             scan={stage === "processing" ? scanProgress : 1}
             solid={stage === "processing" ? solid : 1}
-            components={pkg?.components ?? []}
+            components={pkg?.components ?? EMPTY_COMPONENTS}
             selected={selected}
+            inspection={inspection}
+            hovered={stage === "explore" ? hovered : null}
+            onInspect={(id) => { const item = assemblyIndex.get(id); if (stage === "explore" && item) inspectPart(item); }}
             exploded={exploded}
             isolate={stage !== "return" || phase !== "done"}
             spin={spin}
             phase={phase}
-            showHotspots={stage === "explore"}
+            showHotspots={stage === "explore" && (!inspection || !!component)}
             resetKey={resetKey}
             onSelect={(id) => {
               if (stage !== "explore") return;
-              setSelected(id);
+              selectComponent(id);
             }}
             rightInset={stage === "explore" ? 360 : stage === "return" ? 420 : 0}
             wide={stage === "return"}
-            leftInset={(stage === "explore" || stage === "need") && selected ? 440 : 0}
+            leftInset={(stage === "explore" || stage === "need") && inspection ? 440 : 0}
             onReady={onSceneReady}
           />
         </div>
@@ -419,9 +450,10 @@ export function Studio() {
         {(stage === "explore" || stage === "need") && pkg && glbUrl ? (
           <div className="rs-ui-layer">
             <div className="rs-crumb rs-eyebrow">{project?.name ?? pkg.displayName} / Assembly</div>
-            <ComponentsPanel components={pkg.components} selected={selected} onSelect={(id) => { setSelected(id); if (stage === "need") setStage("explore"); }} />
-            {stage === "explore" && !selected ? <SceneControls spin={spin} exploded={exploded} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); setSelected(null); setResetKey((k) => k + 1); }} /> : null}
-            <AnimatePresence>
+            <AssemblyBrowser items={pkg.assemblyTree} selected={inspectedId} onSelect={inspectPart} onHover={setHovered} />
+            {stage === "explore" && !inspection ? <SceneControls spin={spin} exploded={exploded} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); clearSelection(); setResetKey((k) => k + 1); }} /> : null}
+            {inspection && !component ? <InspectionCard item={inspection} onClose={clearSelection} /> : null}
+            <AnimatePresence mode="wait">
               {component && requirement ? (
                 <ContextCard
                   key={component.componentId}
@@ -433,7 +465,7 @@ export function Studio() {
                   onNeed={setNeed}
                   onStart={(reason) => { setNeed((n) => ({ ...n, reason })); setStage("need"); }}
                   onBack={() => setStage("explore")}
-                  onClose={() => { setSelected(null); setStage("explore"); }}
+                  onClose={() => { clearSelection(); setStage("explore"); }}
                   onSubmit={() => void findSuppliers()}
                   busy={busy === "research"}
                 />
