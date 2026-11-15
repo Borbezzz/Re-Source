@@ -157,3 +157,8 @@
 .rs-map-scale i { display: block; height: 5px; border: 1px solid rgba(244, 241, 234, 0.45); border-top: 0; transition: width 0.3s var(--rs-ease); }
 @media (max-width: 900px) { .rs-map-scale { display: none; } }
 @media (prefers-reduced-motion: reduce) { .rs-dest-ring { animation: none; opacity: 0.4; } }
+
+/* Keep the full-resolution coastlines on their own composited surface. */
+.rs-map > .rs-map-base, .rs-map > .rs-map-overlay { position: absolute; inset: 0; }
+.rs-map > .rs-map-base { pointer-events: none; transform: translateZ(0); }
+.rs-map > .rs-map-overlay { background: transparent; isolation: isolate; }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -68,7 +68,12 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
   const [pinned, setPinned] = useState<string | null>(null);
   const setMode = useCallback((m: Mode) => { setModeState(m); store.set(MODE_KEY, m); }, []);
 
-  const { nodes, edges } = useMemo(() => buildGraph(props), [props.stage, props.part?.name, props.part?.partNumber, props.part?.revision, props.need, props.assessed, props.checked, props.progress, props.disrupted, props.recheck, props.procure, props.chosenId, props.phase, props.busy, props.error, props.project, props.partId]);
+  const { nodes, edges } = useMemo(() => buildGraph(props), [
+    props.stage, props.part?.name, props.part?.partNumber, props.part?.revision,
+    props.need, props.assessed, props.checked, props.progress, props.disrupted,
+    props.recheck, props.procure, props.chosenId, props.phase, props.busy, props.error,
+    props.project, props.partId,
+  ]);
   const loadingOffers = props.stage === "discovery" && props.busy === "research" && !props.assessed.length && !props.error;
   const status = props.error ? { label: "Error", tone: "bad" as const } : loadingOffers ? { label: "Loading offers", tone: "run" as const } : runStatus(nodes);
   const live = loadingOffers || (props.error && props.stage === "discovery") ? "discover" : liveStep(nodes);
@@ -145,24 +150,16 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
   }, [nodes, visible, discovering]);
 
   const done = status.tone === "ok";
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (!visible || done) return;
-    const id = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(id);
-  }, [visible, done]);
-  const elapsed = startedAt ? Math.max(0, Math.floor(((done ? (log.at(-1)?.t.getTime() ?? now) : now) - startedAt) / 1000)) : 0;
-  const clock = `${String(Math.floor(elapsed / 60)).padStart(2, "0")}:${String(elapsed % 60).padStart(2, "0")}`;
-
-  const pin = (id: string | null) => {
+  const pin = useCallback((id: string | null) => {
     setPinned(id === live ? null : id);
     if (id?.startsWith("cand:")) props.onFocusCandidate?.(id.slice(5));
-  };
-  const actOn = (id: string) => {
+  }, [live, props.onFocusCandidate]);
+  const followLive = useCallback(() => setPinned(null), []);
+  const actOn = useCallback((id: string) => {
     // Human-gate nodes in full view send the user back to the scene to act.
     const n = nodes.find((x) => x.id === id);
     if (mode === "full" && n?.status === "waiting") setMode("split");
-  };
+  }, [nodes, mode, setMode]);
 
   if (!visible || typeof document === "undefined") return null;
   const latest = log.at(-1);
@@ -180,8 +177,8 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
       focus={focus}
       pinned={pinned}
       candidateFocus={props.focusId ? `cand:${props.focusId}` : null}
-      onSelect={(id) => pin(id)}
-      onLive={() => setPinned(null)}
+      onSelect={pin}
+      onLive={followLive}
       onAct={actOn}
       insetLeft={mode === "full" ? 300 : 0}
       insetRight={inspectorNode ? 340 : 0}
@@ -213,7 +210,7 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
                 <span className="fl-bar-ico"><Workflow size={15} /></span>
                 <span className="fl-bar-title">Demo sourcing agent</span>
                 <span className={`fl-run is-${status.tone}`}><i />{status.label}</span>
-                <span className="fl-clock" aria-label="Elapsed">{clock}</span>
+                <RunClock startedAt={startedAt} stoppedAt={done ? log.at(-1)?.t.getTime() : undefined} />
                 {props.caseId ? <span className="fl-case">Case {props.caseId.slice(-6)}</span> : null}
               </div>
               <div className="fl-ticker" aria-hidden="true">
@@ -241,7 +238,7 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
                     edges={edges}
                     log={log}
                     onPick={(id) => pin(id)}
-                    onLive={() => setPinned(null)}
+                    onLive={followLive}
                   />
                   <LogPanel log={log} inline focus={focus} onPick={(id) => pin(id)} />
                 </div>
@@ -264,9 +261,21 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
   );
 }
 
+/** A ticking clock must not rebuild the graph or restart its camera and SVG animations. */
+function RunClock({ startedAt, stoppedAt }: { startedAt: number | null; stoppedAt?: number }) {
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    if (stoppedAt != null) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [stoppedAt]);
+  const elapsed = startedAt ? Math.max(0, Math.floor(((stoppedAt ?? now) - startedAt) / 1000)) : 0;
+  return <span className="fl-clock" aria-label="Elapsed">{String(Math.floor(elapsed / 60)).padStart(2, "0")}:{String(elapsed % 60).padStart(2, "0")}</span>;
+}
+
 // ---------------------------------------------------------------- canvas
 
-function FlowCanvas({
+const FlowCanvas = memo(function FlowCanvas({
   nodes, edges, mode, side, group, focus, pinned, candidateFocus, onSelect, onLive, onAct, insetLeft, insetRight,
 }: {
   nodes: FlowNode[];
@@ -294,9 +303,6 @@ function FlowCanvas({
   const [animating, setAnimating] = useState(true);
   const drag = useRef<{ x: number; y: number; vx: number; vy: number } | null>(null);
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
-  const minX = Math.min(...nodes.map((n) => n.x)) - 60;
-  const maxX = Math.max(...nodes.map((n) => n.x)) + 60;
-  const accent = (n: FlowNode) => thermalAt((n.x - minX) / (maxX - minX));
 
   useEffect(() => {
     const el = box.current;
@@ -372,7 +378,6 @@ function FlowCanvas({
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
-  const paths = useMemo(() => edges.map((e) => ({ e, ...edgePath(e, byId) })).filter((p) => p.d), [edges, byId]);
   const anim = !reduced();
   const t = animating && anim ? "transform 1.15s cubic-bezier(0.22, 1, 0.36, 1)" : "none";
   const dot = 22 * view.k;
@@ -402,42 +407,7 @@ function FlowCanvas({
       onDoubleClick={(e) => { if (!(e.target as HTMLElement).closest("button")) fitAll(); }}
     >
       <div className="fl-world" style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.k})`, transition: t }}>
-        <svg className="fl-edges" width="1" height="1" aria-hidden="true">
-          <defs>
-            <linearGradient id="fl-thermal" gradientUnits="userSpaceOnUse" x1={minX} y1="0" x2={maxX} y2="0">
-              <stop offset="0" stopColor="#38bdf8" />
-              <stop offset="0.38" stopColor="#8b5cf6" />
-              <stop offset="0.7" stopColor="#ec4899" />
-              <stop offset="1" stopColor="#fb923c" />
-            </linearGradient>
-          </defs>
-          {paths.map(({ e, d }) => (
-            <g key={e.id} className={`fl-edge is-${e.state}`}>
-              <path d={d} className="fl-edge-base" />
-              {e.state === "done" ? <path d={d} className="fl-edge-done" pathLength={1} /> : null}
-              {e.state === "active" ? (
-                <>
-                  <path d={d} className="fl-edge-flow" />
-                  {anim ? [0, 0.5].map((b) => (
-                    <circle key={b} r={3.2} className="fl-particle">
-                      <animateMotion dur="1.3s" begin={`${b * 1.3}s`} repeatCount="indefinite" path={d} />
-                    </circle>
-                  )) : null}
-                </>
-              ) : null}
-            </g>
-          ))}
-        </svg>
-        {paths.map(({ e, sx, sy, mx, my }) => (
-          <EdgeLabels key={e.id} e={e} sx={sx} sy={sy} mx={mx} my={my} />
-        ))}
-        {nodes.map((n) =>
-          n.kind === "candidate" ? (
-            <Pill key={n.id} n={n} accent={accent(n)} focused={focus === n.id} selected={pinned === n.id || candidateFocus === n.id} onSelect={() => onSelect(pinned === n.id ? null : n.id)} />
-          ) : (
-            <Node key={n.id} n={n} accent={accent(n)} focused={focus === n.id} selected={pinned === n.id} onSelect={() => { onSelect(pinned === n.id ? null : n.id); onAct(n.id); }} />
-          ),
-        )}
+        <GraphContent nodes={nodes} edges={edges} focus={focus} pinned={pinned} candidateFocus={candidateFocus} onSelect={onSelect} onAct={onAct} />
       </div>
       <div className="fl-tools">
         <button
@@ -455,7 +425,58 @@ function FlowCanvas({
       </div>
     </div>
   );
-}
+});
+
+/** Camera movement only transforms this layer; it does not reconcile every node and edge. */
+const GraphContent = memo(function GraphContent({ nodes, edges, focus, pinned, candidateFocus, onSelect, onAct }: {
+  nodes: FlowNode[]; edges: FlowEdge[]; focus: string; pinned: string | null; candidateFocus: string | null;
+  onSelect: (id: string | null) => void; onAct: (id: string) => void;
+}) {
+  const byId = useMemo(() => new Map(nodes.map(n => [n.id, n])), [nodes]);
+  const paths = useMemo(() => edges.map(e => ({ e, ...edgePath(e, byId) })).filter(p => p.d), [edges, byId]);
+  const minX = Math.min(...nodes.map(n => n.x)) - 60;
+  const maxX = Math.max(...nodes.map(n => n.x)) + 60;
+  const accent = (n: FlowNode) => thermalAt((n.x - minX) / (maxX - minX));
+  const anim = !reduced();
+  return <>
+    <svg className="fl-edges" width="1" height="1" aria-hidden="true">
+      <defs>
+        <linearGradient id="fl-thermal" gradientUnits="userSpaceOnUse" x1={minX} y1="0" x2={maxX} y2="0">
+          <stop offset="0" stopColor="#38bdf8" />
+          <stop offset="0.38" stopColor="#8b5cf6" />
+          <stop offset="0.7" stopColor="#ec4899" />
+          <stop offset="1" stopColor="#fb923c" />
+        </linearGradient>
+      </defs>
+      {paths.map(({ e, d }) => (
+        <g key={e.id} className={`fl-edge is-${e.state}`}>
+          <path d={d} className="fl-edge-base" />
+          {e.state === "done" ? <path d={d} className="fl-edge-done" pathLength={1} /> : null}
+          {e.state === "active" ? (
+            <>
+              <path d={d} className="fl-edge-flow" />
+              {anim ? [0, 0.5].map((b) => (
+                <circle key={b} r={3.2} className="fl-particle">
+                  <animateMotion dur="1.3s" begin={`${b * 1.3}s`} repeatCount="indefinite" path={d} />
+                </circle>
+              )) : null}
+            </>
+          ) : null}
+        </g>
+      ))}
+    </svg>
+    {paths.map(({ e, sx, sy, mx, my }) => (
+      <EdgeLabels key={e.id} e={e} sx={sx} sy={sy} mx={mx} my={my} />
+    ))}
+    {nodes.map((n) =>
+      n.kind === "candidate" ? (
+        <Pill key={n.id} n={n} accent={accent(n)} focused={focus === n.id} selected={pinned === n.id || candidateFocus === n.id} onSelect={() => onSelect(pinned === n.id ? null : n.id)} />
+      ) : (
+        <Node key={n.id} n={n} accent={accent(n)} focused={focus === n.id} selected={pinned === n.id} onSelect={() => { onSelect(pinned === n.id ? null : n.id); onAct(n.id); }} />
+      ),
+    )}
+  </>;
+});
 
 function handle(n: FlowNode, side: "in" | "out", offset = 0) {
   if (n.kind === "candidate") return { x: n.x + (side === "in" ? -PILL_W / 2 : PILL_W / 2), y: n.y };
