@@ -1123,3 +1123,238 @@
   padding: 12px 0;
   color: #dbe8ff;
 }
+
+.pf-agent-launch,
+.pf-agent-run {
+  scroll-margin-top: 108px;
+  margin-bottom: 36px;
+  padding: 28px 0;
+  border-top: 1px solid #ffffff20;
+  border-bottom: 1px solid #ffffff20;
+}
+.pf-agent-launch:focus,
+.pf-agent-run:focus {
+  outline: none;
+}
+.pf-agent-launch {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 40px;
+}
+.pf-agent-launch label {
+  max-width: 430px;
+  margin-top: 20px;
+}
+.pf-agent-launch .pf-agent-scope {
+  margin: 12px 0 0;
+  font-size: 12px;
+}
+.pf-agent-launch-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+.pf-agent-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 340px;
+}
+.pf-agent-run .pf-section-heading {
+  margin-bottom: 14px;
+}
+.pf-agent-run .pf-agent-status {
+  color: #dbe8ff;
+  margin: 0 0 8px;
+}
+.pf-agent-run .pf-agent-boundary {
+  font-size: 12px;
+  color: #a8b0bf;
+}
+.pf-agent-attention {
+  padding: 20px 0;
+  margin: 20px 0;
+  border-top: 1px solid #ffffff20;
+}
+.pf-agent-attention p {
+  color: #e7bb83;
+  font-size: 14px;
+}
+.pf-agent-decisions {
+  margin-top: 28px;
+}
+.pf-agent-decisions > article {
+  padding: 18px 0;
+  border-bottom: 1px solid #ffffff14;
+}
+.pf-agent-decisions > article > div {
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.pf-agent-decisions > article p {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+.pf-agent-decisions small {
+  color: #a8b0bf;
+  font-size: 12px;
+}
+.pf-agent-mailbox {
+  margin-top: 32px;
+}
+.pf-agent-mailbox h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pf-agent-mailbox .pf-section-heading > span {
+  white-space: nowrap;
+  color: #a8b0bf;
+  font-size: 12px;
+}
+.pf-mailbox-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+.pf-mailbox-folder > h4 {
+  padding: 12px 0;
+  margin: 0;
+  border-bottom: 1px solid #ffffff20;
+  font-size: 14px;
+}
+.pf-mail-message {
+  border-bottom: 1px solid #ffffff14;
+}
+.pf-mail-message > summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  list-style: none;
+}
+.pf-mail-message > summary strong {
+  display: block;
+  color: #f2f4f8;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.pf-mail-message > summary small {
+  display: block;
+  color: #a8b0bf;
+  font-size: 12px;
+  margin-top: 6px;
+}
+.pf-mail-message > summary > span:last-child {
+  color: #e7bb83;
+  font-size: 11px;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+.pf-mail-message dl {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+.pf-mail-message dl > div {
+  display: grid;
+  grid-template-columns: 55px minmax(0, 1fr);
+  gap: 12px;
+}
+.pf-mail-message dt {
+  color: #a8b0bf;
+}
+.pf-mail-message dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.pf-main .pf-mail-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  padding: 16px;
+  background: #ffffff04;
+  border-radius: 8px;
+}
+.pf-main .pf-mail-quote {
+  color: #e7bb83;
+  font-size: 12px;
+}
+.pf-main .pf-mail-empty {
+  font-size: 12px;
+  padding: 18px 0;
+}
+.pf-agent-timeline {
+  margin: 24px 0 0;
+}
+.pf-agent-timeline ol {
+  list-style: none;
+  margin: 12px 0;
+  padding: 0;
+  max-height: 330px;
+  overflow: auto;
+}
+.pf-agent-timeline li {
+  display: flex;
+  gap: 18px;
+  padding: 10px 0;
+  border-top: 1px solid #ffffff14;
+  line-height: 1.65;
+}
+.pf-agent-timeline time {
+  color: #a8b0bf;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+.pf-main .pf-agent-finished {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #a4d8c0;
+  font-size: 14px;
+  margin: 20px 0 0;
+}
+.pf-agent-finished svg {
+  flex-shrink: 0;
+}
+.pf-main .pf-agent-choice {
+  margin: 12px 0 0;
+  color: #dbe8ff;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  .pf-agent-launch,
+  .pf-agent-run {
+    scroll-margin-top: 130px;
+  }
+  .pf-agent-launch {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .pf-agent-run > .pf-section-heading {
+    display: block;
+  }
+  .pf-agent-controls {
+    justify-content: flex-start;
+    max-width: none;
+    margin-top: 16px;
+  }
+  .pf-mailbox-columns {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .pf-agent-decisions > article > div {
+    display: block;
+  }
+  .pf-agent-decisions h4 {
+    margin-bottom: 8px;
+  }
+}

@@ -111,3 +111,43 @@ test("approval and simulation bind to the package the user reviewed", async () =
     { expected_package_id: "package-v2" },
   ]);
 });
+
+test("agent controls bind mandate version and run identity without purchase authorization", async () => {
+  const calls: { url: string; body: unknown }[] = [];
+  const api = createProductApi("/api/v1/products", async (url, init) => {
+    calls.push({ url: String(url), body: JSON.parse(String(init?.body)) });
+    return new Response("{}", { status: 200 });
+  });
+  await api.startAgent("project/one", 12, "live");
+  await api.pauseAgent("project/one", "run-one", 14);
+  await api.resumeAgent("project/one", "run-one", 15);
+  assert.deepEqual(calls, [
+    {
+      url: "/api/v1/products/project%2Fone/agent/start",
+      body: { expected_version: 12, mode: "live" },
+    },
+    {
+      url: "/api/v1/products/project%2Fone/agent/pause",
+      body: { expected_run_id: "run-one", expected_version: 14 },
+    },
+    {
+      url: "/api/v1/products/project%2Fone/agent/resume",
+      body: { expected_run_id: "run-one", expected_version: 15 },
+    },
+  ]);
+});
+
+test("agent command conflicts surface once without retrying stale mandates", async () => {
+  let attempts = 0;
+  const api = createProductApi("/api/v1/products", async () => {
+    attempts++;
+    return new Response(
+      JSON.stringify({
+        message: "The agent run changed. Refresh before resuming.",
+      }),
+      { status: 409 },
+    );
+  });
+  await assert.rejects(api.resumeAgent("p", "old-run", 2), /run changed/);
+  assert.equal(attempts, 1);
+});

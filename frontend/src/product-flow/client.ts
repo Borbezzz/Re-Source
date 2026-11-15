@@ -35,6 +35,29 @@ export function createProductApi(
     });
   const path = (id: string) => `/${encodeURIComponent(id)}`;
   return {
+    startAgent: (id: string, expected_version: number, mode: "demo" | "live") =>
+      json<ProductProject>(`${path(id)}/agent/start`, {
+        expected_version,
+        mode,
+      }),
+    pauseAgent: (
+      id: string,
+      expected_run_id: string,
+      expected_version: number,
+    ) =>
+      json<ProductProject>(`${path(id)}/agent/pause`, {
+        expected_run_id,
+        expected_version,
+      }),
+    resumeAgent: (
+      id: string,
+      expected_run_id: string,
+      expected_version: number,
+    ) =>
+      json<ProductProject>(`${path(id)}/agent/resume`, {
+        expected_run_id,
+        expected_version,
+      }),
     projects: (signal?: AbortSignal) =>
       request<{ projects: ProductProjectSummary[] }>("", { signal }),
     demos: (signal?: AbortSignal) =>

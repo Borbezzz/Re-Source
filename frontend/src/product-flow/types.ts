@@ -17,9 +17,13 @@ export interface ProductPart {
   name: string;
   quantity: number;
   part_number?: string | null;
+  identity_source?: ProductSource | null;
+  quantity_source?: ProductSource | null;
+  part_number_source?: ProductSource | null;
   requirements: ProductRequirement[];
   node_names: string[];
   explode?: [number, number, number] | null;
+  confirmation_origin?: "user_review" | "agent_grounded" | null;
   status: "proposed" | "confirmed";
 }
 export interface ProductDocument {
@@ -138,6 +142,8 @@ export interface ProductProject {
   parts: ProductPart[];
   model: ProductModel;
   research: ProductInvestigation[];
+  agent?: ProductAgentRun | null;
+  mailbox?: ProductMailboxMessage[];
   selections: Record<string, string>;
   package?: ProductPackage | null;
   events: ProductEvent[];
@@ -171,4 +177,60 @@ export interface ProductProjectSummary {
   failed_research_count: number;
   selected_count: number;
   package_status: ProductPackage["status"] | null;
+  agent_status?: ProductAgentRun["status"] | null;
+  agent_stage?: ProductAgentRun["stage"] | null;
+}
+
+export interface ProductAgentRun {
+  run_id: string;
+  input_version: number;
+  mode: "demo" | "live";
+  status:
+    | "queued"
+    | "running"
+    | "paused"
+    | "needs_attention"
+    | "recommendation_ready"
+    | "failed";
+  stage:
+    "requirements" | "research" | "shortlist" | "rfq" | "outreach" | "complete";
+  summary: string;
+  attention: { code: string; message: string; part_ids: string[] }[];
+  targets: {
+    part_id: string;
+    candidate_id: string;
+    reason: string;
+    readiness: "demo_ready" | "contact_required";
+  }[];
+  sent_count: number;
+  reply_count: number;
+  created_at: string;
+  updated_at: string;
+  completed_at?: string | null;
+  mandate: {
+    objective: "source_and_request_quotes";
+    outreach: "demo_mailbox" | "draft_only";
+    purchase_authorized: false;
+  };
+}
+export interface ProductMailboxMessage {
+  message_id: string;
+  run_id: string;
+  part_id: string;
+  candidate_id: string;
+  direction: "outbound" | "inbound";
+  delivery: "simulated";
+  data_origin: "synthetic_demo";
+  intended_supplier: string;
+  from_label: string;
+  to_label: string;
+  subject: string;
+  body: string;
+  in_reply_to?: string | null;
+  created_at: string;
+  quote?: {
+    price?: number | null;
+    currency?: string | null;
+    lead_time_days?: number | null;
+  } | null;
 }

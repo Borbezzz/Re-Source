@@ -21,30 +21,36 @@ import {
 import { sourceUrl } from "../api/guards.ts";
 import { productApi } from "./client.ts";
 import type { DemoProduct, ProductPart, ProductProject } from "./types.ts";
+import { AgentLaunch, AgentRun } from "./AgentRun.tsx";
 import { ProductResearch } from "./ProductResearch.tsx";
 import "./product-flow.css";
 const AssemblyScene = lazy(() => import("./AssemblyScene.tsx"));
 export type ProductEntry = "gallery" | "upload" | `project:${string}`;
-type Step = "sources" | "assembly" | "research" | "approval";
+type Step = "agent" | "sources" | "assembly" | "research" | "approval";
 export type ProjectAction = (
   label: string,
   work: () => Promise<ProductProject>,
   next?: Step,
 ) => Promise<void>;
+const agentWorking = (project: ProductProject) =>
+  project.agent?.status === "queued" || project.agent?.status === "running";
 const pending = (project: ProductProject) =>
+  agentWorking(project) ||
   project.status === "extracting" ||
   project.research.some(
     (job) => job.status === "queued" || job.status === "running",
   );
 const resumeAt = (project: ProductProject): Step =>
-  project.package
-    ? "approval"
-    : project.research.length
-      ? "research"
-      : project.parts.length &&
-          project.parts.every((part) => part.status === "confirmed")
-        ? "assembly"
-        : "sources";
+  project.agent || (project.demo_id && !project.research.length)
+    ? "agent"
+    : project.package
+      ? "approval"
+      : project.research.length
+        ? "research"
+        : project.parts.length &&
+            project.parts.every((part) => part.status === "confirmed")
+          ? "assembly"
+          : "sources";
 const errorText = (error: unknown) =>
   error instanceof Error
     ? error.message
@@ -65,6 +71,7 @@ export function ProductFlow({
   const [demos, setDemos] = useState<DemoProduct[]>([]);
   const [screen, setScreen] = useState(entry);
   const [openSections, setOpenSections] = useState<Record<Step, boolean>>({
+    agent: false,
     sources: true,
     assembly: false,
     research: false,
@@ -76,6 +83,7 @@ export function ProductFlow({
   const [name, setName] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [sourceDirty, setSourceDirty] = useState(false);
+  const [manualMode, setManualMode] = useState(false);
   const reportDirty = useRef(onDirtyChange);
   reportDirty.current = onDirtyChange;
   useEffect(() => {
@@ -102,6 +110,7 @@ export function ProductFlow({
   }, []);
   const reveal = (section: Step) => {
     setOpenSections({
+      agent: section === "agent",
       sources: section === "sources",
       assembly: section === "assembly",
       research: section === "research",
@@ -135,8 +144,10 @@ export function ProductFlow({
     if (isNew) {
       setSelected([]);
       setSourceDirty(false);
+      setManualMode(false);
       setOpenSections({
-        sources: true,
+        agent: Boolean(value.demo_id),
+        sources: !value.demo_id,
         assembly: false,
         research: false,
         approval: false,
@@ -217,6 +228,11 @@ export function ProductFlow({
   }, [project?.project_id, active]);
   const act: ProjectAction = async (label, work, next) => {
     if (actionLock.current) return;
+    if (next === "agent" && sourceDirty) {
+      setError("Save your source edits before starting or resuming the agent.");
+      reveal("sources");
+      return;
+    }
     actionLock.current = true;
     setBusy(label);
     setError("");
@@ -224,6 +240,7 @@ export function ProductFlow({
       const value = await work();
       if (!mounted.current) return;
       accept(value);
+      if (next === "agent") setManualMode(false);
       if (next) reveal(next);
     } catch (error) {
       if (mounted.current) setError(errorText(error));
@@ -233,6 +250,11 @@ export function ProductFlow({
     }
   };
   const continueAction: ProjectAction = async (label, work, next) => {
+    if (project && agentWorking(project)) {
+      setError("Pause the sourcing agent before making manual changes.");
+      reveal("agent");
+      return;
+    }
     if (sourceDirty) {
       setError(
         "Save and confirm your source edits before continuing this investigation.",
@@ -246,7 +268,12 @@ export function ProductFlow({
     !!project?.parts.length &&
     project.parts.every((part) => part.status === "confirmed");
   const researched = !!project?.research.length;
-  const complete = project?.package?.status === "simulated";
+  const complete =
+    project?.agent?.status === "recommendation_ready" ||
+    project?.package?.status === "simulated";
+  const agentActive = !!project && agentWorking(project);
+  const agentManaged = !!project?.agent && !manualMode;
+  const editorBusy = busy || (agentActive ? "Sourcing agent is working" : "");
   const sourceDocumentCount =
     project?.documents.filter((document) => document.kind !== "model").length ??
     0;
@@ -357,7 +384,7 @@ export function ProductFlow({
                         void act(
                           "Opening demo investigation…",
                           () => productApi.create({ demo_id: demo.demo_id }),
-                          "sources",
+                          "agent",
                         )
                       }
                     >
@@ -391,44 +418,86 @@ export function ProductFlow({
                 <h1>{project.name}</h1>
                 <p>
                   {complete
-                    ? "Investigation complete · simulated purchasing"
+                    ? project.agent
+                      ? "Recommendation ready · no purchase authorized"
+                      : "Investigation complete · simulated purchasing"
                     : project.demo_id
                       ? "Demo investigation · sample documents and prepared geometry"
                       : "Review your parts, find suppliers and prepare a sourcing package."}
                 </p>
               </div>
               <span className="pf-project-status">
-                {complete
-                  ? "Complete"
-                  : active
-                    ? "Research in progress"
-                    : project.package
-                      ? "Ready for review"
-                      : researched
-                        ? "Choose suppliers"
-                        : confirmed
-                          ? "Choose parts"
-                          : "Review sources"}
+                {project.agent
+                  ? project.agent.status === "recommendation_ready"
+                    ? "Recommendation ready"
+                    : project.agent.status.replaceAll("_", " ")
+                  : complete
+                    ? "Complete"
+                    : active
+                      ? "Research in progress"
+                      : project.package
+                        ? "Ready for review"
+                        : researched
+                          ? "Choose suppliers"
+                          : confirmed
+                            ? "Choose parts"
+                            : "Review sources"}
               </span>
             </div>
+            {project.agent ? (
+              <AgentRun
+                project={project}
+                dirty={sourceDirty}
+                busy={busy}
+                onAction={act}
+                onInspect={() =>
+                  reveal(confirmed || project.demo_id ? "assembly" : "sources")
+                }
+                onManual={() => {
+                  setManualMode(true);
+                  reveal("sources");
+                }}
+              />
+            ) : (
+              <AgentLaunch
+                project={project}
+                busy={busy}
+                dirty={sourceDirty}
+                onAction={continueAction}
+                onManual={() => {
+                  setManualMode(true);
+                  reveal("sources");
+                }}
+                onInspect={() => reveal("assembly")}
+              />
+            )}
             <div className="pf-continuous-flow">
               <FlowSection
                 id="sources"
                 label="Sources & parts"
-                summary={`${sourceDocumentCount} ${sourceDocumentCount === 1 ? "document" : "documents"} · ${project.parts.length} ${confirmed ? "reviewed" : "proposed"} parts${sourceDirty ? " · unsaved edits" : ""}`}
+                summary={`${sourceDocumentCount} ${sourceDocumentCount === 1 ? "document" : "documents"} · ${project.parts.length} ${confirmed ? (project.parts.every((part) => part.confirmation_origin === "agent_grounded") ? "source-checked" : "reviewed") : "proposed"} parts${sourceDirty ? " · unsaved edits" : ""}`}
                 completed={confirmed}
-                open={!confirmed || openSections.sources}
+                collapsible={
+                  confirmed ||
+                  !!project.agent ||
+                  (!!project.demo_id && !manualMode)
+                }
+                open={
+                  project.agent || (project.demo_id && !manualMode)
+                    ? openSections.sources
+                    : !confirmed || openSections.sources
+                }
                 onToggle={() => toggleSection("sources")}
               >
                 <Sources
                   key={project.project_id}
                   project={project}
-                  busy={busy}
+                  busy={editorBusy}
                   onAction={act}
                   onDirtyChange={setSourceDirty}
                 />
               </FlowSection>
-              {confirmed ? (
+              {confirmed || project.demo_id ? (
                 <FlowSection
                   id="assembly"
                   label="Assembly & selected parts"
@@ -438,12 +507,21 @@ export function ProductFlow({
                       : `${selected.length} parts selected`
                   }
                   completed={researched}
-                  open={!researched || openSections.assembly}
+                  collapsible={
+                    researched ||
+                    !!project.agent ||
+                    (!!project.demo_id && !manualMode)
+                  }
+                  open={
+                    project.agent || (project.demo_id && !manualMode)
+                      ? openSections.assembly
+                      : !researched || openSections.assembly
+                  }
                   onToggle={() => toggleSection("assembly")}
                 >
                   <Assembly
                     project={project}
-                    busy={busy}
+                    busy={editorBusy}
                     selected={selected}
                     onSelected={setSelected}
                     onAction={continueAction}
@@ -460,18 +538,21 @@ export function ProductFlow({
                   id="research"
                   label="Supplier research & choices"
                   summary={`${project.research.filter((job) => job.status === "complete").length} of ${project.research.length} parts researched · ${selectedSuppliers} supplier ${selectedSuppliers === 1 ? "choice" : "choices"}`}
-                  completed={!!project.package}
-                  open={!project.package || openSections.research}
+                  completed={!!project.package && !agentManaged}
+                  open={
+                    agentManaged || !project.package || openSections.research
+                  }
                   onToggle={() => toggleSection("research")}
                 >
                   <ProductResearch
                     project={project}
-                    busy={busy}
+                    agentManaged={agentManaged}
+                    busy={editorBusy}
                     onAction={continueAction}
                   />
                 </FlowSection>
               ) : null}
-              {project.package ? (
+              {project.package && !agentManaged ? (
                 <FlowSection
                   id="approval"
                   label="Sourcing package"
@@ -491,8 +572,9 @@ export function ProductFlow({
             {complete ? (
               <div className="pf-complete-next">
                 <p>
-                  This investigation is saved with its sources, supplier choices
-                  and simulated receipt.
+                  {project.agent
+                    ? "The agent run is saved with its sources, quote requests, replies and recommendation."
+                    : "This investigation is saved with its sources, supplier choices and simulated receipt."}
                 </p>
                 <button className="secondary" onClick={onNew}>
                   Start a new investigation <ArrowRight size={16} />
@@ -510,6 +592,7 @@ function FlowSection({
   label,
   summary,
   completed,
+  collapsible = completed,
   open,
   onToggle,
   children,
@@ -518,6 +601,7 @@ function FlowSection({
   label: string;
   summary: string;
   completed: boolean;
+  collapsible?: boolean;
   open: boolean;
   onToggle: () => void;
   children: ReactNode;
@@ -529,7 +613,7 @@ function FlowSection({
       tabIndex={-1}
       aria-label={label}
     >
-      {completed ? (
+      {collapsible ? (
         <button
           className="pf-flow-summary"
           aria-expanded={open}
@@ -537,7 +621,7 @@ function FlowSection({
           onClick={onToggle}
         >
           <span className="pf-flow-check">
-            <Check size={16} />
+            {completed ? <Check size={16} /> : null}
           </span>
           <span>
             <strong>{label}</strong>
@@ -751,7 +835,12 @@ function Sources({
                   Part name
                   <input
                     value={p.name}
-                    onChange={(e) => update(index, { name: e.target.value })}
+                    onChange={(e) =>
+                      update(index, {
+                        name: e.target.value,
+                        identity_source: null,
+                      })
+                    }
                     maxLength={160}
                   />
                 </label>
@@ -763,7 +852,10 @@ function Sources({
                     max="1000000"
                     value={p.quantity}
                     onChange={(e) =>
-                      update(index, { quantity: Number(e.target.value) })
+                      update(index, {
+                        quantity: Number(e.target.value),
+                        quantity_source: null,
+                      })
                     }
                   />
                 </label>

@@ -11,10 +11,12 @@ export function ProductResearch({
   project,
   busy,
   onAction,
+  agentManaged = false,
 }: {
   project: ProductProject;
   busy: string;
   onAction: ProjectAction;
+  agentManaged?: boolean;
 }) {
   const [active, setActive] = useState<string | null>(null);
   const cards = useRef(new Map<string, HTMLElement>());
@@ -54,14 +56,19 @@ export function ProductResearch({
     <section className="pf-investigation">
       <div className="pf-section-heading">
         <div>
-          <h2>Find and compare suppliers</h2>
+          <h2>
+            {agentManaged
+              ? "Agent supplier research"
+              : "Find and compare suppliers"}
+          </h2>
           <p aria-live="polite">
             {complete} of {project.research.length} part investigations complete
             {failed ? ` · ${failed} need attention` : ""}.
           </p>
           <p>
-            Review each result as it arrives. Choose a supplier lead after
-            checking its evidence and unknowns.
+            {agentManaged
+              ? "The agent evaluates these leads and prepares quote requests. Every source and unresolved requirement stays available for inspection."
+              : "Review each result as it arrives. Choose a supplier lead after checking its evidence and unknowns."}
           </p>
         </div>
       </div>
@@ -140,7 +147,7 @@ export function ProductResearch({
                     {job.error}
                   </p>
                 ) : null}
-                {job.status === "failed" ? (
+                {job.status === "failed" && !agentManaged ? (
                   <button
                     className="secondary"
                     disabled={!!busy}
@@ -168,6 +175,7 @@ export function ProductResearch({
                     <Candidate
                       key={candidate.candidate_id}
                       candidate={candidate}
+                      agentManaged={agentManaged}
                       index={index}
                       cardRef={(element) => {
                         if (element)
@@ -218,40 +226,43 @@ export function ProductResearch({
             ))}
         </ol>
       </details>
-      <div className="pf-research-continue">
-        <div>
-          <h3>
-            {choices
-              ? `${choices} supplier ${choices === 1 ? "choice" : "choices"} ready for review`
-              : "Choose suppliers for your RFQ"}
-          </h3>
-          <p>
-            {running
-              ? "You can choose completed results now. Prepare the package once the remaining research finishes."
-              : choices
-                ? `The package will include your ${choices} selected ${choices === 1 ? "part" : "parts"}, reviewed requirements and unresolved evidence.`
-                : "A public lead or sample quote still needs supplier confirmation. Your selections will form a reviewable request for quotation."}
-          </p>
+      {!agentManaged ? (
+        <div className="pf-research-continue">
+          <div>
+            <h3>
+              {choices
+                ? `${choices} supplier ${choices === 1 ? "choice" : "choices"} ready for review`
+                : "Choose suppliers for your RFQ"}
+            </h3>
+            <p>
+              {running
+                ? "You can choose completed results now. Prepare the package once the remaining research finishes."
+                : choices
+                  ? `The package will include your ${choices} selected ${choices === 1 ? "part" : "parts"}, reviewed requirements and unresolved evidence.`
+                  : "A public lead or sample quote still needs supplier confirmation. Your selections will form a reviewable request for quotation."}
+            </p>
+          </div>
+          <button
+            className="primary"
+            disabled={!!busy || running || !choices}
+            onClick={() =>
+              void onAction(
+                "Preparing sourcing package…",
+                () => productApi.package(project.project_id),
+                "approval",
+              )
+            }
+          >
+            Prepare sourcing package <ArrowRight size={16} />
+          </button>
         </div>
-        <button
-          className="primary"
-          disabled={!!busy || running || !choices}
-          onClick={() =>
-            void onAction(
-              "Preparing sourcing package…",
-              () => productApi.package(project.project_id),
-              "approval",
-            )
-          }
-        >
-          Prepare sourcing package <ArrowRight size={16} />
-        </button>
-      </div>
+      ) : null}
     </section>
   );
 }
 function Candidate({
   candidate: c,
+  agentManaged,
   index,
   cardRef,
   hasLocation,
@@ -262,6 +273,7 @@ function Candidate({
   onSelect,
 }: {
   candidate: ProductCandidate;
+  agentManaged: boolean;
   index: number;
   cardRef: (element: HTMLElement | null) => void;
   hasLocation: boolean;
@@ -382,7 +394,13 @@ function Candidate({
           </ul>
         ) : null}
       </details>
-      {
+      {agentManaged ? (
+        <p className="pf-agent-choice">
+          {selected
+            ? "Shortlisted by the agent"
+            : "Supplier lead available for evaluation"}
+        </p>
+      ) : (
         <button
           className={selected ? "secondary" : "text-button"}
           disabled={busy || selected}
@@ -398,7 +416,7 @@ function Candidate({
             </>
           )}
         </button>
-      }
+      )}
     </article>
   );
 }
