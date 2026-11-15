@@ -2,6 +2,34 @@ import * as THREE from "three";
 
 type Batch = { mesh: THREE.InstancedMesh; sources: THREE.Mesh[] };
 
+/** Three's CPU raycaster does not apply the renderer's material clipping planes. */
+function applyClippingAwareRaycast(mesh: THREE.Mesh) {
+  const raycast = mesh.raycast;
+  const candidates: THREE.Intersection[] = [];
+  mesh.raycast = function (raycaster, hits) {
+    if (!this.visible) return;
+    if (!Array.isArray(this.material)) {
+      if (!this.material.visible) return;
+      if (!this.material.clippingPlanes?.length) {
+        raycast.call(this, raycaster, hits);
+        return;
+      }
+    }
+    candidates.length = 0;
+    raycast.call(this, raycaster, candidates);
+    for (const hit of candidates) {
+      const material = Array.isArray(this.material) ? this.material[hit.face?.materialIndex ?? 0] : this.material;
+      if (!material?.visible) continue;
+      const planes = material.clippingPlanes;
+      const clipped = planes?.length && (material.clipIntersection
+        ? planes.every(plane => plane.distanceToPoint(hit.point) < 0)
+        : planes.some(plane => plane.distanceToPoint(hit.point) < 0));
+      if (!clipped) hits.push(hit);
+    }
+    candidates.length = 0;
+  };
+}
+
 /** Render repeated geometry together, retaining the source hierarchy for part identity and animation. */
 export class AssemblyInstances {
   readonly root = new THREE.Group();
@@ -33,10 +61,7 @@ export class AssemblyInstances {
           copy = source.clone(false);
           copy.matrixAutoUpdate = false;
           copy.userData = { source };
-          const raycast = copy.raycast;
-          copy.raycast = function (raycaster, hits) {
-            if (this.visible) raycast.call(this, raycaster, hits);
-          };
+          applyClippingAwareRaycast(copy);
           this.singles.set(source, copy);
           this.root.add(copy);
         }
@@ -55,6 +80,7 @@ export class AssemblyInstances {
         mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         mesh.matrixAutoUpdate = false;
         mesh.renderOrder = source.renderOrder;
+        applyClippingAwareRaycast(mesh);
         batch = { mesh, sources: [] };
         mesh.userData.sources = batch.sources;
         this.batches.set(key, batch);
