@@ -6,7 +6,7 @@
 |---|---|
 | `manifest.json` | Package/version, file hashes, component mappings, units and limitations. |
 | `assembly.glb` | Prepared visual geometry and `extras`/`userData` IDs. Not an engineering acceptance source. |
-| `components.csv` | 35 demo part-family records, their roles, fixture identities and occurrence counts. Not a complete engineering BOM. |
+| `components.csv` | 104 demo part-family records, their roles, fixture identities and occurrence counts. Not a complete engineering BOM. |
 | `requirements.json` | Authoritative buyer-defined fixture requirements, keyed by requirement set and component ID. Any displayed PDF must be generated from this file. |
 | `LICENSE-Mechanica.txt`, `ATTRIBUTION.md` | Preserve these with redistributed derivatives. |
 
@@ -32,7 +32,7 @@ function resolveSourcingCase(hit: THREE.Object3D) {
 }
 ```
 
-Resolve manifest `components[].nodeIds` through that map. Version 1.1 deliberately maps repeated blade/injector occurrences to shared fictional part-family identities; do not infer shared specifications from appearance. Track the inspected occurrence separately from the sourcing family. Hovering a group previews its members; hovering a leaf previews that occurrence. Individual selection/reassembly must use that occurrence's stable IDs. The nozzle group has its own assembly-level sourcing case; its children can also be inspected without inventing individual requirements.
+Resolve manifest `components[].nodeIds` through that map. Version 1.2 explicitly covers all 1,835 independent pieces, mapping repeated instances to shared fictional part-family identities; do not infer shared specifications from appearance. Track the inspected occurrence separately from the sourcing family. Hovering a group previews its members; hovering a leaf previews that occurrence. Individual selection/reassembly must use that occurrence's stable IDs. The nozzle group retains its assembly-level sourcing case, and its individual children now have their own explicit specifications. Mixed groups are navigation containers: expand them to select a sourcing family or individual part.
 
 Store every node's original position/quaternion/scale before animation. Use the same imported model for assembly, selection, fault highlight, separation, replacement and reassembly. Component IDs must not change when meshes move. Use clones or reset full transforms; do not mutate canonical geometry or sourcing identities to animate a swap.
 

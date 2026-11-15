@@ -273,7 +273,7 @@ class ProductCreateRequest(ProductContract):
 
 
 class ProductPartsRequest(ProductContract):
-    parts: list[ProductPart] = Field(min_length=1, max_length=50)
+    parts: list[ProductPart] = Field(min_length=1, max_length=200)
     confirm: bool = False
     expected_version: int | None = None
 

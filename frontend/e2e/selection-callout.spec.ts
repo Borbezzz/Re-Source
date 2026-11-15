@@ -26,7 +26,7 @@ async function anchorError(page: Page, stableId: string) {
   }, stableId);
 }
 
-test("only the selected occurrence has a connected label, including inspection-only pieces", async ({ page }, info) => {
+test("only the selected occurrence has a connected label, including small hardware", async ({ page }, info) => {
   test.setTimeout(90_000);
   await page.emulateMedia({ reducedMotion: "reduce" });
   const errors: string[] = [];
@@ -55,10 +55,10 @@ test("only the selected occurrence has a connected label, including inspection-o
   await expect(page.locator(".rs-part-callout-label")).toHaveText("Fan and inlet");
   await page.getByRole("region", { name: "Fan and inlet inspection" }).getByRole("button", { name: "Clear selection", exact: true }).click();
   const fan = page.locator('[data-part-id="rs-mech-tf-v1.group.fan"]');
-  await fan.getByRole("button", { name: /^Retaining ring 01/ }).click();
-  await expect(page.getByRole("region", { name: "Retaining ring 01 inspection" })).toBeVisible();
-  await expect(page.locator(".rs-part-callout-label")).toHaveText("Retaining ring 01");
-  await page.getByRole("region", { name: "Retaining ring 01 inspection" }).getByRole("button", { name: "Clear selection", exact: true }).click();
+  await fan.getByRole("button", { name: "Fan retaining ring", exact: true }).click();
+  await expect(page.getByRole("region", { name: "Fan retaining ring actions" })).toBeVisible();
+  await expect(page.locator(".rs-part-callout-label")).toHaveText("Fan retaining ring");
+  await page.getByRole("region", { name: "Fan retaining ring actions" }).getByRole("button", { name: "Clear selection", exact: true }).click();
   await expect(page.locator(".rs-part-callout, .rs-hotspot")).toHaveCount(0);
   expect(errors).toEqual([]);
 });

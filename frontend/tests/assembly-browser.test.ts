@@ -32,7 +32,7 @@ test("fan group and individual blades target exact, distinct model occurrences",
   }
 });
 
-test("stage sourcing identities come from the manifest and all 35 cases reach the backend with map sites", () => {
+test("all 104 sourcing families reach the backend with map sites", () => {
   const cp = tree.find(item => item.assemblyId === "compressor")!;
   const stages = cp.children.find(item => item.name === "Rotor blades")!.children;
   assert.equal(stages.length, 9);
@@ -42,7 +42,7 @@ test("stage sourcing identities come from the manifest and all 35 cases reach th
   assert.equal(turbine.children.find(item => item.name === "Rotor blades")!.children.length, 5);
   const profile = JSON.parse(read("data/demo-products/turbofan.json").toString());
   const sites = JSON.parse(read("frontend/src/studio/data/extra-sites.json").toString());
-  assert.equal(profile.parts.length, 35);
+  assert.equal(profile.parts.length, 104);
   for (const component of manifest.components) {
     const part = profile.parts.find((part: { part_id: string }) => part.part_id === component.componentId.toLowerCase());
     assert.equal(part.part_number, component.partNumber);
@@ -54,8 +54,22 @@ test("stage sourcing identities come from the manifest and all 35 cases reach th
   }
 });
 
-test("unmapped fasteners remain inspectable without inheriting an invented sourcing identity", () => {
+test("every independent piece has an explicit sourcing specification, including all fasteners", () => {
+  const leaves = [...index.values()].filter(item => !item.children.length);
+  assert.equal(leaves.length, 1835);
+  for (const item of leaves) {
+    assert.ok(item.componentId, item.id);
+    const mapping = manifest.components.find((c: { componentId: string }) => c.componentId === item.componentId);
+    assert.ok(mapping.nodeIds.includes(item.id), item.id);
+  }
   const fasteners = tree.find(item => item.assemblyId === "casing")!.children.find(item => item.name === "Fasteners")!;
+  assert.equal(fasteners.children.length, 392);
+  assert.equal(new Set(fasteners.children.map(item => item.componentId)).size, 9);
+});
+
+test("packages without explicit specifications still do not invent sourcing identities", () => {
+  const unmapped = buildAssemblyTree(nodes, []);
+  const fasteners = unmapped.find(item => item.assemblyId === "casing")!.children.find(item => item.name === "Fasteners")!;
   assert.equal(fasteners.componentId, null);
   assert.ok(fasteners.children.every(item => item.componentId === null));
 });

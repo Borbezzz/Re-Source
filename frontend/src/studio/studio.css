@@ -421,8 +421,6 @@
 .rs-part-leaf { flex: 0 0 26px; }
 .rs-part-leaf::after { content: ""; display: block; width: 4px; height: 4px; margin: auto; background: #ffffff45; border-radius: 50%; }
 .rs-part-count { font: 11px var(--rs-mono); color: var(--rs-text-2); }
-.rs-part-source { display: inline-block; width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: #63d4ee; }
-.rs-parts-legend { display: flex; align-items: center; gap: 7px; color: var(--rs-text-2); font-size: 11px; margin: 16px 0 0; }
 .rs-inspection-heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
 .rs-inspection-heading h2 { margin: 0; font-weight: 500; }
 .rs-inspection-note { color: var(--rs-text-2); line-height: 1.7; border-top: 1px solid var(--rs-line); padding-top: 14px; }

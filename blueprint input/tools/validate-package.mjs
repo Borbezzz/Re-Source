@@ -13,7 +13,7 @@ assert(!gltfJson.buffers.some(b=>b.uri));assert(!gltfJson.images?.length);
 const buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
 const gltf=await new GLTFLoader().parseAsync(buffer,'');const scene=gltf.scene;scene.updateMatrixWorld(true);
 const stable=new Set(),byStableId=new Map();let meshes=0;scene.traverse(o=>{if(o.userData.stableId){assert(!stable.has(o.userData.stableId),'Duplicate stable ID');stable.add(o.userData.stableId);byStableId.set(o.userData.stableId,o);}if(o.isMesh)meshes++;});
-assert.equal(meshes,manifest.geometry.meshOccurrences);assert.equal(manifest.components.length,35);
+assert.equal(meshes,manifest.geometry.meshOccurrences);assert.equal(manifest.components.length,104);
 const csv=(await readFile(new URL('components.csv',dir),'utf8')).trim().split(/\r?\n/);
 assert.equal(csv[0],'component_id,role,name,part_number,revision,parent_assembly_id,node_ids,assembly_quantity,requirement_set,data_mode');
 assert.equal(csv.length,manifest.components.length+1);
@@ -32,6 +32,8 @@ const pieces=JSON.parse(await readFile(new URL('../verification/piece-inventory.
 assert.equal(pieces.filter(p=>p.parentAssemblyId==='combustor'&&p.displayName==='Fuel injector').length,18);
 assert.equal(pieces.filter(p=>p.parentAssemblyId==='fan'&&p.displayName==='Rotor blade').length,24);
 assert.equal(pieces.filter(p=>!p.attachedToStableId).length,1835);
-const report={status:'pass',checks:['GLB header and byte length','SHA-256 file integrity','No external texture/buffer dependencies','GLTFLoader parse round trip','Unique persistent IDs','CSV/manifest component identity, role, counts and requirement consistency','35 sourcing-family node and requirement mappings','Round-trip bounds within 1e-4 visualization units','Upstream injector/blade occurrence counts','1835 independent pieces; attached decorations distinguished'],meshOccurrences:meshes,components:checks,notValidated:['physical dimensions','manufacturing tolerances','OEM applicability','supplier qualification','procurement integration','performance across devices']};
+const mapped=new Set(manifest.components.flatMap(c=>c.nodeIds));
+for(const p of pieces.filter(p=>!p.attachedToStableId))assert(mapped.has(p.stableId),`No sourcing specification for ${p.stableId}`);
+const report={status:'pass',checks:['GLB header and byte length','SHA-256 file integrity','No external texture/buffer dependencies','GLTFLoader parse round trip','Unique persistent IDs','CSV/manifest component identity, role, counts and requirement consistency','104 sourcing-family node and requirement mappings','Round-trip bounds within 1e-4 visualization units','Upstream injector/blade occurrence counts','All 1835 independent pieces have sourcing specifications; attached decorations distinguished'],meshOccurrences:meshes,components:checks,notValidated:['physical dimensions','manufacturing tolerances','OEM applicability','supplier qualification','procurement integration','performance across devices']};
 await writeFile(new URL('../verification/package-validation.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report,null,2));
