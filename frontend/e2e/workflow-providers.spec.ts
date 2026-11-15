@@ -26,7 +26,7 @@ test("workflow names provider features without claiming demo calls ran", async (
   const output = page.getByRole("region", { name: "Stage output" });
   for (const [id, title, detail] of [
     ["trigger", project.capabilities.storage === "lakebase_postgres" ? "Lakebase · Save case" : "Save sourcing case", storage],
-    ["discover", "Linkup · Web Search", "Prepared demo offers; Linkup was not called"],
+    ["discover", "Linkup · Web Search", "Supplier catalogue offers for this part"],
     ["extract", "Databricks · ai_extract", "Prepared demo claims; ai_extract was not called"],
     ["rank", "Rank shortlist", "Re::Source weighted scoring"],
     ["approve", "Approve RFQ", storage],

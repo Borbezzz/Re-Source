@@ -159,8 +159,9 @@ def test_email_preserves_reviewed_need_and_changes_require_fresh_approval(svc, m
     assert "Qty 7" in item["rfq_subject"]
     assert item["rfq_text"].startswith("Dear ")
     for text in ("Quantity required: 7 units", "14 December 2026", enquiry["delivery_destination"],
-                 enquiry["selected_item"], "Kind regards,\nProcurement desk\nDemo Aero Maintenance Ltd", "fictional"):
+                 enquiry["selected_item"], "Kind regards,\nProcurement desk\nDemo Aero Maintenance Ltd"):
         assert text in item["rfq_text"]
+    assert "fictional" not in item["rfq_text"].lower()
     for requirement in part["requirements"]:
         assert requirement["value"] in item["rfq_text"]
     original_id = package["package_id"]

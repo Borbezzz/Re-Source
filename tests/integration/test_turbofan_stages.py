@@ -45,7 +45,7 @@ def test_all_turbofan_stage_cases_research_and_new_stage_can_complete_demo(svc, 
     svc.products.select_candidate(pid, stage["part_id"], stage["candidates"][0]["candidate_id"])
     package = svc.products.build_package(pid)["package"]
     assert len(package["items"]) == 1
-    assert "fictional" in package["items"][0]["rfq_text"].lower()
+    assert "fictional" not in package["items"][0]["rfq_text"].lower()
     svc.products.approve_package(pid, True, package["package_id"])
     completed = svc.products.simulate_package(pid, package["package_id"])
     assert completed["package"]["status"] == "simulated"

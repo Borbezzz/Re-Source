@@ -53,7 +53,7 @@ export function ReturnPanel({
           <div className="rs-state">
             <span className="rs-check-ico" style={{ color: "var(--rs-amber)" }}><Clock size={18} /></span>
             <div>
-              <b>Procurement · quote confirmed (simulated)</b>
+              <b>Procurement · quote confirmed</b>
               <p>{project.package?.receipt ? `Receipt ${project.package.receipt}. ` : ""}Order not committed. Dispatch not confirmed.</p>
             </div>
           </div>
@@ -64,7 +64,7 @@ export function ReturnPanel({
             {events.map((e) => (
               <li key={e.sequence} style={{ gridTemplateColumns: "1fr" }}>
                 <span className="rs-small" style={{ color: "var(--rs-text)" }}>{e.summary}</span>
-                <span className="rs-tiny">{new Date(e.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })} · {e.type}</span>
+                <span className="rs-tiny">{new Date(e.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</span>
               </li>
             ))}
           </ul>

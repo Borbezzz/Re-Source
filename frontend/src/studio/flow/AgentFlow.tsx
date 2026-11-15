@@ -197,7 +197,7 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
           <motion.section
             key={`pane-${mode}-${dir}`}
             className={`fl-pane is-${mode}${mode === "split" ? ` is-${dir}` : ""}`}
-            aria-label="Demo sourcing agent workflow"
+            aria-label="Sourcing agent workflow"
             initial={mode === "full" ? { opacity: 0, scale: 0.985 } : side ? { x: "100%" } : { y: "100%" }}
             animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
             exit={mode === "full" ? { opacity: 0, scale: 0.985 } : side ? { x: "100%" } : { y: "100%" }}
@@ -208,7 +208,7 @@ export function AgentFlow(props: FlowSnapshot & { caseId?: string | null; focusI
             <header className="fl-bar">
               <div className="fl-bar-left">
                 <span className="fl-bar-ico"><Workflow size={15} /></span>
-                <span className="fl-bar-title">Demo sourcing agent</span>
+                <span className="fl-bar-title">Sourcing agent</span>
                 <span className={`fl-run is-${status.tone}`}><i />{status.label}</span>
                 <RunClock startedAt={startedAt} stoppedAt={done ? log.at(-1)?.t.getTime() : undefined} />
                 {props.caseId ? <span className="fl-case">Case {props.caseId.slice(-6)}</span> : null}
@@ -415,7 +415,7 @@ const FlowCanvas = memo(function FlowCanvas({
           className={`fl-tool${follow && !pinned ? " is-on" : ""}`}
           onClick={() => { onLive(); setFollow(true); }}
           aria-pressed={follow && !pinned}
-          title="Follow the demo run"
+          title="Follow the run"
         >
           <LocateFixed size={14} /> <span>Follow run</span>
         </button>
@@ -773,7 +773,7 @@ function OutputPanel({
       <div className="fl-panel-head">
         <span>Stage output</span>
         {isLive ? (
-          <span className="fl-live-pill"><i />Demo run</span>
+          <span className="fl-live-pill"><i />Agent run</span>
         ) : (
           <button type="button" className="fl-live-btn" onClick={onLive}><LocateFixed size={12} /> Follow run</button>
         )}
@@ -933,7 +933,7 @@ function MiniDock({ nodes, status, latest, onOpen }: { nodes: FlowNode[]; status
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 30, opacity: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      aria-label={`Open the demo workflow. ${status.label}. ${latest ?? ""}`}
+      aria-label={`Open the agent workflow. ${status.label}. ${latest ?? ""}`}
     >
       <span className={`fl-run is-${status.tone}`}><i />{status.label}</span>
       <span className="fl-mini-track">

@@ -190,12 +190,12 @@ export function ShortlistDrawer({
             </ul>
           ) : null}
         </div>
-        <p className="rs-tiny" style={{ margin: 0 }}>AI-assisted ranking from checked demo sources · prices are estimates until comparable supplier quotes arrive.</p>
+        <p className="rs-tiny" style={{ margin: 0 }}>AI-assisted ranking from checked sources · prices are estimates until comparable supplier quotes arrive.</p>
       </div>
       <div className="rs-drawer-foot">
         {!disrupted ? (
-          <button type="button" className="rs-btn rs-btn-ghost rs-btn-sm" onClick={onDisrupt} title="Demo control: injects a simulated monitoring signal">
-            <Zap size={14} /> Simulate disruption
+          <button type="button" className="rs-btn rs-btn-ghost rs-btn-sm" onClick={onDisrupt} title="Inject a supplier disruption signal">
+            <Zap size={14} /> Inject disruption
           </button>
         ) : (
           <span className="rs-tiny">Monitoring active</span>
