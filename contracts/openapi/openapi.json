@@ -320,6 +320,47 @@
         "title": "Body_upload_api_v1_products__project_id__documents_post",
         "type": "object"
       },
+      "Body_upload_api_v1_products__project_id__quotes_post": {
+        "properties": {
+          "file": {
+            "anyOf": [
+              {
+                "contentMediaType": "application/octet-stream",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File"
+          },
+          "part_id": {
+            "title": "Part Id",
+            "type": "string"
+          },
+          "reply": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply"
+          },
+          "supplier": {
+            "title": "Supplier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "part_id",
+          "supplier"
+        ],
+        "title": "Body_upload_api_v1_products__project_id__quotes_post",
+        "type": "object"
+      },
       "CandidateOffer": {
         "additionalProperties": false,
         "properties": {
@@ -6173,6 +6214,125 @@
         "title": "ProductSource",
         "type": "object"
       },
+      "QuoteCollection": {
+        "additionalProperties": false,
+        "properties": {
+          "parts": {
+            "items": {
+              "$ref": "#/components/schemas/ProductPart"
+            },
+            "title": "Parts",
+            "type": "array"
+          },
+          "project_name": {
+            "title": "Project Name",
+            "type": "string"
+          },
+          "quotes": {
+            "items": {
+              "$ref": "#/components/schemas/SupplierQuote"
+            },
+            "title": "Quotes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "project_name",
+          "parts",
+          "quotes"
+        ],
+        "title": "QuoteCollection",
+        "type": "object"
+      },
+      "QuoteReview": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_version": {
+            "minimum": 1.0,
+            "title": "Expected Version",
+            "type": "integer"
+          },
+          "terms": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "maxProperties": 15,
+            "propertyNames": {
+              "enum": [
+                "part_number",
+                "revision",
+                "material",
+                "quantity",
+                "unit_price",
+                "currency",
+                "minimum_order",
+                "lead_time",
+                "delivery_date",
+                "quote_date",
+                "valid_until",
+                "shipping",
+                "destination",
+                "certificates",
+                "exceptions"
+              ]
+            },
+            "title": "Terms",
+            "type": "object"
+          }
+        },
+        "required": [
+          "expected_version",
+          "terms"
+        ],
+        "title": "QuoteReview",
+        "type": "object"
+      },
+      "QuoteTerm": {
+        "additionalProperties": false,
+        "properties": {
+          "excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Excerpt"
+          },
+          "origin": {
+            "default": "extracted",
+            "enum": [
+              "extracted",
+              "buyer_review"
+            ],
+            "title": "Origin",
+            "type": "string"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "value": {
+            "maxLength": 1000,
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "title": "QuoteTerm",
+        "type": "object"
+      },
       "RankMove": {
         "additionalProperties": false,
         "properties": {
@@ -7828,6 +7988,113 @@
           "data"
         ],
         "title": "SupplierDiscoveryEvent",
+        "type": "object"
+      },
+      "SupplierQuote": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "follow_up": {
+            "default": "",
+            "title": "Follow Up",
+            "type": "string"
+          },
+          "input_version": {
+            "title": "Input Version",
+            "type": "integer"
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "part_id": {
+            "title": "Part Id",
+            "type": "string"
+          },
+          "quote_id": {
+            "title": "Quote Id",
+            "type": "string"
+          },
+          "reviewed": {
+            "default": false,
+            "title": "Reviewed",
+            "type": "boolean"
+          },
+          "source_kind": {
+            "enum": [
+              "pdf",
+              "reply"
+            ],
+            "title": "Source Kind",
+            "type": "string"
+          },
+          "source_text": {
+            "title": "Source Text",
+            "type": "string"
+          },
+          "source_url": {
+            "title": "Source Url",
+            "type": "string"
+          },
+          "supplier": {
+            "title": "Supplier",
+            "type": "string"
+          },
+          "terms": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/QuoteTerm"
+            },
+            "propertyNames": {
+              "enum": [
+                "part_number",
+                "revision",
+                "material",
+                "quantity",
+                "unit_price",
+                "currency",
+                "minimum_order",
+                "lead_time",
+                "delivery_date",
+                "quote_date",
+                "valid_until",
+                "shipping",
+                "destination",
+                "certificates",
+                "exceptions"
+              ]
+            },
+            "title": "Terms",
+            "type": "object"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "quote_id",
+          "part_id",
+          "supplier",
+          "filename",
+          "source_kind",
+          "source_url",
+          "source_text",
+          "created_at",
+          "input_version",
+          "version",
+          "terms"
+        ],
+        "title": "SupplierQuote",
         "type": "object"
       },
       "TaskStatus": {
@@ -11153,6 +11420,203 @@
         "summary": "Review",
         "tags": [
           "Product projects"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/quotes": {
+      "get": {
+        "operationId": "quotes_api_v1_products__project_id__quotes_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCollection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Quotes",
+        "tags": [
+          "Supplier quotes"
+        ]
+      },
+      "post": {
+        "operationId": "upload_api_v1_products__project_id__quotes_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_api_v1_products__project_id__quotes_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCollection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload",
+        "tags": [
+          "Supplier quotes"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/quotes/{quote_id}": {
+      "patch": {
+        "operationId": "review_api_v1_products__project_id__quotes__quote_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "quote_id",
+            "required": true,
+            "schema": {
+              "title": "Quote Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteReview"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteCollection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Review",
+        "tags": [
+          "Supplier quotes"
+        ]
+      }
+    },
+    "/api/v1/products/{project_id}/quotes/{quote_id}/content": {
+      "get": {
+        "operationId": "content_api_v1_products__project_id__quotes__quote_id__content_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "quote_id",
+            "required": true,
+            "schema": {
+              "title": "Quote Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Content",
+        "tags": [
+          "Supplier quotes"
         ]
       }
     },

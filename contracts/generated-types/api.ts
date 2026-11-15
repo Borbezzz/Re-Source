@@ -814,6 +814,58 @@ export interface paths {
         patch: operations["review_api_v1_products__project_id__parts_patch"];
         trace?: never;
     };
+    "/api/v1/products/{project_id}/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Quotes */
+        get: operations["quotes_api_v1_products__project_id__quotes_get"];
+        put?: never;
+        /** Upload */
+        post: operations["upload_api_v1_products__project_id__quotes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/quotes/{quote_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Review */
+        patch: operations["review_api_v1_products__project_id__quotes__quote_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/products/{project_id}/quotes/{quote_id}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Content */
+        get: operations["content_api_v1_products__project_id__quotes__quote_id__content_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/products/{project_id}/selections": {
         parameters: {
             query?: never;
@@ -1171,6 +1223,17 @@ export interface components {
             file: string;
             /** Kind */
             kind: string;
+        };
+        /** Body_upload_api_v1_products__project_id__quotes_post */
+        Body_upload_api_v1_products__project_id__quotes_post: {
+            /** File */
+            file?: string | null;
+            /** Part Id */
+            part_id: string;
+            /** Reply */
+            reply?: string | null;
+            /** Supplier */
+            supplier: string;
         };
         /** CandidateOffer */
         CandidateOffer: {
@@ -3363,6 +3426,39 @@ export interface components {
             /** Quote */
             quote: string;
         };
+        /** QuoteCollection */
+        QuoteCollection: {
+            /** Parts */
+            parts: components["schemas"]["ProductPart"][];
+            /** Project Name */
+            project_name: string;
+            /** Quotes */
+            quotes: components["schemas"]["SupplierQuote"][];
+        };
+        /** QuoteReview */
+        QuoteReview: {
+            /** Expected Version */
+            expected_version: number;
+            /** Terms */
+            terms: {
+                [key: string]: string;
+            };
+        };
+        /** QuoteTerm */
+        QuoteTerm: {
+            /** Excerpt */
+            excerpt?: string | null;
+            /**
+             * Origin
+             * @default extracted
+             * @enum {string}
+             */
+            origin: "extracted" | "buyer_review";
+            /** Page */
+            page?: number | null;
+            /** Value */
+            value: string;
+        };
         /** RankMove */
         RankMove: {
             /** Candidate Id */
@@ -3996,6 +4092,48 @@ export interface components {
              * @constant
              */
             type: "supplier.discovered";
+        };
+        /** SupplierQuote */
+        SupplierQuote: {
+            /** Created At */
+            created_at: string;
+            /** Filename */
+            filename: string;
+            /**
+             * Follow Up
+             * @default
+             */
+            follow_up: string;
+            /** Input Version */
+            input_version: number;
+            /** Issues */
+            issues?: string[];
+            /** Part Id */
+            part_id: string;
+            /** Quote Id */
+            quote_id: string;
+            /**
+             * Reviewed
+             * @default false
+             */
+            reviewed: boolean;
+            /**
+             * Source Kind
+             * @enum {string}
+             */
+            source_kind: "pdf" | "reply";
+            /** Source Text */
+            source_text: string;
+            /** Source Url */
+            source_url: string;
+            /** Supplier */
+            supplier: string;
+            /** Terms */
+            terms: {
+                [key: string]: components["schemas"]["QuoteTerm"];
+            };
+            /** Version */
+            version: number;
         };
         /** TaskStatus */
         TaskStatus: {
@@ -6042,6 +6180,138 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ProductProject"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    quotes_api_v1_products__project_id__quotes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteCollection"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_api_v1_products__project_id__quotes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_api_v1_products__project_id__quotes_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteCollection"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    review_api_v1_products__project_id__quotes__quote_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+                quote_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuoteReview"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteCollection"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    content_api_v1_products__project_id__quotes__quote_id__content_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                project_id: string;
+                quote_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

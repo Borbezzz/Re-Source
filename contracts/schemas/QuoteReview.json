@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "terms": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "maxProperties": 15,
+      "propertyNames": {
+        "enum": [
+          "part_number",
+          "revision",
+          "material",
+          "quantity",
+          "unit_price",
+          "currency",
+          "minimum_order",
+          "lead_time",
+          "delivery_date",
+          "quote_date",
+          "valid_until",
+          "shipping",
+          "destination",
+          "certificates",
+          "exceptions"
+        ]
+      },
+      "title": "Terms",
+      "type": "object"
+    }
+  },
+  "required": [
+    "expected_version",
+    "terms"
+  ],
+  "title": "QuoteReview",
+  "type": "object"
+}
