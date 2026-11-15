@@ -6,7 +6,7 @@ import type { SourcingNeed } from "../data/checks.ts";
 import { ComponentThumb } from "../scene/ComponentThumb.tsx";
 import { DESTINATION } from "../data/sites.ts";
 
-export function ComponentsPanel({ components, selected, onSelect }: { components: PackageComponent[]; selected: string | null; onSelect: (id: string) => void }) {
+export function ComponentsPanel({ components, selected, onSelect, riskLabels = {} }: { components: PackageComponent[]; selected: string | null; onSelect: (id: string) => void; riskLabels?: Record<string, string> }) {
   const [open, setOpen] = useState(true);
   const ordered = [...components].sort((a, b) => (a.role === "primary" ? -1 : b.role === "primary" ? 1 : 0));
   return (
@@ -31,6 +31,7 @@ export function ComponentsPanel({ components, selected, onSelect }: { components
                   <span>{c.name}</span>
                   <span className="rs-comp-sub rs-mono">
                     {c.partNumber} · Rev {c.revision}
+                    {riskLabels[c.componentId.toLowerCase()] ? <span className="rs-risk-list-status">{riskLabels[c.componentId.toLowerCase()]}</span> : null}
                   </span>
                 </button>
               </li>

@@ -25,6 +25,10 @@ import { Fulfilment, type ProcurementStep } from "./screens/Fulfilment.tsx";
 import { ReturnPanel } from "./screens/Return.tsx";
 import { AgentFlow } from "./flow/AgentFlow.tsx";
 import { QuoteDialog } from "./quotes/SupplierQuotes.tsx";
+import { riskApi } from "./supply-risk/client.ts";
+import { NeedsForm } from "./supply-risk/NeedsForm.tsx";
+import { RiskOverview, RiskPanel } from "./supply-risk/RiskPanel.tsx";
+import { RISK_LABELS, type NeedsDraft, type RiskEvidence, type RiskScan } from "./supply-risk/types.ts";
 
 export type Stage = "intake" | "processing" | "explore" | "need" | "discovery" | "checking" | "shortlist" | "fulfil" | "return";
 
@@ -64,6 +68,12 @@ export function Studio() {
   const [quotesOpen, setQuotesOpen] = useState(false);
   const quotesTrigger = useRef<HTMLButtonElement>(null);
   const [discoveredAt, setDiscoveredAt] = useState<Date | null>(null);
+  const [riskScan, setRiskScan] = useState<RiskScan | null>(null);
+  const [riskBusy, setRiskBusy] = useState(false);
+  const [riskError, setRiskError] = useState<string | null>(null);
+  const [riskOpen, setRiskOpen] = useState(true);
+  const [editingNeeds, setEditingNeeds] = useState(false);
+  const riskProjectId = useRef<string | null>(null);
   const runRef = useRef(0);
   const sceneReady = useRef<() => void>(() => {});
   const sceneIsReady = useRef(false);
@@ -72,9 +82,9 @@ export function Studio() {
   const inspection = inspectedId ? assemblyIndex.get(inspectedId) ?? null : null;
   const sourceComponent = pkg?.components.find((c) => c.componentId === selected) ?? null;
   const component = useMemo(() => sourceComponent && inspection ? { ...sourceComponent, name: inspection.children.length ? sourceComponent.name : inspection.name, nodeIds: inspection.nodeIds } : sourceComponent, [sourceComponent, inspection]);
-  const clearSelection = () => { setSelected(null); setInspectedId(null); setHovered(null); };
+  const clearSelection = () => { setSelected(null); setInspectedId(null); setHovered(null); setRiskOpen(true); };
   const inspectPart = (item: AssemblyItem) => {
-    setInspectedId(item.id); setSelected(item.componentId); setHovered(null);
+    setInspectedId(item.id); setSelected(item.componentId); setHovered(null); setRiskOpen(!!item.componentId); setEditingNeeds(false);
     if (stage === "need") setStage("explore");
   };
   const selectComponent = (id: string | null) => {
@@ -83,6 +93,41 @@ export function Studio() {
   };
   const partId = component?.componentId.toLowerCase() ?? null;
   const requirement = pkg?.requirements.find((r) => r.componentId === selected) ?? null;
+  const riskPart = riskScan?.parts.find((p) => p.part_id === selected?.toLowerCase()) ?? null;
+  const selectPart = (id: string | null) => { selectComponent(id); setRiskOpen(true); setEditingNeeds(false); if (stage === "need") setStage("explore"); };
+  const acceptScan = (scan: RiskScan) => {
+    if (riskProjectId.current !== scan.project_id) return;
+    setRiskScan(scan);
+    setProject((p) => p?.project_id === scan.project_id ? { ...p, version: Math.max(p.version, scan.project_version) } : p);
+  };
+  const refreshRisk = async (id = project?.project_id) => {
+    if (!id) return;
+    setRiskBusy(true); setRiskError(null);
+    try { acceptScan(await riskApi.refresh(id)); }
+    catch (e) { if (riskProjectId.current === id) setRiskError(e instanceof Error ? e.message : "Public research failed. Try again."); }
+    finally { if (riskProjectId.current === id) setRiskBusy(false); }
+  };
+  const saveRiskEvidence = async (evidence: RiskEvidence) => {
+    if (!project || !riskScan) return;
+    setRiskBusy(true); setRiskError(null);
+    try { acceptScan(await riskApi.evidence(project.project_id, riskScan.version, evidence)); }
+    finally { setRiskBusy(false); }
+  };
+  useEffect(() => {
+    if (!project?.project_id || !riskScan) return;
+    const id = project.project_id;
+    const controller = new AbortController();
+    const check = () => {
+      if (document.visibilityState !== "visible") return;
+      void riskApi.get(id, controller.signal).then((scan) => {
+        if (!controller.signal.aborted) acceptScan(scan);
+      }).catch((e) => { if (!controller.signal.aborted) setRiskError(e instanceof Error ? e.message : "Could not check new evidence."); });
+    };
+    const timer = setInterval(check, 20000);
+    window.addEventListener("focus", check);
+    window.addEventListener("resource:quotes-updated", check);
+    return () => { controller.abort(); clearInterval(timer); window.removeEventListener("focus", check); window.removeEventListener("resource:quotes-updated", check); };
+  }, [project?.project_id, !!riskScan]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const assessed = useMemo(() => {
     if (!component) return [];
@@ -104,6 +149,7 @@ export function Studio() {
     setSteps(Object.fromEntries(STEP_IDS.map((s) => [s, { status: "pending" }])) as Record<StepId, StepState>);
     setPkg(null);
     setProject(null);
+    riskProjectId.current = null; setRiskScan(null); setRiskError(null); setRiskBusy(false); setRiskOpen(true);
     setSolid(0);
     setSelected(null);
     setInspectedId(null);
@@ -165,12 +211,23 @@ export function Studio() {
   }, []);
 
   // ---------- 2 → 3: confirm identity, reveal metal ----------
-  const confirmIdentity = useCallback(async () => {
+  const confirmIdentity = async (draft: NeedsDraft) => {
     if (!project) return;
     setBusy("confirm");
+    setError(null); setRiskError(null);
     try {
-      const p = await journeyApi.confirmParts(project);
+      const p = await journeyApi.confirmParts(project, draft);
       setProject(p);
+      riskProjectId.current = p.project_id;
+      const scan = await riskApi.confirm(p.project_id, p.version, draft.parts.map((part) => ({ part_id: part.part_id, quantity: part.quantity, destination: draft.destination, need_by: draft.need_by })));
+      acceptScan(scan);
+      setEditingNeeds(false); setRiskOpen(true);
+      // Keep the assembly identity and supplier request aligned with the review.
+      setPkg((old) => old ? { ...old, components: old.components.map((c) => {
+        const reviewed = draft.parts.find((part) => part.part_id === c.componentId.toLowerCase());
+        return reviewed ? { ...c, partNumber: reviewed.part_number, revision: reviewed.revision } : c;
+      }) } : old);
+      void refreshRisk(p.project_id);
       const start = performance.now();
       const dur = reduceMotion() ? 1 : 1700;
       await new Promise<void>((resolve) => {
@@ -190,7 +247,7 @@ export function Studio() {
     } finally {
       setBusy(null);
     }
-  }, [project]);
+  };
 
   // ---------- 4 → 5/6: research + per-candidate checks ----------
   const findSuppliers = useCallback(async () => {
@@ -364,6 +421,7 @@ export function Studio() {
     setSolid(0);
     setPhase("idle");
     setNeed(defaultNeed());
+    riskProjectId.current = null; setRiskScan(null); setRiskOpen(true); setRiskBusy(false); setRiskError(null); setEditingNeeds(false);
   };
 
   const sceneMode = stage === "processing" ? "scan" : stage === "explore" || stage === "need" || stage === "return" ? "explore" : "hidden";
@@ -423,11 +481,11 @@ export function Studio() {
             resetKey={resetKey}
             onSelect={(id) => {
               if (stage !== "explore") return;
-              selectComponent(id);
+              selectPart(id);
             }}
             rightInset={stage === "explore" ? 360 : stage === "return" ? 420 : 0}
             wide={stage === "return"}
-            leftInset={(stage === "explore" || stage === "need") && inspection ? 440 : 0}
+            leftInset={stage === "explore" && riskOpen && riskScan ? (selected ? 620 : 460) : (stage === "explore" || stage === "need") && inspection ? 440 : 0}
             onReady={onSceneReady}
           />
         </div>
@@ -466,11 +524,11 @@ export function Studio() {
         {(stage === "explore" || stage === "need") && pkg && glbUrl ? (
           <div className="rs-ui-layer">
             <div className="rs-crumb rs-eyebrow">{project?.name ?? pkg.displayName} / Assembly</div>
-            <AssemblyBrowser items={pkg.assemblyTree} selected={inspectedId} onSelect={inspectPart} onHover={setHovered} />
+            <AssemblyBrowser items={pkg.assemblyTree} selected={inspectedId} onSelect={inspectPart} onHover={setHovered} riskLabels={Object.fromEntries((riskScan?.parts ?? []).map((p) => [p.part_id, RISK_LABELS[p.status]]))} />
             {stage === "explore" && !inspection ? <SceneControls spin={spin} exploded={exploded} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); clearSelection(); setResetKey((k) => k + 1); }} /> : null}
             {inspection && !component ? <InspectionCard item={inspection} onClose={clearSelection} /> : null}
             <AnimatePresence mode="wait">
-              {component && requirement ? (
+              {component && requirement && (stage === "need" || !riskOpen) ? (
                 <ContextCard
                   key={component.componentId}
                   glbUrl={glbUrl}
@@ -489,6 +547,16 @@ export function Studio() {
             </AnimatePresence>
           </div>
         ) : null}
+
+        {stage === "explore" && riskScan && riskOpen ? <div className="rs-ui-layer">
+          {editingNeeds && project && pkg ? <section className="rs-risk-edit rs-panel" aria-label="Edit project needs">
+            <button className="rs-btn rs-btn-ghost rs-btn-sm" onClick={() => setEditingNeeds(false)}>Back to supply risk</button>
+            <NeedsForm project={project} pkg={pkg} scan={riskScan} busy={busy === "confirm"} onConfirm={(draft) => void confirmIdentity(draft)} />
+          </section> : riskPart ? <RiskPanel key={riskPart.part_id} part={riskPart} scan={riskScan} busy={riskBusy} error={riskError}
+            onClose={clearSelection} onEdit={() => setEditingNeeds(true)} onRefresh={() => void refreshRisk()} onSave={saveRiskEvidence}
+            onFind={() => { setRiskOpen(false); setNeed((n) => ({ ...n, quantity: riskPart.need.quantity, requiredBy: riskPart.need.need_by, destination: riskPart.need.destination })); setStage("need"); }} />
+            : <RiskOverview scan={riskScan} busy={riskBusy} error={riskError} onSelect={(id) => selectPart(pkg?.components.find((c) => c.componentId.toLowerCase() === id)?.componentId ?? id)} onRefresh={() => void refreshRisk()} onEdit={() => setEditingNeeds(true)} />}
+        </div> : null}
 
         {onMap && component && glbUrl ? (
           <div className="rs-ui-layer">

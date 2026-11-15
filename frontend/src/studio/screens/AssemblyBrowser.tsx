@@ -7,9 +7,10 @@ type BrowserProps = {
   selected: string | null;
   onSelect: (item: AssemblyItem) => void;
   onHover: (item: AssemblyItem | null) => void;
+  riskLabels?: Record<string, string>;
 };
 
-function PartRow({ item, depth, selected, onSelect, onHover }: Omit<BrowserProps, "items"> & { item: AssemblyItem; depth: number }) {
+function PartRow({ item, depth, selected, onSelect, onHover, riskLabels = {} }: Omit<BrowserProps, "items"> & { item: AssemblyItem; depth: number }) {
   const [open, setOpen] = useState(depth === 0 && item.assemblyId === "fan");
   const childrenId = useId();
   const branch = item.children.length > 0;
@@ -28,20 +29,20 @@ function PartRow({ item, depth, selected, onSelect, onHover }: Omit<BrowserProps
           </button>
         ) : <span className="rs-part-leaf" aria-hidden="true" />}
         <button type="button" className="rs-part-select" aria-pressed={selected === item.id} onClick={() => { onHover(null); onSelect(item); }}>
-          <span>{item.name}</span>
+          <span>{item.name}{item.componentId && riskLabels[item.componentId.toLowerCase()] ? <small className="rs-risk-list-status">{riskLabels[item.componentId.toLowerCase()]}</small> : null}</span>
           {branch ? <span className="rs-part-count">{item.pieceCount}</span> : null}
         </button>
       </div>
       {branch && open ? (
         <ul id={childrenId} className="rs-part-children">
-          {item.children.map(child => <PartRow key={child.id} item={child} depth={depth + 1} selected={selected} onSelect={onSelect} onHover={onHover} />)}
+          {item.children.map(child => <PartRow key={child.id} item={child} depth={depth + 1} selected={selected} onSelect={onSelect} onHover={onHover} riskLabels={riskLabels} />)}
         </ul>
       ) : null}
     </li>
   );
 }
 
-export function AssemblyBrowser({ items, selected, onSelect, onHover }: BrowserProps) {
+export function AssemblyBrowser({ items, selected, onSelect, onHover, riskLabels }: BrowserProps) {
   const [open, setOpen] = useState(true);
   return (
     <aside className={`rs-components rs-parts-browser${open ? "" : " is-collapsed"}`} aria-label="Assembly parts" style={{ bottom: open ? 24 : "auto" }}
@@ -52,7 +53,7 @@ export function AssemblyBrowser({ items, selected, onSelect, onHover }: BrowserP
       {open ? <>
         <p className="rs-parts-hint">Hover to highlight. Expand a group to inspect each piece.</p>
         <ul className="rs-part-tree" onPointerLeave={() => onHover(null)}>
-          {items.map(item => <PartRow key={item.id} item={item} depth={0} selected={selected} onSelect={onSelect} onHover={onHover} />)}
+          {items.map(item => <PartRow key={item.id} item={item} depth={0} selected={selected} onSelect={onSelect} onHover={onHover} riskLabels={riskLabels} />)}
         </ul>
       </> : null}
     </aside>

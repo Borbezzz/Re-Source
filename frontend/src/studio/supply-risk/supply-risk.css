@@ -1,0 +1,90 @@
+.rs-risk-panel, .rs-risk-overview, .rs-risk-edit {
+  position: absolute; left: 24px; top: 104px; bottom: 28px; width: min(580px, calc(100vw - 48px));
+  overflow: auto; overscroll-behavior: contain; pointer-events: auto; padding: 24px;
+  scrollbar-color: var(--rs-muted) transparent; scrollbar-width: thin; background: var(--rs-panel-solid); z-index: 25;
+}
+.rs-risk-overview { width: min(420px, calc(100vw - 48px)); }
+.rs-risk-panel *, .rs-risk-overview *, .rs-risk-needs * { box-sizing: border-box; }
+.rs-risk-panel h2, .rs-risk-overview h2 { font-size: 24px; line-height: 1.2; letter-spacing: -.025em; margin: 0; font-weight: 550; text-wrap: balance; }
+.rs-risk-panel h3, .rs-risk-overview h3, .rs-risk-needs h3 { font-size: 16px; margin: 0 0 10px; line-height: 1.4; font-weight: 550; }
+.rs-risk-panel p, .rs-risk-overview p, .rs-risk-needs p { font-size: 13px; line-height: 1.65; color: var(--rs-text-2); max-width: 70ch; }
+.rs-risk-panel button, .rs-risk-panel a, .rs-risk-panel input, .rs-risk-panel select, .rs-risk-panel textarea, .rs-risk-overview button, .rs-risk-needs input, .rs-risk-needs button { outline-offset: 4px; }
+.rs-risk-panel :focus-visible, .rs-risk-overview :focus-visible, .rs-risk-needs :focus-visible { outline: 2px solid var(--rs-cyan); }
+.rs-risk-panel ::selection, .rs-risk-overview ::selection, .rs-risk-needs ::selection { background: #264e64; color: var(--rs-text); }
+.rs-risk-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.rs-risk-heading button { flex-shrink: 0; }
+.rs-risk-identity { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.rs-risk-status { font-size: 12px; font-weight: 550; color: var(--rs-text-2); display: inline-block; }
+.rs-risk-status.is-at_risk { color: var(--rs-bad); }
+.rs-risk-status.is-watchlist { color: var(--rs-wait); }
+.rs-risk-status.is-on_time, .rs-risk-status.is-received { color: var(--rs-ok); }
+.rs-risk-panel p.rs-risk-summary { font-size: 16px; color: var(--rs-text); line-height: 1.55; margin: 12px 0 20px; }
+.rs-risk-deadline { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 0 20px; padding: 16px 0; border-block: 1px solid var(--rs-line); }
+.rs-risk-deadline dt { color: var(--rs-text-2); font-size: 12px; }
+.rs-risk-deadline dd { margin: 6px 0 0; font-size: 14px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.rs-risk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.rs-risk-actions .rs-btn { font-size: 12px; }
+.rs-risk-chart { margin: 28px 0 0; }
+.rs-risk-chart figcaption { font-size: 15px; font-weight: 550; }
+.rs-risk-chart svg { width: 100%; height: auto; display: block; margin-top: 12px; overflow: visible; }
+.rs-risk-chart text { fill: var(--rs-text-2); font-family: var(--rs-sans); font-size: 12px; font-variant-numeric: tabular-nums; }
+.rs-risk-chart text[fill] { fill: revert-layer; }
+.rs-risk-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 11px; color: var(--rs-text-2); }
+.rs-risk-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.rs-risk-legend i { width: 8px; height: 8px; border-radius: 50%; }
+.rs-risk-chart details { margin-top: 16px; font-size: 12px; color: var(--rs-text-2); }
+.rs-risk-panel summary { cursor: pointer; padding: 8px 0; }
+.rs-risk-table-scroll { overflow-x: auto; }
+.rs-risk-chart table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.rs-risk-chart td, .rs-risk-chart th { padding: 9px 5px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rs-line); font-weight: 400; }
+.rs-risk-chart-empty { margin: 28px 0; padding: 22px 16px; background: var(--rs-raise); text-align: center; }
+.rs-risk-chart-empty strong { font-size: 14px; font-weight: 500; }
+.rs-risk-panel section, .rs-risk-sources, .rs-risk-example { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--rs-line); }
+.rs-risk-missing { margin-top: 24px; }
+.rs-risk-next ul { padding-left: 18px; margin: 0; font-size: 13px; line-height: 1.65; color: var(--rs-text-2); }
+.rs-risk-next li + li { margin-top: 8px; }
+.rs-risk-alternatives { background: var(--rs-raise); padding: 1px 14px; margin-top: 16px; }
+.rs-risk-source, .rs-risk-document { padding: 18px 0; border-bottom: 1px solid var(--rs-line); overflow-wrap: anywhere; }
+.rs-risk-source-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--rs-text-2); }
+.rs-risk-source-meta span { display: inline-flex; align-items: center; gap: 6px; }
+.rs-risk-source a { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-top: 9px; color: var(--rs-text); font-size: 14px; line-height: 1.45; text-decoration: none; }
+.rs-risk-source a:hover, .rs-risk-document a:hover { color: var(--rs-cyan); text-decoration: underline; text-underline-offset: 3px; }
+.rs-risk-source a svg { flex-shrink: 0; margin-top: 3px; }
+.rs-risk-source small, .rs-risk-document small { font-size: 11px; line-height: 1.5; color: var(--rs-text-2); }
+.rs-risk-source p { margin: 8px 0; }
+.rs-risk-providers { display: flex; gap: 8px 16px; flex-wrap: wrap; font-size: 11px; color: var(--rs-text-2); }
+.rs-risk-document h4 { font-weight: 550; font-size: 15px; margin: 10px 0; }
+.rs-risk-document a { color: var(--rs-text); text-underline-offset: 3px; }
+.rs-risk-document blockquote { margin: 0; padding: 14px; border: 0; background: var(--rs-raise); color: var(--rs-text); font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
+.rs-risk-document.is-superseded { opacity: .75; }
+.rs-risk-document.is-alert p strong { color: var(--rs-bad); }
+.rs-risk-part-rows { margin: 18px 0 12px; }
+.rs-risk-part-rows button { display: flex; width: 100%; gap: 16px; align-items: center; justify-content: space-between; text-align: left; padding: 16px 0; border: 0; border-bottom: 1px solid var(--rs-line); background: transparent; color: var(--rs-text); cursor: pointer; }
+.rs-risk-part-rows button:hover { background: var(--rs-raise); }
+.rs-risk-part-rows strong { display: block; font-size: 14px; font-weight: 500; }
+.rs-risk-part-rows small { display: block; color: var(--rs-text-2); font-size: 11px; margin-top: 6px; }
+.rs-risk-needs { margin-top: 20px; }
+.rs-risk-needs fieldset { border: 0; border-top: 1px solid var(--rs-line); padding: 14px 0 4px; margin: 14px 0; display: grid; grid-template-columns: 1.2fr .65fr .85fr; gap: 10px; min-width: 0; }
+.rs-risk-needs legend { font-size: 13px; padding: 0 8px 0 0; color: var(--rs-text); }
+.rs-risk-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rs-risk-needs label, .rs-risk-evidence-form label { display: flex; flex-direction: column; gap: 7px; font-size: 12px; color: var(--rs-text-2); min-width: 0; margin-bottom: 13px; }
+.rs-risk-needs input, .rs-risk-evidence-form input, .rs-risk-evidence-form select, .rs-risk-evidence-form textarea { width: 100%; min-width: 0; padding: 10px; background: var(--rs-bg-2); border: 1px solid var(--rs-line-2); border-radius: var(--rs-radius-s); color: var(--rs-text); font: inherit; font-size: 13px; color-scheme: dark; caret-color: var(--rs-cyan); }
+.rs-risk-needs input::placeholder, .rs-risk-evidence-form input::placeholder, .rs-risk-evidence-form textarea::placeholder { color: var(--rs-text-2); opacity: .9; }
+.rs-risk-evidence-form { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--rs-line); }
+.rs-risk-evidence-form textarea { resize: vertical; min-height: 100px; }
+.rs-risk-evidence-form label.rs-risk-check { display: flex; flex-direction: row; align-items: start; gap: 10px; line-height: 1.5; }
+.rs-risk-check input { width: 16px; height: 16px; accent-color: var(--rs-cyan); flex-shrink: 0; }
+.rs-risk-panel p.rs-risk-error, .rs-risk-overview p.rs-risk-error { color: var(--rs-bad); }
+.rs-risk-note { font-size: 11px !important; line-height: 1.6; }
+.rs-risk-edit { z-index: 30; }
+.rs-risk-list-status { display: block; margin-top: 4px; font-size: 11px; }
+.rs-risk-example { font-size: 12px; color: var(--rs-text-2); }
+@media (max-width: 800px) {
+  .rs-risk-panel, .rs-risk-overview, .rs-risk-edit { left: 12px; top: 88px; bottom: 16px; width: calc(100vw - 24px); padding: 20px; z-index: 30; }
+  .rs-risk-panel h2, .rs-risk-overview h2 { font-size: 22px; }
+  .rs-risk-overview { max-height: 62vh; top: auto; }
+  .rs-risk-needs fieldset { grid-template-columns: 1fr 1fr; }
+  .rs-risk-needs fieldset label:first-of-type { grid-column: 1 / -1; }
+  .rs-risk-form-row { grid-template-columns: 1fr; gap: 0; }
+  .rs-risk-actions { flex-direction: column; }
+}
