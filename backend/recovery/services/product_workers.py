@@ -6,6 +6,7 @@ import json
 import logging
 import re
 import uuid
+from datetime import date
 from urllib.parse import urlsplit
 
 from ..adapters import store as st
@@ -414,33 +415,60 @@ class ProductWorkers:
             self._event(p, "candidate.selected", f"Selected {candidate['supplier_name']} for a draft RFQ. Evidence is still required.", part_id)
         return self.get(project_id)
 
-    def build_package(self, project_id: str) -> dict:
+    def build_package(self, project_id: str, enquiry: dict | None = None) -> dict:
         with self._mutate(project_id) as p:
             if not p["selections"]:
                 raise invalid("Select at least one supplier candidate before drafting an RFQ package.")
+            if enquiry and enquiry["part_id"] not in p["selections"]:
+                raise invalid("Select a supplier for the requested part before drafting its enquiry.")
             if any(r["status"] in {"queued", "running"} for r in p["research"]):
                 raise conflict("RESEARCH_RUNNING", "Wait for supplier research to finish before drafting the package.")
-            if p["package"] and p["package"]["input_version"] == p["input_version"]:
+            if (p["package"] and p["package"]["input_version"] == p["input_version"]
+                    and p["package"].get("enquiry") == enquiry):
                 return self._public(p)
             items = []
             for part in p["parts"]:
                 cid = p["selections"].get(part["part_id"])
-                if not cid:
+                if not cid or (enquiry and part["part_id"] != enquiry["part_id"]):
                     continue
                 research = next(r for r in p["research"] if r["part_id"] == part["part_id"])
                 candidate = next(c for c in research["candidates"] if c["candidate_id"] == cid)
                 gaps = [e["note"] for e in candidate["evidence"] if e["status"] != "supported"]
                 gaps.append("Obtain a dated quotation, current availability and documentary evidence for every required specification. Public claims are not verified compliance.")
                 req_text = "\n".join(f"- {r['label']}: {requirement_value(r)}" for r in part["requirements"])
-                rfq = (f"DRAFT — Request for quotation\nProduct: {p['name']}\nSupplier: {candidate['supplier_name']}\n"
-                       f"Part: {part['name']}\nQuantity: {part['quantity']}\n\nReviewed requirements:\n{req_text}\n\n"
-                       "Please provide a quotation, delivery schedule, manufacturing/source location and supporting material, inspection and conformity documents. "
-                       "State any exceptions to these requirements. No purchase commitment is made.\n\n"
-                       + ("This supplier and offer are fictional demonstration data.\n" if candidate["data_origin"] == "synthetic_demo" else f"Discovery source: {candidate['source_url']}\n"))
-                items.append({"part_id": part["part_id"], "part_name": part["name"], "quantity": part["quantity"], "supplier_name": candidate["supplier_name"],
-                              "candidate_id": cid, "data_origin": candidate["data_origin"], "requirements": part["requirements"], "evidence_gaps": gaps, "rfq_text": rfq})
+                quantity = enquiry["quantity"] if enquiry else part["quantity"]
+                supplier = candidate["supplier_name"].removesuffix(" (sample)")
+                reference = part.get("part_number") or part["name"]
+                subject = f"Request for quotation — {reference} — Qty {quantity}"
+                selected = f"Selected assembly item: {enquiry['selected_item']}\n" if enquiry else ""
+                if enquiry:
+                    required_by = date.fromisoformat(enquiry["required_by"]).strftime("%d %B %Y").lstrip("0")
+                    delivery = (f"Delivery required by: {required_by}\nDelivery destination: {enquiry['delivery_destination']}\n"
+                                "Please confirm whether you can meet this on-site date. If not, advise your earliest achievable delivery date.")
+                    signature = f"{enquiry['buyer_contact']}\n{enquiry['buyer_company']}"
+                else:
+                    delivery = "Please advise your earliest dispatch date and delivery lead time. The delivery address and required date will be confirmed separately."
+                    signature = "Procurement team"
+                rfq = (f"Dear {supplier} sales team,\n\n"
+                       f"Please provide a quotation for the following part for our {p['name']} assembly.\n\n"
+                       f"Part: {part['name']}\n{selected}Quantity required: {quantity} {'unit' if quantity == 1 else 'units'}\n\n"
+                       f"Specification and supporting documents required:\n{req_text}\n\n"
+                       f"{delivery}\n\n"
+                       "Please include the following in your quotation:\n"
+                       "- Unit price, total price, currency and any minimum order quantity.\n"
+                       "- Available stock, dispatch lead time, shipping cost and estimated arrival date.\n"
+                       "- Manufacturer, country of origin and supplying location.\n"
+                       "- Applicable conformity or release documents, traceability records, and material or inspection evidence against the requirements above.\n"
+                       "- Payment and delivery terms, warranty, and quotation validity.\n\n"
+                       "Please identify any exceptions or proposed alternatives separately and provide supporting evidence. "
+                       "No purchase commitment is made by this enquiry.\n\n"
+                       f"Thank you. We look forward to your quotation.\n\nKind regards,\n{signature}\n\n"
+                       + ("Demo draft: the supplier and offer are fictional. Delivery is simulated.\n" if candidate["data_origin"] == "synthetic_demo" else ""))
+                items.append({"part_id": part["part_id"], "part_name": part["name"], "quantity": quantity, "supplier_name": candidate["supplier_name"],
+                              "candidate_id": cid, "data_origin": candidate["data_origin"], "requirements": part["requirements"], "evidence_gaps": gaps,
+                              "rfq_subject": subject, "rfq_text": rfq})
             p["package"] = {"package_id": f"rfq-{uuid.uuid4().hex[:16]}", "status": "draft", "input_version": p["input_version"], "items": items,
-                            "created_at": st.now_iso(), "approval_scope": "simulation_only"}
+                            "created_at": st.now_iso(), "approval_scope": "simulation_only", "enquiry": enquiry}
             p["status"] = "packaged"
             self._event(p, "package.drafted", f"Drafted {len(items)} RFQs with reviewed specifications and outstanding evidence requests. Nothing has been sent.")
         return self.get(project_id)

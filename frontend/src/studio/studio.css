@@ -709,9 +709,12 @@
   position: relative;
   overflow: clip;
 }
-.rs-doc::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--rs-grad); }
-.rs-doc pre { white-space: pre-wrap; font: 13px/1.6 var(--rs-mono); margin: 0; color: #27272a; }
 .rs-doc-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 14px; color: #52525b; font-size: 12.5px; }
+.rs-email-envelope { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 9px 16px; padding-bottom: 20px; margin: 0 0 22px; border-bottom: 1px solid #d8d5cf; font-size: 13px; line-height: 1.5; }
+.rs-email-envelope dt { color: #62626b; }
+.rs-email-envelope dd { margin: 0; overflow-wrap: anywhere; }
+.rs-email-envelope dd:last-child { font-weight: 600; }
+.rs-email-body { white-space: pre-wrap; overflow-wrap: anywhere; font: 14px/1.75 var(--rs-sans); color: #27272a; }
 .rs-timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
 .rs-tl {
   display: grid;

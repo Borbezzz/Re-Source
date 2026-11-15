@@ -107,8 +107,10 @@ def product_router(service_provider: Callable, idempotent: Callable) -> APIRoute
         return await command(project_id, "select", idempotency_key, body.model_dump(), lambda: service().select_candidate(project_id, body.part_id, body.candidate_id))
 
     @router.post("/{project_id}/package", response_model=P.ProductProject)
-    async def package(project_id: str, idempotency_key: str | None = Header(None)):
-        return await command(project_id, "package", idempotency_key, {}, lambda: service().build_package(project_id))
+    async def package(project_id: str, body: P.ProductPackageRequest | None = None, idempotency_key: str | None = Header(None)):
+        payload = body.model_dump(mode="json") if body else {}
+        return await command(project_id, "package", idempotency_key, payload,
+                             lambda: service().build_package(project_id, payload.get("enquiry")))
 
     @router.post("/{project_id}/package/approve", response_model=P.ProductProject)
     async def approve(project_id: str, body: P.ProductApprovalRequest, idempotency_key: str | None = Header(None)):

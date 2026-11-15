@@ -1,5 +1,5 @@
 import { productApi } from "../product-flow/client.ts";
-import type { ProductProject } from "../product-flow/types.ts";
+import type { ProductEnquiry, ProductProject } from "../product-flow/types.ts";
 
 /** Thin journey wrapper over the real /api/v1/products contract. */
 export const journeyApi = {
@@ -26,7 +26,7 @@ export const journeyApi = {
     throw new Error("Supplier research is taking longer than expected. Please retry.");
   },
   select: (projectId: string, partId: string, candidateId: string) => productApi.select(projectId, partId, candidateId),
-  package: (projectId: string) => productApi.package(projectId),
+  package: (projectId: string, enquiry: ProductEnquiry) => productApi.package(projectId, enquiry),
   approve: (projectId: string, packageId: string) => productApi.approve(projectId, packageId),
   simulate: (projectId: string, packageId: string) => productApi.simulate(projectId, packageId),
 };

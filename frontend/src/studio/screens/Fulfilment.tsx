@@ -39,6 +39,7 @@ export function Fulfilment({
 }) {
   const pkg = project.package!;
   const item = pkg.items[0];
+  const enquiry = pkg.enquiry;
   const [identityOk, setIdentityOk] = useState(false);
   const idx = ORDER.indexOf(step);
   const supplier = chosen ? chosen.candidate.supplier_name.replace(" (sample)", "") : item.supplier_name;
@@ -79,13 +80,15 @@ export function Fulfilment({
         </div>
         <article className="rs-doc" style={{ maxWidth: 760 }} aria-label="Request for quotation">
           <div className="rs-doc-head">
-            <span>Request for quotation · {pkg.status === "draft" ? "Draft" : pkg.status === "approved" ? "Approved" : "Sent (simulated)"}</span>
+            <span>Email draft · {pkg.status === "draft" ? "Ready for review" : pkg.status === "approved" ? "Approved" : "Sent (simulated)"}</span>
             <span>{new Date(pkg.created_at).toLocaleDateString("en-GB")}</span>
           </div>
-          <pre>{item.rfq_text}</pre>
-          <pre style={{ marginTop: 12 }}>
-            {`Requested on-site date: ${fmtDay(need.requiredBy)}\nDeliver to: ${DESTINATION.site}\nQuantity: ${need.quantity}`}
-          </pre>
+          <dl className="rs-email-envelope">
+            <dt>To</dt><dd>{supplier} sales team</dd>
+            <dt>From</dt><dd>{enquiry?.buyer_contact ?? "Procurement desk"} · {enquiry?.buyer_company ?? "Demo Aero Maintenance Ltd"}</dd>
+            <dt>Subject</dt><dd>{item.rfq_subject || `Request for quotation — ${component.partNumber} — Qty ${item.quantity}`}</dd>
+          </dl>
+          <div className="rs-email-body">{item.rfq_text}</div>
         </article>
         <div style={{ display: "flex", gap: 10, maxWidth: 760 }}>
           <button type="button" className="rs-btn rs-btn-ghost" onClick={onBack} disabled={idx > 0}>
@@ -98,9 +101,9 @@ export function Fulfilment({
           <h2 className="rs-h3">Buyer identity</h2>
           <dl className="rs-kv">
             <dt>Company</dt>
-            <dd>Demo Aero Maintenance Ltd</dd>
+            <dd>{enquiry?.buyer_company ?? "Demo Aero Maintenance Ltd"}</dd>
             <dt>Contact</dt>
-            <dd>Procurement desk · demo profile</dd>
+            <dd>{enquiry?.buyer_contact ?? "Procurement desk"} · demo profile</dd>
             <dt>Site</dt>
             <dd>{DESTINATION.name}</dd>
           </dl>
