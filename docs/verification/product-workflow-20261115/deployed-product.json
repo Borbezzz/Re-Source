@@ -1,0 +1,60 @@
+{
+  "base_url": "https://resource-8l52a07c4-borbez2s-projects.vercel.app",
+  "checks": [
+    {
+      "check": "gallery",
+      "products": [
+        "desk-lamp",
+        "engine",
+        "toy-car"
+      ]
+    },
+    {
+      "check": "durable_demo_research",
+      "storage": "lakebase_postgres",
+      "execution": "durable_queue",
+      "jobs": 2
+    },
+    {
+      "check": "reviewed_package",
+      "status": "simulated",
+      "items": 2,
+      "receipt": "SIM-334C3376172B"
+    },
+    {
+      "check": "visitor_isolation",
+      "other_visitor_status": 404
+    },
+    {
+      "check": "durable_upload_and_extraction",
+      "parts": [
+        {
+          "name": "Mounting bracket",
+          "quantity": 4
+        },
+        {
+          "name": "Drive shaft",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "check": "live_supplier_research",
+      "providers": [
+        "openai",
+        "linkup",
+        "databricks_ai_extract"
+      ],
+      "candidates": 6,
+      "source_urls": [
+        "https://advancegrinding.com/materials/stainless-steel-bar/304-stainless-steel-shaft/",
+        "https://www.aerovacalloyforge.com/blogs/category-competitive-pricing-on-standard-stainless-steel-shaft-sizes-manufactured-premium-supplier/",
+        "https://www.cncpartschina.com/custom-shafts/304-steel-shaft/",
+        "https://mozaicprecision.com/material/564-2/",
+        "https://www.savoypipinginc.com/round-bars-rods-manufacturer/304-stainless-steel-shaft-supplier.html",
+        "https://www.reninemetalloys.in/304-stainless-steel-shaft.html"
+      ]
+    }
+  ],
+  "ok": true
+}
