@@ -24,6 +24,7 @@ import { ShortlistDrawer, DisruptionAlert } from "./screens/Shortlist.tsx";
 import { Fulfilment, type ProcurementStep } from "./screens/Fulfilment.tsx";
 import { ReturnPanel } from "./screens/Return.tsx";
 import { AgentFlow } from "./flow/AgentFlow.tsx";
+import { QuoteDialog } from "./quotes/SupplierQuotes.tsx";
 
 export type Stage = "intake" | "processing" | "explore" | "need" | "discovery" | "checking" | "shortlist" | "fulfil" | "return";
 
@@ -61,6 +62,8 @@ export function Studio() {
   const [invalidated, setInvalidated] = useState(false);
   const [phase, setPhase] = useState<ReassemblyPhase>("idle");
   const [busy, setBusy] = useState<string | null>(null);
+  const [quotesOpen, setQuotesOpen] = useState(false);
+  const quotesTrigger = useRef<HTMLButtonElement>(null);
   const [discoveredAt, setDiscoveredAt] = useState<Date | null>(null);
   const runRef = useRef(0);
   const sceneReady = useRef<() => void>(() => {});
@@ -383,6 +386,11 @@ export function Studio() {
           <Logo size={30} />
         </button>
         <div className="rs-header-right">
+          {project && ["explore", "need", "shortlist", "fulfil", "return"].includes(stage) ? (
+            <button ref={quotesTrigger} type="button" className="rs-btn rs-btn-ghost rs-btn-sm" onClick={() => setQuotesOpen(true)}>
+              Supplier quotes
+            </button>
+          ) : null}
           {backendState !== "idle" ? (
             <span className="rs-tiny rs-provenance" title={backendState === "connected" ? "State persisted by the Re::Source API" : "API unavailable"}>
               <i className={`rs-live-dot${backendState === "connected" ? "" : " off"}`} />
@@ -402,7 +410,7 @@ export function Studio() {
         <div className="rs-scene-layer" style={{ opacity: sceneMode === "hidden" ? 0 : 1, transition: "opacity .7s var(--rs-ease)", top: "var(--rs-header)" }} aria-hidden={sceneMode === "hidden"}>
           <EngineCanvas
             url={glbUrl}
-            mode={sceneMode}
+            mode={quotesOpen ? "hidden" : sceneMode}
             scan={stage === "processing" ? scanProgress : 1}
             solid={stage === "processing" ? solid : 1}
             components={pkg?.components ?? EMPTY_COMPONENTS}
@@ -613,6 +621,10 @@ export function Studio() {
         focusId={focusId}
         onFocusCandidate={setFocusId}
       />
+      {quotesOpen && project ? <QuoteDialog projectId={project.project_id} partId={partId ?? undefined} onClose={() => {
+        setQuotesOpen(false);
+        quotesTrigger.current?.focus();
+      }} /> : null}
     </div>
   );
 }

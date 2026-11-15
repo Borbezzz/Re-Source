@@ -426,6 +426,9 @@ export function ProductFlow({
                       : "Review your parts, find suppliers and prepare a sourcing package."}
                 </p>
               </div>
+              {project.parts.length > 0 && (
+                <a className="text-button" href={`#quotes/${project.project_id}`}>Supplier quotes</a>
+              )}
               <span className="pf-project-status">
                 {project.agent
                   ? project.agent.status === "recommendation_ready"

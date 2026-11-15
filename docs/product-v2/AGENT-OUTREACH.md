@@ -60,3 +60,18 @@ The user has not yet supplied a demo email account or recipient addresses.
 An arbitrary model confidence percentage does not grant sending authority or
 establish engineering compliance. The UI shows the concrete reason for proceeding
 or asking for clarification.
+
+## Import a supplier quote
+
+Open **Supplier quotes** from a Studio assembly or its saved investigation.
+Choose the part and supplier, then upload a text PDF of up to 4 MB and 30 pages or
+paste the supplier's reply. Studio shows the extracted terms beside the other
+quotes for that part. Open **Review source** to see the original, PDF page
+references, and the follow-up draft. Buyer edits retain their own label and the
+original excerpt. Missing or ambiguous terms stay open for review.
+
+The private project quote endpoint is `/api/v1/products/{project_id}/quotes`.
+It accepts multipart imports with `part_id`, `supplier` and either `file` or
+`reply`. Repeated imports of the same source for a part and supplier return
+the saved quote. `PATCH /quotes/{quote_id}` accepts the expected quote version and
+edited terms. The original source is available under the quote's `/content` route.
