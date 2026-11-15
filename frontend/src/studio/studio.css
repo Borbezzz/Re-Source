@@ -502,8 +502,10 @@
 
 /* ---------- 4. Need form ---------- */
 .rs-form { display: grid; gap: 14px; }
+.rs-form .rs-row { align-items: start; }
 .rs-field { display: grid; gap: 7px; }
-.rs-field > span { font-size: 12.5px; color: var(--rs-text-2); }
+.rs-field > span, .rs-field > label { font-size: 12.5px; color: var(--rs-text-2); }
+.rs-field-error { color: var(--rs-bad); font-size: 12px; line-height: 1.4; }
 .rs-input, .rs-select {
   height: 42px;
   border-radius: 10px;
@@ -516,6 +518,7 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .rs-input:focus, .rs-select:focus { outline: none; border-color: rgba(139, 92, 246, 0.8); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.16); }
+.rs-input[aria-invalid="true"] { border-color: var(--rs-bad); }
 .rs-seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 3px; border-radius: 11px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--rs-line); }
 .rs-seg button { height: 34px; border-radius: 8px; border: 0; background: transparent; color: var(--rs-text-2); font: 500 13.5px var(--rs-sans); cursor: pointer; }
 .rs-seg button[aria-pressed="true"] { background: var(--rs-text); color: #0b0b0e; }
