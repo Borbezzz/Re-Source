@@ -10,7 +10,7 @@ const loadMap = () => import("./map/SupplierMap.tsx");
 const SupplierMap = lazy(() => loadMap().then((m) => ({ default: m.SupplierMap })));
 import { PROFILE_FOR_PACKAGE, SAMPLE_PACKAGE_URL, readDesignPackage, type DesignPackage, type StepId, type PackageComponent } from "./data/package.ts";
 import { CHECK_ORDER, assess, counts, defaultNeed, rankAll, type Assessed, type SourcingNeed } from "./data/checks.ts";
-import { DISRUPTION } from "./data/sites.ts";
+import { DESTINATION, DISRUPTION } from "./data/sites.ts";
 import { journeyApi } from "./api.ts";
 import type { ProductCandidate, ProductProject } from "../product-flow/types.ts";
 import { Intake } from "./screens/Intake.tsx";
@@ -46,6 +46,7 @@ export function Studio() {
   const [inspectedId, setInspectedId] = useState<string | null>(null);
   const [hovered, setHovered] = useState<AssemblyItem | null>(null);
   const [exploded, setExploded] = useState(false);
+  const [cutaway, setCutaway] = useState(false);
   const [spin, setSpin] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [need, setNeed] = useState<SourcingNeed>(() => defaultNeed());
@@ -285,11 +286,19 @@ export function Studio() {
 
   // ---------- 9: select supplier → reviewable RFQ ----------
   const selectSupplier = async (candidateId: string) => {
-    if (!project || !partId) return;
+    if (!project || !partId || !component) return;
     setBusy("select");
     try {
       await journeyApi.select(project.project_id, partId, candidateId);
-      const p = await journeyApi.package(project.project_id);
+      const p = await journeyApi.package(project.project_id, {
+        part_id: partId,
+        selected_item: component.name,
+        quantity: need.quantity,
+        required_by: need.requiredBy,
+        delivery_destination: DESTINATION.site,
+        buyer_company: "Demo Aero Maintenance Ltd",
+        buyer_contact: "Procurement desk",
+      });
       setProject(p);
       setProcure("prepared");
       setInvalidated(false);
@@ -355,6 +364,8 @@ export function Studio() {
     setError(null);
     setSolid(0);
     setPhase("idle");
+    setExploded(false);
+    setCutaway(false);
     setNeed(defaultNeed());
   };
 
@@ -408,10 +419,11 @@ export function Studio() {
             hovered={stage === "explore" ? hovered : null}
             onInspect={(id) => { const item = assemblyIndex.get(id); if (stage === "explore" && item) inspectPart(item); }}
             exploded={exploded}
+            cutaway={cutaway}
             isolate={stage !== "return" || phase !== "done"}
             spin={spin}
             phase={phase}
-            showHotspots={stage === "explore" && (!inspection || !!component)}
+            showHotspots={stage === "explore" && !!inspection}
             resetKey={resetKey}
             onSelect={(id) => {
               if (stage !== "explore") return;
@@ -437,7 +449,7 @@ export function Studio() {
               selectedId={focusId}
               onSelect={(id) => setFocusId(id)}
               disruptedId={disruptedId}
-              insetRight={stage === "shortlist" ? 0.34 : stage === "checking" ? 0.3 : 0}
+              insetRight={stage === "shortlist" ? 0.34 : 0.3}
             />
             </Suspense>
           </motion.div>
@@ -447,7 +459,7 @@ export function Studio() {
       <LayoutGroup>
         <AnimatePresence mode="wait">
           {stage === "intake" ? (
-            <Intake key="intake" onFiles={(f) => void startPackage(f)} onSample={() => void startPackage("sample")} error={error} />
+            <Intake key="intake" onFiles={(f) => void startPackage(f)} error={error} />
           ) : null}
         </AnimatePresence>
 
@@ -459,7 +471,7 @@ export function Studio() {
           <div className="rs-ui-layer">
             <div className="rs-crumb rs-eyebrow">{project?.name ?? pkg.displayName} / Assembly</div>
             <AssemblyBrowser items={pkg.assemblyTree} selected={inspectedId} onSelect={inspectPart} onHover={setHovered} />
-            {stage === "explore" && !inspection ? <SceneControls spin={spin} exploded={exploded} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); clearSelection(); setResetKey((k) => k + 1); }} /> : null}
+            {stage === "explore" && !inspection ? <SceneControls spin={spin} exploded={exploded} cutaway={cutaway} onCutaway={() => setCutaway(v => !v)} onSpin={() => setSpin((v) => !v)} onExplode={() => setExploded((v) => !v)} onReset={() => { setExploded(false); setCutaway(false); clearSelection(); setResetKey((k) => k + 1); }} /> : null}
             {inspection && !component ? <InspectionCard item={inspection} onClose={clearSelection} /> : null}
             <AnimatePresence mode="wait">
               {component && requirement ? (
@@ -590,6 +602,8 @@ export function Studio() {
 
       {/* Live n8n-style agent workflow (portal; Scene / Split / Workflow views). */}
       <AgentFlow
+        project={project}
+        partId={partId}
         stage={stage}
         part={component ? { name: component.name, partNumber: component.partNumber, revision: component.revision } : null}
         need={need}

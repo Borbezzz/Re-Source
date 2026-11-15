@@ -30,7 +30,6 @@ function PartRow({ item, depth, selected, onSelect, onHover }: Omit<BrowserProps
         <button type="button" className="rs-part-select" aria-pressed={selected === item.id} onClick={() => { onHover(null); onSelect(item); }}>
           <span>{item.name}</span>
           {branch ? <span className="rs-part-count">{item.pieceCount}</span> : null}
-          {item.componentId ? <span className="rs-part-source" title="Prepared demo sourcing case" aria-label="Demo sourcing available" /> : null}
         </button>
       </div>
       {branch && open ? (
@@ -55,7 +54,6 @@ export function AssemblyBrowser({ items, selected, onSelect, onHover }: BrowserP
         <ul className="rs-part-tree" onPointerLeave={() => onHover(null)}>
           {items.map(item => <PartRow key={item.id} item={item} depth={0} selected={selected} onSelect={onSelect} onHover={onHover} />)}
         </ul>
-        <p className="rs-parts-legend"><span className="rs-part-source" aria-hidden="true" /> Demo sourcing available</p>
       </> : null}
     </aside>
   );
@@ -68,7 +66,9 @@ export function InspectionCard({ item, onClose }: { item: AssemblyItem; onClose:
         <button type="button" className="rs-btn rs-btn-ghost rs-btn-sm" onClick={onClose} aria-label="Clear selection"><X size={16} /></button>
       </div>
       <p className="rs-small">{item.pieceCount === 1 ? "1 model piece" : `${item.pieceCount.toLocaleString()} model pieces`} · prepared assembly</p>
-      <p className="rs-small rs-inspection-note">This geometry has no sourcing specification in the uploaded package. A part identity and requirements are needed before supplier research.</p>
+      <p className="rs-small rs-inspection-note">{item.children.length
+        ? "Expand this group and select a part to replace it or change its supplier."
+        : "This geometry has no sourcing specification in the uploaded package. A part identity and requirements are needed before supplier research."}</p>
     </section>
   );
 }

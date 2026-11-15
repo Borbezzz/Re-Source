@@ -86,7 +86,30 @@ addCase('COMBUSTOR-LINER','Combustor liners','combustor',allPieces.filter(p=>p.p
 addCase('FUEL-TUBE','Fuel feed tubes','combustor',allPieces.filter(p=>p.parentAssemblyId==='combustor'&&p.displayName==='Tube'));
 addCase('CASING','Engine casing sections','casing',allPieces.filter(p=>p.parentAssemblyId==='casing'&&p.displayName==='Housing'));
 addCase('SHAFT','Shafts and sleeves','shaft',allPieces.filter(p=>p.parentAssemblyId==='shaft'&&p.displayName==='Shaft / sleeve'));
+// Complete the independent-piece inventory with explicit demo specifications.
+// Distinct source meshes keep distinct identities; repeated instances share one
+// family. Attached surface decorations remain part of their parent's purchase.
+const mappedPieces=new Set(cases.flatMap(c=>c.nodeIds));
+const missingFamilies=new Map<string,typeof allPieces>();
+for(const piece of allPieces){
+ if(piece.attachedToStableId||mappedPieces.has(piece.stableId))continue;
+ const key=`${piece.parentAssemblyId}:${piece.sourceMeshIndex}`;
+ const family=missingFamilies.get(key)??[];family.push(piece);missingFamilies.set(key,family);
+}
+const assemblyNames:Record<string,string>={fan:'Fan',compressor:'Compressor',combustor:'Combustor',turbine:'Turbine',nozzle:'Nozzle',casing:'Casing',shaft:'Shaft'};
+const assemblyCodes:Record<string,string>={fan:'FAN',compressor:'CP',combustor:'CB',turbine:'TB',nozzle:'NZ',casing:'CA',shaft:'SH'};
+const kindCodes:Record<string,string>={'Retaining ring':'RING','Housing':'HOUSING','Fastener':'FASTENER','Tube':'TUBE','Stator vane':'VANE'};
+const familyCounts=new Map<string,number>();const familySerials=new Map<string,number>();
+for(const pieces of missingFamilies.values()){const p=pieces[0],key=`${p.parentAssemblyId}:${p.displayName}`;familyCounts.set(key,(familyCounts.get(key)??0)+1);}
+for(const pieces of missingFamilies.values()){
+ const p=pieces[0],assembly=p.parentAssemblyId,key=`${assembly}:${p.displayName}`;
+ const serial=(familySerials.get(key)??0)+1;familySerials.set(key,serial);
+ const noun=p.displayName.toLowerCase()+(pieces.length>1?'s':'');
+ const name=`${assemblyNames[assembly]} ${noun}${familyCounts.get(key)!>1?' '+String(serial).padStart(2,'0'):''}`;
+ addCase(`${assemblyCodes[assembly]}-${kindCodes[p.displayName]}-M${String(p.sourceMeshIndex).padStart(3,'0')}`,name,assembly,pieces);
+}
 const caseByNode=new Map(cases.flatMap(c=>c.nodeIds.map(id=>[id,c.componentId] as const)));
+if(allPieces.some(p=>!p.attachedToStableId&&!caseByNode.has(p.stableId)))throw new Error('Independent piece lacks a sourcing specification.');
 exported.traverse(o=>{if(caseByNode.has(o.name))o.userData.componentId=caseByNode.get(o.name);const piece=allPieces.find(p=>p.stableId===o.name);if(piece?.attachedToStableId)o.userData.attachedToStableId=piece.attachedToStableId;});
 exported.updateMatrixWorld(true);
 const box=new T.Box3().setFromObject(exported);

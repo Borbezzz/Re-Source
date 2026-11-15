@@ -48,6 +48,29 @@ const BaseMap = memo(function BaseMap({ hosts }: { hosts: string }) {
   );
 });
 
+/** Independent paint layer: animated pins/sonar never invalidate the detailed geography. */
+const MapBackground = memo(function MapBackground({ viewBox, hosts }: { viewBox: string; hosts: string }) {
+  return (
+    <svg className="rs-map-base" viewBox={viewBox} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        {/* Ocean: a fine dot lattice that scales with zoom, giving the sea depth without noise. */}
+        <pattern id="rs-ocean" width="14" height="14" patternUnits="userSpaceOnUse">
+          <circle cx="7" cy="7" r="0.85" fill="rgba(244,241,234,0.07)" />
+        </pattern>
+        <linearGradient id="rs-land-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#22222a" />
+          <stop offset="1" stopColor="#18181e" />
+        </linearGradient>
+        <linearGradient id="rs-land-host" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#262534" />
+          <stop offset="1" stopColor="#201f29" />
+        </linearGradient>
+      </defs>
+      <BaseMap hosts={hosts} />
+    </svg>
+  );
+});
+
 const LABELS: [string, number, number][] = [
   ["United Kingdom", -1.9, 54.6],
   ["Ireland", -8.1, 53.2],
@@ -280,9 +303,11 @@ export function SupplierMap({
       const pts = list.filter((a) => a.rank != null || a.candidate.candidate_id === disruptedId).map((a) => xy(a.site.lon, a.site.lat));
       return frame([...pts, dest], 28, aspect, inset);
     }
-    const pts = visible.map((a) => xy(a.site.lon, a.site.lat));
+    // Start one smooth zoom as the result batch arrives. Staggered pin reveals
+    // must not restart the 1.1-second camera tween every 160 ms.
+    const pts = list.map((a) => xy(a.site.lon, a.site.lat));
     return frame([...pts, dest], 44, aspect, inset);
-  }, [list, visible, mode, aspect, inset, disruptedId, dest]);
+  }, [list, mode, aspect, inset, disruptedId, dest]);
 
   // ---- User camera: null = automatic framing for the current stage ----
   const [user, setUser] = useState<VB | null>(null);
@@ -455,7 +480,9 @@ export function SupplierMap({
       }}
       onKeyDown={onKeyDown}
     >
+      <MapBackground viewBox={vb.join(" ")} hosts={hosts} />
       <svg
+        className="rs-map-overlay"
         ref={svgRef}
         viewBox={vb.join(" ")}
         preserveAspectRatio="xMidYMid slice"
@@ -480,18 +507,6 @@ export function SupplierMap({
           <marker id="rs-arrow-bad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="#f87171" />
           </marker>
-          {/* Ocean: a fine dot lattice that scales with zoom, giving the sea depth without noise. */}
-          <pattern id="rs-ocean" width="14" height="14" patternUnits="userSpaceOnUse">
-            <circle cx="7" cy="7" r="0.85" fill="rgba(244,241,234,0.07)" />
-          </pattern>
-          <linearGradient id="rs-land-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#22222a" />
-            <stop offset="1" stopColor="#18181e" />
-          </linearGradient>
-          <linearGradient id="rs-land-host" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#262534" />
-            <stop offset="1" stopColor="#201f29" />
-          </linearGradient>
           <radialGradient id="rs-pool-ok">
             <stop offset="0" stopColor="#4ade9c" stopOpacity="0.55" />
             <stop offset="1" stopColor="#4ade9c" stopOpacity="0" />
@@ -510,7 +525,6 @@ export function SupplierMap({
             <stop offset="1" stopColor="#8b5cf6" stopOpacity="0" />
           </radialGradient>
         </defs>
-        <BaseMap hosts={hosts} />
         {/* Discovery: sonar rings sweeping out from the delivery site. */}
         {mode === "discovery" ? (
           <g transform={`translate(${dest[0]} ${dest[1]})`} className="rs-sonar" aria-hidden="true">

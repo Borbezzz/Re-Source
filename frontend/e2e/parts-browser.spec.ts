@@ -54,6 +54,7 @@ test("group and individual preview, keyboard selection, new-stage sourcing and w
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.getByRole("button", { name: "Find suppliers", exact: true }).click();
   await expect(page.locator(".rs-map")).toBeVisible();
+  const initialWidth = Number((await page.locator(".rs-map-base").getAttribute("viewBox"))!.split(" ")[2]);
   const frames = await page.evaluate(() => new Promise<{ count: number; width: number }[]>(resolve => {
     const samples: { count: number; width: number }[] = [];
     const start = performance.now();
@@ -67,7 +68,8 @@ test("group and individual preview, keyboard selection, new-stage sourcing and w
   await expect(page.locator(".rs-map [data-pin]")).toHaveCount(8);
   const early = frames.find(frame => frame.count > 0 && frame.count < 6)!;
   expect(early).toBeTruthy();
-  expect(frames.at(-1)!.width).toBeGreaterThan(early.width * 2);
+  // The camera zooms out once as the batch arrives, independently of pin reveals.
+  expect(frames.at(-1)!.width).toBeGreaterThan(initialWidth * 2);
   await page.screenshot({ path: info.outputPath("supplier-map.png") });
   await info.attach("map-framing", { body: JSON.stringify(frames), contentType: "application/json" });
   await expect(page.getByText("Demo sourcing agent", { exact: true })).toBeVisible();

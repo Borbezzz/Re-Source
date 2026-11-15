@@ -5,6 +5,7 @@ different provenance. Public supplier research is discovery, never certification
 """
 from __future__ import annotations
 
+from datetime import date
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -115,6 +116,20 @@ class ProductEvent(ProductContract):
     created_at: str
 
 
+class ProductEnquiry(ProductContract):
+    part_id: str = Field(min_length=1, max_length=100)
+    selected_item: str = Field(min_length=1, max_length=160)
+    quantity: int = Field(ge=1, le=1000000)
+    required_by: date
+    delivery_destination: str = Field(min_length=1, max_length=500)
+    buyer_company: str = Field(min_length=1, max_length=160)
+    buyer_contact: str = Field(min_length=1, max_length=160)
+
+
+class ProductPackageRequest(ProductContract):
+    enquiry: ProductEnquiry | None = None
+
+
 class ProductPackageItem(ProductContract):
     part_id: str
     part_name: str
@@ -124,6 +139,7 @@ class ProductPackageItem(ProductContract):
     data_origin: Literal["synthetic_demo", "public_web"]
     requirements: list[ProductRequirement]
     evidence_gaps: list[str]
+    rfq_subject: str = ""
     rfq_text: str
 
 
@@ -133,6 +149,7 @@ class ProductPackage(ProductContract):
     input_version: int
     items: list[ProductPackageItem]
     created_at: str
+    enquiry: ProductEnquiry | None = None
     approved_at: str | None = None
     approved_by: str | None = None
     approval_scope: Literal["simulation_only"] = "simulation_only"
@@ -273,7 +290,7 @@ class ProductCreateRequest(ProductContract):
 
 
 class ProductPartsRequest(ProductContract):
-    parts: list[ProductPart] = Field(min_length=1, max_length=50)
+    parts: list[ProductPart] = Field(min_length=1, max_length=200)
     confirm: bool = False
     expected_version: int | None = None
 

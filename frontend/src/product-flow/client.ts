@@ -3,6 +3,7 @@ import type {
   ProductPart,
   ProductProject,
   ProductProjectSummary,
+  ProductEnquiry,
 } from "./types.ts";
 export function createProductApi(
   base = "/api/v1/products",
@@ -98,7 +99,7 @@ export function createProductApi(
         { part_id, candidate_id },
         "PATCH",
       ),
-    package: (id: string) => json<ProductProject>(`${path(id)}/package`),
+    package: (id: string, enquiry?: ProductEnquiry) => json<ProductProject>(`${path(id)}/package`, { enquiry }),
     approve: (id: string, package_id: string) =>
       json<ProductProject>(`${path(id)}/package/approve`, {
         acknowledge_unverified: true,

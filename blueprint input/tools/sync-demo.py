@@ -42,6 +42,10 @@ for c in manifest["components"]:
     part["identity_source"] = part["part_number_source"] = part["requirements"][0]["source"]
     parts.append(part)
     base_price = {"fan": 6850, "compressor": 1800, "turbine": 3400, "combustor": 1250, "nozzle": 18700, "casing": 14500, "shaft": 9200}[c["parentAssemblyId"]]
+    # Small hardware should not inherit the price of the assembly around it.
+    hardware = next((key for key in ("fastener", "ring", "tube") if key in c["name"].lower()), None)
+    if hardware:
+        base_price = {"fastener": 45, "ring": 420, "tube": 260}[hardware]
     for number, name, city, country, code, lat, lon, activity, lead, transit, stock, multiplier, capability in locations:
         if pid in old_ids and number < 13: continue
         candidate_id = f"{pid}-site-{number:02}"
@@ -52,7 +56,7 @@ for c in manifest["components"]:
                                    applicability="missing" if number == 15 else "provided", traceability="missing" if number == 13 else "provided",
                                    siteEvidence="missing" if number == 4 else "provided", sourceLabel="Prepared supplier dossier (demo)")
 
-profile.update(description="Prepared Mechanica turbofan with 35 demo sourcing families across seven sections and individual compressor/turbine stages.", parts=parts, sample_offers=offers)
+profile.update(description=f"Prepared Mechanica turbofan with {len(parts)} demo sourcing families covering all {manifest['geometry']['independentPieces']:,} independent pieces across seven sections.", parts=parts, sample_offers=offers)
 profile["documents"][0]["text"] = "\n".join(document_lines)
 profile_path.write_text(json.dumps(profile, indent=2, ensure_ascii=False) + "\n")
 (root / "frontend/src/studio/data/extra-sites.json").write_text(json.dumps(sites, indent=2, ensure_ascii=False) + "\n")

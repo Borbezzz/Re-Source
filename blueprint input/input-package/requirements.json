@@ -1823,6 +1823,3594 @@
       "manufacturingTolerances": null,
       "materialGrade": null,
       "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-FAN-RING-M002-A",
+      "componentId": "RS-TF-FAN-RING-M002",
+      "partNumber": "RS-DEMO-FAN-RING-M002",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-HOUSING-M004-A",
+      "componentId": "RS-TF-CP-HOUSING-M004",
+      "partNumber": "RS-DEMO-CP-HOUSING-M004",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M006-A",
+      "componentId": "RS-TF-CP-RING-M006",
+      "partNumber": "RS-DEMO-CP-RING-M006",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M008-A",
+      "componentId": "RS-TF-CP-RING-M008",
+      "partNumber": "RS-DEMO-CP-RING-M008",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M010-A",
+      "componentId": "RS-TF-CP-RING-M010",
+      "partNumber": "RS-DEMO-CP-RING-M010",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M012-A",
+      "componentId": "RS-TF-CP-RING-M012",
+      "partNumber": "RS-DEMO-CP-RING-M012",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M014-A",
+      "componentId": "RS-TF-CP-RING-M014",
+      "partNumber": "RS-DEMO-CP-RING-M014",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M016-A",
+      "componentId": "RS-TF-CP-RING-M016",
+      "partNumber": "RS-DEMO-CP-RING-M016",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M018-A",
+      "componentId": "RS-TF-CP-RING-M018",
+      "partNumber": "RS-DEMO-CP-RING-M018",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M020-A",
+      "componentId": "RS-TF-CP-RING-M020",
+      "partNumber": "RS-DEMO-CP-RING-M020",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M022-A",
+      "componentId": "RS-TF-CP-RING-M022",
+      "partNumber": "RS-DEMO-CP-RING-M022",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M024-A",
+      "componentId": "RS-TF-CP-RING-M024",
+      "partNumber": "RS-DEMO-CP-RING-M024",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M026-A",
+      "componentId": "RS-TF-CP-RING-M026",
+      "partNumber": "RS-DEMO-CP-RING-M026",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M028-A",
+      "componentId": "RS-TF-CP-RING-M028",
+      "partNumber": "RS-DEMO-CP-RING-M028",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M030-A",
+      "componentId": "RS-TF-CP-RING-M030",
+      "partNumber": "RS-DEMO-CP-RING-M030",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M032-A",
+      "componentId": "RS-TF-CP-RING-M032",
+      "partNumber": "RS-DEMO-CP-RING-M032",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M034-A",
+      "componentId": "RS-TF-CP-RING-M034",
+      "partNumber": "RS-DEMO-CP-RING-M034",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M036-A",
+      "componentId": "RS-TF-CP-RING-M036",
+      "partNumber": "RS-DEMO-CP-RING-M036",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M038-A",
+      "componentId": "RS-TF-CP-RING-M038",
+      "partNumber": "RS-DEMO-CP-RING-M038",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CP-RING-M039-A",
+      "componentId": "RS-TF-CP-RING-M039",
+      "partNumber": "RS-DEMO-CP-RING-M039",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CB-RING-M042-A",
+      "componentId": "RS-TF-CB-RING-M042",
+      "partNumber": "RS-DEMO-CB-RING-M042",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CB-RING-M043-A",
+      "componentId": "RS-TF-CB-RING-M043",
+      "partNumber": "RS-DEMO-CB-RING-M043",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-HOUSING-M081-A",
+      "componentId": "RS-TF-TB-HOUSING-M081",
+      "partNumber": "RS-DEMO-TB-HOUSING-M081",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M083-A",
+      "componentId": "RS-TF-TB-RING-M083",
+      "partNumber": "RS-DEMO-TB-RING-M083",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M085-A",
+      "componentId": "RS-TF-TB-RING-M085",
+      "partNumber": "RS-DEMO-TB-RING-M085",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M087-A",
+      "componentId": "RS-TF-TB-RING-M087",
+      "partNumber": "RS-DEMO-TB-RING-M087",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M089-A",
+      "componentId": "RS-TF-TB-RING-M089",
+      "partNumber": "RS-DEMO-TB-RING-M089",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M091-A",
+      "componentId": "RS-TF-TB-RING-M091",
+      "partNumber": "RS-DEMO-TB-RING-M091",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M093-A",
+      "componentId": "RS-TF-TB-RING-M093",
+      "partNumber": "RS-DEMO-TB-RING-M093",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M095-A",
+      "componentId": "RS-TF-TB-RING-M095",
+      "partNumber": "RS-DEMO-TB-RING-M095",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M097-A",
+      "componentId": "RS-TF-TB-RING-M097",
+      "partNumber": "RS-DEMO-TB-RING-M097",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M099-A",
+      "componentId": "RS-TF-TB-RING-M099",
+      "partNumber": "RS-DEMO-TB-RING-M099",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-TB-RING-M100-A",
+      "componentId": "RS-TF-TB-RING-M100",
+      "partNumber": "RS-DEMO-TB-RING-M100",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-NZ-HOUSING-M101-A",
+      "componentId": "RS-TF-NZ-HOUSING-M101",
+      "partNumber": "RS-DEMO-NZ-HOUSING-M101",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-NZ-HOUSING-M102-A",
+      "componentId": "RS-TF-NZ-HOUSING-M102",
+      "partNumber": "RS-DEMO-NZ-HOUSING-M102",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-NZ-RING-M103-A",
+      "componentId": "RS-TF-NZ-RING-M103",
+      "partNumber": "RS-DEMO-NZ-RING-M103",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-NZ-FASTENER-M104-A",
+      "componentId": "RS-TF-NZ-FASTENER-M104",
+      "partNumber": "RS-DEMO-NZ-FASTENER-M104",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M106-A",
+      "componentId": "RS-TF-CA-RING-M106",
+      "partNumber": "RS-DEMO-CA-RING-M106",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M107-A",
+      "componentId": "RS-TF-CA-FASTENER-M107",
+      "partNumber": "RS-DEMO-CA-FASTENER-M107",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M108-A",
+      "componentId": "RS-TF-CA-RING-M108",
+      "partNumber": "RS-DEMO-CA-RING-M108",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M109-A",
+      "componentId": "RS-TF-CA-FASTENER-M109",
+      "partNumber": "RS-DEMO-CA-FASTENER-M109",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M110-A",
+      "componentId": "RS-TF-CA-RING-M110",
+      "partNumber": "RS-DEMO-CA-RING-M110",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M111-A",
+      "componentId": "RS-TF-CA-FASTENER-M111",
+      "partNumber": "RS-DEMO-CA-FASTENER-M111",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M112-A",
+      "componentId": "RS-TF-CA-RING-M112",
+      "partNumber": "RS-DEMO-CA-RING-M112",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M113-A",
+      "componentId": "RS-TF-CA-FASTENER-M113",
+      "partNumber": "RS-DEMO-CA-FASTENER-M113",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M115-A",
+      "componentId": "RS-TF-CA-RING-M115",
+      "partNumber": "RS-DEMO-CA-RING-M115",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M116-A",
+      "componentId": "RS-TF-CA-FASTENER-M116",
+      "partNumber": "RS-DEMO-CA-FASTENER-M116",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M117-A",
+      "componentId": "RS-TF-CA-RING-M117",
+      "partNumber": "RS-DEMO-CA-RING-M117",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M118-A",
+      "componentId": "RS-TF-CA-FASTENER-M118",
+      "partNumber": "RS-DEMO-CA-FASTENER-M118",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M119-A",
+      "componentId": "RS-TF-CA-RING-M119",
+      "partNumber": "RS-DEMO-CA-RING-M119",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M120-A",
+      "componentId": "RS-TF-CA-FASTENER-M120",
+      "partNumber": "RS-DEMO-CA-FASTENER-M120",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M121-A",
+      "componentId": "RS-TF-CA-RING-M121",
+      "partNumber": "RS-DEMO-CA-RING-M121",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M122-A",
+      "componentId": "RS-TF-CA-FASTENER-M122",
+      "partNumber": "RS-DEMO-CA-FASTENER-M122",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-RING-M123-A",
+      "componentId": "RS-TF-CA-RING-M123",
+      "partNumber": "RS-DEMO-CA-RING-M123",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-FASTENER-M124-A",
+      "componentId": "RS-TF-CA-FASTENER-M124",
+      "partNumber": "RS-DEMO-CA-FASTENER-M124",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-TUBE-M125-A",
+      "componentId": "RS-TF-CA-TUBE-M125",
+      "partNumber": "RS-DEMO-CA-TUBE-M125",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-TUBE-M126-A",
+      "componentId": "RS-TF-CA-TUBE-M126",
+      "partNumber": "RS-DEMO-CA-TUBE-M126",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-TUBE-M127-A",
+      "componentId": "RS-TF-CA-TUBE-M127",
+      "partNumber": "RS-DEMO-CA-TUBE-M127",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-TUBE-M128-A",
+      "componentId": "RS-TF-CA-TUBE-M128",
+      "partNumber": "RS-DEMO-CA-TUBE-M128",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-TUBE-M129-A",
+      "componentId": "RS-TF-CA-TUBE-M129",
+      "partNumber": "RS-DEMO-CA-TUBE-M129",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-TUBE-M130-A",
+      "componentId": "RS-TF-CA-TUBE-M130",
+      "partNumber": "RS-DEMO-CA-TUBE-M130",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-TUBE-M131-A",
+      "componentId": "RS-TF-CA-TUBE-M131",
+      "partNumber": "RS-DEMO-CA-TUBE-M131",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-CA-TUBE-M132-A",
+      "componentId": "RS-TF-CA-TUBE-M132",
+      "partNumber": "RS-DEMO-CA-TUBE-M132",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-SH-RING-M135-A",
+      "componentId": "RS-TF-SH-RING-M135",
+      "partNumber": "RS-DEMO-SH-RING-M135",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-SH-VANE-M136-A",
+      "componentId": "RS-TF-SH-VANE-M136",
+      "partNumber": "RS-DEMO-SH-VANE-M136",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-SH-RING-M137-A",
+      "componentId": "RS-TF-SH-RING-M137",
+      "partNumber": "RS-DEMO-SH-RING-M137",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-SH-VANE-M138-A",
+      "componentId": "RS-TF-SH-VANE-M138",
+      "partNumber": "RS-DEMO-SH-VANE-M138",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-SH-RING-M139-A",
+      "componentId": "RS-TF-SH-RING-M139",
+      "partNumber": "RS-DEMO-SH-RING-M139",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
+    },
+    {
+      "id": "REQ-SH-VANE-M140-A",
+      "componentId": "RS-TF-SH-VANE-M140",
+      "partNumber": "RS-DEMO-SH-VANE-M140",
+      "revision": "A",
+      "sourcingRoute": "exact_demo_part",
+      "condition": "new",
+      "mandatoryChecks": [
+        {
+          "id": "identity",
+          "kind": "exact_match",
+          "fields": [
+            "partNumber",
+            "revision"
+          ],
+          "provenance": "fictional_demo_identity"
+        },
+        {
+          "id": "applicability",
+          "kind": "document_review",
+          "requiredEvidence": "Document linking the offered part/revision to this demo assembly configuration",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "traceability",
+          "kind": "document_review",
+          "requiredEvidence": "Supplier identity, manufacturer/origin, serial or lot identifier, and supporting release/quality records appropriate to transaction",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "site",
+          "kind": "site_evidence",
+          "requiredEvidence": "Evidence relevant to the supplying site and the offered activity",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "availability",
+          "kind": "supplier_confirmation",
+          "requiredEvidence": "Quantity and dispatch commitment for the requested part/revision",
+          "provenance": "buyer_defined_demo_requirement"
+        },
+        {
+          "id": "arrival",
+          "kind": "date_comparison",
+          "against": "request.requiredArrivalDate",
+          "provenance": "user_sourcing_request"
+        }
+      ],
+      "manufacturingTolerances": null,
+      "materialGrade": null,
+      "notes": "Educational geometry supplies visual identity only. Missing mandatory evidence remains awaiting verification. These fixtures do not supply real approved-part applicability or manufacturing acceptance."
     }
   ]
 }
