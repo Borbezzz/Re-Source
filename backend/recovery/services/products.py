@@ -15,7 +15,7 @@ from contextvars import copy_context
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 from ..adapters import store as st
 from ..adapters.blob_store import blob_store
@@ -24,7 +24,13 @@ from ..adapters.external import linkup
 from ..adapters.glb import GLTFError, load_json, parse_nodes
 from ..config import settings
 from ..domain.errors import DomainError, conflict, invalid, not_found
-from ..domain.products import DemoProduct, ProductModel, ProductPart, ProductProject
+from ..domain.products import (
+    DemoProduct,
+    ProductModel,
+    ProductPart,
+    ProductProject,
+    ProductProjectSummary,
+)
 from ..runtime.context import visitor_id
 from .product_workers import ProductWorkers, literal_mention, requirement_value
 
@@ -104,6 +110,47 @@ class ProductService(ProductWorkers):
 
     def get(self, project_id: str) -> dict:
         return self._public(self._load(project_id))
+
+    def list_projects(self, limit: int = 100) -> dict:
+        """Return the newest 1–100 owned summaries directly from durable storage.
+
+        The database filters ownership before the limit and computes the counters,
+        so document text, requirements and other visitors' records never leave the
+        database for this dashboard read. No separate summary index can go stale.
+        """
+        if not 1 <= limit <= 100:
+            raise invalid("The project summary limit must be between 1 and 100.")
+        owner = self._owner()
+        if self.s.store.is_sqlite:
+            document = "value"
+            owner_value = "json_extract(value, '$._owner')"
+            field = lambda key: f"json_extract(document, '$.{key}')"
+            array_count = lambda key: f"json_array_length({field(key)})"
+            matching = lambda key, states: (f"(SELECT COUNT(*) FROM json_each(document, '$.{key}') AS item "
+                                            f"WHERE json_extract(item.value, '$.status') IN ({states}))")
+            selected_count = "(SELECT COUNT(*) FROM json_each(document, '$.selections'))"
+            package_status = field("package.status")
+        else:
+            document = "CAST(value AS JSONB)"
+            owner_value = f"{document} ->> '_owner'"
+            field = lambda key: f"document ->> '{key}'"
+            array_count = lambda key: f"jsonb_array_length(document -> '{key}')"
+            matching = lambda key, states: (f"(SELECT COUNT(*) FROM jsonb_array_elements(document -> '{key}') AS item(value) "
+                                            f"WHERE item.value ->> 'status' IN ({states}))")
+            selected_count = "(SELECT COUNT(*) FROM jsonb_object_keys(document -> 'selections'))"
+            package_status = "document -> 'package' ->> 'status'"
+        columns = [f"{field(key)} AS {key}" for key in ("project_id", "name", "demo_id", "product_type", "status", "created_at", "updated_at")]
+        columns += [f"{array_count('parts')} AS part_count", f"{matching('parts', "'confirmed'")} AS confirmed_part_count",
+                    f"{array_count('research')} AS research_count", f"{matching('research', "'queued', 'running'")} AS active_research_count",
+                    f"{matching('research', "'complete'")} AS completed_research_count", f"{matching('research', "'failed'")} AS failed_research_count",
+                    f"{selected_count} AS selected_count", f"{package_status} AS package_status"]
+        # Expressions and field names above are code constants. Only owner/limit
+        # are request-dependent, and both remain bound SQL parameters.
+        query = text(f"WITH owned AS (SELECT {document} AS document FROM kv WHERE key LIKE 'product:%' AND {owner_value} = :owner) "
+                     f"SELECT {', '.join(columns)} FROM owned ORDER BY updated_at DESC, project_id DESC LIMIT :limit")
+        with self.s.store.tx() as conn:
+            rows = conn.execute(query, {"owner": owner, "limit": limit}).mappings().all()
+        return {"projects": [ProductProjectSummary.model_validate(dict(row)).model_dump(mode="json") for row in rows]}
 
     @staticmethod
     def _event(project: dict, type_: str, summary: str, part_id: str | None = None) -> None:

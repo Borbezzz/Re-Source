@@ -5427,6 +5427,144 @@
         "title": "ProductProject",
         "type": "object"
       },
+      "ProductProjectList": {
+        "additionalProperties": false,
+        "properties": {
+          "projects": {
+            "items": {
+              "$ref": "#/components/schemas/ProductProjectSummary"
+            },
+            "title": "Projects",
+            "type": "array"
+          }
+        },
+        "required": [
+          "projects"
+        ],
+        "title": "ProductProjectList",
+        "type": "object"
+      },
+      "ProductProjectSummary": {
+        "additionalProperties": false,
+        "description": "Dashboard fields only; project contents remain behind the owned detail route.",
+        "properties": {
+          "active_research_count": {
+            "description": "Investigations currently queued or running.",
+            "minimum": 0.0,
+            "title": "Active Research Count",
+            "type": "integer"
+          },
+          "completed_research_count": {
+            "minimum": 0.0,
+            "title": "Completed Research Count",
+            "type": "integer"
+          },
+          "confirmed_part_count": {
+            "minimum": 0.0,
+            "title": "Confirmed Part Count",
+            "type": "integer"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "demo_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Demo Id"
+          },
+          "failed_research_count": {
+            "minimum": 0.0,
+            "title": "Failed Research Count",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "package_status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "draft",
+                  "approved",
+                  "simulated"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Package Status"
+          },
+          "part_count": {
+            "minimum": 0.0,
+            "title": "Part Count",
+            "type": "integer"
+          },
+          "product_type": {
+            "title": "Product Type",
+            "type": "string"
+          },
+          "project_id": {
+            "title": "Project Id",
+            "type": "string"
+          },
+          "research_count": {
+            "minimum": 0.0,
+            "title": "Research Count",
+            "type": "integer"
+          },
+          "selected_count": {
+            "minimum": 0.0,
+            "title": "Selected Count",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "extracting",
+              "review",
+              "ready",
+              "investigating",
+              "results",
+              "packaged"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "project_id",
+          "name",
+          "demo_id",
+          "product_type",
+          "status",
+          "created_at",
+          "updated_at",
+          "part_count",
+          "confirmed_part_count",
+          "research_count",
+          "active_research_count",
+          "completed_research_count",
+          "failed_research_count",
+          "selected_count",
+          "package_status"
+        ],
+        "title": "ProductProjectSummary",
+        "type": "object"
+      },
       "ProductRequirement": {
         "additionalProperties": false,
         "properties": {
@@ -9611,6 +9749,52 @@
       }
     },
     "/api/v1/products": {
+      "get": {
+        "description": "List this visitor's saved projects, newest update first, without document or model contents.",
+        "operationId": "projects_api_v1_products_get",
+        "parameters": [
+          {
+            "description": "Newest projects to return; defaults to 100.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "Newest projects to return; defaults to 100.",
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductProjectList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Projects",
+        "tags": [
+          "Product projects"
+        ]
+      },
       "post": {
         "operationId": "create_api_v1_products_post",
         "parameters": [
