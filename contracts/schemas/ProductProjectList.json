@@ -1,0 +1,180 @@
+{
+  "$defs": {
+    "ProductProjectSummary": {
+      "additionalProperties": false,
+      "description": "Dashboard fields only; project contents remain behind the owned detail route.",
+      "properties": {
+        "active_research_count": {
+          "description": "Investigations currently queued or running.",
+          "minimum": 0,
+          "title": "Active Research Count",
+          "type": "integer"
+        },
+        "agent_stage": {
+          "anyOf": [
+            {
+              "enum": [
+                "requirements",
+                "research",
+                "shortlist",
+                "rfq",
+                "outreach",
+                "complete"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agent Stage"
+        },
+        "agent_status": {
+          "anyOf": [
+            {
+              "enum": [
+                "queued",
+                "running",
+                "paused",
+                "needs_attention",
+                "recommendation_ready",
+                "failed"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agent Status"
+        },
+        "completed_research_count": {
+          "minimum": 0,
+          "title": "Completed Research Count",
+          "type": "integer"
+        },
+        "confirmed_part_count": {
+          "minimum": 0,
+          "title": "Confirmed Part Count",
+          "type": "integer"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "demo_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Demo Id"
+        },
+        "failed_research_count": {
+          "minimum": 0,
+          "title": "Failed Research Count",
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "package_status": {
+          "anyOf": [
+            {
+              "enum": [
+                "draft",
+                "approved",
+                "simulated"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Package Status"
+        },
+        "part_count": {
+          "minimum": 0,
+          "title": "Part Count",
+          "type": "integer"
+        },
+        "product_type": {
+          "title": "Product Type",
+          "type": "string"
+        },
+        "project_id": {
+          "title": "Project Id",
+          "type": "string"
+        },
+        "research_count": {
+          "minimum": 0,
+          "title": "Research Count",
+          "type": "integer"
+        },
+        "selected_count": {
+          "minimum": 0,
+          "title": "Selected Count",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "extracting",
+            "review",
+            "ready",
+            "investigating",
+            "results",
+            "packaged"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "updated_at": {
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "project_id",
+        "name",
+        "demo_id",
+        "product_type",
+        "status",
+        "created_at",
+        "updated_at",
+        "part_count",
+        "confirmed_part_count",
+        "research_count",
+        "active_research_count",
+        "completed_research_count",
+        "failed_research_count",
+        "selected_count",
+        "package_status"
+      ],
+      "title": "ProductProjectSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "projects": {
+      "items": {
+        "$ref": "#/$defs/ProductProjectSummary"
+      },
+      "title": "Projects",
+      "type": "array"
+    }
+  },
+  "required": [
+    "projects"
+  ],
+  "title": "ProductProjectList",
+  "type": "object"
+}

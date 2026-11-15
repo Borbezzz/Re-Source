@@ -1,0 +1,23 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_version": {
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "mode": {
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "title": "Mode",
+      "type": "string"
+    }
+  },
+  "required": [
+    "expected_version",
+    "mode"
+  ],
+  "title": "ProductAgentStartRequest",
+  "type": "object"
+}

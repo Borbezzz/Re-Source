@@ -1,0 +1,164 @@
+/* Interactive supplier map: pan / zoom / pick. Base map styles live in studio.css. */
+
+.rs-map { cursor: grab; touch-action: none; outline: none; user-select: none; -webkit-user-select: none; }
+.rs-map[data-dragging] { cursor: grabbing; }
+.rs-map:focus-visible { box-shadow: inset 0 0 0 2px rgba(56, 189, 248, 0.55); }
+
+/* Pins and destination */
+.rs-pin .rs-pin-glyph { transition: transform 0.25s var(--rs-ease), filter 0.25s; }
+.rs-pin:hover .rs-pin-glyph, .rs-pin:focus-visible .rs-pin-glyph { transform: scale(1.18); filter: drop-shadow(0 0 6px rgba(244, 241, 234, 0.45)); }
+.rs-pin:focus { outline: none; }
+.rs-pin.is-dim:hover { opacity: 0.7; }
+.rs-pin-hover { opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.rs-pin:hover .rs-pin-hover, .rs-pin:focus-visible .rs-pin-hover { opacity: 1; }
+.rs-pin-halo { fill: none; stroke: url(#rs-thermal); stroke-width: 2; opacity: 0.9; animation: rs-halo 1.8s ease-in-out infinite; }
+@keyframes rs-halo { 50% { opacity: 0.35; } }
+.rs-dest { cursor: pointer; }
+.rs-dest:focus { outline: none; }
+.rs-dest:hover rect, .rs-dest:focus-visible rect { filter: drop-shadow(0 0 6px rgba(244, 241, 234, 0.6)); }
+
+/* Fat invisible stroke so routes are easy to hit. */
+.rs-route-hit { fill: none; stroke: transparent; stroke-width: 18; vector-effect: non-scaling-stroke; pointer-events: stroke; cursor: pointer; }
+.rs-route-hit:hover { stroke: rgba(244, 241, 234, 0.07); }
+
+/* Zoom controls */
+.rs-map-zoom {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 21;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--rs-line-2);
+  background: rgba(14, 14, 18, 0.86);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  cursor: default;
+}
+.rs-map-zoom button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--rs-text-2);
+  cursor: pointer;
+}
+.rs-map-zoom button:hover { background: var(--rs-raise-2); color: var(--rs-text); }
+.rs-map-zoom button:focus-visible { outline: 2px solid var(--rs-cyan); outline-offset: 1px; }
+.rs-map-zoom button[aria-pressed="true"] { color: var(--rs-cyan); }
+.rs-map-zoom i { width: 18px; height: 1px; background: var(--rs-line-2); margin: 2px 0; }
+.rs-map-pct { font: 500 10.5px var(--rs-mono); color: var(--rs-text-3); padding: 1px 0; }
+
+/* Info card */
+.rs-map-card {
+  position: absolute;
+  z-index: 24;
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px 12px;
+  border-radius: 14px;
+  background: linear-gradient(rgba(17, 17, 22, 0.96), rgba(14, 14, 18, 0.96)) padding-box, var(--rs-grad) border-box;
+  border: 1px solid transparent;
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.9);
+  cursor: default;
+  user-select: text;
+  -webkit-user-select: text;
+  animation: rs-card-in 0.28s var(--rs-ease) both;
+}
+@keyframes rs-card-in { from { opacity: 0; transform: translateY(6px) scale(0.98); } }
+.rs-map-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rs-map-chip { font: 600 11px var(--rs-sans); padding: 3px 8px; border-radius: 99px; border: 1px solid var(--rs-line-2); color: var(--rs-text-2); }
+.rs-map-chip.is-eligible { color: var(--rs-ok); border-color: rgba(74, 222, 156, 0.4); }
+.rs-map-chip.is-awaiting { color: var(--rs-wait); border-color: rgba(251, 191, 36, 0.4); }
+.rs-map-chip.is-excluded { color: var(--rs-text-2); }
+.rs-map-chip.is-bad { color: var(--rs-bad); border-color: rgba(248, 113, 113, 0.45); }
+.rs-map-chip.is-dest { color: var(--rs-text); }
+.rs-map-x { width: 24px; height: 24px; display: grid; place-items: center; border: 0; border-radius: 6px; background: none; color: var(--rs-text-2); cursor: pointer; }
+.rs-map-x:hover { background: var(--rs-raise-2); color: var(--rs-text); }
+.rs-map-card-title { font-size: 15px; font-weight: 550; letter-spacing: -0.01em; }
+.rs-map-card-sub { font-size: 12px; color: var(--rs-text-2); margin-top: -3px; }
+.rs-map-card-note { margin: 2px 0 0; font-size: 12.5px; line-height: 1.4; color: var(--rs-text); }
+.rs-map-card-kv { margin: 2px 0 0; display: grid; gap: 3px; }
+.rs-map-card-kv div { display: grid; grid-template-columns: 82px 1fr; gap: 8px; font-size: 12px; }
+.rs-map-card-kv dt { color: var(--rs-text-3); }
+.rs-map-card-kv dd { margin: 0; color: var(--rs-text); }
+.rs-map-card-kv small { color: var(--rs-text-3); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; }
+.rs-map-card-zoom {
+  justify-self: start;
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--rs-line-2);
+  background: var(--rs-raise);
+  color: var(--rs-text);
+  font: 500 12px var(--rs-sans);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.rs-map-card-zoom svg { width: 13px; height: 13px; flex: none; }
+.rs-map-card-zoom:hover { border-color: rgba(56, 189, 248, 0.5); }
+
+@media (max-width: 900px) {
+  /* Below the full-width part card, clear of the bottom sheets. */
+  .rs-map-zoom { left: auto; right: 12px; top: 116px; transform: none; display: flex; padding: 3px; }
+  .rs-map-zoom i { width: 1px; height: 18px; margin: 0 2px; align-self: center; }
+  .rs-map-pct { align-self: center; padding: 0 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rs-pin-halo, .rs-map-card { animation: none; }
+}
+
+/* ---------- Visual layers ---------- */
+.rs-map svg { background: #09090c; }
+.rs-map .rs-graticule { stroke: rgba(244, 241, 234, 0.045); stroke-width: 0.6; stroke-dasharray: 1 3; }
+/* Soft cyan halo along every coastline: a wide, faint stroke under the land fill. */
+.rs-coast-glow path { fill: none; stroke: rgba(56, 189, 248, 0.07); stroke-width: 7px; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.rs-map .rs-land { fill: url(#rs-land-fill); stroke: rgba(244, 241, 234, 0.16); stroke-width: 0.7; }
+.rs-map .rs-land.is-host { fill: url(#rs-land-host); stroke: rgba(196, 181, 253, 0.32); stroke-width: 0.9; }
+.rs-map .rs-country-label { fill: rgba(244, 241, 234, 0.2); font-weight: 500; }
+
+.rs-sonar circle { fill: none; stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+
+.rs-pin-pool { fill: url(#rs-pool-ok); pointer-events: none; }
+.rs-pin-pool.is-ranked { fill: url(#rs-pool-rank); }
+.rs-pin-pool.is-wait { fill: url(#rs-pool-wait); }
+.rs-pin .rs-pin-glyph { filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55)); }
+
+.rs-dest-ring { fill: none; stroke: rgba(244, 241, 234, 0.7); stroke-width: 1.2; transform-box: fill-box; transform-origin: center; animation: rs-beacon 2.8s var(--rs-ease) infinite; pointer-events: none; }
+.rs-dest-ring.is-late { animation-delay: 1.4s; }
+@keyframes rs-beacon { 0% { transform: scale(0.6); opacity: 0.9; } 100% { transform: scale(3.4); opacity: 0; } }
+
+.rs-route-glow { fill: none; stroke-width: 7px; opacity: 0.16; stroke-linecap: round; vector-effect: non-scaling-stroke; pointer-events: none; }
+.rs-comet { fill: #fff; filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 9px rgba(139, 92, 246, 0.95)); pointer-events: none; }
+
+/* Scale bar under the zoom controls. */
+.rs-map-scale {
+  position: absolute;
+  left: 24px;
+  top: calc(50% + 92px);
+  z-index: 21;
+  display: grid;
+  gap: 4px;
+  font: 500 10.5px var(--rs-mono);
+  color: var(--rs-text-3);
+  pointer-events: none;
+}
+.rs-map-scale i { display: block; height: 5px; border: 1px solid rgba(244, 241, 234, 0.45); border-top: 0; transition: width 0.3s var(--rs-ease); }
+@media (max-width: 900px) { .rs-map-scale { display: none; } }
+@media (prefers-reduced-motion: reduce) { .rs-dest-ring { animation: none; opacity: 0.4; } }
+
+/* Keep the full-resolution coastlines on their own composited surface. */
+.rs-map > .rs-map-base, .rs-map > .rs-map-overlay { position: absolute; inset: 0; }
+.rs-map > .rs-map-base { pointer-events: none; transform: translateZ(0); }
+.rs-map > .rs-map-overlay { background: transparent; isolation: isolate; }

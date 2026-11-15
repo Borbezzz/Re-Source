@@ -1,0 +1,68 @@
+{
+  "$defs": {
+    "MonitoringStatus": {
+      "enum": [
+        "active",
+        "paused",
+        "closed"
+      ],
+      "title": "MonitoringStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "dependency_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Dependency Ids",
+      "type": "array"
+    },
+    "dependency_revision": {
+      "title": "Dependency Revision",
+      "type": "integer"
+    },
+    "owner": {
+      "title": "Owner",
+      "type": "string"
+    },
+    "reconciled_change_cursor": {
+      "default": 0,
+      "title": "Reconciled Change Cursor",
+      "type": "integer"
+    },
+    "scenario_run_id": {
+      "title": "Scenario Run Id",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/MonitoringStatus"
+    },
+    "subscription_id": {
+      "title": "Subscription Id",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "subscription_id",
+    "scenario_run_id",
+    "case_id",
+    "dependency_ids",
+    "dependency_revision",
+    "status",
+    "owner",
+    "updated_at"
+  ],
+  "title": "CaseSubscription",
+  "type": "object"
+}

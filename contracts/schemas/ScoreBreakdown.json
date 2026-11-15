@@ -1,0 +1,54 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "current_resilience": {
+      "title": "Current Resilience",
+      "type": "number"
+    },
+    "historical_reliability": {
+      "title": "Historical Reliability",
+      "type": "number"
+    },
+    "inputs": {
+      "additionalProperties": true,
+      "title": "Inputs",
+      "type": "object"
+    },
+    "landed_cost": {
+      "title": "Landed Cost",
+      "type": "number"
+    },
+    "recovery_speed": {
+      "title": "Recovery Speed",
+      "type": "number"
+    },
+    "score": {
+      "title": "Score",
+      "type": "number"
+    },
+    "thresholds": {
+      "additionalProperties": true,
+      "title": "Thresholds",
+      "type": "object"
+    },
+    "weights": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Weights",
+      "type": "object"
+    }
+  },
+  "required": [
+    "recovery_speed",
+    "landed_cost",
+    "historical_reliability",
+    "current_resilience",
+    "weights",
+    "inputs",
+    "thresholds",
+    "score"
+  ],
+  "title": "ScoreBreakdown",
+  "type": "object"
+}

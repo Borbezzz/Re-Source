@@ -1,0 +1,20 @@
+{
+  "assembly_id": "toy-car-demo",
+  "display_name": "Toy car",
+  "product_type": "toy_car",
+  "description": "Prepared demonstration model; engineering requirements must come from reviewed source documents.",
+  "requirements_status": "source_required",
+  "investigation_available": false,
+  "data_origin": "synthetic_demo",
+  "asset": {"name": "Khronos Toy Car", "creators": ["Guido Odendahl", "Eric Chadwick"], "licence": "CC0", "kind": "prepared_demo"},
+  "components": [
+    {"component_id": "toycar-body", "display_name": "Body", "node_name": "ToyCar_Body"},
+    {"component_id": "toycar-glazing", "display_name": "Glazing", "node_name": "ToyCar_Glazing"},
+    {"component_id": "toycar-wheel-fl", "display_name": "Front left wheel", "node_name": "ToyCar_Wheel_FL"},
+    {"component_id": "toycar-wheel-fr", "display_name": "Front right wheel", "node_name": "ToyCar_Wheel_FR"},
+    {"component_id": "toycar-wheel-rl", "display_name": "Rear left wheel", "node_name": "ToyCar_Wheel_RL"},
+    {"component_id": "toycar-wheel-rr", "display_name": "Rear right wheel", "node_name": "ToyCar_Wheel_RR"},
+    {"component_id": "toycar-bumper-f", "display_name": "Front bumper", "node_name": "ToyCar_Bumper_F"},
+    {"component_id": "toycar-bumper-r", "display_name": "Rear bumper", "node_name": "ToyCar_Bumper_R"}
+  ]
+}

@@ -1,0 +1,477 @@
+/* Re::Source: the supplied vector wordmark over the verified silk field. */
+.product-home {
+  background: #000;
+}
+.product-entry {
+  position: relative;
+  isolation: isolate;
+  min-height: min(920px, calc(100svh - 72px));
+  min-height: clamp(660px, calc(100svh - 72px), 980px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 40px 100px;
+  overflow: hidden;
+}
+.entry-wave-field {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.55;
+  background: #000;
+}
+.entry-wave-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, #000, #0000 18%, #0000 43%, #0007 63%, #0009 78%, #000),
+    linear-gradient(90deg, #000, #0000 14%, #0000 86%, #000);
+  pointer-events: none;
+}
+.entry-wordmark {
+  position: relative;
+  width: min(1180px, 100%);
+  height: clamp(190px, 25vw, 330px);
+  flex-shrink: 0;
+}
+.static-vector-wordmark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(54px, 12.3vw, 178px);
+  line-height: 1;
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  color: #e6e9ef;
+  text-shadow:
+    0 1px 0 #fff9,
+    0 10px 34px #0009;
+}
+.entry-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: min(660px, 100%);
+  margin-top: -6px;
+}
+.entry-actions h2 {
+  max-width: 26ch;
+  font-size: clamp(26px, 2.55vw, 36px);
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  font-weight: 480;
+  text-wrap: balance;
+  color: #f4f5f8;
+}
+.entry-actions > p {
+  font-size: 15px;
+  color: #bdc2cb;
+  margin-top: 18px;
+  text-wrap: balance;
+}
+.entry-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 30px;
+}
+.entry-cta-group > button {
+  min-height: 52px;
+  padding: 14px 23px;
+  font-size: 14px;
+  gap: 12px;
+}
+.entry-cta-group .entry-demo {
+  min-width: 188px;
+}
+.entry-actions > .entry-scope {
+  color: #9ca3b0;
+  font-size: 12px;
+  max-width: 48ch;
+  margin-top: 20px;
+}
+.entry-explore {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: absolute;
+  bottom: 28px;
+  color: #b5bcc7;
+  font-size: 12px;
+  text-decoration: none;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: var(--radius-control);
+}
+.entry-explore:hover {
+  color: #fff;
+  background: #ffffff0b;
+}
+.prepared-entry {
+  scroll-margin-top: 72px;
+}
+.prepared-entry > .text-button {
+  margin: 16px 24px;
+}
+.product-home .intro-heading .eyebrow,
+.intake-form .eyebrow,
+.workspace-heading .eyebrow {
+  display: none;
+}
+.intake {
+  max-width: 850px;
+}
+@media (max-width: 900px) {
+  .product-entry {
+    padding: 48px 24px 100px;
+  }
+  .entry-wordmark {
+    height: 230px;
+  }
+}
+@media (max-width: 600px) {
+  .product-entry {
+    min-height: max(650px, calc(100svh - 68px));
+    padding: 58px 20px 110px;
+  }
+  .entry-wordmark {
+    width: calc(100% + 12px);
+    height: 150px;
+  }
+  .static-vector-wordmark {
+    font-size: 12.7vw;
+  }
+  .entry-actions {
+    margin-top: 12px;
+  }
+  .entry-actions h2 {
+    font-size: 26px;
+    max-width: 22ch;
+  }
+  .entry-actions > p {
+    font-size: 14px;
+    max-width: 28ch;
+    margin-top: 16px;
+  }
+  .entry-cta-group {
+    gap: 10px;
+    width: 100%;
+    margin-top: 26px;
+  }
+  .entry-cta-group > button {
+    padding: 13px 18px;
+  }
+  .entry-cta-group .entry-demo {
+    min-width: 156px;
+  }
+  .entry-actions > .entry-scope {
+    max-width: 33ch;
+    font-size: 12px;
+  }
+  .entry-explore {
+    bottom: 24px;
+  }
+}
+.assembly-track {
+  height: 230vh;
+  position: relative;
+  scroll-margin-top: 72px;
+  border-top: 1px solid var(--border);
+}
+.assembly-track.direct {
+  height: auto;
+}
+.assembly-track .assembly-sticky {
+  position: sticky;
+  top: 72px;
+  min-height: 690px;
+  height: calc(100vh - 72px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  background: #e8ebef;
+}
+.assembly-stage {
+  min-width: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(300px, 1fr) auto auto;
+}
+.assembly-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 32px 0;
+  align-items: start;
+  z-index: 1;
+}
+.assembly-title h2 {
+  font-size: 32px;
+  letter-spacing: -0.035em;
+  font-weight: 560;
+}
+.assembly-title p {
+  color: var(--muted);
+  margin-top: 6px;
+  font-size: 14px;
+}
+.asset-status {
+  font-size: 11px;
+  color: var(--muted);
+  padding-top: 10px;
+  white-space: nowrap;
+}
+.product-scene {
+  position: relative;
+  min-height: 300px;
+  touch-action: pan-y;
+}
+.model-loading {
+  position: absolute;
+  inset: 45% 0 auto;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  pointer-events: none;
+}
+.assembly-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.assembly-controls > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.assembly-controls button {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  padding: 10px 4px;
+  min-height: 40px;
+}
+.assembly-controls input {
+  accent-color: var(--brand);
+  width: 110px;
+}
+.asset-credit {
+  font-size: 10px;
+  color: var(--muted);
+  padding: 0 32px 18px;
+}
+.asset-credit a {
+  color: inherit;
+}
+.part-sidebar {
+  background: var(--paper);
+  border-left: 1px solid var(--border);
+  padding: 26px 24px;
+  overflow-y: auto;
+}
+.part-list-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.part-list-heading h3 {
+  font-size: 22px;
+}
+.prepared-part-list {
+  display: grid;
+  gap: 2px;
+}
+.prepared-part-list > button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  width: 100%;
+  padding: 10px 9px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  min-height: 40px;
+}
+.prepared-part-list > button:hover {
+  background: var(--surface);
+}
+.prepared-part-list > button[aria-pressed="true"] {
+  background: #e9eeff;
+  color: #2144ba;
+  border-color: #b7c8ff;
+}
+.part-checkbox {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #adb6c7;
+  border-radius: 2px;
+}
+[aria-pressed="true"] > .part-checkbox {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+.part-source-detail {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.part-source-detail h3 {
+  font-size: 17px;
+  margin-bottom: 14px;
+}
+.part-source-detail dl {
+  margin: 0;
+  font-size: 12px;
+}
+.part-source-detail dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0;
+}
+.part-source-detail dt {
+  color: var(--muted);
+}
+.part-source-detail dd {
+  margin: 0;
+  text-align: right;
+}
+.part-source-detail p,
+.selection-tray p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 16px;
+}
+.part-source-detail .text-button {
+  padding: 12px 0;
+  font-size: 12px;
+}
+.selection-tray {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.selection-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.selection-chips button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  padding: 6px 8px;
+  border: 0;
+  background: var(--soft);
+  color: var(--brand);
+  border-radius: 3px;
+}
+.selection-tray .secondary {
+  font-size: 12px;
+  margin-top: 12px;
+  width: 100%;
+}
+@media (max-width: 1050px) {
+  .assembly-track .assembly-sticky {
+    grid-template-columns: minmax(0, 1fr) 290px;
+  }
+  .part-sidebar {
+    padding: 20px 18px;
+  }
+  .assembly-title {
+    display: block;
+  }
+  .asset-status {
+    display: block;
+    margin-top: 6px;
+  }
+  .assembly-controls {
+    padding: 10px 20px;
+  }
+  .assembly-title {
+    padding: 24px 20px 0;
+  }
+  .asset-credit {
+    padding: 0 20px 14px;
+  }
+}
+@media (max-width: 700px) {
+  .assembly-track {
+    height: auto;
+  }
+  .assembly-track .assembly-sticky {
+    height: auto;
+    min-height: 0;
+    position: relative;
+    top: 0;
+    display: block;
+  }
+  .assembly-stage {
+    grid-template-rows: auto 370px auto auto;
+  }
+  .assembly-title h2 {
+    font-size: 28px;
+  }
+  .assembly-controls {
+    gap: 0;
+  }
+  .assembly-controls > span {
+    width: 100%;
+    font-size: 11px;
+  }
+  .assembly-controls > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .assembly-controls input {
+    flex: 1;
+    max-width: 160px;
+  }
+  .part-sidebar {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    padding: 24px 20px;
+    overflow: visible;
+  }
+  .prepared-part-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+  .part-source-detail dl {
+    max-width: 380px;
+  }
+  .selection-tray {
+    padding-bottom: 10px;
+  }
+  .asset-credit {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .assembly-track {
+    height: auto;
+  }
+}

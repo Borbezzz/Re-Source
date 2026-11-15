@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "Duration": {
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "default": "days",
+          "enum": [
+            "hours",
+            "days"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Duration",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "adjusted_by": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Adjusted By",
+      "type": "array"
+    },
+    "assumption": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Assumption"
+    },
+    "depends_on": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Depends On",
+      "type": "array"
+    },
+    "duration": {
+      "$ref": "#/$defs/Duration"
+    },
+    "duration_range": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Duration Range"
+    },
+    "finish_day": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Finish Day"
+    },
+    "kind": {
+      "enum": [
+        "procurement",
+        "manufacture",
+        "qualification",
+        "transport",
+        "inspection",
+        "installation",
+        "documentation"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "on_critical_path": {
+      "default": false,
+      "title": "On Critical Path",
+      "type": "boolean"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "start_day": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Start Day"
+    },
+    "step_id": {
+      "title": "Step Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "step_id",
+    "name",
+    "kind",
+    "duration",
+    "source"
+  ],
+  "title": "PlanStep",
+  "type": "object"
+}

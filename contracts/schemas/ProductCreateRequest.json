@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "demo_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Demo Id"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "maxLength": 160,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Name"
+    }
+  },
+  "title": "ProductCreateRequest",
+  "type": "object"
+}

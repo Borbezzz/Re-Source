@@ -1,0 +1,353 @@
+{
+  "$defs": {
+    "CaseState": {
+      "enum": [
+        "ready",
+        "investigating",
+        "recommendations_ready",
+        "reassessing",
+        "selected",
+        "documents_preparing",
+        "documents_ready",
+        "submission_simulated",
+        "installation_visualized",
+        "restored_visualized",
+        "waiting_for_evidence",
+        "interrupted",
+        "failed",
+        "selection_stale",
+        "documents_stale"
+      ],
+      "title": "CaseState",
+      "type": "string"
+    },
+    "CaseSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "current_decision_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Decision Id"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "preferred_candidate_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Preferred Candidate Label"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        },
+        "stale": {
+          "default": false,
+          "title": "Stale",
+          "type": "boolean"
+        },
+        "state": {
+          "$ref": "#/$defs/CaseState"
+        },
+        "visual_state": {
+          "$ref": "#/$defs/VisualState"
+        }
+      },
+      "required": [
+        "case_id",
+        "component_id",
+        "display_name",
+        "state",
+        "revision",
+        "visual_state"
+      ],
+      "title": "CaseSummary",
+      "type": "object"
+    },
+    "ComponentInstance": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "data_origin": {
+          "$ref": "#/$defs/DataOrigin",
+          "default": "synthetic_demo"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "engine_id": {
+          "title": "Engine Id",
+          "type": "string"
+        },
+        "failure_story": {
+          "additionalProperties": true,
+          "title": "Failure Story",
+          "type": "object"
+        },
+        "mesh_mapping": {
+          "$ref": "#/$defs/MeshMapping"
+        },
+        "part_identity": {
+          "title": "Part Identity",
+          "type": "string"
+        },
+        "position": {
+          "title": "Position",
+          "type": "string"
+        },
+        "requirement_set_id": {
+          "title": "Requirement Set Id",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "string"
+        },
+        "short_description": {
+          "title": "Short Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "engine_id",
+        "component_id",
+        "case_id",
+        "display_name",
+        "short_description",
+        "part_identity",
+        "revision",
+        "position",
+        "requirement_set_id",
+        "mesh_mapping",
+        "failure_story"
+      ],
+      "title": "ComponentInstance",
+      "type": "object"
+    },
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    },
+    "EngineConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "additionalProperties": true,
+          "title": "Asset",
+          "type": "object"
+        },
+        "component_instance_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Component Instance Ids",
+          "type": "array"
+        },
+        "configuration_revision": {
+          "title": "Configuration Revision",
+          "type": "string"
+        },
+        "data_origin": {
+          "$ref": "#/$defs/DataOrigin",
+          "default": "synthetic_demo"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "engine_id": {
+          "title": "Engine Id",
+          "type": "string"
+        },
+        "representative_note": {
+          "title": "Representative Note",
+          "type": "string"
+        },
+        "scenario_manifest_version": {
+          "title": "Scenario Manifest Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "engine_id",
+        "display_name",
+        "representative_note",
+        "configuration_revision",
+        "component_instance_ids",
+        "scenario_manifest_version",
+        "asset"
+      ],
+      "title": "EngineConfiguration",
+      "type": "object"
+    },
+    "MeshMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "camera_focus": {
+          "additionalProperties": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "description": "{position:[x,y,z], target:[x,y,z]}",
+          "title": "Camera Focus",
+          "type": "object"
+        },
+        "exploded_offset": {
+          "description": "[x,y,z] offset applied in exploded view",
+          "items": {
+            "type": "number"
+          },
+          "title": "Exploded Offset",
+          "type": "array"
+        },
+        "hotspot_anchor": {
+          "description": "[x,y,z] world-space anchor for the hotspot",
+          "items": {
+            "type": "number"
+          },
+          "title": "Hotspot Anchor",
+          "type": "array"
+        },
+        "node_name": {
+          "title": "Node Name",
+          "type": "string"
+        },
+        "removal_vector": {
+          "description": "[x,y,z] direction used by the removal animation",
+          "items": {
+            "type": "number"
+          },
+          "title": "Removal Vector",
+          "type": "array"
+        }
+      },
+      "required": [
+        "node_name",
+        "hotspot_anchor",
+        "exploded_offset",
+        "camera_focus",
+        "removal_vector"
+      ],
+      "title": "MeshMapping",
+      "type": "object"
+    },
+    "Mode": {
+      "enum": [
+        "live",
+        "seeded",
+        "replay"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "VisualState": {
+      "enum": [
+        "assembled",
+        "exploded",
+        "failed",
+        "removed",
+        "replacement_ready",
+        "installed",
+        "running"
+      ],
+      "title": "VisualState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/CaseSummary"
+      },
+      "title": "Cases",
+      "type": "array"
+    },
+    "components": {
+      "items": {
+        "$ref": "#/$defs/ComponentInstance"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "engine": {
+      "$ref": "#/$defs/EngineConfiguration"
+    },
+    "mode": {
+      "$ref": "#/$defs/Mode"
+    },
+    "operating_story": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Operating Story"
+    },
+    "scenario_run_id": {
+      "title": "Scenario Run Id",
+      "type": "string"
+    },
+    "visual_states": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/VisualState"
+      },
+      "title": "Visual States",
+      "type": "array"
+    }
+  },
+  "required": [
+    "engine",
+    "components",
+    "cases",
+    "scenario_run_id",
+    "mode"
+  ],
+  "title": "EngineView",
+  "type": "object"
+}

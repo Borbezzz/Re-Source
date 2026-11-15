@@ -1,0 +1,140 @@
+# Requirement templates shared by every component requirement set (PRD FR-02).
+# Each component set instantiates these with its own IDs, part identity and parameters.
+# evaluator_id/evaluator_version map to deterministic code in backend/recovery/domain/rules.py.
+templates:
+  ID:
+    title: Part identity and revision match
+    plain_language: The offered part number and revision match the failed part (or a documented interchangeable revision).
+    category: technical
+    routes: [BUY, MAKE]
+    mandatory: true
+    evaluator_id: part_identity
+    evaluator_version: "1.0"
+    fact_inputs: [release_certificate.part_number, release_certificate.revision, quote.part_number, quote.revision, ipc_extract.interchangeable_revisions]
+    evidence_authority_policy: release certificate (rank 80) outranks supplier quote (rank 40); IPC (rank 100) defines allowed revisions
+  IC:
+    title: Documented interchangeability and effectivity
+    plain_language: The design holder's parts catalogue says this revision fits this engine configuration, and current service bulletins do not exclude it.
+    category: technical
+    routes: [BUY, MAKE]
+    mandatory: true
+    evaluator_id: interchangeability
+    evaluator_version: "1.0"
+    fact_inputs: [ipc_extract.interchangeable_revisions, ipc_extract.non_interchangeable_revisions, ipc_extract.effectivity, service_bulletin.revision]
+    evidence_authority_policy: design holder documents (rank 100); newest SB revision supersedes older revisions
+  REL:
+    title: Authorised release certificate
+    plain_language: The spare comes with a valid CAA Form 1 release certificate for this exact part and serial number.
+    category: regulatory
+    routes: [BUY]
+    mandatory: true
+    evaluator_id: release_certificate
+    evaluator_version: "1.0"
+    fact_inputs: [release_certificate.form_type, release_certificate.approval_reference, release_certificate.part_number, release_certificate.serial_number, release_certificate.status_work]
+    params:
+      accepted_forms: ["CAA Form 1 MO", "CAA Form 1-21", "CAA Form 1"]
+      accepted_status: ["NEW", "OVERHAULED", "INSPECTED/TESTED", "REPAIRED", "MODIFIED"]
+    evidence_authority_policy: release certificate issued by an approved organisation (rank 80)
+  TRC:
+    title: Traceability and non-incident statement
+    plain_language: The supplier can trace the part's history and confirms it was not involved in an incident.
+    category: technical
+    routes: [BUY]
+    mandatory: true
+    evaluator_id: traceability
+    evaluator_version: "1.0"
+    fact_inputs: [trace_pack.back_to_birth, trace_pack.last_operator, trace_pack.non_incident_statement, trace_pack.serial_number]
+    evidence_authority_policy: supplier record (rank 50) must match release certificate serial
+  QMS:
+    title: Site-specific quality system certificate
+    plain_language: The specific site supplying the part holds a current aerospace quality certificate (a certificate for another site of the same company does not count).
+    category: supplier_site
+    routes: [BUY, MAKE]
+    mandatory: true
+    evaluator_id: quality_certificate_site
+    evaluator_version: "1.0"
+    fact_inputs: [quality_certificate.standard, quality_certificate.certified_site, quality_certificate.expiry_date]
+    params:
+      standards: {BUY: ["AS9120B", "AS9100D"], MAKE: ["AS9100D"]}
+    evidence_authority_policy: certification body record (rank 70); site identity must equal the offer's site
+  LEG:
+    title: Supplier legal entity active
+    plain_language: The selling company is a registered, active legal entity.
+    category: supplier_site
+    routes: [BUY, MAKE]
+    mandatory: true
+    evaluator_id: legal_entity
+    evaluator_version: "1.0"
+    fact_inputs: [registry_extract.status, registry_extract.legal_entity_name]
+    evidence_authority_policy: company registry (rank 90); live mode uses Companies House for GB entities
+  QTE:
+    title: Current quotation
+    plain_language: The quote is still valid on the scenario date and covers the required quantity.
+    category: supplier_site
+    routes: [BUY, MAKE]
+    mandatory: true
+    evaluator_id: quote_valid
+    evaluator_version: "1.0"
+    fact_inputs: [quote.quote_valid_until, quote.quantity, quote.unit_price, quote.currency]
+    evidence_authority_policy: supplier quote (rank 40)
+  POA:
+    title: Production approval covers part and site
+    plain_language: The manufacturer holds a UK Part 21 Subpart G production approval whose scope covers this part family at this site.
+    category: regulatory
+    routes: [MAKE]
+    mandatory: true
+    evaluator_id: production_approval
+    evaluator_version: "1.0"
+    fact_inputs: [poa_certificate.scope, poa_certificate.approved_sites, poa_certificate.approval_reference]
+    evidence_authority_policy: competent authority approval record (rank 95)
+  DD:
+    title: Approved design data basis
+    plain_language: The manufacturer is licensed to build to the design holder's drawing at a revision that current service bulletins accept.
+    category: technical
+    routes: [MAKE]
+    mandatory: true
+    evaluator_id: design_data
+    evaluator_version: "1.0"
+    fact_inputs: [design_licence.drawing_revision, design_licence.licensee, service_bulletin.min_drawing_revision]
+    evidence_authority_policy: design holder licence (rank 90); newest SB minimum drawing revision applies
+  SPC:
+    title: Special process capability at site
+    plain_language: The manufacturing site is accredited for every special process the part needs (for example brazing, heat treatment, inspection).
+    category: supplier_site
+    routes: [MAKE]
+    mandatory: true
+    evaluator_id: special_process
+    evaluator_version: "1.0"
+    fact_inputs: [special_process_accreditation.processes, special_process_accreditation.site, special_process_accreditation.expiry_date]
+    evidence_authority_policy: accreditation body record (rank 70) outranks supplier capability statement (rank 40)
+  FAI:
+    title: First article inspection complete
+    plain_language: A first article inspection (AS9102) for this part has been completed at this site. Without it the plan is feasible but not ready to select.
+    category: technical
+    routes: [MAKE]
+    mandatory: true
+    feasibility_only: true
+    evaluator_id: first_article
+    evaluator_version: "1.0"
+    fact_inputs: [fai_report.result, fai_report.site, fai_report.part_number, fai_report.revision]
+    evidence_authority_policy: supplier quality record (rank 60)
+  LOG:
+    title: Logistics route currently viable
+    plain_language: The shipping route is open (possibly with a delay) given currently active disruption signals.
+    category: logistics
+    routes: [BUY, MAKE]
+    mandatory: true
+    evaluator_id: route_viable
+    evaluator_version: "1.0"
+    fact_inputs: [route.passes_through, signal.scope, signal.assertion]
+    evidence_authority_policy: normalised risk signals with explicit route/geo relationships
+  REG:
+    title: Regulatory route and document package determined
+    plain_language: The applicable UK CAA document package for this route is known and does not depend on an approval the supplier does not hold.
+    category: regulatory
+    routes: [BUY, MAKE]
+    mandatory: true
+    evaluator_id: regulatory_route
+    evaluator_version: "1.0"
+    fact_inputs: [applicability.rule, poa_certificate.scope, release_certificate.form_type]
+    evidence_authority_policy: UK CAA applicability catalogue (rules/applicability/uk-caa-v1.yaml)

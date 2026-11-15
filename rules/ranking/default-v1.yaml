@@ -1,0 +1,21 @@
+# PRD FR-08 default preference score (product default, editable). Higher is better.
+# score = 100 × (0.45 recovery_speed + 0.25 landed_cost + 0.20 historical_reliability + 0.10 current_resilience)
+ranking_config_version: ranking-default-v1
+weights: {recovery_speed: 0.45, landed_cost: 0.25, historical_reliability: 0.20, current_resilience: 0.10}
+normalisation:
+  recovery_speed: {input: elapsed_recovery_days, best: 2.0, worst: 30.0, unit: days}
+  historical_reliability: {input: on_time_delivery_rate, best: 1.0, worst: 0.80, unit: ratio, metric: on_time_delivery_rate}
+  current_resilience: {input: current_exposure, formula: "1 - exposure", unit: ratio}
+  landed_cost:
+    input: landed_cost_gbp
+    unit: GBP
+    per_case:
+      case-primary: {best: 20000, worst: 120000}
+      case-secondary-a: {best: 10000, worst: 60000}
+      case-secondary-b: {best: 5000, worst: 30000}
+    default: {best: 5000, worst: 150000}
+clamp: [0.0, 1.0]
+tie_breaking: [elapsed_recovery_days_asc, landed_cost_gbp_asc, candidate_id_asc]
+rounding: {score_decimals: 2, component_decimals: 4}
+missing_inputs: pending_comparison   # missing preference inputs never silently become zero
+currency: {reporting: GBP, fx_table: fx.json}

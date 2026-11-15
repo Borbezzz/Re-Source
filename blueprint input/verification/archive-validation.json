@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "packageVersion": "1.2.0",
+  "uploadArchive": "mechanica-input-package.zip",
+  "uploadSha256": "2aedcb07dc7c940170d951773828916cdbe663b2d69f3d5ec0d1533a9ef5f82c",
+  "rootMembers": [
+    "ATTRIBUTION.md",
+    "LICENSE-Mechanica.txt",
+    "assembly.glb",
+    "components.csv",
+    "manifest.json",
+    "requirements.json"
+  ],
+  "crc": "pass",
+  "fileHashes": "match manifest",
+  "publicCopy": "identical",
+  "sourceFamilies": 104
+}

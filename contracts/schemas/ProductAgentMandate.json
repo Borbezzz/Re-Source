@@ -1,0 +1,30 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "objective": {
+      "const": "source_and_request_quotes",
+      "default": "source_and_request_quotes",
+      "title": "Objective",
+      "type": "string"
+    },
+    "outreach": {
+      "enum": [
+        "demo_mailbox",
+        "draft_only"
+      ],
+      "title": "Outreach",
+      "type": "string"
+    },
+    "purchase_authorized": {
+      "const": false,
+      "default": false,
+      "title": "Purchase Authorized",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "outreach"
+  ],
+  "title": "ProductAgentMandate",
+  "type": "object"
+}

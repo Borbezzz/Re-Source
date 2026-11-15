@@ -1,0 +1,18 @@
+# Databricks App runtime dependencies (top-level only; the platform applies its own managed constraints).
+# Local development uses backend/pyproject.toml + backend/uv.lock instead.
+fastapi
+python-multipart
+uvicorn[standard]
+pydantic>=2.6
+sqlalchemy>=2.0
+langgraph>=0.4
+langgraph-checkpoint-sqlite>=2.0
+openai>=1.66
+mlflow-skinny>=3.1
+databricks-sql-connector
+databricks-sdk
+httpx
+pyyaml
+python-dotenv
+ortools
+psycopg[binary]>=3.1

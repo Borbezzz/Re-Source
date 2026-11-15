@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    },
+    "note": {
+      "default": "",
+      "title": "Note",
+      "type": "string"
+    },
+    "revision": {
+      "description": "New template/applicability revision label, e.g. 'issue 3'",
+      "title": "Revision",
+      "type": "string"
+    },
+    "template_id": {
+      "title": "Template Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "template_id",
+    "revision"
+  ],
+  "title": "TemplateChangeRequest",
+  "type": "object"
+}

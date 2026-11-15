@@ -1,0 +1,25 @@
+{
+  "status": "review",
+  "documents": [
+    {
+      "method": "databricks_ai_parse_document",
+      "status": "complete"
+    }
+  ],
+  "parts": [
+    {
+      "name": "NASA H\u2082-O\u2082 APU Turbine Rotor Blade Section",
+      "part_number": null,
+      "requirements": 3
+    }
+  ],
+  "model": {
+    "origin": "uploaded",
+    "status": "missing"
+  },
+  "last_events": [
+    "nasa-h2o2-apu-turbine-rotor-blade-section-s81367.pdf: read with databricks ai parse document.",
+    "OpenAI is identifying parts and citing the supplied specifications.",
+    "Proposed 1 parts using openai structured. Review and confirm before research."
+  ]
+}

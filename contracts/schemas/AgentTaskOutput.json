@@ -1,0 +1,88 @@
+{
+  "additionalProperties": false,
+  "description": "PRD \u00a76.2 \u2014 every agent capability returns this shape, validated before merge.",
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "check_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Check Refs",
+      "type": "array"
+    },
+    "evidence_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "facts": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Facts",
+      "type": "array"
+    },
+    "gaps": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Gaps",
+      "type": "array"
+    },
+    "input_revision": {
+      "title": "Input Revision",
+      "type": "integer"
+    },
+    "next_actions": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Next Actions",
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "pending",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "tool_usage": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "default": {},
+      "title": "Tool Usage",
+      "type": "object"
+    }
+  },
+  "required": [
+    "task_id",
+    "case_id",
+    "input_revision",
+    "status",
+    "summary"
+  ],
+  "title": "AgentTaskOutput",
+  "type": "object"
+}

@@ -1,0 +1,1093 @@
+{
+  "OFF-PA": {
+    "plan_id": "plan-off-pa",
+    "candidate_id": "OFF-PA",
+    "steps": [
+      {
+        "step_id": "alloc",
+        "name": "Stock allocation and packing",
+        "kind": "procurement",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "docs",
+        "name": "Release certificate and trace review",
+        "kind": "documentation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Transport via Rotterdam \u2192 Harwich ro-ro",
+        "kind": "transport",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "alloc",
+          "docs"
+        ],
+        "duration_range": [
+          1.5,
+          3.0
+        ],
+        "assumption": "Daily ro-ro sailing",
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-PB": {
+    "plan_id": "plan-off-pb",
+    "candidate_id": "OFF-PB",
+    "steps": [
+      {
+        "step_id": "alloc",
+        "name": "Stock allocation",
+        "kind": "procurement",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "test",
+        "name": "Flow bench functional test",
+        "kind": "inspection",
+        "duration": {
+          "value": 3.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "alloc"
+        ],
+        "duration_range": [
+          2.0,
+          4.0
+        ],
+        "assumption": "Test rig slot confirmed in quote",
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Road transport Manchester \u2192 East Midlands",
+        "kind": "transport",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "test"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-PC": {
+    "plan_id": "plan-off-pc",
+    "candidate_id": "OFF-PC",
+    "steps": [
+      {
+        "step_id": "licence",
+        "name": "Design data licence confirmation",
+        "kind": "documentation",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "material",
+        "name": "Material procurement (Ni alloy bar)",
+        "kind": "procurement",
+        "duration": {
+          "value": 5.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": [
+          4.0,
+          7.0
+        ],
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "machine",
+        "name": "5-axis machining and vacuum brazing",
+        "kind": "manufacture",
+        "duration": {
+          "value": 8.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "licence",
+          "material"
+        ],
+        "duration_range": [
+          7.0,
+          10.0
+        ],
+        "assumption": "Requires machining slot",
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "heat",
+        "name": "Heat treatment",
+        "kind": "manufacture",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "machine"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "fai",
+        "name": "Conformity inspection against FAI baseline",
+        "kind": "qualification",
+        "duration": {
+          "value": 3.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "heat"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "release",
+        "name": "CAA Form 1-21 release by POA holder",
+        "kind": "documentation",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "fai"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Courier Sheffield \u2192 East Midlands",
+        "kind": "transport",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "release"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [
+      {
+        "label": "Tooling set-up",
+        "amount": "4000.00",
+        "currency": "GBP"
+      },
+      {
+        "label": "First article / conformity inspection",
+        "amount": "3000.00",
+        "currency": "GBP"
+      }
+    ],
+    "capacity_slots": {
+      "step_id": "machine",
+      "windows": [
+        [
+          5,
+          13
+        ],
+        [
+          16,
+          30
+        ]
+      ]
+    },
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-PD": {
+    "plan_id": "plan-off-pd",
+    "candidate_id": "OFF-PD",
+    "steps": [
+      {
+        "step_id": "alloc",
+        "name": "Stock allocation",
+        "kind": "procurement",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Road transport Luton \u2192 East Midlands",
+        "kind": "transport",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "alloc"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-PE": {
+    "plan_id": "plan-off-pe",
+    "candidate_id": "OFF-PE",
+    "steps": [
+      {
+        "step_id": "alloc",
+        "name": "Stock allocation",
+        "kind": "procurement",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Road transport Birmingham \u2192 East Midlands",
+        "kind": "transport",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "alloc"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-SA1": {
+    "plan_id": "plan-off-sa1",
+    "candidate_id": "OFF-SA1",
+    "steps": [
+      {
+        "step_id": "alloc",
+        "name": "Stock allocation",
+        "kind": "procurement",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "docs",
+        "name": "Release certificate and trace review",
+        "kind": "documentation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "insp",
+        "name": "Borescope-grade visual and dimensional inspection",
+        "kind": "inspection",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "alloc"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Road transport Southampton \u2192 East Midlands",
+        "kind": "transport",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "insp",
+          "docs"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-SA2": {
+    "plan_id": "plan-off-sa2",
+    "candidate_id": "OFF-SA2",
+    "steps": [
+      {
+        "step_id": "alloc",
+        "name": "Stock allocation",
+        "kind": "procurement",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "export",
+        "name": "Export documentation",
+        "kind": "documentation",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "alloc"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Short-sea Hamburg \u2192 Immingham + road",
+        "kind": "transport",
+        "duration": {
+          "value": 3.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "export"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-SA3": {
+    "plan_id": "plan-off-sa3",
+    "candidate_id": "OFF-SA3",
+    "steps": [
+      {
+        "step_id": "alloc",
+        "name": "Stock allocation",
+        "kind": "procurement",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Ferry Dublin \u2192 Holyhead + road",
+        "kind": "transport",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "alloc"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-SB1": {
+    "plan_id": "plan-off-sb1",
+    "candidate_id": "OFF-SB1",
+    "steps": [
+      {
+        "step_id": "alloc",
+        "name": "Backorder allocation from OEM",
+        "kind": "procurement",
+        "duration": {
+          "value": 12.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": [
+          10.0,
+          16.0
+        ],
+        "assumption": "OEM backorder estimate",
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "export",
+        "name": "OEM release and export documentation",
+        "kind": "documentation",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "alloc"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Short-sea Hamburg \u2192 Immingham + road",
+        "kind": "transport",
+        "duration": {
+          "value": 3.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "export"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-SB2": {
+    "plan_id": "plan-off-sb2",
+    "candidate_id": "OFF-SB2",
+    "steps": [
+      {
+        "step_id": "tool",
+        "name": "Forming tool manufacture",
+        "kind": "manufacture",
+        "duration": {
+          "value": 4.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "material",
+        "name": "Sheet material procurement",
+        "kind": "procurement",
+        "duration": {
+          "value": 3.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "form",
+        "name": "Forming and TIG welding",
+        "kind": "manufacture",
+        "duration": {
+          "value": 4.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "tool",
+          "material"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "fai",
+        "name": "AS9102 first article inspection",
+        "kind": "qualification",
+        "duration": {
+          "value": 3.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "form"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "release",
+        "name": "Production release",
+        "kind": "documentation",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "fai"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Courier Rotherham \u2192 East Midlands",
+        "kind": "transport",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "release"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [
+      {
+        "label": "Forming tool",
+        "amount": "2600.00",
+        "currency": "GBP"
+      },
+      {
+        "label": "First article inspection",
+        "amount": "1800.00",
+        "currency": "GBP"
+      }
+    ],
+    "capacity_slots": null,
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  },
+  "OFF-SB3": {
+    "plan_id": "plan-off-sb3",
+    "candidate_id": "OFF-SB3",
+    "steps": [
+      {
+        "step_id": "licence",
+        "name": "Design data licence confirmation",
+        "kind": "documentation",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "material",
+        "name": "Sheet material procurement",
+        "kind": "procurement",
+        "duration": {
+          "value": 3.0,
+          "unit": "days"
+        },
+        "depends_on": [],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "form",
+        "name": "Forming and TIG welding",
+        "kind": "manufacture",
+        "duration": {
+          "value": 4.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "licence",
+          "material"
+        ],
+        "duration_range": null,
+        "assumption": "Requires forming slot",
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ndt",
+        "name": "Heat treatment and FPI",
+        "kind": "manufacture",
+        "duration": {
+          "value": 2.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "form"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "conf",
+        "name": "Conformity inspection against FAI baseline",
+        "kind": "qualification",
+        "duration": {
+          "value": 1.0,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ndt"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "release",
+        "name": "CAA Form 1-21 release by POA holder",
+        "kind": "documentation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "conf"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ship",
+        "name": "Road transport Bristol \u2192 East Midlands",
+        "kind": "transport",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "release"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "recv",
+        "name": "Receiving inspection (145.A.42)",
+        "kind": "inspection",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "ship"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      },
+      {
+        "step_id": "ready",
+        "name": "Installation readiness",
+        "kind": "installation",
+        "duration": {
+          "value": 0.5,
+          "unit": "days"
+        },
+        "depends_on": [
+          "recv"
+        ],
+        "duration_range": null,
+        "assumption": null,
+        "source": "scenario fixture"
+      }
+    ],
+    "extra_costs": [
+      {
+        "label": "Conformity inspection",
+        "amount": "1050.00",
+        "currency": "GBP"
+      }
+    ],
+    "capacity_slots": {
+      "step_id": "form",
+      "windows": [
+        [
+          3,
+          30
+        ]
+      ]
+    },
+    "data_origin": "synthetic_demo",
+    "source": "scenario fixture (synthetic durations)"
+  }
+}

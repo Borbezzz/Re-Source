@@ -1,0 +1,14 @@
+SAMPLE SPECIFICATION — fictional values for testing the upload workflow.
+Assembly: Bench-top conveyor
+
+Part: Mounting bracket
+Quantity: 4
+Material: Aluminium 6061-T6
+Thickness: 4 mm
+Finish: Clear anodised
+
+Part: Drive shaft
+Quantity: 1
+Material: Stainless steel 304
+Diameter: 12 mm
+Length: 180 mm

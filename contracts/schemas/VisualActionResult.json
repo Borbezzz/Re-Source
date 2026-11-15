@@ -1,0 +1,78 @@
+{
+  "$defs": {
+    "CaseState": {
+      "enum": [
+        "ready",
+        "investigating",
+        "recommendations_ready",
+        "reassessing",
+        "selected",
+        "documents_preparing",
+        "documents_ready",
+        "submission_simulated",
+        "installation_visualized",
+        "restored_visualized",
+        "waiting_for_evidence",
+        "interrupted",
+        "failed",
+        "selection_stale",
+        "documents_stale"
+      ],
+      "title": "CaseState",
+      "type": "string"
+    },
+    "VisualState": {
+      "enum": [
+        "assembled",
+        "exploded",
+        "failed",
+        "removed",
+        "replacement_ready",
+        "installed",
+        "running"
+      ],
+      "title": "VisualState",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allowed_next": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Next",
+      "type": "array"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "case_state": {
+      "$ref": "#/$defs/CaseState"
+    },
+    "selected_candidate_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Candidate Id"
+    },
+    "visual_state": {
+      "$ref": "#/$defs/VisualState"
+    }
+  },
+  "required": [
+    "case_id",
+    "visual_state",
+    "case_state",
+    "allowed_next"
+  ],
+  "title": "VisualActionResult",
+  "type": "object"
+}

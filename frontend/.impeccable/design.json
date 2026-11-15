@@ -1,0 +1,490 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T21:22:34.947207Z",
+  "title": "Design System: ReSource",
+  "extensions": {
+    "colorMeta": {
+      "surface": {
+        "role": "neutral",
+        "displayName": "Cool paper",
+        "tonalRamp": [
+          "oklch(15.0% 0.0007 264.5)",
+          "oklch(26.4% 0.0014 264.5)",
+          "oklch(37.9% 0.0023 264.5)",
+          "oklch(49.3% 0.0029 264.5)",
+          "oklch(60.7% 0.0029 264.5)",
+          "oklch(72.1% 0.0024 264.5)",
+          "oklch(83.6% 0.0016 264.5)",
+          "oklch(95.0% 0.0005 264.5)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "White",
+        "tonalRamp": [
+          "oklch(15.0% 0.0000 89.9)",
+          "oklch(26.4% 0.0000 89.9)",
+          "oklch(37.9% 0.0000 89.9)",
+          "oklch(49.3% 0.0000 89.9)",
+          "oklch(60.7% 0.0000 89.9)",
+          "oklch(72.1% 0.0000 89.9)",
+          "oklch(83.6% 0.0000 89.9)",
+          "oklch(95.0% 0.0000 89.9)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Charcoal",
+        "tonalRamp": [
+          "oklch(15.0% 0.0021 264.4)",
+          "oklch(26.4% 0.0042 264.4)",
+          "oklch(37.9% 0.0068 264.4)",
+          "oklch(49.3% 0.0085 264.4)",
+          "oklch(60.7% 0.0085 264.4)",
+          "oklch(72.1% 0.0072 264.4)",
+          "oklch(83.6% 0.0047 264.4)",
+          "oklch(95.0% 0.0015 264.4)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Slate",
+        "tonalRamp": [
+          "oklch(15.0% 0.0052 261.3)",
+          "oklch(26.4% 0.0105 261.3)",
+          "oklch(37.9% 0.0168 261.3)",
+          "oklch(49.3% 0.0210 261.3)",
+          "oklch(60.7% 0.0210 261.3)",
+          "oklch(72.1% 0.0178 261.3)",
+          "oklch(83.6% 0.0115 261.3)",
+          "oklch(95.0% 0.0038 261.3)"
+        ]
+      },
+      "brand": {
+        "role": "primary",
+        "displayName": "Electric cobalt",
+        "tonalRamp": [
+          "oklch(15.0% 0.0603 265.2)",
+          "oklch(26.4% 0.1205 265.2)",
+          "oklch(37.9% 0.1928 265.2)",
+          "oklch(49.3% 0.2410 265.2)",
+          "oklch(60.7% 0.2410 265.2)",
+          "oklch(72.1% 0.2049 265.2)",
+          "oklch(83.6% 0.1326 265.2)",
+          "oklch(95.0% 0.0434 265.2)"
+        ]
+      },
+      "soft": {
+        "role": "primary",
+        "displayName": "Cobalt wash",
+        "tonalRamp": [
+          "oklch(15.0% 0.0039 266.3)",
+          "oklch(26.4% 0.0079 266.3)",
+          "oklch(37.9% 0.0126 266.3)",
+          "oklch(49.3% 0.0158 266.3)",
+          "oklch(60.7% 0.0158 266.3)",
+          "oklch(72.1% 0.0134 266.3)",
+          "oklch(83.6% 0.0087 266.3)",
+          "oklch(95.0% 0.0028 266.3)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Separator",
+        "tonalRamp": [
+          "oklch(15.0% 0.0034 262.4)",
+          "oklch(26.4% 0.0067 262.4)",
+          "oklch(37.9% 0.0108 262.4)",
+          "oklch(49.3% 0.0135 262.4)",
+          "oklch(60.7% 0.0135 262.4)",
+          "oklch(72.1% 0.0114 262.4)",
+          "oklch(83.6% 0.0074 262.4)",
+          "oklch(95.0% 0.0024 262.4)"
+        ]
+      },
+      "warning": {
+        "role": "secondary",
+        "displayName": "Warning amber",
+        "tonalRamp": [
+          "oklch(15.0% 0.0262 57.0)",
+          "oklch(26.4% 0.0523 57.0)",
+          "oklch(37.9% 0.0838 57.0)",
+          "oklch(49.3% 0.1047 57.0)",
+          "oklch(60.7% 0.1047 57.0)",
+          "oklch(72.1% 0.0890 57.0)",
+          "oklch(83.6% 0.0576 57.0)",
+          "oklch(95.0% 0.0188 57.0)"
+        ]
+      },
+      "brand-hover": {
+        "role": "primary",
+        "displayName": "Cobalt hover",
+        "tonalRamp": [
+          "oklch(15.0% 0.0524 265.4)",
+          "oklch(26.4% 0.1048 265.4)",
+          "oklch(37.9% 0.1678 265.4)",
+          "oklch(49.3% 0.2097 265.4)",
+          "oklch(60.7% 0.2097 265.4)",
+          "oklch(72.1% 0.1782 265.4)",
+          "oklch(83.6% 0.1153 265.4)",
+          "oklch(95.0% 0.0377 265.4)"
+        ]
+      },
+      "soft-hover": {
+        "role": "primary",
+        "displayName": "Cobalt-wash hover",
+        "tonalRamp": [
+          "oklch(15.0% 0.0078 269.8)",
+          "oklch(26.4% 0.0156 269.8)",
+          "oklch(37.9% 0.0249 269.8)",
+          "oklch(49.3% 0.0312 269.8)",
+          "oklch(60.7% 0.0312 269.8)",
+          "oklch(72.1% 0.0265 269.8)",
+          "oklch(83.6% 0.0171 269.8)",
+          "oklch(95.0% 0.0056 269.8)"
+        ]
+      },
+      "stage": {
+        "role": "neutral",
+        "displayName": "Assembly grey",
+        "tonalRamp": [
+          "oklch(15.0% 0.0016 255.5)",
+          "oklch(26.4% 0.0031 255.5)",
+          "oklch(37.9% 0.0050 255.5)",
+          "oklch(49.3% 0.0063 255.5)",
+          "oklch(60.7% 0.0063 255.5)",
+          "oklch(72.1% 0.0053 255.5)",
+          "oklch(83.6% 0.0035 255.5)",
+          "oklch(95.0% 0.0011 255.5)"
+        ]
+      },
+      "selection-fill": {
+        "role": "primary",
+        "displayName": "Selected-part wash",
+        "tonalRamp": [
+          "oklch(15.0% 0.0059 272.8)",
+          "oklch(26.4% 0.0117 272.8)",
+          "oklch(37.9% 0.0188 272.8)",
+          "oklch(49.3% 0.0235 272.8)",
+          "oklch(60.7% 0.0235 272.8)",
+          "oklch(72.1% 0.0200 272.8)",
+          "oklch(83.6% 0.0129 272.8)",
+          "oklch(95.0% 0.0042 272.8)"
+        ]
+      },
+      "selection-text": {
+        "role": "primary",
+        "displayName": "Selected-part text",
+        "tonalRamp": [
+          "oklch(15.0% 0.0474 265.8)",
+          "oklch(26.4% 0.0949 265.8)",
+          "oklch(37.9% 0.1518 265.8)",
+          "oklch(49.3% 0.1898 265.8)",
+          "oklch(60.7% 0.1898 265.8)",
+          "oklch(72.1% 0.1613 265.8)",
+          "oklch(83.6% 0.1044 265.8)",
+          "oklch(95.0% 0.0342 265.8)"
+        ]
+      },
+      "selection-border": {
+        "role": "primary",
+        "displayName": "Selected-part border",
+        "tonalRamp": [
+          "oklch(15.0% 0.0199 271.3)",
+          "oklch(26.4% 0.0398 271.3)",
+          "oklch(37.9% 0.0636 271.3)",
+          "oklch(49.3% 0.0795 271.3)",
+          "oklch(60.7% 0.0795 271.3)",
+          "oklch(72.1% 0.0676 271.3)",
+          "oklch(83.6% 0.0437 271.3)",
+          "oklch(95.0% 0.0143 271.3)"
+        ]
+      },
+      "status-good": {
+        "role": "secondary",
+        "displayName": "Status green",
+        "tonalRamp": [
+          "oklch(15.0% 0.0193 161.6)",
+          "oklch(26.4% 0.0385 161.6)",
+          "oklch(37.9% 0.0617 161.6)",
+          "oklch(49.3% 0.0771 161.6)",
+          "oklch(60.7% 0.0771 161.6)",
+          "oklch(72.1% 0.0655 161.6)",
+          "oklch(83.6% 0.0424 161.6)",
+          "oklch(95.0% 0.0139 161.6)"
+        ]
+      },
+      "status-bad": {
+        "role": "secondary",
+        "displayName": "Status red",
+        "tonalRamp": [
+          "oklch(15.0% 0.0341 28.6)",
+          "oklch(26.4% 0.0681 28.6)",
+          "oklch(37.9% 0.1090 28.6)",
+          "oklch(49.3% 0.1362 28.6)",
+          "oklch(60.7% 0.1362 28.6)",
+          "oklch(72.1% 0.1158 28.6)",
+          "oklch(83.6% 0.0749 28.6)",
+          "oklch(95.0% 0.0245 28.6)"
+        ]
+      },
+      "status-unknown": {
+        "role": "secondary",
+        "displayName": "Status amber",
+        "tonalRamp": [
+          "oklch(15.0% 0.0235 62.0)",
+          "oklch(26.4% 0.0470 62.0)",
+          "oklch(37.9% 0.0752 62.0)",
+          "oklch(49.3% 0.0940 62.0)",
+          "oklch(60.7% 0.0940 62.0)",
+          "oklch(72.1% 0.0799 62.0)",
+          "oklch(83.6% 0.0517 62.0)",
+          "oklch(95.0% 0.0169 62.0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Static ReSource fallback; the animated identity has its own reference-width scale."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Prepared assembly title."
+      },
+      "page-heading": {
+        "displayName": "Page Heading",
+        "purpose": "Retained workflow page headings."
+      },
+      "intake-heading": {
+        "displayName": "Intake Heading",
+        "purpose": "Source intake heading."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "General section headings."
+      },
+      "subheading": {
+        "displayName": "Subheading",
+        "purpose": "Panel headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Ordinary working copy."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Supporting source details."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Compact badges."
+      }
+    },
+    "shadows": [
+      {
+        "name": "engine-mesh-pin",
+        "value": "0 3px 9px #233d2830",
+        "purpose": "Retained engine pin only; legacy tint, not a v2 panel rule."
+      },
+      {
+        "name": "evidence-drawer",
+        "value": "-8px 0 35px #1430201a",
+        "purpose": "Retained evidence overlay; legacy tint, not ordinary card elevation."
+      },
+      {
+        "name": "engine-mobile-inspector",
+        "value": "0 -12px 45px #132c2820",
+        "purpose": "Retained mobile engine sheet only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "background 160ms ease, color 160ms ease",
+        "purpose": "Shared button hover transition."
+      },
+      {
+        "name": "assembly-scroll",
+        "value": "linear; reversible Anime.js onScroll sync",
+        "purpose": "Scroll progress controls prepared separation, with visible direct alternatives."
+      },
+      {
+        "name": "assembly-damping",
+        "value": "THREE.MathUtils.damp(current, target, 10, min(delta, 0.1))",
+        "purpose": "Prepared mesh interpolation only; reduced motion sets the target directly."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Static wordmark, direct assembly controls, no extended track, and near-instant CSS transitions."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-workflow",
+        "value": "480px"
+      },
+      {
+        "name": "entry-stack",
+        "value": "600px"
+      },
+      {
+        "name": "assembly-stack",
+        "value": "700px"
+      },
+      {
+        "name": "comparison-scroll-hint",
+        "value": "760px"
+      },
+      {
+        "name": "workflow-stack",
+        "value": "800px"
+      },
+      {
+        "name": "entry-compact",
+        "value": "900px"
+      },
+      {
+        "name": "assembly-sidebar-compact",
+        "value": "1050px"
+      },
+      {
+        "name": "workflow-compact",
+        "value": "1100px"
+      },
+      {
+        "name": "entry-wide",
+        "value": "1600px"
+      },
+      {
+        "name": "engine-wide",
+        "value": "1700px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Shared action variant with a visible keyboard focus state.",
+      "html": "<button class=\"ds-primary\">Upload blueprint</button>",
+      "css": ".ds-primary {font-family: \"Geist Variable\", sans-serif; font-size: 14px; font-weight: 500; min-height: 42px; border: 0; border-radius: var(--radius-control, 4px); padding: 10px 16px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; cursor: pointer; transition: background .16s, color .16s; background: var(--brand, #2251ef); color: var(--paper, #fff);} .ds-primary:hover:not(:disabled) {background: #173bc0;} .ds-primary:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;} .ds-primary:disabled {opacity: .5; cursor: not-allowed;}"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Shared action variant with a visible keyboard focus state.",
+      "html": "<button class=\"ds-secondary\">Open working engine demo</button>",
+      "css": ".ds-secondary {font-family: \"Geist Variable\", sans-serif; font-size: 14px; font-weight: 500; min-height: 42px; border: 0; border-radius: var(--radius-control, 4px); padding: 10px 16px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; cursor: pointer; transition: background .16s, color .16s; background: var(--soft, #e8edf8); color: var(--brand, #2251ef);} .ds-secondary:hover:not(:disabled) {background: #dce4fa;} .ds-secondary:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;} .ds-secondary:disabled {opacity: .5; cursor: not-allowed;}"
+    },
+    {
+      "name": "Text button",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Shared action variant with a visible keyboard focus state.",
+      "html": "<button class=\"ds-text\">Clear selection</button>",
+      "css": ".ds-text {font-family: \"Geist Variable\", sans-serif; font-size: 14px; font-weight: 500; min-height: 42px; border: 0; border-radius: var(--radius-control, 4px); padding: 10px 16px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; cursor: pointer; transition: background .16s, color .16s; background: transparent; color: var(--brand, #2251ef);} .ds-text:hover:not(:disabled) {background: var(--soft, #e8edf8);} .ds-text:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;} .ds-text:disabled {opacity: .5; cursor: not-allowed;}"
+    },
+    {
+      "name": "Icon button",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Shared icon-only control; label the action for assistive technology.",
+      "html": "<button class=\"ds-icon\" aria-label=\"Close evidence\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"m18 6-12 12M6 6l12 12\"/></svg></button>",
+      "css": ".ds-icon {font-family: \"Geist Variable\", sans-serif; font-size: 14px; font-weight: 500; min-height: 42px; border: 0; border-radius: var(--radius-control, 4px); padding: 10px 16px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; cursor: pointer; transition: background .16s, color .16s; min-width: 42px; padding: 10px; color: var(--brand, #2251ef); background: transparent;} .ds-icon:hover {background: var(--soft, #e8edf8);} .ds-icon:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;} .ds-icon:disabled {opacity: .5; cursor: not-allowed;}"
+    },
+    {
+      "name": "Select field",
+      "kind": "input",
+      "refersTo": "select-field",
+      "description": "Retained workflow select with the v2 shared separator and focus color.",
+      "html": "<label class=\"ds-field\">Component<select class=\"ds-select\"><option>Selected component</option><option>Another component</option></select></label>",
+      "css": ".ds-field {font-family: \"Geist Variable\", sans-serif; font-size: 12px; display: grid; gap: 8px; color: var(--ink, #17191d);} .ds-select {font: inherit; color: var(--ink, #17191d); background: var(--paper, #fff); border: 1px solid var(--border, #d6dbe4); border-radius: 7px; padding: 9px 32px 9px 12px; max-width: 100%;} .ds-select:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;}"
+    },
+    {
+      "name": "Global navigation",
+      "kind": "nav",
+      "refersTo": "global-navigation",
+      "description": "Cool-paper navigation with a cobalt active underline.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Workspace\"><button class=\"ds-nav-item ds-active\" aria-current=\"page\">Product</button><button class=\"ds-nav-item\">Sources</button></nav>",
+      "css": ".ds-nav {display: flex; gap: 28px; height: 72px; background: var(--surface, #f2f3f5); border-bottom: 1px solid var(--border, #d6dbe4);} .ds-nav-item {position: relative; font: 13px \"Geist Variable\", sans-serif; padding: 0 1px; border: 0; color: var(--muted, #5d6470); background: none; cursor: pointer;} .ds-nav-item.ds-active {color: var(--ink, #17191d);} .ds-nav-item.ds-active:after {content: \"\"; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--brand, #2251ef);} .ds-nav-item:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;}"
+    },
+    {
+      "name": "Provenance badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Compact written provenance; a badge is not a selected part.",
+      "html": "<span class=\"ds-badge\">Prepared model</span>",
+      "css": ".ds-badge {display: inline-flex; width: max-content; max-width: 100%; border-radius: 5px; background: var(--soft, #e8edf8); color: var(--brand, #2251ef); padding: 4px 8px; font: 500 11px/1.3 \"Geist Variable\", sans-serif;}"
+    },
+    {
+      "name": "Draft panel",
+      "kind": "card",
+      "refersTo": "draft-panel",
+      "description": "Flat retained document container with v2 corners and native disclosure.",
+      "html": "<details class=\"ds-draft\" open><summary>Document draft</summary><p>Review the source-backed fields before approval.</p></details>",
+      "css": ".ds-draft {background: var(--paper, #fff); color: var(--ink, #17191d); border-radius: 4px; padding: 24px; font: 14px/1.55 \"Geist Variable\", sans-serif;} .ds-draft summary {display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 550; cursor: pointer;} .ds-draft summary:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;} .ds-draft p {margin: 10px 0 0; max-width: 75ch;}"
+    },
+    {
+      "name": "Selected part row",
+      "kind": "custom",
+      "refersTo": "part-selector-selected",
+      "description": "A checked, pressed-state selection independent of the 3D renderer.",
+      "html": "<button class=\"ds-part\" aria-pressed=\"true\"><span class=\"ds-check\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"m20 6-11 11-5-5\"/></svg></span>Front wheels</button>",
+      "css": ".ds-part {display: flex; align-items: center; gap: 12px; text-align: left; width: 100%; min-height: 40px; padding: 10px 9px; border: 1px solid transparent; border-radius: 4px; color: var(--ink, #17191d); background: transparent; font: 13px \"Geist Variable\", sans-serif; cursor: pointer;} .ds-part:hover {background: var(--surface, #f2f3f5);} .ds-part[aria-pressed=\"true\"] {background: #e9eeff; color: #2144ba; border-color: #b7c8ff;} .ds-check {display: grid; place-items: center; width: 15px; height: 15px; border: 1px solid #adb6c7; border-radius: 2px;} .ds-part[aria-pressed=\"true\"] .ds-check {background: var(--brand, #2251ef); border-color: var(--brand, #2251ef); color: white;} .ds-part:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;}"
+    },
+    {
+      "name": "Selection chip",
+      "kind": "chip",
+      "refersTo": "selection-chip",
+      "description": "Removable selected part with a visible close icon and explicit action label.",
+      "html": "<button class=\"ds-selection-chip\" aria-label=\"Remove front wheels\">Front wheels<svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"m18 6-12 12M6 6l12 12\"/></svg></button>",
+      "css": ".ds-selection-chip {display: inline-flex; align-items: center; gap: 6px; font: 11px \"Geist Variable\", sans-serif; padding: 6px 8px; border: 0; background: var(--soft, #e8edf8); color: var(--brand, #2251ef); border-radius: 3px; cursor: pointer;} .ds-selection-chip:focus-visible {outline: 2px solid var(--brand, #2251ef); outline-offset: 4px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "From Solid to Source",
+    "overview": "ReSource uses charcoal lettering, cool near-white work surfaces, electric cobalt actions and selection, and fine dotted geometry. The supplied wordmark establishes the signature: solid Geist lettering resolves into a dotted outline around the pointer, with a restrained vector rig. The working interface carries that precision through thin dividers, compact controls, and prepared physical geometry.\n\nThe assembly has depth; the surrounding interface stays flat and legible. Selection is explicit in the model, the part list, and removable chips. Source requirements and unavailable actions remain written beside the relevant controls. The v2 entry and prepared toy-car selection are implemented; the engine demo retains the working intake, evidence, and sourcing flows. The dotted globe and parallel-research frame remain a Figma concept, not a delivered component.",
+    "keyCharacteristics": [
+      "Charcoal and cool paper with cobalt reserved for actions, focus, and selection.",
+      "Solid-to-dotted ReSource lettering and precise variable Geist typography.",
+      "Prepared geometry paired with a persistent, keyboard-operable part list.",
+      "Reversible separation with direct controls, reduced motion, and explicit source states."
+    ],
+    "rules": [
+      {
+        "name": "The Explicit State Rule",
+        "body": "Pair color with a written state, checked selection, or status icon; cobalt selection never means that a requirement is verified.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Use Geist for headings, prose, controls, and aligned working data. Keep the wordmark’s coordinate readouts local to its vector treatment.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Work Surface Rule",
+        "body": "Use tone, whitespace, and fine borders for ordinary panels; keep physical lighting and contact shadows within the assembly scene.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use cobalt for interactive selection and visible focus while keeping source status written in text.",
+      "Do retain the source-required dimensions and material labels beside prepared geometry.",
+      "Do keep the model, pressed-state part list, selection count, and removable chips synchronized.",
+      "Do provide Assemble, Explode, and the separation slider alongside reversible scroll motion.",
+      "Do preserve the engine workflow’s evidence links, provenance labels, status icons, and SIMULATED receipts.",
+      "Do use the supplied wordmark as the identity reference and provide its static reduced-motion fallback."
+    ],
+    "donts": [
+      "Don’t treat curated geometry or a visual group as proof of an engineering requirement.",
+      "Don’t present the globe/research concept, toy-car source review, or toy-car supplier research as implemented.",
+      "Don’t use cobalt alone to convey selection, compatibility, or approval.",
+      "Don’t add decorative card shadows to the flat product workspace.",
+      "Don’t turn residual forest-tinted engine styles or 8–10px metadata into v2 defaults."
+    ]
+  }
+}

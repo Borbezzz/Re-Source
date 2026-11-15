@@ -1,0 +1,19 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "acknowledge_unverified": {
+      "default": false,
+      "title": "Acknowledge Unverified",
+      "type": "boolean"
+    },
+    "expected_package_id": {
+      "title": "Expected Package Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "expected_package_id"
+  ],
+  "title": "ProductApprovalRequest",
+  "type": "object"
+}

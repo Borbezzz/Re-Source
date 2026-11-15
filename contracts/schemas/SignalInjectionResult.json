@@ -1,0 +1,181 @@
+{
+  "$defs": {
+    "ChangeEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_state": {
+          "enum": [
+            "registered",
+            "staged",
+            "active",
+            "superseded",
+            "scheduled"
+          ],
+          "title": "Activation State",
+          "type": "string"
+        },
+        "affected_case_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Case Ids",
+          "type": "array"
+        },
+        "affected_entity_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Entity Ids",
+          "type": "array"
+        },
+        "change_id": {
+          "title": "Change Id",
+          "type": "string"
+        },
+        "dedup_key": {
+          "title": "Dedup Key",
+          "type": "string"
+        },
+        "effective_at": {
+          "format": "date-time",
+          "title": "Effective At",
+          "type": "string"
+        },
+        "fanout_done": {
+          "default": [],
+          "description": "Idempotent per-case fan-out keys already applied",
+          "items": {
+            "type": "string"
+          },
+          "title": "Fanout Done",
+          "type": "array"
+        },
+        "fanout_state": {
+          "enum": [
+            "pending",
+            "partial",
+            "complete",
+            "not_required"
+          ],
+          "title": "Fanout State",
+          "type": "string"
+        },
+        "impact_paths": {
+          "default": [],
+          "items": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "title": "Impact Paths",
+          "type": "array"
+        },
+        "queued_case_ids": {
+          "default": [],
+          "description": "Cases whose monitoring was paused; reconciled on resume",
+          "items": {
+            "type": "string"
+          },
+          "title": "Queued Case Ids",
+          "type": "array"
+        },
+        "received_at": {
+          "format": "date-time",
+          "title": "Received At",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        },
+        "scenario_run_id": {
+          "title": "Scenario Run Id",
+          "type": "string"
+        },
+        "scope": {
+          "additionalProperties": true,
+          "title": "Scope",
+          "type": "object"
+        },
+        "source_version": {
+          "title": "Source Version",
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
+        },
+        "trigger_id": {
+          "title": "Trigger Id",
+          "type": "string"
+        },
+        "trigger_type": {
+          "enum": [
+            "signal",
+            "evidence",
+            "requirement",
+            "template",
+            "relationship",
+            "clock"
+          ],
+          "title": "Trigger Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "change_id",
+        "scenario_run_id",
+        "trigger_type",
+        "trigger_id",
+        "source_version",
+        "affected_entity_ids",
+        "scope",
+        "effective_at",
+        "received_at",
+        "revision",
+        "dedup_key",
+        "activation_state",
+        "fanout_state"
+      ],
+      "title": "ChangeEvent",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "affected_case_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Affected Case Ids",
+      "type": "array"
+    },
+    "change": {
+      "$ref": "#/$defs/ChangeEvent"
+    },
+    "duplicate": {
+      "title": "Duplicate",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "change",
+    "duplicate",
+    "affected_case_ids"
+  ],
+  "title": "SignalInjectionResult",
+  "type": "object"
+}

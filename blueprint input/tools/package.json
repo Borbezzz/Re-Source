@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "export": "node export-package.ts"
+  }
+}

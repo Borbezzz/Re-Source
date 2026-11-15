@@ -1,0 +1,39 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "after": {
+      "title": "After"
+    },
+    "before": {
+      "title": "Before"
+    },
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "field": {
+      "title": "Field",
+      "type": "string"
+    },
+    "unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unit"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "field",
+    "before",
+    "after"
+  ],
+  "title": "FieldChange",
+  "type": "object"
+}

@@ -1,0 +1,83 @@
+{
+  "baseline": "7ea27db",
+  "errors": [],
+  "phases": {
+    "upload": {
+      "sampleMs": 3688.4,
+      "frameCount": 217,
+      "p95FrameMs": 16.8,
+      "maxFrameMs": 33.4,
+      "longTaskDurationsMs": [],
+      "drawingBufferChanges": [
+        {
+          "start": 2073.4000000953674,
+          "duration": 0.9000000953674316,
+          "key": "width",
+          "old": 300,
+          "value": 1440,
+          "thumb": false,
+          "hidden": "false"
+        },
+        {
+          "start": 2074.300000190735,
+          "duration": 1.6999998092651367,
+          "key": "height",
+          "old": 150,
+          "value": 836,
+          "thumb": false,
+          "hidden": "false"
+        }
+      ]
+    },
+    "select": {
+      "sampleMs": 2233.6,
+      "frameCount": 130,
+      "p95FrameMs": 16.8,
+      "maxFrameMs": 83.3,
+      "longTaskDurationsMs": [],
+      "drawingBufferChanges": [
+        {
+          "start": 7597.800000190735,
+          "duration": 1.299999713897705,
+          "key": "width",
+          "old": 300,
+          "value": 74,
+          "thumb": true
+        },
+        {
+          "start": 7599.099999904633,
+          "duration": 0.7000002861022949,
+          "key": "height",
+          "old": 150,
+          "value": 56,
+          "thumb": true
+        }
+      ]
+    },
+    "sourcing": {
+      "sampleMs": 5000.0,
+      "frameCount": 270,
+      "p95FrameMs": 33.3,
+      "maxFrameMs": 50,
+      "longTaskDurationsMs": [],
+      "drawingBufferChanges": [
+        {
+          "start": 10663.599999904633,
+          "duration": 0.6000003814697266,
+          "key": "width",
+          "old": 300,
+          "value": 74,
+          "thumb": true
+        },
+        {
+          "start": 10664.400000095367,
+          "duration": 0.6999998092651367,
+          "key": "height",
+          "old": 150,
+          "value": 56,
+          "thumb": true
+        }
+      ]
+    }
+  }
+}

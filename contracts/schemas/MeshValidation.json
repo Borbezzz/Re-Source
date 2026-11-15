@@ -1,0 +1,283 @@
+{
+  "$defs": {
+    "MeshNodeCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "bbox_max": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bbox Max"
+        },
+        "bbox_min": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bbox Min"
+        },
+        "centre": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Centre"
+        },
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "has_source_ref": {
+          "default": false,
+          "title": "Has Source Ref",
+          "type": "boolean"
+        },
+        "inside_bounds": {
+          "default": false,
+          "title": "Inside Bounds",
+          "type": "boolean"
+        },
+        "is_mesh": {
+          "title": "Is Mesh",
+          "type": "boolean"
+        },
+        "node_name": {
+          "title": "Node Name",
+          "type": "string"
+        },
+        "non_degenerate_axes": {
+          "default": 0,
+          "title": "Non Degenerate Axes",
+          "type": "integer"
+        },
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "present": {
+          "title": "Present",
+          "type": "boolean"
+        },
+        "problems": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Problems",
+          "type": "array"
+        },
+        "source_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SourceRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unique": {
+          "title": "Unique",
+          "type": "boolean"
+        },
+        "vertex_count": {
+          "default": 0,
+          "title": "Vertex Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "component_id",
+        "node_name",
+        "present",
+        "unique",
+        "is_mesh",
+        "ok"
+      ],
+      "title": "MeshNodeCheck",
+      "type": "object"
+    },
+    "SourceRef": {
+      "additionalProperties": false,
+      "description": "Where a value came from inside an uploaded document or blueprint.",
+      "properties": {
+        "bbox": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "[x0, y0, x1, y1] in the source page's coordinate space",
+          "title": "Bbox"
+        },
+        "element_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Element Id"
+        },
+        "excerpt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Excerpt"
+        },
+        "line": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "upload_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upload Id"
+        }
+      },
+      "title": "SourceRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/MeshNodeCheck"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "engine_bounds": {
+      "additionalProperties": {
+        "items": {
+          "type": "number"
+        },
+        "type": "array"
+      },
+      "title": "Engine Bounds",
+      "type": "object"
+    },
+    "mesh_count": {
+      "title": "Mesh Count",
+      "type": "integer"
+    },
+    "node_count": {
+      "title": "Node Count",
+      "type": "integer"
+    },
+    "note": {
+      "default": "Bounding boxes use node translation/scale; rotations are not applied (approximate world bounds).",
+      "title": "Note",
+      "type": "string"
+    },
+    "ok": {
+      "title": "Ok",
+      "type": "boolean"
+    },
+    "problems": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Problems",
+      "type": "array"
+    },
+    "validated_at": {
+      "format": "date-time",
+      "title": "Validated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "ok",
+    "checks",
+    "engine_bounds",
+    "node_count",
+    "mesh_count",
+    "validated_at"
+  ],
+  "title": "MeshValidation",
+  "type": "object"
+}

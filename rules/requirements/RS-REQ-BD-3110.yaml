@@ -1,0 +1,21 @@
+requirement_set_id: RS-REQ-BD-3110
+version: "v1"
+component_id: component-secondary-b
+engine_configuration: RS-TF2-CFG-A
+part_identity: {part_number: RS-BD-3110, revision: "A", family: bleed_air_duct}
+data_origin: synthetic_demo
+note: Requirement parameters are a scenario design pending DISC-02 authoritative technical sources.
+requirements:
+  - {id: REQ-BD-ID-01, template: ID}
+  - {id: REQ-BD-IC-01, template: IC}
+  - {id: REQ-BD-REL-01, template: REL}
+  - {id: REQ-BD-TRC-01, template: TRC}
+  - {id: REQ-BD-QMS-01, template: QMS}
+  - {id: REQ-BD-LEG-01, template: LEG}
+  - {id: REQ-BD-QTE-01, template: QTE}
+  - {id: REQ-BD-POA-01, template: POA, params: {family: bleed_air_duct}}
+  - {id: REQ-BD-DD-01, template: DD}
+  - {id: REQ-BD-SPC-01, template: SPC}
+  - {id: REQ-BD-FAI-01, template: FAI}
+  - {id: REQ-BD-LOG-01, template: LOG}
+  - {id: REQ-BD-REG-01, template: REG}

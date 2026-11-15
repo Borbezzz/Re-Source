@@ -1,0 +1,83 @@
+{
+  "$defs": {
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "address": {
+      "title": "Address",
+      "type": "string"
+    },
+    "capabilities": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin",
+      "default": "synthetic_demo"
+    },
+    "geography": {
+      "additionalProperties": true,
+      "title": "Geography",
+      "type": "object"
+    },
+    "metric_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Metric Refs",
+      "type": "array"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "qualified_scope_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Qualified Scope Refs",
+      "type": "array"
+    },
+    "roles": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Roles",
+      "type": "array"
+    },
+    "site_id": {
+      "title": "Site Id",
+      "type": "string"
+    },
+    "supplier_id": {
+      "title": "Supplier Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "site_id",
+    "supplier_id",
+    "name",
+    "address",
+    "geography",
+    "roles"
+  ],
+  "title": "Site",
+  "type": "object"
+}

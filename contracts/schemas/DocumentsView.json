@@ -1,0 +1,664 @@
+{
+  "$defs": {
+    "DocumentDraft": {
+      "additionalProperties": false,
+      "properties": {
+        "applicability": {
+          "additionalProperties": true,
+          "title": "Applicability",
+          "type": "object"
+        },
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "draft_id": {
+          "title": "Draft Id",
+          "type": "string"
+        },
+        "fields": {
+          "items": {
+            "$ref": "#/$defs/DraftField"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "generation_id": {
+          "title": "Generation Id",
+          "type": "string"
+        },
+        "review_state": {
+          "default": "draft",
+          "enum": [
+            "draft",
+            "in_review",
+            "approved",
+            "changes_requested"
+          ],
+          "title": "Review State",
+          "type": "string"
+        },
+        "scenario_run_id": {
+          "title": "Scenario Run Id",
+          "type": "string"
+        },
+        "selection_id": {
+          "title": "Selection Id",
+          "type": "string"
+        },
+        "status": {
+          "default": "current",
+          "enum": [
+            "current",
+            "superseded",
+            "stale"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "template_id": {
+          "title": "Template Id",
+          "type": "string"
+        },
+        "template_title": {
+          "title": "Template Title",
+          "type": "string"
+        },
+        "template_version": {
+          "title": "Template Version",
+          "type": "string"
+        },
+        "validation": {
+          "additionalProperties": true,
+          "title": "Validation",
+          "type": "object"
+        },
+        "version": {
+          "title": "Version",
+          "type": "integer"
+        },
+        "why_included": {
+          "title": "Why Included",
+          "type": "string"
+        }
+      },
+      "required": [
+        "draft_id",
+        "case_id",
+        "scenario_run_id",
+        "template_id",
+        "template_version",
+        "template_title",
+        "version",
+        "selection_id",
+        "generation_id",
+        "fields",
+        "validation",
+        "why_included",
+        "applicability",
+        "created_at"
+      ],
+      "title": "DocumentDraft",
+      "type": "object"
+    },
+    "DocumentPackage": {
+      "additionalProperties": false,
+      "properties": {
+        "approved_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approved Hash"
+        },
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "decision_id": {
+          "title": "Decision Id",
+          "type": "string"
+        },
+        "destination_type": {
+          "title": "Destination Type",
+          "type": "string"
+        },
+        "draft_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Draft Ids",
+          "type": "array"
+        },
+        "evidence_set_id": {
+          "title": "Evidence Set Id",
+          "type": "string"
+        },
+        "generation_id": {
+          "title": "Generation Id",
+          "type": "string"
+        },
+        "package_hash": {
+          "title": "Package Hash",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "readiness": {
+          "additionalProperties": true,
+          "title": "Readiness",
+          "type": "object"
+        },
+        "review_state": {
+          "default": "draft",
+          "enum": [
+            "draft",
+            "approved"
+          ],
+          "title": "Review State",
+          "type": "string"
+        },
+        "route_explanation": {
+          "title": "Route Explanation",
+          "type": "string"
+        },
+        "scenario_run_id": {
+          "title": "Scenario Run Id",
+          "type": "string"
+        },
+        "selection_id": {
+          "title": "Selection Id",
+          "type": "string"
+        },
+        "status": {
+          "default": "current",
+          "enum": [
+            "current",
+            "superseded",
+            "stale"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "package_id",
+        "case_id",
+        "scenario_run_id",
+        "version",
+        "selection_id",
+        "decision_id",
+        "generation_id",
+        "evidence_set_id",
+        "draft_ids",
+        "package_hash",
+        "readiness",
+        "destination_type",
+        "route_explanation",
+        "created_at"
+      ],
+      "title": "DocumentPackage",
+      "type": "object"
+    },
+    "DraftField": {
+      "additionalProperties": false,
+      "properties": {
+        "block": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Block"
+        },
+        "editable": {
+          "default": true,
+          "title": "Editable",
+          "type": "boolean"
+        },
+        "field_id": {
+          "title": "Field Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        },
+        "provenance": {
+          "$ref": "#/$defs/FieldProvenance",
+          "default": {
+            "check_refs": [],
+            "edited_at": null,
+            "edited_by": null,
+            "evidence_refs": [],
+            "origin": "evidence",
+            "source_fact_ids": [],
+            "transform": "copy"
+          }
+        },
+        "required": {
+          "default": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "responsible": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Responsible"
+        },
+        "status": {
+          "default": "filled",
+          "enum": [
+            "filled",
+            "missing",
+            "completion_task",
+            "invalid"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "field_id",
+        "label"
+      ],
+      "title": "DraftField",
+      "type": "object"
+    },
+    "FieldProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "check_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Check Refs",
+          "type": "array"
+        },
+        "edited_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edited At"
+        },
+        "edited_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edited By"
+        },
+        "evidence_refs": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "origin": {
+          "default": "evidence",
+          "enum": [
+            "evidence",
+            "selection",
+            "decision",
+            "case",
+            "computed",
+            "user_edit",
+            "completion_task"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "source_fact_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Fact Ids",
+          "type": "array"
+        },
+        "transform": {
+          "default": "copy",
+          "title": "Transform",
+          "type": "string"
+        }
+      },
+      "title": "FieldProvenance",
+      "type": "object"
+    },
+    "FormTemplate": {
+      "additionalProperties": false,
+      "properties": {
+        "applicability_rule_id": {
+          "title": "Applicability Rule Id",
+          "type": "string"
+        },
+        "authority": {
+          "title": "Authority",
+          "type": "string"
+        },
+        "completion_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Completion Rules",
+          "type": "array"
+        },
+        "destination_type": {
+          "title": "Destination Type",
+          "type": "string"
+        },
+        "fields": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "release_certificate",
+            "internal_quality_record",
+            "authority_application"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "owner": {
+          "title": "Owner",
+          "type": "string"
+        },
+        "responsible_applicant": {
+          "title": "Responsible Applicant",
+          "type": "string"
+        },
+        "signatory": {
+          "title": "Signatory",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "supporting_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Supporting Evidence",
+          "type": "array"
+        },
+        "template_id": {
+          "title": "Template Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        },
+        "why_included": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Why Included"
+        }
+      },
+      "required": [
+        "template_id",
+        "title",
+        "owner",
+        "authority",
+        "version",
+        "source_url",
+        "kind",
+        "applicability_rule_id",
+        "responsible_applicant",
+        "signatory",
+        "supporting_evidence",
+        "completion_rules",
+        "destination_type",
+        "fields"
+      ],
+      "title": "FormTemplate",
+      "type": "object"
+    },
+    "SimulatedReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "title": "Case Id",
+          "type": "string"
+        },
+        "destination_label": {
+          "title": "Destination Label",
+          "type": "string"
+        },
+        "destination_type": {
+          "title": "Destination Type",
+          "type": "string"
+        },
+        "idempotency_key": {
+          "title": "Idempotency Key",
+          "type": "string"
+        },
+        "label": {
+          "default": "SIMULATED \u2014 no real submission was made",
+          "title": "Label",
+          "type": "string"
+        },
+        "package_hash": {
+          "title": "Package Hash",
+          "type": "string"
+        },
+        "package_id": {
+          "title": "Package Id",
+          "type": "string"
+        },
+        "package_version": {
+          "title": "Package Version",
+          "type": "integer"
+        },
+        "payload_hash": {
+          "title": "Payload Hash",
+          "type": "string"
+        },
+        "receipt_id": {
+          "title": "Receipt Id",
+          "type": "string"
+        },
+        "scenario_run_id": {
+          "title": "Scenario Run Id",
+          "type": "string"
+        },
+        "selection_id": {
+          "title": "Selection Id",
+          "type": "string"
+        },
+        "simulated_at": {
+          "format": "date-time",
+          "title": "Simulated At",
+          "type": "string"
+        },
+        "status": {
+          "default": "accepted_simulated",
+          "enum": [
+            "accepted_simulated",
+            "historical"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "submitted_documents": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Submitted Documents",
+          "type": "array"
+        }
+      },
+      "required": [
+        "receipt_id",
+        "case_id",
+        "scenario_run_id",
+        "selection_id",
+        "package_id",
+        "package_version",
+        "package_hash",
+        "destination_type",
+        "destination_label",
+        "submitted_documents",
+        "payload_hash",
+        "idempotency_key",
+        "simulated_at"
+      ],
+      "title": "SimulatedReceipt",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "current_drafts": {
+      "items": {
+        "$ref": "#/$defs/DocumentDraft"
+      },
+      "title": "Current Drafts",
+      "type": "array"
+    },
+    "current_package": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DocumentPackage"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "generation_status": {
+      "enum": [
+        "none",
+        "preparing",
+        "ready",
+        "stale",
+        "failed"
+      ],
+      "title": "Generation Status",
+      "type": "string"
+    },
+    "history": {
+      "items": {
+        "$ref": "#/$defs/DocumentPackage"
+      },
+      "title": "History",
+      "type": "array"
+    },
+    "readiness": {
+      "additionalProperties": true,
+      "title": "Readiness",
+      "type": "object"
+    },
+    "receipts": {
+      "items": {
+        "$ref": "#/$defs/SimulatedReceipt"
+      },
+      "title": "Receipts",
+      "type": "array"
+    },
+    "templates": {
+      "items": {
+        "$ref": "#/$defs/FormTemplate"
+      },
+      "title": "Templates",
+      "type": "array"
+    }
+  },
+  "required": [
+    "case_id",
+    "current_package",
+    "current_drafts",
+    "history",
+    "receipts",
+    "generation_status",
+    "readiness",
+    "templates"
+  ],
+  "title": "DocumentsView",
+  "type": "object"
+}

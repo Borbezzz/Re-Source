@@ -1,0 +1,115 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "approved_hash": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved Hash"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "destination_type": {
+      "title": "Destination Type",
+      "type": "string"
+    },
+    "draft_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Draft Ids",
+      "type": "array"
+    },
+    "evidence_set_id": {
+      "title": "Evidence Set Id",
+      "type": "string"
+    },
+    "generation_id": {
+      "title": "Generation Id",
+      "type": "string"
+    },
+    "package_hash": {
+      "title": "Package Hash",
+      "type": "string"
+    },
+    "package_id": {
+      "title": "Package Id",
+      "type": "string"
+    },
+    "readiness": {
+      "additionalProperties": true,
+      "title": "Readiness",
+      "type": "object"
+    },
+    "review_state": {
+      "default": "draft",
+      "enum": [
+        "draft",
+        "approved"
+      ],
+      "title": "Review State",
+      "type": "string"
+    },
+    "route_explanation": {
+      "title": "Route Explanation",
+      "type": "string"
+    },
+    "scenario_run_id": {
+      "title": "Scenario Run Id",
+      "type": "string"
+    },
+    "selection_id": {
+      "title": "Selection Id",
+      "type": "string"
+    },
+    "status": {
+      "default": "current",
+      "enum": [
+        "current",
+        "superseded",
+        "stale"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "package_id",
+    "case_id",
+    "scenario_run_id",
+    "version",
+    "selection_id",
+    "decision_id",
+    "generation_id",
+    "evidence_set_id",
+    "draft_ids",
+    "package_hash",
+    "readiness",
+    "destination_type",
+    "route_explanation",
+    "created_at"
+  ],
+  "title": "DocumentPackage",
+  "type": "object"
+}

@@ -1,0 +1,20 @@
+ReSource prepared engine cutaway
+
+Base: Turbofan quarter cutaway by Innerscene Corp. CC0 1.0 Universal.
+https://www.innerscene.com/tools/library/3d-parts/turbofan-quarter-cutaway-e0184203
+https://creativecommons.org/publicdomain/zero/1.0/
+Source SHA-256: 65ce366afd7fd46f254fef43363f7d4cd39b2cc75899e59c3933fc1dcbe02f88
+
+Component-study donors: Jet Engine Lab contributors. MIT, copyright 2026.
+https://github.com/AungMyoKyaw/jet-engine-lab/tree/07dc2651814ae4736f1ee2cbfd7f12c89d3b8b85
+Full MIT notice: jet-engine-lab-MIT.txt
+Files: combustor-manifold.glb, turbine-nozzle-guide.glb, compressor-service-hardware.glb.
+
+ReSource modifications: axis and presentation scale, separate module hierarchy,
+materials, component-study extraction/placement, and Blender casing-first exploded
+animation. The three named case counterparts are illustrative mappings, not exact
+OEM geometry or evidence of numbered physical positions. Backend part numbers,
+requirements and case evidence remain synthetic demonstration data.
+
+This is a prepared educational cutaway. It is not reconstructed from an uploaded
+blueprint and is not a complete production-engine BOM or engineering approval.

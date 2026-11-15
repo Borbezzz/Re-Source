@@ -1,0 +1,200 @@
+{
+  "$defs": {
+    "ProductAgentAttention": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "part_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Part Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ProductAgentAttention",
+      "type": "object"
+    },
+    "ProductAgentMandate": {
+      "additionalProperties": false,
+      "properties": {
+        "objective": {
+          "const": "source_and_request_quotes",
+          "default": "source_and_request_quotes",
+          "title": "Objective",
+          "type": "string"
+        },
+        "outreach": {
+          "enum": [
+            "demo_mailbox",
+            "draft_only"
+          ],
+          "title": "Outreach",
+          "type": "string"
+        },
+        "purchase_authorized": {
+          "const": false,
+          "default": false,
+          "title": "Purchase Authorized",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "outreach"
+      ],
+      "title": "ProductAgentMandate",
+      "type": "object"
+    },
+    "ProductAgentTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "part_id": {
+          "title": "Part Id",
+          "type": "string"
+        },
+        "readiness": {
+          "enum": [
+            "demo_ready",
+            "contact_required"
+          ],
+          "title": "Readiness",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id",
+        "candidate_id",
+        "reason",
+        "readiness"
+      ],
+      "title": "ProductAgentTarget",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "attention": {
+      "items": {
+        "$ref": "#/$defs/ProductAgentAttention"
+      },
+      "title": "Attention",
+      "type": "array"
+    },
+    "completed_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Completed At"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "input_version": {
+      "title": "Input Version",
+      "type": "integer"
+    },
+    "mandate": {
+      "$ref": "#/$defs/ProductAgentMandate"
+    },
+    "mode": {
+      "enum": [
+        "demo",
+        "live"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "reply_count": {
+      "default": 0,
+      "title": "Reply Count",
+      "type": "integer"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "sent_count": {
+      "default": 0,
+      "title": "Sent Count",
+      "type": "integer"
+    },
+    "stage": {
+      "enum": [
+        "requirements",
+        "research",
+        "shortlist",
+        "rfq",
+        "outreach",
+        "complete"
+      ],
+      "title": "Stage",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "paused",
+        "needs_attention",
+        "recommendation_ready",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "targets": {
+      "items": {
+        "$ref": "#/$defs/ProductAgentTarget"
+      },
+      "title": "Targets",
+      "type": "array"
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "input_version",
+    "mode",
+    "status",
+    "stage",
+    "summary",
+    "mandate",
+    "created_at",
+    "updated_at"
+  ],
+  "title": "ProductAgentRun",
+  "type": "object"
+}

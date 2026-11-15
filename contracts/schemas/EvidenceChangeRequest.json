@@ -1,0 +1,26 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "fixture_evidence_change_id": {
+      "title": "Fixture Evidence Change Id",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    }
+  },
+  "required": [
+    "fixture_evidence_change_id"
+  ],
+  "title": "EvidenceChangeRequest",
+  "type": "object"
+}

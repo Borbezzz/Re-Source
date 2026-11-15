@@ -1,0 +1,203 @@
+{
+  "deployment": "https://resource-ipdtf97bt-borbez2s-projects.vercel.app",
+  "started_at": "2026-11-15T01:09:11.871178+00:00",
+  "status": "passed",
+  "requests": [
+    {
+      "action": "fresh_visitor_list",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 352
+    },
+    {
+      "action": "create_prepared_toy_car",
+      "status": 201,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 546
+    },
+    {
+      "action": "create_custom_draft",
+      "status": 201,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 507
+    },
+    {
+      "action": "newest_creation_order",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 331
+    },
+    {
+      "action": "confirm_parts",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 859
+    },
+    {
+      "action": "newest_update_order",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 329
+    },
+    {
+      "action": "start_two_demo_jobs",
+      "status": 202,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 1768
+    },
+    {
+      "action": "poll_research_summary",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 578
+    },
+    {
+      "action": "poll_research_summary",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 561
+    },
+    {
+      "action": "poll_research_summary",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 497
+    },
+    {
+      "action": "poll_research_summary",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 433
+    },
+    {
+      "action": "poll_research_summary",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 402
+    },
+    {
+      "action": "same_cookie_resume_project",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 375
+    },
+    {
+      "action": "same_cookie_resume_list",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 404
+    },
+    {
+      "action": "second_visitor_list",
+      "status": 200,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 352
+    },
+    {
+      "action": "second_visitor_project_denied",
+      "status": 404,
+      "cache_control": "private, no-store",
+      "content_type": "application/json",
+      "duration_ms": 271
+    }
+  ],
+  "checks": {
+    "fresh_visitor_empty": true,
+    "exact_summary_fields": true,
+    "newest_creation_first": true,
+    "custom_draft_saved": true,
+    "newest_update_first": true,
+    "two_demo_jobs_completed": true,
+    "active_counters_observed": true,
+    "same_cookie_resume": true,
+    "sample_provenance_preserved": true,
+    "second_visitor_empty": true,
+    "second_visitor_detail_404": true,
+    "private_no_store_all_api_responses": true
+  },
+  "research_progress": [
+    {
+      "status": "investigating",
+      "part_count": 8,
+      "confirmed_part_count": 8,
+      "research_count": 2,
+      "active_research_count": 2,
+      "completed_research_count": 0,
+      "failed_research_count": 0,
+      "selected_count": 0,
+      "package_status": null
+    },
+    {
+      "status": "investigating",
+      "part_count": 8,
+      "confirmed_part_count": 8,
+      "research_count": 2,
+      "active_research_count": 1,
+      "completed_research_count": 1,
+      "failed_research_count": 0,
+      "selected_count": 0,
+      "package_status": null
+    },
+    {
+      "status": "results",
+      "part_count": 8,
+      "confirmed_part_count": 8,
+      "research_count": 2,
+      "active_research_count": 0,
+      "completed_research_count": 2,
+      "failed_research_count": 0,
+      "selected_count": 0,
+      "package_status": null
+    }
+  ],
+  "scope": "Two prepared demo jobs only; no live supplier-provider calls.",
+  "capabilities": {
+    "storage": "lakebase_postgres",
+    "execution": "durable_queue",
+    "model_generation": "provider_required"
+  },
+  "summary_fields": [
+    "active_research_count",
+    "completed_research_count",
+    "confirmed_part_count",
+    "created_at",
+    "demo_id",
+    "failed_research_count",
+    "name",
+    "package_status",
+    "part_count",
+    "product_type",
+    "project_id",
+    "research_count",
+    "selected_count",
+    "status",
+    "updated_at"
+  ],
+  "final_summary": {
+    "status": "results",
+    "part_count": 8,
+    "confirmed_part_count": 8,
+    "research_count": 2,
+    "active_research_count": 0,
+    "completed_research_count": 2,
+    "failed_research_count": 0,
+    "selected_count": 0,
+    "package_status": null
+  },
+  "finished_at": "2026-11-15T01:09:28.506636+00:00"
+}

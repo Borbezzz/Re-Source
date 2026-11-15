@@ -1,0 +1,192 @@
+{
+  "$defs": {
+    "CheckOutcome": {
+      "enum": [
+        "pass",
+        "fail",
+        "unknown"
+      ],
+      "title": "CheckOutcome",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "category": {
+      "title": "Category",
+      "type": "string"
+    },
+    "check_id": {
+      "title": "Check Id",
+      "type": "string"
+    },
+    "contradictions": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Contradictions",
+      "type": "array"
+    },
+    "dependency_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Dependency Ids",
+      "type": "array"
+    },
+    "evaluated_at": {
+      "format": "date-time",
+      "title": "Evaluated At",
+      "type": "string"
+    },
+    "evidence_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Refs",
+      "type": "array"
+    },
+    "explanation": {
+      "title": "Explanation",
+      "type": "string"
+    },
+    "fact_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Fact Refs",
+      "type": "array"
+    },
+    "feasible_if_unknown": {
+      "default": false,
+      "title": "Feasible If Unknown",
+      "type": "boolean"
+    },
+    "fingerprint": {
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "gap": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Gap"
+    },
+    "input_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "title": "Input Versions",
+      "type": "object"
+    },
+    "mandatory": {
+      "title": "Mandatory",
+      "type": "boolean"
+    },
+    "plain_language": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Plain Language"
+    },
+    "requirement_id": {
+      "title": "Requirement Id",
+      "type": "string"
+    },
+    "requirement_title": {
+      "title": "Requirement Title",
+      "type": "string"
+    },
+    "requirement_version": {
+      "title": "Requirement Version",
+      "type": "string"
+    },
+    "rerun_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rerun Reason"
+    },
+    "result": {
+      "$ref": "#/$defs/CheckOutcome"
+    },
+    "reused_from_decision_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reused From Decision Id"
+    },
+    "rule_version": {
+      "title": "Rule Version",
+      "type": "string"
+    },
+    "template_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Template Code"
+    }
+  },
+  "required": [
+    "check_id",
+    "case_id",
+    "candidate_id",
+    "requirement_id",
+    "requirement_version",
+    "requirement_title",
+    "category",
+    "mandatory",
+    "result",
+    "explanation",
+    "fingerprint",
+    "rule_version",
+    "evaluated_at"
+  ],
+  "title": "CheckResult",
+  "type": "object"
+}

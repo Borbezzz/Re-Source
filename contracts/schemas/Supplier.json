@@ -1,0 +1,56 @@
+{
+  "$defs": {
+    "DataOrigin": {
+      "enum": [
+        "synthetic_demo",
+        "public_source",
+        "provided_document",
+        "computed"
+      ],
+      "title": "DataOrigin",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin",
+      "default": "synthetic_demo"
+    },
+    "legal_entity_name": {
+      "title": "Legal Entity Name",
+      "type": "string"
+    },
+    "registry": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Registry"
+    },
+    "roles": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Roles",
+      "type": "array"
+    },
+    "supplier_id": {
+      "title": "Supplier Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "supplier_id",
+    "legal_entity_name",
+    "roles"
+  ],
+  "title": "Supplier",
+  "type": "object"
+}

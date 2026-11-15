@@ -1,0 +1,15 @@
+{
+  "dataMode": "fictional_demo",
+  "packageId": "rs-mechanica-turbofan-v1",
+  "packageVersion": "1.0.0",
+  "componentId": "RS-TF-FAN-BLADE",
+  "reason": "faulty_component",
+  "quantity": 1,
+  "requiredArrivalDate": "2026-11-20",
+  "deliveryDestination": {
+    "name": "Bristol demo manufacturing site",
+    "city": "Bristol",
+    "country": "GB"
+  },
+  "note": "Example UI request, not an actual purchasing instruction or approved order."
+}

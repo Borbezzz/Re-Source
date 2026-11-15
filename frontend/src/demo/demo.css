@@ -1,0 +1,104 @@
+.demo-guide {
+  margin: 20px clamp(16px, 3vw, 48px);
+  padding: 18px 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.demo-guide-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.demo-guide-heading strong {
+  font-size: 14px;
+}
+.demo-guide-heading span {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.demo-guide ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding: 0;
+  margin: 16px 0;
+}
+.demo-guide li button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  padding: 6px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.demo-guide li button[aria-current] {
+  color: var(--ink);
+  font-weight: 650;
+}
+.demo-guide li button span {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  font-size: 11px;
+}
+.demo-guide li button[aria-current] span {
+  border-color: var(--ink);
+}
+.demo-guide-content p,
+.demo-scope p {
+  max-width: 100ch;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 8px 0 12px;
+}
+.demo-guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+}
+.demo-scope {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.demo-scope summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.demo-guide :focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 4px;
+}
+@media (max-width: 600px) {
+  .demo-guide {
+    margin: 12px;
+    padding: 14px;
+  }
+  .demo-guide-heading {
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .demo-guide-heading .inline {
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .demo-guide-heading span {
+    max-width: 170px;
+    line-height: 1.5;
+  }
+  .demo-guide ol {
+    gap: 4px 14px;
+  }
+}

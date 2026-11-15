@@ -1,0 +1,31 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "document_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Document Id"
+    },
+    "origin": {
+      "enum": [
+        "prepared_demo",
+        "uploaded",
+        "generated"
+      ],
+      "title": "Origin",
+      "type": "string"
+    }
+  },
+  "required": [
+    "origin"
+  ],
+  "title": "ProductModelRequest",
+  "type": "object"
+}

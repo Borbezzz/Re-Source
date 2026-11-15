@@ -1,0 +1,23 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "amount": {
+      "description": "Decimal amount as a string-safe decimal",
+      "title": "Amount",
+      "type": "string"
+    },
+    "currency": {
+      "description": "ISO 4217 code",
+      "maxLength": 3,
+      "minLength": 3,
+      "title": "Currency",
+      "type": "string"
+    }
+  },
+  "required": [
+    "amount",
+    "currency"
+  ],
+  "title": "Money",
+  "type": "object"
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["sfo1"],
+  "services": {
+    "frontend": {
+      "root": "frontend",
+      "framework": "vite",
+      "installCommand": "npm ci",
+      "buildCommand": "npm run build",
+      "outputDirectory": "dist",
+      "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+    },
+    "backend": {
+      "root": ".",
+      "framework": "fastapi",
+      "entrypoint": "pyproject.toml",
+      "functions": {
+        "**/*.py": {
+          "maxDuration": 300,
+          "includeFiles": "{backend/recovery,data,rules,templates}/**",
+          "excludeFiles": "{frontend,tests,.git,var,backend/.venv}/**"
+        }
+      }
+    }
+  },
+  "rewrites": [
+    { "source": "/api/:path*", "destination": {"service": "backend"} },
+    { "source": "/", "destination": {"service": "frontend", "path": "/index.html"} },
+    { "source": "/:path*", "destination": {"service": "frontend"} }
+  ]
+}

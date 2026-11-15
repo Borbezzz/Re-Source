@@ -1,0 +1,36 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "enum": [
+        "focus",
+        "explode",
+        "reassemble",
+        "show_failure",
+        "remove",
+        "install",
+        "restore",
+        "reset_view"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Idempotency Key"
+    }
+  },
+  "required": [
+    "action"
+  ],
+  "title": "VisualActionRequest",
+  "type": "object"
+}

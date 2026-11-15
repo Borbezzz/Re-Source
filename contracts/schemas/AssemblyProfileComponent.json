@@ -1,0 +1,24 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "component_id": {
+      "title": "Component Id",
+      "type": "string"
+    },
+    "display_name": {
+      "title": "Display Name",
+      "type": "string"
+    },
+    "node_name": {
+      "title": "Node Name",
+      "type": "string"
+    }
+  },
+  "required": [
+    "component_id",
+    "display_name",
+    "node_name"
+  ],
+  "title": "AssemblyProfileComponent",
+  "type": "object"
+}

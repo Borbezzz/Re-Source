@@ -1,0 +1,17 @@
+:root {
+  --surface: #f2f3f5;
+  --paper: #fff;
+  --ink: #17191d;
+  --muted: #5d6470;
+  --brand: #2251ef;
+  --soft: #e8edf8;
+  --border: #d6dbe4;
+  --warning: #8a4d17;
+  --radius-control: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+}
