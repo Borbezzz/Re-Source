@@ -2,6 +2,12 @@
 
 This describes what the code actually does. Where it departs from PRD §5, see the referenced decision in [`decisions.md`](decisions.md). Module status is tracked in [`status.md`](status.md).
 
+## Workflow overview
+
+![Re::Source workflow and architecture](docs/diagrams/agent-workflow.png)
+
+Workflow snapshot: 15 November 2026, `main@9f8c120`. The diagram distinguishes the Studio demo, live product research and retained engine recovery workflow.
+
 ## 1. Layers
 
 | Layer | PRD default | Implemented | Notes |
