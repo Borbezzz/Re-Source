@@ -4,6 +4,18 @@ import { productApi } from "./client.ts";
 import type { ProductProjectSummary } from "./types.ts";
 
 export function investigationState(project: ProductProjectSummary): string {
+  if (project.agent_status === "recommendation_ready")
+    return "Agent recommendation ready";
+  if (project.agent_status === "needs_attention")
+    return "Agent needs your input";
+  if (project.agent_status === "paused") return "Agent paused";
+  if (project.agent_status === "failed") return "Agent run needs attention";
+  if (project.agent_status === "queued" || project.agent_status === "running")
+    return project.agent_stage === "outreach"
+      ? "Agent requesting quotes"
+      : project.agent_stage === "requirements"
+        ? "Agent checking sources"
+        : "Sourcing agent working";
   if (project.active_research_count)
     return `Researching ${project.active_research_count} ${project.active_research_count === 1 ? "part" : "parts"}`;
   if (project.status === "extracting") return "Reading documents";
@@ -151,7 +163,11 @@ export function Investigations() {
                   <div className="investigation-progress">
                     <span
                       className={
-                        project.active_research_count ? "is-running" : ""
+                        project.active_research_count ||
+                        project.agent_status === "queued" ||
+                        project.agent_status === "running"
+                          ? "is-running"
+                          : ""
                       }
                     >
                       {investigationState(project)}
@@ -161,7 +177,8 @@ export function Investigations() {
                     </time>
                   </div>
                   <span className="investigation-resume">
-                    {project.package_status === "simulated"
+                    {project.package_status === "simulated" ||
+                    project.agent_status === "recommendation_ready"
                       ? "View"
                       : "Continue"}
                     <ArrowRight size={18} aria-hidden="true" />

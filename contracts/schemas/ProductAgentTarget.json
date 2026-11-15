@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "part_id": {
+      "title": "Part Id",
+      "type": "string"
+    },
+    "readiness": {
+      "enum": [
+        "demo_ready",
+        "contact_required"
+      ],
+      "title": "Readiness",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "part_id",
+    "candidate_id",
+    "reason",
+    "readiness"
+  ],
+  "title": "ProductAgentTarget",
+  "type": "object"
+}

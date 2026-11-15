@@ -1,14 +1,16 @@
 # Re::Source
 
-A product-parts sourcing workspace: upload a blueprint or specification, review
-its parts and requirements, select one or many parts, investigate suppliers in
-parallel, compare evidence and prepare a draft RFQ package.
+A product-parts sourcing agent: give it a design package and a sourcing mandate,
+then follow its research, quote requests and recommendations in one investigation.
 
 ## Current workflow
 
 Start demo opens a gallery containing a toy car, turbofan engine and table lamp.
-Each creates its own persisted product project. All three use the shared Sources &
-parts → Assembly → Research → Compare → Review & approve workflow. Upload blueprint
+Each creates its own persisted product project. A single start action authorizes
+grounded specification checks, supplier research, quote-request preparation and
+the labelled demo mailbox. The agent continues through those steps without asking
+the user to approve each one. Source review, assembly inspection and manual
+supplier selection remain available. Upload blueprint
 creates a new product whose parts are independent of the engine catalog. The
 original engine recovery, monitoring and scenario workflow remains available via
 Engine operations.
@@ -19,16 +21,24 @@ requirements. Uploaded segmented GLBs can be mapped to reviewed parts. The part
 list remains usable without a model. Automatic model generation is unavailable
 until a real generation provider is integrated.
 
-Review names, quantities, specification values and source quotes before research.
+Prepared specifications can be checked by the agent against their source text;
+agent checks are distinguished from human review. Ambiguous custom parts still
+need clarification before their specification can be used in outreach.
 Demo suppliers use explicitly fictional quotes. Live research uses configured
 OpenAI query planning, Linkup discovery and Databricks extraction. Public sources
 remain unverified leads; missing prices, delivery dates and compliance facts stay
 unknown. Country markers are representative and require a supplied country and
 source. Never invent precise addresses or animate fictional task progress.
 
-RFQs include reviewed requirements and evidence gaps. Approval is tied to the exact
-reviewed package and authorizes simulation only. No supplier messages, purchase
-orders or payments are sent. Changes invalidate dependent research and approvals.
+RFQs include grounded requirements and evidence gaps. Readiness to ask a supplier
+for evidence is separate from verified suitability to purchase: missing price,
+availability and certification become questions in the RFQ. The demo mailbox
+persists simulated outgoing requests and sample supplier replies; it does not
+claim to be a connected email account. Live research can prepare drafts, but a
+verified contact and an authorized mailbox are required for actual sending.
+The autonomous outcome is a recommendation, never an automatic purchase.
+Changes invalidate dependent work and pause the mandate. The existing manual
+package approval remains tied to its exact revision and permits simulation only.
 The legacy engine flow retains its own compatibility and decision gates.
 
 ## Product and technical direction

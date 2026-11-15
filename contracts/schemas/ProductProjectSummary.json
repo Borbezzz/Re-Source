@@ -8,6 +8,46 @@
       "title": "Active Research Count",
       "type": "integer"
     },
+    "agent_stage": {
+      "anyOf": [
+        {
+          "enum": [
+            "requirements",
+            "research",
+            "shortlist",
+            "rfq",
+            "outreach",
+            "complete"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Agent Stage"
+    },
+    "agent_status": {
+      "anyOf": [
+        {
+          "enum": [
+            "queued",
+            "running",
+            "paused",
+            "needs_attention",
+            "recommendation_ready",
+            "failed"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Agent Status"
+    },
     "completed_research_count": {
       "minimum": 0,
       "title": "Completed Research Count",

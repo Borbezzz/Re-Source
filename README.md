@@ -1,5 +1,13 @@
 # Re-Source
 
+The current product workspace supports a toy car, engine, table lamp or uploaded
+design package. Its sourcing agent checks specifications, researches suppliers,
+prepares quote requests and presents recommendations in one continuous flow.
+The built-in mailbox uses explicitly simulated messages and sample replies;
+real email delivery needs an authorized account and verified recipients. See the
+[current product flow](docs/product-v2/DEMO-AND-LIVE.md) and
+[agent outreach contract](docs/product-v2/AGENT-OUTREACH.md).
+
 **Aerospace recovery agent.** When a jet-engine component fails, Re-Source finds replacement options, compares buying a spare (BUY) with commissioning manufacture (MAKE), checks the evidence (technical applicability, supplier and site suitability, UK CAA route), ranks the eligible plans transparently, and prepares the selected route's paperwork. When a monitored risk signal or a piece of evidence changes, it traces the impact through an explicit evidence graph, re-runs only the affected checks and shows how the recovery plan changed (D1 → D2).
 
 - Specification: [`PRD.md`](PRD.md) (v1.2)

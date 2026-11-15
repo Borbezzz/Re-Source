@@ -11,8 +11,11 @@ with an uploaded design package or one of the prepared demos. **Investigations**
 shows this browser visitor's saved projects, including unfinished drafts, running
 research, reviewable results and simulated completions.
 
-Each project has one URL and one continuous page: review sources → select assembly
-parts → research and compare suppliers → review the RFQ → approve and simulate.
+Each project has one URL and one continuous page. The default agent flow is:
+set the mandate → check sources → research and compare suppliers → prepare quote
+requests → demo mailbox and replies → recommendation. Routine stages advance
+without repeated approval. Source editing, assembly inspection and manual RFQ
+preparation remain available within that page.
 Completed sections become expandable summaries. Leaving and reopening a project
 resumes the persisted work; research continues in the durable queue. Unsaved part
 edits require a choice before navigating away and are never overwritten by
@@ -25,10 +28,12 @@ source text, documents or model payloads. It shows at most the latest 100 projec
 ## What the demo demonstrates
 
 Choose a toy car, turbofan engine or table lamp. Each project owns its parts,
-documents, model, research and decisions. Review the authored sample specification,
-select several parts, run research, compare candidates and prepare an RFQ package.
-Approving the package authorizes a simulation only. It does not place an order,
-contact a supplier or certify a part.
+documents, model, research and decisions. Start the sourcing agent once; it checks
+the authored sample specification, researches parts, chooses quote-request
+targets, and processes simulated mailbox messages and sample replies. The outcome
+is a recommendation with remaining unknowns. It does not place an order, contact
+a real supplier or certify a part. The separate manual package-approval path
+still authorizes a simulation only.
 
 Models are licensed, prepared assets. Demo specifications, prices, lead times and
 suppliers are explicitly synthetic examples. Mesh groups provide selection and
@@ -42,9 +47,10 @@ Source credits are recorded in the profiles and public model license files.
 2. Parse document text (Databricks when configured), then propose parts and
    requirements. Keep source quotes attached. Missing facts require review;
    drawing numbers are not automatically manufacturer part numbers.
-3. Review the proposed parts, quantities and requirements. Human edits remain
-   distinguishable from quoted document facts. Confirmation creates the input
-   revision used for research.
+3. Check proposed parts, quantities and requirements against their source spans.
+   Agent checks and human review remain distinguishable. A usable specification
+   creates the input revision used for research; unresolved identity, quantity or
+   specification questions require clarification.
 4. Attach a segmented GLB if one is available and map named mesh nodes to parts.
    The part list remains usable without a model. Uploaded models have their own
    provenance; they are not described as generated geometry.
@@ -52,18 +58,22 @@ Source credits are recorded in the profiles and public model license files.
    citations in live research. Candidates remain unverified until supporting
    evidence establishes the required facts. Never invent quoted prices, delivery
    dates, exact locations or certification from a supplier's marketing page.
-6. Compare findings, select candidates and produce draft RFQs with the reviewed
-   requirements and outstanding evidence gaps. Preserve the human approval gate.
+6. Compare findings, select outreach targets and produce draft RFQs with grounded
+   requirements and outstanding evidence gaps. Live email requires verified
+   recipient contacts and an authorized mailbox. Reserve a separate user decision
+   for purchasing; asking for a quote does not establish compliance or commit money.
 
 ```mermaid
 flowchart LR
   A[Prepared demo or document upload] --> B[Project and source documents]
   B --> C[Extract and review parts]
-  C --> D[Confirm requirements]
+  C --> D[Check requirements or ask for clarification]
   D --> E[Select parts in list or 3D model]
   E --> F[Concurrent supplier investigations]
   F --> G[Evidence and comparisons]
-  G --> H[Draft RFQs and approval]
+  G --> H[RFQs and mailbox delivery]
+  H --> J[Compare replies and recommend]
+  J --> K[User purchase decision]
   I[Prepared or uploaded GLB] --> E
 ```
 
@@ -103,6 +113,9 @@ remains useful without external services, and is labeled as sample data.
   synthetic demo offers. A review confirmation is not supplier verification.
 - Revalidate uploaded source references and model mappings before activation.
 - Commit requirement changes atomically, then dispatch workers after commit.
+
+See [agent outreach and mailbox boundaries](AGENT-OUTREACH.md) for the current
+autonomy mandate, demo delivery semantics and the real test-account integration.
 
 Context used: the original hackathon handoff in “Continue ReSource hackathon
 handoff”, its later product-agnostic/Blender decisions, and “Map backend flow and

@@ -87,6 +87,21 @@ def product_router(service_provider: Callable, idempotent: Callable) -> APIRoute
     async def investigate(project_id: str, body: P.ProductInvestigateRequest, idempotency_key: str | None = Header(None)):
         return await command(project_id, "investigate", idempotency_key, body.model_dump(), lambda: service().investigate(project_id, body.part_ids, body.mode), 202)
 
+    @router.post("/{project_id}/agent/start", response_model=P.ProductProject, status_code=202)
+    async def agent_start(project_id: str, body: P.ProductAgentStartRequest, idempotency_key: str | None = Header(None)):
+        return await command(project_id, "agent:start", idempotency_key, body.model_dump(),
+                             lambda: service().agent_start(project_id, body.expected_version, body.mode), 202)
+
+    @router.post("/{project_id}/agent/pause", response_model=P.ProductProject)
+    async def agent_pause(project_id: str, body: P.ProductAgentControlRequest, idempotency_key: str | None = Header(None)):
+        return await command(project_id, "agent:pause", idempotency_key, body.model_dump(),
+                             lambda: service().agent_pause(project_id, body.expected_run_id, body.expected_version))
+
+    @router.post("/{project_id}/agent/resume", response_model=P.ProductProject, status_code=202)
+    async def agent_resume(project_id: str, body: P.ProductAgentControlRequest, idempotency_key: str | None = Header(None)):
+        return await command(project_id, "agent:resume", idempotency_key, body.model_dump(),
+                             lambda: service().agent_resume(project_id, body.expected_run_id, body.expected_version), 202)
+
     @router.patch("/{project_id}/selections", response_model=P.ProductProject)
     async def select(project_id: str, body: P.ProductSelectionRequest, idempotency_key: str | None = Header(None)):
         return await command(project_id, "select", idempotency_key, body.model_dump(), lambda: service().select_candidate(project_id, body.part_id, body.candidate_id))
