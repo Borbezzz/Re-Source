@@ -13,7 +13,7 @@ assert(!gltfJson.buffers.some(b=>b.uri));assert(!gltfJson.images?.length);
 const buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
 const gltf=await new GLTFLoader().parseAsync(buffer,'');const scene=gltf.scene;scene.updateMatrixWorld(true);
 const stable=new Set(),byStableId=new Map();let meshes=0;scene.traverse(o=>{if(o.userData.stableId){assert(!stable.has(o.userData.stableId),'Duplicate stable ID');stable.add(o.userData.stableId);byStableId.set(o.userData.stableId,o);}if(o.isMesh)meshes++;});
-assert.equal(meshes,manifest.geometry.meshOccurrences);assert.equal(manifest.components.length,3);
+assert.equal(meshes,manifest.geometry.meshOccurrences);assert.equal(manifest.components.length,35);
 const csv=(await readFile(new URL('components.csv',dir),'utf8')).trim().split(/\r?\n/);
 assert.equal(csv[0],'component_id,role,name,part_number,revision,parent_assembly_id,node_ids,assembly_quantity,requirement_set,data_mode');
 assert.equal(csv.length,manifest.components.length+1);

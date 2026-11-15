@@ -64,10 +64,28 @@ const primary=allPieces.find(p=>p.parentAssemblyId==='combustor'&&p.displayName=
 const blade=allPieces.find(p=>p.parentAssemblyId==='fan'&&p.displayName==='Rotor blade'&&p.sourceInstanceIndex===0);
 if(!primary||!blade||!groups.nozzle)throw new Error('Required demo geometry not found.');
 const cases=[
- {componentId:'RS-TF-FUEL-INJECTOR',role:'secondary',name:'Fuel injector 01',partNumber:'RS-DEMO-FI-001',revision:'C',parentAssemblyId:'combustor',nodeIds:[primary.stableId],assemblyQuantity:18,condition:'new',requirementSet:'REQ-FI-C'},
- {componentId:'RS-TF-FAN-BLADE',role:'primary',name:'Front fan blade 01',partNumber:'RS-DEMO-FB-001',revision:'B',parentAssemblyId:'fan',nodeIds:[blade.stableId],assemblyQuantity:24,condition:'new',requirementSet:'REQ-FB-B'},
+ {componentId:'RS-TF-FUEL-INJECTOR',role:'secondary',name:'Fuel injectors',partNumber:'RS-DEMO-FI-001',revision:'C',parentAssemblyId:'combustor',nodeIds:allPieces.filter(p=>p.parentAssemblyId==='combustor'&&p.displayName==='Fuel injector').map(p=>p.stableId),assemblyQuantity:18,condition:'new',requirementSet:'REQ-FI-C'},
+ {componentId:'RS-TF-FAN-BLADE',role:'primary',name:'Front fan blades',partNumber:'RS-DEMO-FB-001',revision:'B',parentAssemblyId:'fan',nodeIds:allPieces.filter(p=>p.parentAssemblyId==='fan'&&p.displayName==='Rotor blade').map(p=>p.stableId),assemblyQuantity:24,condition:'new',requirementSet:'REQ-FB-B'},
  {componentId:'RS-TF-CORE-NOZZLE',role:'secondary',name:'Core exhaust nozzle assembly',partNumber:'RS-DEMO-NZ-001',revision:'A',parentAssemblyId:'nozzle',nodeIds:[groups.nozzle.name],assemblyQuantity:1,condition:'new',requirementSet:'REQ-NZ-A'}
 ];
+// Explicit fictional part families for the expanded browser. Repeated geometry
+// shares a demo identity only where this manifest deliberately assigns it.
+function addCase(id:string,name:string,assembly:string,pieces:typeof allPieces){
+ cases.push({componentId:`RS-TF-${id}`,role:'secondary',name,partNumber:`RS-DEMO-${id}`,revision:'A',parentAssemblyId:assembly,nodeIds:pieces.map(p=>p.stableId),assemblyQuantity:pieces.length,condition:'new',requirementSet:`REQ-${id}-A`});
+}
+addCase('FAN-VANE','Fan guide vanes','fan',allPieces.filter(p=>p.parentAssemblyId==='fan'&&p.displayName==='Stator vane'));
+addCase('SPINNER','Fan spinner','fan',allPieces.filter(p=>p.parentAssemblyId==='fan'&&p.displayName==='Spinner / cone'));
+for(const assembly of ['compressor','turbine']){
+ for(const [label,code] of [['Rotor blade','ROTOR'],['Stator vane','STATOR']]){
+  const pieces=allPieces.filter(p=>p.parentAssemblyId===assembly&&p.displayName===label);
+  const stages=[...new Set(pieces.map(p=>p.sourceMeshIndex))];
+  stages.forEach((index,i)=>addCase(`${assembly==='compressor'?'CP':'TB'}-${code}-${String(i+1).padStart(2,'0')}`,`${assembly==='compressor'?'Compressor':'Turbine'} stage ${i+1} ${label==='Rotor blade'?'rotor blades':'stator vanes'}`,assembly,pieces.filter(p=>p.sourceMeshIndex===index)));
+ }
+}
+addCase('COMBUSTOR-LINER','Combustor liners','combustor',allPieces.filter(p=>p.parentAssemblyId==='combustor'&&p.displayName==='Housing'));
+addCase('FUEL-TUBE','Fuel feed tubes','combustor',allPieces.filter(p=>p.parentAssemblyId==='combustor'&&p.displayName==='Tube'));
+addCase('CASING','Engine casing sections','casing',allPieces.filter(p=>p.parentAssemblyId==='casing'&&p.displayName==='Housing'));
+addCase('SHAFT','Shafts and sleeves','shaft',allPieces.filter(p=>p.parentAssemblyId==='shaft'&&p.displayName==='Shaft / sleeve'));
 const caseByNode=new Map(cases.flatMap(c=>c.nodeIds.map(id=>[id,c.componentId] as const)));
 exported.traverse(o=>{if(caseByNode.has(o.name))o.userData.componentId=caseByNode.get(o.name);const piece=allPieces.find(p=>p.stableId===o.name);if(piece?.attachedToStableId)o.userData.attachedToStableId=piece.attachedToStableId;});
 exported.updateMatrixWorld(true);

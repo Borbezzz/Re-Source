@@ -1,7 +1,8 @@
 {
   "status": "pass",
+  "packageVersion": "1.1.0",
   "uploadArchive": "mechanica-input-package.zip",
-  "uploadSha256": "05f2c16b00eb6119792033bbf94d05c265b05a702ecafd8a00c5a0e99b44dde2",
+  "uploadSha256": "bf4aa65a20a53fcb74b4abb1e4e12783e8018eda1195215cea74b74755a29d3b",
   "rootMembers": [
     "ATTRIBUTION.md",
     "LICENSE-Mechanica.txt",
@@ -12,11 +13,6 @@
   ],
   "crc": "pass",
   "fileHashes": "match manifest",
-  "handoffArchiveExclusions": [
-    "tools/node_modules/**",
-    ".DS_Store",
-    "__pycache__/**"
-  ],
-  "notes": "Full handoff ZIP membership/exclusions and checksums verified by primary agent after including final independent review.",
-  "handoffMemberCount": 33
+  "publicCopy": "identical",
+  "sourceFamilies": 35
 }

@@ -23,7 +23,7 @@ Use quiet premium industrial design: charcoal background, offwhite typography, f
 ## Geometry and selection
 
 - Load `input-package/assembly.glb` with the existing Three.js/React Three Fiber environment. Keep one model identity throughout the case.
-- Treat `RS-TF-FAN-BLADE` as primary. It maps to the first front fan blade; `RS-TF-FUEL-INJECTOR` maps to one injector head, and `RS-TF-CORE-NOZZLE` maps to the nozzle group. Show all three in the collapsible list and support direct mesh selection.
+- Package 1.1 maps 35 sourcing families across all seven sections. `RS-TF-FAN-BLADE` explicitly maps all 24 fan blades and `RS-TF-FUEL-INJECTOR` all 18 injectors; `RS-TF-CORE-NOZZLE` maps the nozzle group. The expanded browser keeps family sourcing identity separate from the inspected occurrence, with group/individual hover, keyboard focus and direct selection. See the manifest for per-stage compressor/turbine identities.
 - Follow PACKAGE-CONTRACT.md for metadata-based lookup and nearest-ancestor case resolution. GLTFLoader sanitises names, so use `userData.stableId`/`componentId`.
 - Save home transforms and implement intentional focus, explode, fault, removal and insertion animations. The export has no baked animation. Keep component and requirement IDs stable while objects move.
 - The fuel injector is a simplified cylindrical original reference shape. Do not present it as a detailed manufactured nozzle or relabel unrelated meshes. The front blade is the stronger close-up. Physical geometry, materials and dimensions are educational and unvalidated.

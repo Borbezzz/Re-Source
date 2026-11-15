@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { geoConicConformal, geoGraticule10, geoPath } from "d3-geo";
+import { geoMercator, geoGraticule10, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
 import countries from "world-atlas/countries-50m.json";
 import type { Topology, GeometryCollection } from "topojson-specification";
@@ -11,20 +11,8 @@ import "./map.css";
 const W = 1600;
 const H = 1000;
 const world = feature(countries as unknown as Topology, countries.objects.countries as GeometryCollection);
-const projection = geoConicConformal()
-  .rotate([-8, 0])
-  .parallels([38, 62])
-  .fitExtent(
-    [
-      [0, 0],
-      [W, H],
-    ],
-    {
-      type: "Feature",
-      properties: {},
-      geometry: { type: "MultiPoint", coordinates: [[-12, 35], [26, 35], [-12, 63], [26, 63]] },
-    } as never,
-  );
+// A global projection keeps overseas demo sites legible as discovery widens.
+const projection = geoMercator().scale(W / (2 * Math.PI)).translate([W / 2, H / 2]);
 const path = geoPath(projection);
 const landPaths = (world.features as { id?: string; geometry: unknown }[]).map((f, i) => ({ key: `${f.id ?? "x"}-${i}`, iso: String(f.id ?? ""), d: path(f as never) ?? "" }));
 const grat = path(geoGraticule10()) ?? "";
@@ -32,6 +20,7 @@ const grat = path(geoGraticule10()) ?? "";
 const ISO_NUM: Record<string, string> = {
   GB: "826", IE: "372", FR: "250", DE: "276", ES: "724", IT: "380", PL: "616", NO: "578", CZ: "203",
   NL: "528", BE: "056", AT: "040", CH: "756", SE: "752", DK: "208", PT: "620",
+  CA: "124", SG: "702",
 };
 /** svg units per km around the delivery site (conformal projection: same in every direction locally). */
 const unitsPerKm = (() => {
@@ -39,7 +28,7 @@ const unitsPerKm = (() => {
   const b = projection([-1.5, 51.5])!;
   return Math.hypot(b[0] - a[0], b[1] - a[1]) / (111.32 * Math.cos((51.5 * Math.PI) / 180));
 })();
-const NICE_KM = [10, 20, 50, 100, 200, 300, 500, 1000];
+const NICE_KM = [10, 20, 50, 100, 200, 300, 500, 1000, 2000, 5000];
 
 /** Static base map: ocean texture, graticule, coast glow, land. Memoised so pan/zoom never re-diffs 240 country paths. */
 const BaseMap = memo(function BaseMap({ hosts }: { hosts: string }) {
@@ -76,8 +65,8 @@ export const xy = (lon: number, lat: number) => projection([lon, lat]) as [numbe
 
 type VB = [number, number, number, number];
 type Pt = [number, number];
-/** Zoom range as viewBox width: from street-ish (0.08 W) out to the whole continent (1.5 W). */
-const MIN_W = W * 0.08;
+/** Zoom range from a local region to the worldwide supplier network. */
+const MIN_W = W * 0.025;
 const MAX_W = W * 1.5;
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 const reduced = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -112,7 +101,7 @@ function zoomAt(v: VB, f: number, p: Pt): VB {
   const k = w / v[2];
   return pan([p[0] - (p[0] - v[0]) * k, p[1] - (p[1] - v[1]) * k, w, v[3] * k], 0, 0);
 }
-/** Shift a viewBox, keeping its centre over (roughly) Europe. */
+/** Shift a viewBox while keeping its centre within the world map. */
 function pan(v: VB, dx: number, dy: number): VB {
   const cx = clamp(v[0] + v[2] / 2 + dx, -W * 0.15, W * 1.15);
   const cy = clamp(v[1] + v[3] / 2 + dy, -H * 0.15, H * 1.15);
@@ -266,17 +255,34 @@ export function SupplierMap({
     return () => ro.disconnect();
   }, []);
   const aspect = size.w / size.h;
-  const narrow = size.w < 800;
-  const inset = narrow ? 0 : insetRight;
+  const narrow = typeof window !== "undefined" && window.innerWidth <= 900;
+  // Split mode narrows this map independently of the browser viewport. Reserve
+  // the actual 400px checks panel, not just a fraction of the original screen.
+  const inset = narrow || !insetRight ? 0 : Math.min(0.72, Math.max(insetRight, 424 / size.w));
   const dest = useMemo(() => xy(DESTINATION.lon, DESTINATION.lat), []);
+  const signature = list.map(a => a.candidate.candidate_id).join("|");
+  const [revealed, setRevealed] = useState({ signature: "", count: 0 });
+  useEffect(() => {
+    if (reduced()) { setRevealed({ signature, count: list.length }); return; }
+    setRevealed({ signature, count: 0 });
+    if (!list.length) return;
+    let count = 0;
+    const timer = window.setInterval(() => {
+      count += 1;
+      setRevealed({ signature, count });
+      if (count >= list.length) window.clearInterval(timer);
+    }, 160);
+    return () => window.clearInterval(timer);
+  }, [signature]); // eslint-disable-line react-hooks/exhaustive-deps
+  const visible = useMemo(() => list.slice(0, revealed.signature === signature ? revealed.count : 0), [list, signature, revealed]);
   const auto = useMemo<VB>(() => {
     if (mode === "shortlist" || mode === "disruption") {
       const pts = list.filter((a) => a.rank != null || a.candidate.candidate_id === disruptedId).map((a) => xy(a.site.lon, a.site.lat));
-      return frame([...pts, dest], 150, aspect, inset);
+      return frame([...pts, dest], 28, aspect, inset);
     }
-    const pts = list.map((a) => xy(a.site.lon, a.site.lat));
-    return frame([...pts, dest], 120, aspect, inset);
-  }, [list, mode, aspect, inset, disruptedId, dest]);
+    const pts = visible.map((a) => xy(a.site.lon, a.site.lat));
+    return frame([...pts, dest], 44, aspect, inset);
+  }, [list, visible, mode, aspect, inset, disruptedId, dest]);
 
   // ---- User camera: null = automatic framing for the current stage ----
   const [user, setUser] = useState<VB | null>(null);
@@ -434,6 +440,7 @@ export function SupplierMap({
       tabIndex={0}
       role="application"
       aria-label="Supplier map. Drag to pan, scroll or pinch to zoom, +/- keys zoom, 0 resets, select a pin for details."
+      data-visible-suppliers={visible.length}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endPointer}
@@ -562,7 +569,7 @@ export function SupplierMap({
           <rect x="-6" y="-6" width="12" height="12" fill="#f4f1ea" stroke="#09090c" strokeWidth="1.5" />
           <text className="rs-pin-label" x="14" y="5">{DESTINATION.short}</text>
         </g>
-        {list.map((a) => {
+        {visible.map((a) => {
           const [x, y] = xy(a.site.lon, a.site.lat);
           const id = a.candidate.candidate_id;
           return (

@@ -3,6 +3,7 @@ import { CameraControls, Environment, Html, Lightformer, useGLTF } from "@react-
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { PackageComponent } from "../data/package.ts";
+import type { AssemblyItem } from "../data/assembly.ts";
 
 /*
  * Art direction follows Astra's (gpt-6-astra) review in
@@ -24,6 +25,9 @@ export interface EngineCanvasProps {
   solid: number;
   components: PackageComponent[];
   selected: string | null;
+  inspection?: AssemblyItem | null;
+  hovered?: AssemblyItem | null;
+  onInspect?: (id: string) => void;
   exploded: boolean;
   isolate: boolean;
   spin: boolean;
@@ -152,9 +156,12 @@ interface Prepared {
   groups: Map<string, { node: THREE.Object3D; home: THREE.Vector3 }>;
   compNodes: Map<string, THREE.Object3D[]>;
   compHome: Map<string, THREE.Vector3[]>;
+  byStable: Map<string, THREE.Object3D>;
+  nodeHome: Map<string, THREE.Vector3>;
   mats: Record<string, THREE.MeshPhysicalMaterial>;
   casingPlanes: { scan: THREE.Plane[]; cut: THREE.Plane[] };
   highlight: THREE.MeshPhysicalMaterial;
+  hover: THREE.MeshPhysicalMaterial;
   context: THREE.MeshStandardMaterial;
   scanMat: THREE.ShaderMaterial;
   clip: THREE.Plane;
@@ -207,14 +214,18 @@ function usePrepared(url: string, components: PackageComponent[]): Prepared {
       detail: metal("#c2c5c8", 0.3, 1, common),
     } as Record<string, THREE.MeshPhysicalMaterial>;
     const highlight = makeHighlight(clip);
+    // An x-ray preview makes rear blades visible through the inlet without moving the camera.
+    const hover = metal("#63d4ee", 0.32, 0.55, { emissive: "#14728a", emissiveIntensity: 0.45,
+      transparent: true, opacity: 0.86, depthTest: false, depthWrite: false });
     const context = new THREE.MeshStandardMaterial({ color: "#33363a", metalness: 0.35, roughness: 0.78, envMapIntensity: 0.25 });
     const scanMat = makeScanMaterial();
     const meshes: THREE.Mesh[] = [];
     const groups = new Map<string, { node: THREE.Object3D; home: THREE.Vector3 }>();
     const compNodes = new Map<string, THREE.Object3D[]>();
     const byStable = new Map<string, THREE.Object3D>();
+    const nodeHome = new Map<string, THREE.Vector3>();
     root.traverse((o) => {
-      if (o.userData?.stableId) byStable.set(o.userData.stableId, o);
+      if (o.userData?.stableId) { byStable.set(o.userData.stableId, o); nodeHome.set(o.userData.stableId, o.position.clone()); }
       if (o.userData?.assemblyId && String(o.userData?.stableId ?? "").includes(".group.")) groups.set(o.userData.assemblyId, { node: o, home: o.position.clone() });
       const mesh = o as THREE.Mesh;
       if (mesh.isMesh) {
@@ -242,12 +253,22 @@ function usePrepared(url: string, components: PackageComponent[]): Prepared {
         o.raycast = () => {};
       }
     });
-    return { root, scanRoot, meshes, groups, compNodes, compHome, mats, casingPlanes, highlight, context, scanMat, clip };
+    return { root, scanRoot, meshes, groups, compNodes, compHome, byStable, nodeHome, mats, casingPlanes, highlight, hover, context, scanMat, clip };
   }, [gltf, components]);
 }
 
+function inspectionNodes(p: Prepared, inspection: AssemblyItem | null | undefined, selected: string | null): THREE.Object3D[] {
+  return inspection ? inspection.nodeIds.flatMap(id => { const node = p.byStable.get(id); return node ? [node] : []; }) : (p.compNodes.get(selected ?? "") ?? []);
+}
+
+function meshSet(nodes: THREE.Object3D[]): Set<THREE.Object3D> {
+  const result = new Set<THREE.Object3D>();
+  nodes.forEach(n => n.traverse(child => { if ((child as THREE.Mesh).isMesh) result.add(child); }));
+  return result;
+}
+
 function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
-  const { prepared: p, mode, scan, solid, selected, exploded, isolate, phase, onSelect } = props;
+  const { prepared: p, mode, scan, solid, selected, inspection, hovered, exploded, isolate, phase, onSelect, onInspect } = props;
   const { gl } = useThree();
   useLayoutEffect(() => {
     gl.localClippingEnabled = true;
@@ -269,18 +290,22 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
 
   // Selection: metal + thermal rim; isolate keeps nearby context opaque and hides the rest.
   useEffect(() => {
-    const keep = selected ? (CONTEXT[selected] ?? []) : [];
+    const keep = inspection ? [inspection.assemblyId] : selected ? (CONTEXT[selected] ?? []) : [];
+    const chosen = meshSet(inspectionNodes(p, inspection, selected));
+    const preview = hovered ? meshSet(inspectionNodes(p, hovered, null)) : new Set();
     for (const m of p.meshes) {
-      const isSel = selected != null && m.userData.comp === selected;
+      const isSel = chosen.has(m);
       m.visible = true;
-      if (isSel) m.material = p.highlight;
-      else if (isolate && selected) {
+      m.renderOrder = preview.has(m) ? 10 : 0;
+      if (preview.has(m)) m.material = p.hover;
+      else if (isSel) m.material = p.highlight;
+      else if (isolate && (inspection || selected)) {
         // Context keeps nearby internals but drops enclosing shells that would hide the part.
         if (keep.includes(m.userData.group) && !/housing/i.test(String(m.userData.displayName ?? ""))) m.material = p.context;
         else m.visible = false;
       } else m.material = m.userData.baseMat;
     }
-  }, [p, selected, isolate]);
+  }, [p, selected, inspection, hovered, isolate]);
 
   useFrame((state, dt) => {
     // Scan + solid sweep along world X.
@@ -302,8 +327,7 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
 
     // Removal / insertion choreography for the selected part.
     if (selected) {
-      const nodes = p.compNodes.get(selected) ?? [];
-      const homes = p.compHome.get(selected) ?? [];
+      const nodes = inspectionNodes(p, inspection, selected);
       const target = phase === "remove" ? 1 : 0;
       phaseT.current = THREE.MathUtils.damp(phaseT.current, target, phase === "insert" ? 2.2 : 2.6, dt);
       const box = boundsOf(nodes);
@@ -312,8 +336,8 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
       if (radial.lengthSq() < 0.01) radial.set(0, 1, 0);
       radial.normalize().multiplyScalar(2.6);
       radial.x += selected.includes("NOZZLE") ? 2.4 : -0.4;
-      nodes.forEach((n, i) => {
-        const h = homes[i];
+      nodes.forEach((n) => {
+        const h = p.nodeHome.get(n.userData.stableId);
         if (h) n.position.set(h.x + radial.x * phaseT.current, h.y + radial.y * phaseT.current, h.z + radial.z * phaseT.current);
       });
       // Rim brightens briefly while the replacement seats, then settles (no breathing glow).
@@ -331,11 +355,13 @@ function Engine(props: EngineCanvasProps & { prepared: Prepared }) {
         onPointerDown={(ev: { stopPropagation: () => void; object: THREE.Object3D }) => {
           if (mode !== "explore" || !ev.object.visible) return;
           ev.stopPropagation();
+          const stable = ev.object.userData.attachedToStableId ?? ev.object.userData.stableId;
+          if (stable && onInspect) { onInspect(stable); return; }
           const comp = componentOf(ev.object) ?? (ev.object.userData?.comp as string | null);
           if (comp) onSelect?.(comp);
         }}
         onPointerOver={(ev: { object: THREE.Object3D }) => {
-          if (mode === "explore" && ev.object.visible && (componentOf(ev.object) || ev.object.userData?.comp)) document.body.style.cursor = "pointer";
+          if (mode === "explore" && ev.object.visible && ev.object.userData?.stableId) document.body.style.cursor = "pointer";
         }}
         onPointerOut={() => (document.body.style.cursor = "")}
       />
@@ -384,7 +410,7 @@ function Hotspots({ prepared, components, selected, onSelect }: { prepared: Prep
   );
 }
 
-function Rig({ prepared, selected, mode, resetKey, rightInset = 0, leftInset = 0, turntable, wide }: { prepared: Prepared; selected: string | null; mode: SceneMode; resetKey: number; rightInset?: number; leftInset?: number; turntable: boolean; wide: boolean }) {
+function Rig({ prepared, selected, inspection, mode, resetKey, rightInset = 0, leftInset = 0, turntable, wide }: { prepared: Prepared; selected: string | null; inspection?: AssemblyItem | null; mode: SceneMode; resetKey: number; rightInset?: number; leftInset?: number; turntable: boolean; wide: boolean }) {
   const ref = useRef<CameraControls>(null);
   const { size, camera } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
@@ -412,11 +438,11 @@ function Rig({ prepared, selected, mode, resetKey, rightInset = 0, leftInset = 0
       const eye = center.clone().addScaledVector(dir, dist);
       void cc.setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, true);
     };
-    if (selected && mode === "explore" && !wide) {
+    if ((selected || inspection) && mode === "explore" && !wide) {
       prepared.root.updateMatrixWorld(true);
-      const sphere = boundsOf(prepared.compNodes.get(selected) ?? []).getBoundingSphere(new THREE.Sphere());
+      const sphere = boundsOf(inspectionNodes(prepared, inspection, selected)).getBoundingSphere(new THREE.Sphere());
       // Each part is framed from a view that shows its form, with nearby context.
-      const f = FOCUS[selected] ?? { dir: VIEW_DIR, k: 1.6, minR: 0.6 };
+      const f = FOCUS[selected ?? ""] ?? { dir: VIEW_DIR, k: 1.6, minR: 0.6 };
       const c = sphere.center.clone();
       if (f.axis != null) c.set(c.x, c.y * f.axis, c.z * f.axis); // pull toward the engine axis for disc context
       fit(c, Math.max(sphere.radius, f.minR), f.k, f.dir);
@@ -428,7 +454,7 @@ function Rig({ prepared, selected, mode, resetKey, rightInset = 0, leftInset = 0
       const eye = center.clone().addScaledVector(VIEW_DIR, narrow ? dist * 1.15 : dist);
       void cc.setLookAt(eye.x, eye.y, eye.z, center.x, center.y, center.z, true);
     }
-  }, [selected, mode, resetKey, prepared, size.width, size.height, inset, wide, cam, narrow]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selected, inspection, mode, resetKey, prepared, size.width, size.height, inset, wide, cam, narrow]); // eslint-disable-line react-hooks/exhaustive-deps
   useFrame((_, dt) => {
     if (turntable && mode === "explore" && ref.current) ref.current.azimuthAngle += dt * 0.18;
   });
@@ -446,9 +472,9 @@ function SceneContents(props: EngineCanvasProps) {
     <>
       <Engine {...props} prepared={prepared} />
       {props.showHotspots && props.mode === "explore" && props.phase === "idle" ? (
-        <Hotspots prepared={prepared} components={props.components} selected={props.selected} onSelect={props.onSelect} />
+        <Hotspots prepared={prepared} components={props.components.filter(c => props.selected ? c.componentId === props.selected : ["RS-TF-FAN-BLADE", "RS-TF-FUEL-INJECTOR", "RS-TF-CORE-NOZZLE"].includes(c.componentId))} selected={props.selected} onSelect={props.onSelect} />
       ) : null}
-      <Rig prepared={prepared} selected={props.selected} mode={props.mode} resetKey={props.resetKey} rightInset={props.rightInset} leftInset={props.leftInset} turntable={props.spin && props.phase === "idle"} wide={!!props.wide} />
+      <Rig prepared={prepared} selected={props.selected} inspection={props.inspection} mode={props.mode} resetKey={props.resetKey} rightInset={props.rightInset} leftInset={props.leftInset} turntable={props.spin && props.phase === "idle"} wide={!!props.wide} />
     </>
   );
 }

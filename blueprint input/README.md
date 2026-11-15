@@ -1,6 +1,6 @@
 # Re::Source — prepared Mechanica demo package
 
-This is the approved Mechanica direction made concrete: a real exported GLB, three mapped sourcing cases, buyer-defined demo requirements and an implementation handover. Start with **[HANDOVER.md](HANDOVER.md)**.
+This is the approved Mechanica direction made concrete: a real exported GLB, 35 mapped demo sourcing families, buyer-defined demo requirements and an implementation handover. Package 1.1 adds individual occurrence browsing and compressor/turbine stages. Start with **[HANDOVER.md](HANDOVER.md)**.
 
 ## Folder map
 
@@ -23,7 +23,7 @@ This is the approved Mechanica direction made concrete: a real exported GLB, thr
 | Secondary: fuel injector 01 | `RS-TF-FUEL-INJECTOR` | `RS-DEMO-FI-001` / C | 18 |
 | Secondary: core exhaust nozzle assembly | `RS-TF-CORE-NOZZLE` | `RS-DEMO-NZ-001` / A | 1 |
 
-The injector is deliberately a simplified original Mechanica shape; the blade has the stronger close-up geometry. Assembly quantity is not purchase quantity. One occurrence is selected for the blade and injector cases; the nozzle case selects a whole group.
+The injector is deliberately a simplified original Mechanica shape; the blade has the stronger close-up geometry. Assembly quantity is not purchase quantity. The 24 blades and 18 injectors now have explicit shared family specifications; the browser can inspect and highlight each occurrence separately. Additional demo families cover fan guide vanes/spinner, nine compressor rotor and eight stator stages, five turbine rotor and four stator stages, liners, fuel tubes, casing sections, and shafts. Details without a fixture specification remain inspection-only.
 
 ## Inspect locally
 
@@ -37,7 +37,7 @@ python3 -m http.server 8768 --bind 127.0.0.1
 
 Open `http://127.0.0.1:8768/preview.html`. Test component buttons, model clicks, casing, explosion and reassembly. Stop the local server with Ctrl-C. The inspector is a utility, not the approved final website layout.
 
-To rebuild the data from the included audited geometry adapter, run `node tools/export-package.ts`, then validation. The ZIP/checksums must be refreshed after rebuilding; see HANDOVER.md. The pinned upstream source snapshots are retained under `tools/vendor/` for inspection, not installation as a full application.
+To rebuild the data, run `node tools/export-package.ts`, `python3 tools/sync-demo.py`, then `node tools/validate-package.mjs`. The sync step updates the backend profile, extra fictional map sites, public GLB and both ZIP copies. Increment `tools/package-config.json` before changing the exporter. The pinned upstream source snapshots are retained under `tools/vendor/` for inspection, not installation as a full application.
 
 ## What is real and what is prepared
 
