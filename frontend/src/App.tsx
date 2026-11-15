@@ -26,6 +26,12 @@ import {
   Status,
   human,
 } from "./components/Primitives.tsx";
+import type { ProductEntry } from "./product-flow/ProductFlow.tsx";
+const ProductFlow = lazy(() =>
+  import("./product-flow/ProductFlow.tsx").then((m) => ({
+    default: m.ProductFlow,
+  })),
+);
 import { ProductHome } from "./product/ProductHome.tsx";
 import { Intake } from "./components/Intake.tsx";
 import { Activity, Research } from "./components/Research.tsx";
@@ -73,6 +79,28 @@ const shortName = (c: ComponentInstance) =>
         : c.display_name;
 
 export default function App() {
+  const [productEntry, setProductEntry] = useState<ProductEntry | null>(() =>
+    location.hash.startsWith("#project/")
+      ? `project:${location.hash.slice(9)}`
+      : location.hash === "#products"
+        ? "gallery"
+        : location.hash === "#upload"
+          ? "upload"
+          : null,
+  );
+  const openProduct = (entry: ProductEntry) => {
+    setProductEntry(entry);
+    history.replaceState(
+      null,
+      "",
+      entry === "gallery"
+        ? "#products"
+        : entry === "upload"
+          ? "#upload"
+          : `#project/${entry.slice(8)}`,
+    );
+    window.scrollTo(0, 0);
+  };
   const [demo, setDemo] = useState(readDemoSession);
   const [demoSourceBusy, setDemoSourceBusy] = useState(false),
     [demoStartFailed, setDemoStartFailed] = useState(false);
@@ -269,6 +297,25 @@ export default function App() {
       setRunBusy(false);
     }
   };
+  if (productEntry)
+    return (
+      <Suspense fallback={<Loading>Opening product workspace…</Loading>}>
+        <ProductFlow
+          entry={productEntry}
+          onExit={() => {
+            setProductEntry(null);
+            setIntro(true);
+            setInvestigating(false);
+            history.replaceState(null, "", location.pathname + location.search);
+            window.scrollTo(0, 0);
+          }}
+          onLegacy={() => {
+            setProductEntry(null);
+            void startDemo();
+          }}
+        />
+      </Suspense>
+    );
   return (
     <>
       <a className="skip-link" href="#main-content">
@@ -294,7 +341,9 @@ export default function App() {
         <nav aria-label="Main navigation">
           <button
             className={!investigating && !intro && !entered ? "active" : ""}
-            onClick={openSources}
+            onClick={() =>
+              intro && !demo ? openProduct("upload") : openSources()
+            }
           >
             Sources & requirements
           </button>
@@ -450,8 +499,8 @@ export default function App() {
             engine={engine}
             connectionFailed={Boolean(error)}
             onRetry={() => void refresh()}
-            onSources={openSources}
-            {...{ onStartDemo: () => void startDemo() }}
+            onSources={() => openProduct("upload")}
+            onStartDemo={() => openProduct("gallery")}
             onPart={(id) => {
               setInitialPart(id);
               setWorkspaceTab("assembly");

@@ -2084,7 +2084,9 @@ input[type="range"] {
 @media(max-width:1000px) { .intro-sticky { grid-template-columns: minmax(0,1fr) 285px; } .intro-stage { padding: 28px 22px 18px; } .intro-inspector { padding: 30px 20px; } .intro-motion { flex-wrap: wrap; gap: 5px; } .module-strip button { font-size: 9px; padding: 8px 3px; } }
 @media(max-width:700px) {
  .intro-scroll { min-height: 240vh; }
- .intro-sticky { top: 68px; height: calc(100svh - 68px); min-height: 660px; display: block; }
+ /* The mobile navigation occupies two rows. Keep the pinned title below it. */
+ .intro-scroll.direct { min-height: calc(100svh - 108px); }
+ .intro-sticky { top: 108px; height: calc(100svh - 108px); min-height: 660px; display: block; }
  .intro-stage { height: 100%; padding: 25px 18px 16px; }
  .intro-heading h1 { font-size: 34px; }
  .intro-caption { font-size: 12px; }

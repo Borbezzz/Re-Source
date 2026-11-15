@@ -208,3 +208,45 @@ def test_vercel_work_is_persisted_with_owner_before_dispatch(svc, monkeypatch):
     finally:
         visitor_id.reset(token)
         object.__setattr__(settings, "job_backend", original)
+
+
+def test_custom_upload_http_flow_is_owned_and_publishes_discovered_parts(svc, monkeypatch):
+    import importlib
+    import time
+    from fastapi.testclient import TestClient
+    from recovery.config import settings
+
+    api = importlib.import_module("recovery.api.app")
+    monkeypatch.setattr(api, "SERVICES", svc)
+    original = settings.public_demo
+    object.__setattr__(settings, "public_demo", True)
+    try:
+        with TestClient(api.app) as owner, TestClient(api.app) as other:
+            created = owner.post("/api/v1/products", json={"name": "Custom gearbox"})
+            assert created.status_code == 201, created.text
+            pid = created.json()["project_id"]
+            base = f"/api/v1/products/{pid}"
+            uploaded = owner.post(f"{base}/documents", data={"kind": "requirements"}, files={
+                "file": ("gearbox.txt", b"Part: Drive shaft\nMaterial: Steel\nDiameter: 8 mm\nPart: Gear housing\nMaterial: Aluminium\n", "text/plain")})
+            assert uploaded.status_code == 201, uploaded.text
+            did = uploaded.json()["documents"][0]["document_id"]
+            assert other.get(base).status_code == 404
+            assert other.get(f"{base}/documents/{did}/content").status_code == 404
+            assert other.post(f"{base}/extract").status_code == 404
+            assert owner.post(f"{base}/extract").status_code == 202
+            deadline = time.monotonic() + 4
+            while time.monotonic() < deadline:
+                project = owner.get(base).json()
+                if project["status"] != "extracting":
+                    break
+                time.sleep(0.02)
+            assert [part["name"] for part in project["parts"]] == ["Drive shaft", "Gear housing"]
+            assert project["model"]["status"] == "missing"
+            reviewed = owner.patch(f"{base}/parts", json={"parts": project["parts"], "confirm": True, "expected_version": project["version"]})
+            assert reviewed.status_code == 200, reviewed.text
+            assert reviewed.json()["status"] == "ready"
+            generation = owner.post(f"{base}/model", json={"origin": "generated"})
+            assert generation.json()["model"]["status"] == "provider_required"
+            assert owner.post(f"{base}/investigations", json={"mode": "demo"}).status_code == 422
+    finally:
+        object.__setattr__(settings, "public_demo", original)

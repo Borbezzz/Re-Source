@@ -151,7 +151,9 @@ export function PreparedAssembly({ onEngine }: { onEngine: () => void }) {
             <p>
               Geometry helps you explore. Documents establish the requirements.
             </p>
-            <p>Source review for this assembly is not yet available.</p>
+            <p>
+              Continue with the toy-car demo to review its sample specification.
+            </p>
           </section>
           <div className="selection-tray">
             <strong>
@@ -174,11 +176,11 @@ export function PreparedAssembly({ onEngine }: { onEngine: () => void }) {
               ))}
             </div>
             <p>
-              Supplier research for this assembly is not yet available. Try the
-              engine demo for the complete sourcing workflow.
+              Take this product through source review, supplier research and a
+              reviewable sourcing package.
             </p>
             <button className="secondary" onClick={onEngine}>
-              Open working engine demo <ArrowRight size={15} />
+              Choose a demo product <ArrowRight size={15} />
             </button>
           </div>
         </aside>

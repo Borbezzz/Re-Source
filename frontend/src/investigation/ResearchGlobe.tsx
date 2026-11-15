@@ -121,7 +121,11 @@ export default function ResearchGlobe({
   findings,
   selected,
   onSelect,
+  locationLabel = "sourced locations",
+  locationNote,
 }: {
+  locationLabel?: string;
+  locationNote?: string;
   findings: Finding[];
   selected: string | null;
   onSelect: (id: string) => void;
@@ -141,7 +145,9 @@ export default function ResearchGlobe({
     <div className="research-globe" data-ready={ready}>
       <div className="globe-heading">
         <h2>Research connections</h2>
-        <span>{sites.length} sourced locations</span>
+        <span>
+          {sites.length} {locationLabel}
+        </span>
       </div>
       <div className="globe-canvas">
         <GlobeBoundary>
@@ -212,9 +218,8 @@ export default function ResearchGlobe({
         </button>
       </div>
       <p>
-        Lines link discovered locations to this investigation, not transport
-        routes. Fixture locations are representative; unknown locations stay in
-        the list.
+        {locationNote ??
+          "Lines link discovered locations to this investigation, not transport routes. Fixture locations are representative; unknown locations stay in the list."}
       </p>
     </div>
   );
