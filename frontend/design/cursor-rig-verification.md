@@ -1,5 +1,7 @@
 # Cursor-local sourcing rig
 
+Historical verification: the user requested removal of this overlay on 15 November 2026. Its component, listeners and stylesheet have been removed; the title and background ripples remain.
+
 14 November 2026. Refines the hero interaction from main 2d13863.
 
 - Nine small white cubes and three optional neutral labels stay near the pointer. Short links follow the same local cluster.
