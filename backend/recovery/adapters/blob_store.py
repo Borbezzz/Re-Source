@@ -12,6 +12,7 @@ import hashlib
 import io
 import logging
 import re
+import tempfile
 import threading
 from pathlib import Path
 from typing import Optional
@@ -57,9 +58,14 @@ class BlobStore:
         sha = self.sha256(data)
         path = self.local_path(sha, ext)
         if not path.exists():
-            tmp = path.with_suffix(path.suffix + ".tmp")
-            tmp.write_bytes(data)
-            tmp.replace(path)
+            with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as file:
+                tmp = Path(file.name)
+                try:
+                    file.write(data)
+                    file.close()
+                    tmp.replace(path)
+                finally:
+                    tmp.unlink(missing_ok=True)
         return sha, path
 
     def _client(self):  # noqa: ANN202
