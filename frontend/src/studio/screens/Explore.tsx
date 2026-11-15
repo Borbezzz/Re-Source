@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight, ChevronDown, Expand, Minimize2, RefreshCcw, RotateCw, X } from "lucide-react";
 import type { PackageComponent, RequirementSet } from "../data/package.ts";
@@ -87,6 +87,16 @@ export function ContextCard({
   busy: boolean;
 }) {
   const today = new Date().toISOString().slice(0, 10);
+  const quantityId = useId();
+  const [quantity, setQuantity] = useState(() => String(need.quantity));
+  const quantityValue = Number(quantity);
+  const quantityError = quantity === "" || !Number.isFinite(quantityValue) || quantityValue < 1
+    ? "Quantity must be at least 1."
+    : !Number.isInteger(quantityValue)
+      ? "Quantity must be a whole number."
+      : quantityValue > component.assemblyQuantity
+        ? `Quantity must be at most ${component.assemblyQuantity}.`
+        : null;
   return (
     <motion.section
       layoutId="component-card"
@@ -141,6 +151,7 @@ export function ContextCard({
           className="rs-form"
           onSubmit={(e) => {
             e.preventDefault();
+            if (quantityError || busy) return;
             onSubmit();
           }}
         >
@@ -156,10 +167,29 @@ export function ContextCard({
             </div>
           </div>
           <div className="rs-row">
-            <label className="rs-field">
-              <span>Quantity</span>
-              <input className="rs-input" type="number" min={1} max={component.assemblyQuantity} value={need.quantity} onChange={(e) => onNeed({ ...need, quantity: Math.max(1, Number(e.target.value) || 1) })} />
-            </label>
+            <div className="rs-field">
+              <label htmlFor={quantityId}>Quantity</label>
+              <input
+                id={quantityId}
+                className="rs-input"
+                type="number"
+                min={1}
+                max={component.assemblyQuantity}
+                step={1}
+                required
+                value={quantity}
+                aria-invalid={Boolean(quantityError)}
+                aria-describedby={quantityError ? `${quantityId}-error` : undefined}
+                onChange={(e) => {
+                  setQuantity(e.target.value);
+                  const value = e.target.valueAsNumber;
+                  if (Number.isInteger(value) && value >= 1 && value <= component.assemblyQuantity) {
+                    onNeed({ ...need, quantity: value });
+                  }
+                }}
+              />
+              {quantityError ? <small className="rs-field-error" id={`${quantityId}-error`} role="alert">{quantityError}</small> : null}
+            </div>
             <label className="rs-field">
               <span>Required on site by</span>
               <input className="rs-input" type="date" min={today} value={need.requiredBy} onChange={(e) => e.target.value && onNeed({ ...need, requiredBy: e.target.value })} required />
@@ -180,7 +210,7 @@ export function ContextCard({
             <button type="button" className="rs-btn rs-btn-ghost" onClick={onBack}>
               <ArrowLeft size={15} /> Back
             </button>
-            <button type="submit" className="rs-btn rs-btn-grad" disabled={busy}>
+            <button type="submit" className="rs-btn rs-btn-grad" disabled={busy || Boolean(quantityError)}>
               {busy ? "Starting…" : "Find suppliers"} <ArrowRight size={16} />
             </button>
           </div>
