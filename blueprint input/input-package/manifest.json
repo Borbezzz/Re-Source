@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "1.0",
+  "packageId": "rs-mechanica-turbofan-v1",
+  "displayName": "ReSource prepared turbofan demo",
+  "packageVersion": "1.0.0",
+  "buildFingerprint": "1149c89aeb42d86ef8c018d20075ca7ba89beaa1e7e04cdf271326915f8ae5bd",
+  "toolchain": {
+    "node": "24.14.0",
+    "three": "0.180.0"
+  },
+  "dataMode": "fictional_demo",
+  "source": {
+    "repository": "https://github.com/PouyanJay/mechanica",
+    "commit": "a1d52be81b5e9ea125df337a3b30039ff996edc8",
+    "license": "MIT"
+  },
+  "geometry": {
+    "file": "assembly.glb",
+    "kind": "prepared_visualization_assembly",
+    "isManufacturingCAD": false,
+    "unit": "visualization_unit",
+    "gltfCoordinateConvention": "glTF coordinates use the metre convention; physical correspondence is not validated",
+    "physicalScaleValidated": false,
+    "upAxis": "Y",
+    "engineAxis": "X",
+    "bounds": {
+      "min": [
+        -4.03000020980835,
+        -2.386372972279787,
+        -2.3919999040663242
+      ],
+      "max": [
+        5.099999904632568,
+        2.386372972279787,
+        2.3919999040663242
+      ]
+    },
+    "meshOccurrences": 2075,
+    "independentPieces": 1835,
+    "containsExternalTextures": false
+  },
+  "files": [
+    {
+      "path": "assembly.glb",
+      "sha256": "5c73a214be7fb3099b0e5e8b35d96feb617b93654b5607071b62da66ccf0e7c5"
+    },
+    {
+      "path": "components.csv",
+      "sha256": "b6068483cb2a7eb60bc0d5000c2a369eb1d287bc315b10ec3c9780effab4224f"
+    },
+    {
+      "path": "requirements.json",
+      "sha256": "27c69aa924cc9ff565861008050c6548c660dc22752ced7656c9954f9f4e6632"
+    },
+    {
+      "path": "LICENSE-Mechanica.txt",
+      "sha256": "9f92c8f5271e35ac3ee6c41cd6d89bb36e004f4061da581b0b64febe5ef0ffa1"
+    },
+    {
+      "path": "ATTRIBUTION.md",
+      "sha256": "0fbfb2d0280a18ba6649aaf48d7c55638517079fbf8bb0e842cbf7bd8316485a"
+    }
+  ],
+  "components": [
+    {
+      "componentId": "RS-TF-FUEL-INJECTOR",
+      "role": "secondary",
+      "name": "Fuel injector 01",
+      "partNumber": "RS-DEMO-FI-001",
+      "revision": "C",
+      "parentAssemblyId": "combustor",
+      "nodeIds": [
+        "rs-mech-tf-v1.combustor.m044.i000"
+      ],
+      "assemblyQuantity": 18,
+      "condition": "new",
+      "requirementSet": "REQ-FI-C",
+      "bounds": {
+        "min": [
+          0.8099999985098839,
+          -0.08500000089406967,
+          0.7549999991059303
+        ],
+        "max": [
+          1.0100000014901163,
+          0.08500000089406967,
+          0.9250000008940696
+        ],
+        "size": [
+          0.20000000298023235,
+          0.17000000178813934,
+          0.17000000178813934
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-FAN-BLADE",
+      "role": "primary",
+      "name": "Front fan blade 01",
+      "partNumber": "RS-DEMO-FB-001",
+      "revision": "B",
+      "parentAssemblyId": "fan",
+      "nodeIds": [
+        "rs-mech-tf-v1.fan.m000.i000"
+      ],
+      "assemblyQuantity": 24,
+      "condition": "new",
+      "requirementSet": "REQ-FB-B",
+      "bounds": {
+        "min": [
+          -3.2472897213697434,
+          0.5299999713897705,
+          -0.44602277874946594
+        ],
+        "max": [
+          -2.4344086241722107,
+          2.130000114440918,
+          0.44602277874946594
+        ],
+        "size": [
+          0.8128810971975327,
+          1.6000001430511475,
+          0.8920455574989319
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    },
+    {
+      "componentId": "RS-TF-CORE-NOZZLE",
+      "role": "secondary",
+      "name": "Core exhaust nozzle assembly",
+      "partNumber": "RS-DEMO-NZ-001",
+      "revision": "A",
+      "parentAssemblyId": "nozzle",
+      "nodeIds": [
+        "rs-mech-tf-v1.group.nozzle"
+      ],
+      "assemblyQuantity": 1,
+      "condition": "new",
+      "requirementSet": "REQ-NZ-A",
+      "bounds": {
+        "min": [
+          3.6500000953674316,
+          -1.076373029500246,
+          -1.0819999612867832
+        ],
+        "max": [
+          5.099999904632568,
+          1.076373029500246,
+          1.0819999612867832
+        ],
+        "size": [
+          1.4499998092651367,
+          2.152746059000492,
+          2.1639999225735664
+        ],
+        "unit": "visualization_unit",
+        "provenance": "derived_from_prepared_geometry_not_physical_measurement"
+      },
+      "dataMode": "fictional_demo"
+    }
+  ],
+  "selectionContract": {
+    "resolve": "Nearest ancestor with userData.componentId; otherwise inspect group without starting a sourcing case",
+    "stableIdentity": "Persist exported stableId and componentId with package version; do not regenerate serial-only IDs",
+    "homeTransforms": "Keep loaded GLB transforms unchanged as canonical home; animate clones or store/restore every transform",
+    "assemblyQuantity": "Count in assembly, not quantity being purchased"
+  },
+  "sourcingInputs": {
+    "required": [
+      "reason",
+      "quantity",
+      "requiredArrivalDate",
+      "deliveryDestination"
+    ],
+    "defaults": {
+      "reason": "faulty_component",
+      "quantity": 1
+    },
+    "providedBy": "UI after component selection; company/contact profile before outreach, commercial details before commitment"
+  }
+}

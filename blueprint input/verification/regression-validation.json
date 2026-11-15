@@ -1,0 +1,9 @@
+{
+  "status": "pass",
+  "checks": [
+    "Frozen build re-export keeps exact file hashes",
+    "Changed geometry under same version rejected",
+    "Rehashed contradictory component CSV rejected"
+  ],
+  "isolation": "Temporary copy removed; deliverable unchanged"
+}
